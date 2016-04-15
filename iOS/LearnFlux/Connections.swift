@@ -16,7 +16,7 @@ class Connections : UITableViewController {
         let item:UIBarButtonItem! = UIBarButtonItem();
         item.image = UIImage(named: "hamburger-18.png");
         self.navigationItem.leftBarButtonItem = item;
-        item.action = "revealMenu:";
+        item.action = #selector(self.revealMenu);
         item.target = self;
     }
     

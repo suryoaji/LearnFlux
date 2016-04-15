@@ -20,7 +20,7 @@
 #import "CommonConstants.h"
 #import "CommonUtility.h"
 #import "UIViewController+FrequentTools.h"
-#import "AFHTTPSessionManager.h"
+//#import "AFHTTPSessionManager.h"
 #import "UIView+Positioning.h"
 //#import <SDWebImage/UIImageView+WebCache.h>
 #import "UILabel+HeightToFit.h"
@@ -39,4 +39,4 @@
 #import "UIView+RoundedRect.h"
 #import "UIView+Rotate.h"
 
-#import "PKRevealController.h"
+#import "PKRevealController/PKRevealController.h"

@@ -71,7 +71,7 @@ class ForgotPassword : UIViewController {
     }
     
     override func globalResignFirstResponderRec(view: UIView) {
-        if view.respondsToSelector("resignFirstResponder") {
+        if view.respondsToSelector(#selector(self.resignFirstResponder)) {
             view.resignFirstResponder()
         }
         for subview: UIView in view.subviews {

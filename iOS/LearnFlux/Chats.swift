@@ -16,13 +16,13 @@ class Chats : UITableViewController {
         let left:UIBarButtonItem! = UIBarButtonItem();
         left.image = UIImage(named: "hamburger-18.png");
         self.navigationItem.leftBarButtonItem = left;
-        left.action = "revealMenu:";
+        left.action = #selector(self.revealMenu);
         left.target = self;
 
         let right:UIBarButtonItem! = UIBarButtonItem();
         right.title = "All";
         self.navigationItem.rightBarButtonItem = right;
-        right.action = "filter:";
+        right.action = #selector(self.filter);
         right.target = self;
     }
     

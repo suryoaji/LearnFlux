@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import PKRevealController
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, PKRevealing {
