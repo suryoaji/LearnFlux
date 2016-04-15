@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.idesolusiasia.learnflux.ChatbubbleActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView2">
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:id="@+id/chatbubbleLayout">
+            <LinearLayout android:orientation="horizontal"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+            >
+                <ImageView android:layout_width="45dp"
+                           android:layout_height="45dp"
+                           android:id="@+id/imageView4"
+                           android:src="@drawable/girl"/>
+                <LinearLayout android:orientation="vertical"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginLeft="15dp">
+                    <RelativeLayout android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:textAppearance="?android:attr/textAppearanceSmall"
+                                  android:text="Fiore Chen" android:id="@+id/textView13"
+                                  android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:textAppearance="?android:attr/textAppearanceSmall"
+                                  android:text="Today - 10.42" android:id="@+id/textView14"
+                                  android:layout_centerVertical="true"
+                                  android:layout_toRightOf="@+id/textView13"
+                                  android:layout_toEndOf="@+id/textView13"
+                                  android:layout_marginLeft="30dp" android:textSize="10dp"
+                                  android:textColor="@color/bright_foreground_disabled_material_light"/>
+                    </RelativeLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:textAppearance="?android:attr/textAppearanceSmall"
+                              android:text="You would not believe it!!!" android:id="@+id/textView15"
+                              android:layout_marginTop="10dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:textAppearance="?android:attr/textAppearanceSmall"
+                              android:text="Guess who I met just now!!" android:id="@+id/textView16"
+                              android:layout_marginTop="3dp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:orientation="horizontal"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="20dp"
+            >
+                <ImageView android:layout_width="45dp" android:layout_height="45dp"
+                           android:id="@+id/imageView5" android:src="@drawable/me"/>
+                <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
+                              android:layout_height="wrap_content" android:layout_marginLeft="15dp">
+                    <RelativeLayout android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:textAppearance="?android:attr/textAppearanceSmall"
+                                  android:text="Agatha Cynthia" android:id="@+id/textView17"
+                                  android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:textAppearance="?android:attr/textAppearanceSmall"
+                                  android:text="Today - 10.43" android:id="@+id/textView18"
+                                  android:layout_centerVertical="true"
+                                  android:layout_toRightOf="@+id/textView17"
+                                  android:layout_toEndOf="@+id/textView17"
+                                  android:layout_marginLeft="30dp" android:textSize="10dp"
+                                  android:textColor="@color/bright_foreground_disabled_material_light"/>
+                    </RelativeLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:textAppearance="?android:attr/textAppearanceSmall"
+                              android:text="WHO?? Don&apos;t you say you met Ben Affleck!"
+                              android:id="@+id/textView19" android:layout_marginTop="10dp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
+                          android:layout_height="wrap_content" android:layout_marginTop="20dp">
+                <ImageView android:layout_width="45dp" android:layout_height="45dp"
+                           android:id="@+id/imageView2" android:src="@drawable/girl"/>
+                <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:layout_marginLeft="15dp">
+                    <RelativeLayout android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:textAppearance="?android:attr/textAppearanceSmall"
+                                  android:text="Fiore Chen" android:id="@+id/textView6"
+                                  android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:textAppearance="?android:attr/textAppearanceSmall"
+                                  android:text="Today - 10.42" android:id="@+id/textView7"
+                                  android:layout_centerVertical="true"
+                                  android:layout_toRightOf="@+id/textView6"
+                                  android:layout_toEndOf="@+id/textView6"
+                                  android:layout_marginLeft="30dp" android:textSize="10dp"
+                                  android:textColor="@color/bright_foreground_disabled_material_light"/>
+                    </RelativeLayout>
+                    <TextView android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:textAppearance="?android:attr/textAppearanceSmall"
+                              android:text="No! Hahaha.."
+                              android:id="@+id/textView8" android:layout_marginTop="10dp"/>
+                    <TextView android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:textAppearance="?android:attr/textAppearanceSmall"
+                              android:text="But I really want to watch Batman vs Superman" android:id="@+id/textView9"
+                              android:layout_marginTop="3dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:weightSum="1" android:layout_alignBottom="@+id/scrollView2"
+                  android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                  android:background="#fafafa">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:baselineAligned="false"
+            android:id="@+id/attachmentLayout" android:visibility="gone">
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event"
+                android:id="@+id/btnAddEvent" android:textColor="@color/colorPrimaryDark"/>
+            <Button style="?android:attr/buttonStyleSmall" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="Poll"
+                    android:id="@+id/btnAddPoll" android:textColor="@color/colorPrimaryDark"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView android:layout_width="0dp" android:layout_height="match_parent"
+                       android:id="@+id/ivAttachment" android:layout_weight="1"
+                       android:src="@drawable/ic_attach_file_black_24dp" android:padding="3dp"
+                       android:tint="@color/colorPrimaryDark"/>
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/etMessage" android:layout_weight="9"
+                android:background="@android:color/transparent" android:padding="10dp"
+                android:hint="Write a message"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/ivImportant" android:src="@drawable/ic_important_24dp"
+                android:padding="5dp" android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+                android:clickable="true"/>
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/ivSend" android:layout_weight="1"
+                android:src="@drawable/ic_menu_send" android:padding="2dp"
+                android:tint="@color/colorPrimaryDark"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
+
