@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="Home"/>
+    <item android:title="Tools">
+        <menu>
+            <item
+                android:id="@+id/nav_chats"
+                android:icon="@drawable/ic_chat_24dp"
+                android:title="Chats"/>
+            <item
+                android:id="@+id/nav_calendar"
+                android:icon="@drawable/ic_event_black_24dp"
+                android:title="Calendar"/>
+            <item
+                android:id="@+id/nav_attendance"
+                android:icon="@drawable/ic_attendance_24dp"
+                android:title="Attendance"/>
+            <item
+                android:id="@+id/nav_Polls"
+                android:icon="@drawable/ic_poll_24dp"
+                android:title="Polls"/>
+            <item
+                android:id="@+id/nav_gallery"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="Gallery"/>
+            <item
+                android:id="@+id/nav_internet_groups"
+                android:icon="@drawable/ic_public_black_24dp"
+                android:title="Internet Groups"/>
+        </menu>
+    </item>
+    <group
+        android:id="@+id/lowerMenu"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@android:drawable/btn_star"
+            android:title="Favorites"/>
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Settings"/>
+    </group>
+
+</menu>
