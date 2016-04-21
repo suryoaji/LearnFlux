@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_gravity="right"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:paddingTop="15dp"
+    android:background="@drawable/bubble2" android:paddingBottom="15dp">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivAddToCalendar"
+                android:src="@drawable/ic_poll_24dp"
+                android:tint="@color/abc_secondary_text_material_light"
+                android:layout_alignParentTop="true" android:layout_toRightOf="@+id/tvTime"
+                android:layout_toEndOf="@+id/tvTime"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Today - 10.42"
+                android:id="@+id/tvTime"
+                android:textSize="10dp"
+                android:textColor="@color/bright_foreground_disabled_material_light"
+                android:layout_centerVertical="true" android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"/>
+        </LinearLayout>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text="You has created a poll" android:id="@+id/textView12"
+        />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text="Do you enjoy this Parent Meeting event?" android:id="@+id/tvEventTitle"
+                  android:layout_marginTop="10dp" android:textStyle="bold"
+        />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text="click to see details" android:id="@+id/textView20"
+                  android:layout_marginTop="10dp" android:textStyle="italic"
+        />
+    </LinearLayout>
+</LinearLayout>

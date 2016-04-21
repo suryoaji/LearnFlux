@@ -95,7 +95,7 @@ public class ChattingActivity extends BaseActivity {
 		ivSend.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				View view = layoutInflater.inflate(R.layout.row_chatbubble, null);
+				View view = layoutInflater.inflate(R.layout.row_plainbubble_other, null);
 				TextView tvTime = (TextView) view.findViewById(R.id.tvTime);
 				Time time = new Time();
 				time.setToNow();
@@ -177,7 +177,7 @@ public class ChattingActivity extends BaseActivity {
 				btnAdd.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						View view = layoutInflater.inflate(R.layout.row_chatevent, null);
+						View view = layoutInflater.inflate(R.layout.row_chatevent_other, null);
 						TextView tvTime = (TextView) view.findViewById(R.id.tvTime);
 						TextView tvEventTime = (TextView) view.findViewById(R.id.tvEventTime);
 						TextView tvEventDate = (TextView) view.findViewById(R.id.tvEventDate);
