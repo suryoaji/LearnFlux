@@ -40,3 +40,4 @@
 #import "UIView+Rotate.h"
 
 #import "PKRevealController/PKRevealController.h"
+#import "JSQMessagesViewController/JSQMessagesViewController.h"
