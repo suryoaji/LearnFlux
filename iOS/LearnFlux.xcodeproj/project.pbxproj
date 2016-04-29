@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2D3D549154E78BF23D6DC8C8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9376CFD1C1CCB93E6369171A /* Pods.framework */; };
+		5B01FC411CD2FCB800047C15 /* NSDictionary+ForKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */; };
 		5B04A2361CBCDEE000FA5CCA /* Connections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2351CBCDEE000FA5CCA /* Connections.swift */; };
 		5B04A2381CBCDF0300FA5CCA /* Org.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2371CBCDF0300FA5CCA /* Org.swift */; };
 		5B04A23A1CBCDF3400FA5CCA /* Chats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2391CBCDF3400FA5CCA /* Chats.swift */; };
@@ -317,13 +318,24 @@
 		5BDBCC071CBE518900655A61 /* important_red-18.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDBCC011CBE518900655A61 /* important_red-18.png */; };
 		5BDBCC081CBE518900655A61 /* important_red-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDBCC021CBE518900655A61 /* important_red-18@2x.png */; };
 		5BDBCC091CBE518900655A61 /* important_red-18@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDBCC031CBE518900655A61 /* important_red-18@3x.png */; };
+		5BE7BBB11CD1DE2500BDFCE1 /* AttachPoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB01CD1DE2500BDFCE1 /* AttachPoll.swift */; };
+		5BE7BBB51CD1E5D500BDFCE1 /* plus-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB21CD1E5D500BDFCE1 /* plus-32.png */; };
+		5BE7BBB61CD1E5D500BDFCE1 /* plus-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB31CD1E5D500BDFCE1 /* plus-32@2x.png */; };
+		5BE7BBB71CD1E5D500BDFCE1 /* plus-32@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB41CD1E5D500BDFCE1 /* plus-32@3x.png */; };
+		5BE7BBBB1CD206A800BDFCE1 /* checkmark-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB81CD206A800BDFCE1 /* checkmark-24.png */; };
+		5BE7BBBC1CD206A800BDFCE1 /* checkmark-24@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB91CD206A800BDFCE1 /* checkmark-24@2x.png */; };
+		5BE7BBBD1CD206A800BDFCE1 /* checkmark-24@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBBA1CD206A800BDFCE1 /* checkmark-24@3x.png */; };
+		5BE7C3111CCE00DF0067334D /* AttachEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE7C3101CCE00DF0067334D /* AttachEvent.swift */; };
 		5BEB83481CBC9AF700EB818C /* OpenSans-CondBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BEB83451CBC9AF700EB818C /* OpenSans-CondBold.ttf */; };
 		5BEB83491CBC9AF700EB818C /* OpenSans-CondLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BEB83461CBC9AF700EB818C /* OpenSans-CondLight.ttf */; };
 		5BEB834A1CBC9AF700EB818C /* OpenSans-CondLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BEB83471CBC9AF700EB818C /* OpenSans-CondLightItalic.ttf */; };
+		5BFF797F1CCF0BC400B50896 /* DatePickerDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF797E1CCF0BC400B50896 /* DatePickerDialog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		5B01FC3F1CD2FC5F00047C15 /* NSDictionary+ForKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+ForKey.h"; path = "Library/NSDictionary+ForKey.h"; sourceTree = "<group>"; };
+		5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+ForKey.m"; path = "Library/NSDictionary+ForKey.m"; sourceTree = "<group>"; };
 		5B04A2351CBCDEE000FA5CCA /* Connections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connections.swift; sourceTree = "<group>"; };
 		5B04A2371CBCDF0300FA5CCA /* Org.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Org.swift; sourceTree = "<group>"; };
 		5B04A2391CBCDF3400FA5CCA /* Chats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chats.swift; sourceTree = "<group>"; };
@@ -662,9 +674,18 @@
 		5BDBCC011CBE518900655A61 /* important_red-18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "important_red-18.png"; path = "Icons/important_red-18.png"; sourceTree = "<group>"; };
 		5BDBCC021CBE518900655A61 /* important_red-18@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "important_red-18@2x.png"; path = "Icons/important_red-18@2x.png"; sourceTree = "<group>"; };
 		5BDBCC031CBE518900655A61 /* important_red-18@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "important_red-18@3x.png"; path = "Icons/important_red-18@3x.png"; sourceTree = "<group>"; };
+		5BE7BBB01CD1DE2500BDFCE1 /* AttachPoll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachPoll.swift; sourceTree = "<group>"; };
+		5BE7BBB21CD1E5D500BDFCE1 /* plus-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "plus-32.png"; path = "Icons/plus-32.png"; sourceTree = "<group>"; };
+		5BE7BBB31CD1E5D500BDFCE1 /* plus-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "plus-32@2x.png"; path = "Icons/plus-32@2x.png"; sourceTree = "<group>"; };
+		5BE7BBB41CD1E5D500BDFCE1 /* plus-32@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "plus-32@3x.png"; path = "Icons/plus-32@3x.png"; sourceTree = "<group>"; };
+		5BE7BBB81CD206A800BDFCE1 /* checkmark-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "checkmark-24.png"; path = "Icons2/checkmark-24.png"; sourceTree = "<group>"; };
+		5BE7BBB91CD206A800BDFCE1 /* checkmark-24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "checkmark-24@2x.png"; path = "Icons2/checkmark-24@2x.png"; sourceTree = "<group>"; };
+		5BE7BBBA1CD206A800BDFCE1 /* checkmark-24@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "checkmark-24@3x.png"; path = "Icons2/checkmark-24@3x.png"; sourceTree = "<group>"; };
+		5BE7C3101CCE00DF0067334D /* AttachEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachEvent.swift; sourceTree = "<group>"; };
 		5BEB83451CBC9AF700EB818C /* OpenSans-CondBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-CondBold.ttf"; path = "Fonts/OpenSans-CondBold.ttf"; sourceTree = "<group>"; };
 		5BEB83461CBC9AF700EB818C /* OpenSans-CondLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-CondLight.ttf"; path = "Fonts/OpenSans-CondLight.ttf"; sourceTree = "<group>"; };
 		5BEB83471CBC9AF700EB818C /* OpenSans-CondLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-CondLightItalic.ttf"; path = "Fonts/OpenSans-CondLightItalic.ttf"; sourceTree = "<group>"; };
+		5BFF797E1CCF0BC400B50896 /* DatePickerDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerDialog.swift; sourceTree = "<group>"; };
 		9376CFD1C1CCB93E6369171A /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B500899EAA747E11ACABC428 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -761,6 +782,8 @@
 				5B04A2391CBCDF3400FA5CCA /* Chats.swift */,
 				5B04A25E1CBCFB6D00FA5CCA /* Chat.swift */,
 				5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */,
+				5BE7C3101CCE00DF0067334D /* AttachEvent.swift */,
+				5BE7BBB01CD1DE2500BDFCE1 /* AttachPoll.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -851,6 +874,8 @@
 				5B37425C1CC0CBAD00AF2897 /* UIViewController+FrequentTools.m */,
 				5B3742371CC0CBAD00AF2897 /* UIViewController+Popover.h */,
 				5B3742381CC0CBAD00AF2897 /* UIViewController+Popover.m */,
+				5B01FC3F1CD2FC5F00047C15 /* NSDictionary+ForKey.h */,
+				5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */,
 			);
 			name = Library;
 			sourceTree = "<group>";
@@ -858,6 +883,9 @@
 		5B09CF6C1CBB98C90042C70B /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				5BE7BBB21CD1E5D500BDFCE1 /* plus-32.png */,
+				5BE7BBB31CD1E5D500BDFCE1 /* plus-32@2x.png */,
+				5BE7BBB41CD1E5D500BDFCE1 /* plus-32@3x.png */,
 				5B3742781CC0CBF000AF2897 /* Icons2 */,
 				5BDBCBFE1CBE518900655A61 /* clip-18.png */,
 				5BDBCBFF1CBE518900655A61 /* clip-18@2x.png */,
@@ -884,6 +912,9 @@
 		5B3742781CC0CBF000AF2897 /* Icons2 */ = {
 			isa = PBXGroup;
 			children = (
+				5BE7BBB81CD206A800BDFCE1 /* checkmark-24.png */,
+				5BE7BBB91CD206A800BDFCE1 /* checkmark-24@2x.png */,
+				5BE7BBBA1CD206A800BDFCE1 /* checkmark-24@3x.png */,
 				5B3742791CC0CBFC00AF2897 /* asset-default.jpg */,
 				5B37427A1CC0CBFC00AF2897 /* asset-default2.jpg */,
 				5B37427B1CC0CBFC00AF2897 /* change_user-48.png */,
@@ -1130,6 +1161,7 @@
 		88926D3F72F0978DEF45DAAC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5BFF797E1CCF0BC400B50896 /* DatePickerDialog.swift */,
 				9376CFD1C1CCB93E6369171A /* Pods.framework */,
 			);
 			name = Frameworks;
@@ -1198,6 +1230,7 @@
 			files = (
 				5B3744181CC0CBFD00AF2897 /* upload-24.png in Resources */,
 				5B3743C41CC0CBFD00AF2897 /* group-24@2x.png in Resources */,
+				5BE7BBBC1CD206A800BDFCE1 /* checkmark-24@2x.png in Resources */,
 				5B3744421CC0CBFD00AF2897 /* star-128@2x.png in Resources */,
 				5B3743621CC0CBFD00AF2897 /* change_user-48.png in Resources */,
 				5B3743631CC0CBFD00AF2897 /* change_user-48@2x.png in Resources */,
@@ -1222,6 +1255,7 @@
 				5B3743AF1CC0CBFD00AF2897 /* down4-24@2x.png in Resources */,
 				5B04A24A1CBCE64D00FA5CCA /* male01.png in Resources */,
 				5B3744371CC0CBFD00AF2897 /* plus-16@2x.png in Resources */,
+				5BE7BBBD1CD206A800BDFCE1 /* checkmark-24@3x.png in Resources */,
 				5B3744411CC0CBFD00AF2897 /* star-128.png in Resources */,
 				5B04A24E1CBCE64E00FA5CCA /* male05.png in Resources */,
 				5B37437E1CC0CBFD00AF2897 /* home_background10.jpg in Resources */,
@@ -1275,6 +1309,7 @@
 				5B09CF7B1CBB9FAE0042C70B /* hamburger-18@2x.png in Resources */,
 				5B3743741CC0CBFD00AF2897 /* handshake-512.png in Resources */,
 				5B37440C1CC0CBFD00AF2897 /* thumb_up-24.png in Resources */,
+				5BE7BBBB1CD206A800BDFCE1 /* checkmark-24.png in Resources */,
 				5B3743F71CC0CBFD00AF2897 /* reload-24.png in Resources */,
 				5B37438D1CC0CBFD00AF2897 /* alarm_clock-24.png in Resources */,
 				5B3744331CC0CBFD00AF2897 /* edit-24.png in Resources */,
@@ -1322,6 +1357,7 @@
 				5B3743C61CC0CBFD00AF2897 /* help-24.png in Resources */,
 				5B04A2471CBCE64D00FA5CCA /* female02.png in Resources */,
 				5B3743EC1CC0CBFD00AF2897 /* picture-512.png in Resources */,
+				5BE7BBB71CD1E5D500BDFCE1 /* plus-32@3x.png in Resources */,
 				5B3743DC1CC0CBFD00AF2897 /* location-24@2x.png in Resources */,
 				5BDBCC041CBE518900655A61 /* clip-18.png in Resources */,
 				5BDBCC051CBE518900655A61 /* clip-18@2x.png in Resources */,
@@ -1363,6 +1399,7 @@
 				5B04A24F1CBCE64E00FA5CCA /* male06.png in Resources */,
 				5B3744011CC0CBFD00AF2897 /* sent-24@2x.png in Resources */,
 				5B37439B1CC0CBFD00AF2897 /* bookmark-24@3x.png in Resources */,
+				5BE7BBB51CD1E5D500BDFCE1 /* plus-32.png in Resources */,
 				5B3743F11CC0CBFD00AF2897 /* price_tag-24.png in Resources */,
 				5B37442A1CC0CBFD00AF2897 /* zoom_out-24@2x.png in Resources */,
 				5B3743D41CC0CBFD00AF2897 /* left2-24@3x.png in Resources */,
@@ -1424,6 +1461,7 @@
 				5B3743FE1CC0CBFD00AF2897 /* search-24@2x.png in Resources */,
 				5B37442C1CC0CBFD00AF2897 /* calendar-24.png in Resources */,
 				5B3744061CC0CBFD00AF2897 /* speech_bubble-24.png in Resources */,
+				5BE7BBB61CD1E5D500BDFCE1 /* plus-32@2x.png in Resources */,
 				5B37438E1CC0CBFD00AF2897 /* alarm_clock-24@2x.png in Resources */,
 				5B3743781CC0CBFD00AF2897 /* home_background4.jpg in Resources */,
 				5B3743D31CC0CBFD00AF2897 /* left2-24@2x.png in Resources */,
@@ -1531,6 +1569,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B09CEB51CBB4A330042C70B /* Login.swift in Sources */,
+				5BE7BBB11CD1DE2500BDFCE1 /* AttachPoll.swift in Sources */,
 				5B98B59B1CC8DB190070AE97 /* ChatFlow.swift in Sources */,
 				5B3742711CC0CBAD00AF2897 /* OSTextField.m in Sources */,
 				5B3742761CC0CBAD00AF2897 /* UIViewController+FrequentTools.m in Sources */,
@@ -1544,6 +1583,7 @@
 				5B37426F1CC0CBAD00AF2897 /* CommonUtility.m in Sources */,
 				5B3742771CC0CBAD00AF2897 /* UIView+Border.m in Sources */,
 				5B37426A1CC0CBAD00AF2897 /* UITableView+ReloadDataAnimate.m in Sources */,
+				5B01FC411CD2FCB800047C15 /* NSDictionary+ForKey.m in Sources */,
 				5B09CF6B1CBB94C60042C70B /* Home.swift in Sources */,
 				5B37426B1CC0CBAD00AF2897 /* UIView+Slide.m in Sources */,
 				5B3742671CC0CBAD00AF2897 /* UIImageView+RoundedRect.m in Sources */,
@@ -1551,7 +1591,9 @@
 				5B37426C1CC0CBAD00AF2897 /* UIViewController+FirstResponder.m in Sources */,
 				5B04A2381CBCDF0300FA5CCA /* Org.swift in Sources */,
 				5B09CEB31CBB4A330042C70B /* AppDelegate.swift in Sources */,
+				5BFF797F1CCF0BC400B50896 /* DatePickerDialog.swift in Sources */,
 				5B04A23A1CBCDF3400FA5CCA /* Chats.swift in Sources */,
+				5BE7C3111CCE00DF0067334D /* AttachEvent.swift in Sources */,
 				5B3742611CC0CBAD00AF2897 /* PopoverDateViewController.m in Sources */,
 				5B3742601CC0CBAD00AF2897 /* NSInteger+String.m in Sources */,
 				5B3742661CC0CBAD00AF2897 /* NSIndexPath+MockupShortcut.m in Sources */,

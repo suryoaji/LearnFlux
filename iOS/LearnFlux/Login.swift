@@ -10,6 +10,8 @@ import UIKit
 
 class Login: UIViewController, UITextFieldDelegate {
 
+    let aDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+    
     @IBOutlet weak var tfUsername: OSTextField!;
     @IBOutlet weak var tfPassword: OSTextField!;
     var animatedDistance: Double = 0;
@@ -47,7 +49,13 @@ class Login: UIViewController, UITextFieldDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-        
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "Login") {
+            aDelegate.userId = "1";
+        }
+    }
+    
     // MARK: magic code for adjusting text field into view.
 
     func textFieldDidBeginEditing(textField: UITextField) {

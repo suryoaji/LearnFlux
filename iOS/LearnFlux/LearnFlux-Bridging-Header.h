@@ -38,6 +38,8 @@
 #import "ARSPopover.h"
 #import "UIView+RoundedRect.h"
 #import "UIView+Rotate.h"
+#import "NSDictionary+ForKey.h"
 
 #import "PKRevealController/PKRevealController.h"
 #import "JSQMessagesViewController/JSQMessagesViewController.h"
+#import "JSQMessagesViewController/JSQMessageMediaData.h"

@@ -34,6 +34,7 @@
 
 - (void) globalResignFirstResponder {
     [self globalResignFirstResponderRec:[self view]];
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
 @end
