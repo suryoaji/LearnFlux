@@ -1,14 +1,17 @@
 PODS:
+  - CZPicker (0.4.2)
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - PKRevealController (2.0.6)
 
 DEPENDENCIES:
+  - CZPicker
   - JSQMessagesViewController
   - PKRevealController
 
 SPEC CHECKSUMS:
+  CZPicker: df3d8d0511595b7cd2f032263c82c611d45a9b8e
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   PKRevealController: ffb45a16f5a5032ad90a3d16e5cbb0d8e035bd58
