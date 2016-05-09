@@ -353,4 +353,10 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneURLString]];
 }
 
++ (void) delay:(double)delay closure:(completionBlock)closure {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        closure();
+    });
+}
+
 @end

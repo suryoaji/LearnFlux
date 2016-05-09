@@ -8,38 +8,8 @@
 
 import Foundation
 
-class AttachedEvent : NSObject {
-    var title: String
-    var date: String;
-    var time: String;
-    var duration: Int;
-    var location: String
-    
-    init (vtitle : String, vdate : String, vtime : String, vduration : Int, vlocation : String) {
-        title = vtitle;
-        date = vdate;
-        time = vtime;
-        duration = vduration;
-        location = vlocation;
-        super.init();
-    }
-}
-
-//func encode<AttachedEvent>(var value: AttachedEvent) -> NSData {
-//    return withUnsafePointer(&value) { p in
-//        NSData(bytes: p, length: sizeofValue(AttachedEvent))
-//    }
-//}
-//
-//func decode<AttachedEvent>(data: NSData) -> AttachedEvent {
-//    let pointer = UnsafeMutablePointer<AttachedEvent>.alloc(sizeof(AttachedEvent.Type))
-//    data.getBytes(pointer, length: sizeofValue(AttachedEvent))
-//    
-//    return pointer.move()
-//}
-
 protocol AttachEventReturnDelegate {
-    func sendSelectedEventData (event: AttachedEvent);
+    func sendSelectedEventData (event: NSDictionary);
 }
 
 class AttachEvent : UITableViewController {
@@ -51,15 +21,15 @@ class AttachEvent : UITableViewController {
     var chosenTitle : String = "";
     var chosenDuration : Int = 60;
     
-    var events = [AttachedEvent]();
+    var events = [NSDictionary]();
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print(NSStringFromClass(self.dynamicType));
 
-        events.append(AttachedEvent(vtitle: "How to Stand Out in the College Admissions Process", vdate: "Tuesday, 3 May 2016", vtime: "19:30", vduration: 120, vlocation: "The Meeting Point - Behind Block 79 (Launchpad) Ayer Rajah Crescen, Tel 92471912, Singapore 139951, Singapore"));
-        events.append(AttachedEvent(vtitle: "QUT Creative Industries Workshop: The 7 Attributes of a Great Designer", vdate: "Wednesday, 4 May 2016", vtime: "18:00", vduration: 90, vlocation: "AUG Singapore - 7 Maxwell Road, MND Complex Annex B, #02-100, Singapore, 069111, Singapore"));
-        events.append(AttachedEvent(vtitle: "What is STEM and Why Should I Care", vdate: "Saturday, 30 April 2016", vtime: "10:00", vduration: 90, vlocation: "Dreamkids Kindergarten @ East Gate - 46 East Coast Rd #01-03, East Gate, Singapore, Singapore 428766, Singapore"));
+        events.append(["title": "How to Stand Out in the College Admissions Process", "date": "Tuesday, 3 May 2016", "time": "19:30", "duration": 120, "location": "The Meeting Point - Behind Block 79 (Launchpad) Ayer Rajah Crescen, Tel 92471912, Singapore 139951, Singapore"]);
+        events.append(["title": "QUT Creative Industries Workshop: The 7 Attributes of a Great Designer", "date": "Wednesday, 4 May 2016", "time": "18:00", "duration": 90, "location": "AUG Singapore - 7 Maxwell Road, MND Complex Annex B, #02-100, Singapore, 069111, Singapore"]);
+        events.append(["title": "What is STEM and Why Should I Care", "date": "Saturday, 30 April 2016", "time": "10:00", "duration": 90, "location": "Dreamkids Kindergarten @ East Gate - 46 East Coast Rd #01-03, East Gate, Singapore, Singapore 428766, Singapore"]);
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -71,7 +41,10 @@ class AttachEvent : UITableViewController {
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return tableView.dequeueReusableCellWithIdentifier(indexPath.code)!.height;
+        let code = indexPath.code;
+        let cell = tableView.dequeueReusableCellWithIdentifier(code)!;
+        let height = cell.height;
+        return height;
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -89,9 +62,9 @@ class AttachEvent : UITableViewController {
             let date = cell.viewWithTag(2) as! UILabel;
             let location = cell.viewWithTag(3) as! UILabel;
             let event = events[indexPath.row];
-            title.text = event.title;
-            date.text = event.date + ", " + event.time + "(\(event.duration))";
-            location.text = event.location;
+            title.text = event.stringForKey("title");
+            date.text = event.stringForKey("date") + ", " + event.stringForKey("time") + "(\(event.intForKey("duration")))";
+            location.text = event.stringForKey("location");
         }
         
         return cell;

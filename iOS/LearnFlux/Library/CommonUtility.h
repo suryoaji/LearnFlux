@@ -65,5 +65,7 @@
 
 + (void) phoneCall:(NSString *)number;
 
++ (void) delay: (double) delay closure:(completionBlock)closure;
+
 
 @end

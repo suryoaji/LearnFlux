@@ -94,8 +94,12 @@ class Chats : UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         let chatVc = segue.destinationViewController as! ChatFlow
+        let cell = sender as! UITableViewCell;
+        let title = cell.viewWithTag(1) as! UILabel;
         chatVc.senderId = "1"
         chatVc.senderDisplayName = "Jack Joyce"
+        chatVc.thisChatType = "chat";
+        chatVc.thisChatMetadata = ["title":title.text!];
     }
     
     func setTabBarVisible(visible:Bool, animated:Bool) {

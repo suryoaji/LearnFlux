@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		2D3D549154E78BF23D6DC8C8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9376CFD1C1CCB93E6369171A /* Pods.framework */; };
 		5B01FC411CD2FCB800047C15 /* NSDictionary+ForKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */; };
+		5B01FC491CD34A8600047C15 /* arrow_down_circle-18.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC481CD34A8600047C15 /* arrow_down_circle-18.png */; };
+		5B01FC5B1CD34D6700047C15 /* arrow_down_circle-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC561CD34D6700047C15 /* arrow_down_circle-18@2x.png */; };
+		5B01FC5C1CD34D6700047C15 /* arrow_down_circle-18@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC571CD34D6700047C15 /* arrow_down_circle-18@3x.png */; };
+		5B01FC5D1CD34D6700047C15 /* arrow_up_circle-18.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC581CD34D6700047C15 /* arrow_up_circle-18.png */; };
+		5B01FC5E1CD34D6700047C15 /* arrow_up_circle-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC591CD34D6700047C15 /* arrow_up_circle-18@2x.png */; };
+		5B01FC5F1CD34D6700047C15 /* arrow_up_circle-18@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC5A1CD34D6700047C15 /* arrow_up_circle-18@3x.png */; };
+		5B01FC611CD3657600047C15 /* close_window.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC601CD3657600047C15 /* close_window.png */; };
 		5B04A2361CBCDEE000FA5CCA /* Connections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2351CBCDEE000FA5CCA /* Connections.swift */; };
 		5B04A2381CBCDF0300FA5CCA /* Org.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2371CBCDF0300FA5CCA /* Org.swift */; };
 		5B04A23A1CBCDF3400FA5CCA /* Chats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2391CBCDF3400FA5CCA /* Chats.swift */; };
@@ -319,9 +326,6 @@
 		5BDBCC081CBE518900655A61 /* important_red-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDBCC021CBE518900655A61 /* important_red-18@2x.png */; };
 		5BDBCC091CBE518900655A61 /* important_red-18@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDBCC031CBE518900655A61 /* important_red-18@3x.png */; };
 		5BE7BBB11CD1DE2500BDFCE1 /* AttachPoll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB01CD1DE2500BDFCE1 /* AttachPoll.swift */; };
-		5BE7BBB51CD1E5D500BDFCE1 /* plus-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB21CD1E5D500BDFCE1 /* plus-32.png */; };
-		5BE7BBB61CD1E5D500BDFCE1 /* plus-32@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB31CD1E5D500BDFCE1 /* plus-32@2x.png */; };
-		5BE7BBB71CD1E5D500BDFCE1 /* plus-32@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB41CD1E5D500BDFCE1 /* plus-32@3x.png */; };
 		5BE7BBBB1CD206A800BDFCE1 /* checkmark-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB81CD206A800BDFCE1 /* checkmark-24.png */; };
 		5BE7BBBC1CD206A800BDFCE1 /* checkmark-24@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBB91CD206A800BDFCE1 /* checkmark-24@2x.png */; };
 		5BE7BBBD1CD206A800BDFCE1 /* checkmark-24@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7BBBA1CD206A800BDFCE1 /* checkmark-24@3x.png */; };
@@ -329,13 +333,24 @@
 		5BEB83481CBC9AF700EB818C /* OpenSans-CondBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BEB83451CBC9AF700EB818C /* OpenSans-CondBold.ttf */; };
 		5BEB83491CBC9AF700EB818C /* OpenSans-CondLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BEB83461CBC9AF700EB818C /* OpenSans-CondLight.ttf */; };
 		5BEB834A1CBC9AF700EB818C /* OpenSans-CondLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BEB83471CBC9AF700EB818C /* OpenSans-CondLightItalic.ttf */; };
+		5BF481291CE05169006930CC /* EventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF481281CE05169006930CC /* EventDetails.swift */; };
+		5BF4812B1CE07166006930CC /* PollDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BF4812A1CE07166006930CC /* PollDetails.swift */; };
 		5BFF797F1CCF0BC400B50896 /* DatePickerDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF797E1CCF0BC400B50896 /* DatePickerDialog.swift */; };
+		5BFFFDB71CD8958B0099AB3F /* SweetAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFFFDB61CD8958B0099AB3F /* SweetAlert.swift */; };
+		5BFFFDB91CD8AB740099AB3F /* CommonUtilitySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFFFDB81CD8AB740099AB3F /* CommonUtilitySwift.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		5B01FC3F1CD2FC5F00047C15 /* NSDictionary+ForKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+ForKey.h"; path = "Library/NSDictionary+ForKey.h"; sourceTree = "<group>"; };
 		5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+ForKey.m"; path = "Library/NSDictionary+ForKey.m"; sourceTree = "<group>"; };
+		5B01FC481CD34A8600047C15 /* arrow_down_circle-18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_down_circle-18.png"; path = "Icons/arrow_down_circle-18.png"; sourceTree = "<group>"; };
+		5B01FC561CD34D6700047C15 /* arrow_down_circle-18@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_down_circle-18@2x.png"; path = "Icons/arrow_down_circle-18@2x.png"; sourceTree = "<group>"; };
+		5B01FC571CD34D6700047C15 /* arrow_down_circle-18@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_down_circle-18@3x.png"; path = "Icons/arrow_down_circle-18@3x.png"; sourceTree = "<group>"; };
+		5B01FC581CD34D6700047C15 /* arrow_up_circle-18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_up_circle-18.png"; path = "Icons/arrow_up_circle-18.png"; sourceTree = "<group>"; };
+		5B01FC591CD34D6700047C15 /* arrow_up_circle-18@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_up_circle-18@2x.png"; path = "Icons/arrow_up_circle-18@2x.png"; sourceTree = "<group>"; };
+		5B01FC5A1CD34D6700047C15 /* arrow_up_circle-18@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_up_circle-18@3x.png"; path = "Icons/arrow_up_circle-18@3x.png"; sourceTree = "<group>"; };
+		5B01FC601CD3657600047C15 /* close_window.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = close_window.png; path = Icons/close_window.png; sourceTree = "<group>"; };
 		5B04A2351CBCDEE000FA5CCA /* Connections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connections.swift; sourceTree = "<group>"; };
 		5B04A2371CBCDF0300FA5CCA /* Org.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Org.swift; sourceTree = "<group>"; };
 		5B04A2391CBCDF3400FA5CCA /* Chats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chats.swift; sourceTree = "<group>"; };
@@ -675,9 +690,6 @@
 		5BDBCC021CBE518900655A61 /* important_red-18@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "important_red-18@2x.png"; path = "Icons/important_red-18@2x.png"; sourceTree = "<group>"; };
 		5BDBCC031CBE518900655A61 /* important_red-18@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "important_red-18@3x.png"; path = "Icons/important_red-18@3x.png"; sourceTree = "<group>"; };
 		5BE7BBB01CD1DE2500BDFCE1 /* AttachPoll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachPoll.swift; sourceTree = "<group>"; };
-		5BE7BBB21CD1E5D500BDFCE1 /* plus-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "plus-32.png"; path = "Icons/plus-32.png"; sourceTree = "<group>"; };
-		5BE7BBB31CD1E5D500BDFCE1 /* plus-32@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "plus-32@2x.png"; path = "Icons/plus-32@2x.png"; sourceTree = "<group>"; };
-		5BE7BBB41CD1E5D500BDFCE1 /* plus-32@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "plus-32@3x.png"; path = "Icons/plus-32@3x.png"; sourceTree = "<group>"; };
 		5BE7BBB81CD206A800BDFCE1 /* checkmark-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "checkmark-24.png"; path = "Icons2/checkmark-24.png"; sourceTree = "<group>"; };
 		5BE7BBB91CD206A800BDFCE1 /* checkmark-24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "checkmark-24@2x.png"; path = "Icons2/checkmark-24@2x.png"; sourceTree = "<group>"; };
 		5BE7BBBA1CD206A800BDFCE1 /* checkmark-24@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "checkmark-24@3x.png"; path = "Icons2/checkmark-24@3x.png"; sourceTree = "<group>"; };
@@ -685,7 +697,11 @@
 		5BEB83451CBC9AF700EB818C /* OpenSans-CondBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-CondBold.ttf"; path = "Fonts/OpenSans-CondBold.ttf"; sourceTree = "<group>"; };
 		5BEB83461CBC9AF700EB818C /* OpenSans-CondLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-CondLight.ttf"; path = "Fonts/OpenSans-CondLight.ttf"; sourceTree = "<group>"; };
 		5BEB83471CBC9AF700EB818C /* OpenSans-CondLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-CondLightItalic.ttf"; path = "Fonts/OpenSans-CondLightItalic.ttf"; sourceTree = "<group>"; };
+		5BF481281CE05169006930CC /* EventDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetails.swift; sourceTree = "<group>"; };
+		5BF4812A1CE07166006930CC /* PollDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PollDetails.swift; sourceTree = "<group>"; };
 		5BFF797E1CCF0BC400B50896 /* DatePickerDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerDialog.swift; sourceTree = "<group>"; };
+		5BFFFDB61CD8958B0099AB3F /* SweetAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SweetAlert.swift; sourceTree = "<group>"; };
+		5BFFFDB81CD8AB740099AB3F /* CommonUtilitySwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommonUtilitySwift.swift; path = Library/CommonUtilitySwift.swift; sourceTree = "<group>"; };
 		9376CFD1C1CCB93E6369171A /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B500899EAA747E11ACABC428 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -784,6 +800,8 @@
 				5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */,
 				5BE7C3101CCE00DF0067334D /* AttachEvent.swift */,
 				5BE7BBB01CD1DE2500BDFCE1 /* AttachPoll.swift */,
+				5BF481281CE05169006930CC /* EventDetails.swift */,
+				5BF4812A1CE07166006930CC /* PollDetails.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -830,6 +848,7 @@
 				5B37424C1CC0CBAD00AF2897 /* CommonTypes.h */,
 				5B37424D1CC0CBAD00AF2897 /* CommonUtility.h */,
 				5B37424E1CC0CBAD00AF2897 /* CommonUtility.m */,
+				5BFFFDB81CD8AB740099AB3F /* CommonUtilitySwift.swift */,
 				5B09CECA1CBB4C5D0042C70B /* LearnFlux-Bridging-Header.h */,
 				5B37422C1CC0CBAD00AF2897 /* NSDate+String.h */,
 				5B37422D1CC0CBAD00AF2897 /* NSDate+String.m */,
@@ -876,6 +895,7 @@
 				5B3742381CC0CBAD00AF2897 /* UIViewController+Popover.m */,
 				5B01FC3F1CD2FC5F00047C15 /* NSDictionary+ForKey.h */,
 				5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */,
+				5BFFFDB61CD8958B0099AB3F /* SweetAlert.swift */,
 			);
 			name = Library;
 			sourceTree = "<group>";
@@ -883,9 +903,13 @@
 		5B09CF6C1CBB98C90042C70B /* Icons */ = {
 			isa = PBXGroup;
 			children = (
-				5BE7BBB21CD1E5D500BDFCE1 /* plus-32.png */,
-				5BE7BBB31CD1E5D500BDFCE1 /* plus-32@2x.png */,
-				5BE7BBB41CD1E5D500BDFCE1 /* plus-32@3x.png */,
+				5B01FC601CD3657600047C15 /* close_window.png */,
+				5B01FC481CD34A8600047C15 /* arrow_down_circle-18.png */,
+				5B01FC561CD34D6700047C15 /* arrow_down_circle-18@2x.png */,
+				5B01FC571CD34D6700047C15 /* arrow_down_circle-18@3x.png */,
+				5B01FC581CD34D6700047C15 /* arrow_up_circle-18.png */,
+				5B01FC591CD34D6700047C15 /* arrow_up_circle-18@2x.png */,
+				5B01FC5A1CD34D6700047C15 /* arrow_up_circle-18@3x.png */,
 				5B3742781CC0CBF000AF2897 /* Icons2 */,
 				5BDBCBFE1CBE518900655A61 /* clip-18.png */,
 				5BDBCBFF1CBE518900655A61 /* clip-18@2x.png */,
@@ -1267,6 +1291,7 @@
 				5B3744191CC0CBFD00AF2897 /* upload2-24.png in Resources */,
 				5B3743931CC0CBFD00AF2897 /* back-24.png in Resources */,
 				5B3743C51CC0CBFD00AF2897 /* group-24@3x.png in Resources */,
+				5B01FC5D1CD34D6700047C15 /* arrow_up_circle-18.png in Resources */,
 				5B37443B1CC0CBFD00AF2897 /* star_empty-24@3x.png in Resources */,
 				5B09CF721CBB98D70042C70B /* hamburger-36@2x.png in Resources */,
 				5B3743711CC0CBFD00AF2897 /* handshake-24.png in Resources */,
@@ -1293,6 +1318,7 @@
 				5B3743661CC0CBFD00AF2897 /* minus-48.png in Resources */,
 				5B3743DB1CC0CBFD00AF2897 /* location-24.png in Resources */,
 				5B3743AB1CC0CBFD00AF2897 /* down-24.png in Resources */,
+				5B01FC611CD3657600047C15 /* close_window.png in Resources */,
 				5B3744271CC0CBFD00AF2897 /* zoom_in-24@2x.png in Resources */,
 				5B37443D1CC0CBFD00AF2897 /* star_full-24.png in Resources */,
 				5B3743FA1CC0CBFD00AF2897 /* right-24.png in Resources */,
@@ -1322,11 +1348,14 @@
 				5B37439D1CC0CBFD00AF2897 /* clock-24@2x.png in Resources */,
 				5B3743CA1CC0CBFD00AF2897 /* home-24@2x.png in Resources */,
 				5B3744001CC0CBFD00AF2897 /* sent-24.png in Resources */,
+				5B01FC5C1CD34D6700047C15 /* arrow_down_circle-18@3x.png in Resources */,
 				5B37437F1CC0CBFD00AF2897 /* home_background11.jpg in Resources */,
 				5B3744101CC0CBFD00AF2897 /* trash-24@2x.png in Resources */,
 				5B37438B1CC0CBFD00AF2897 /* shower-24@3x.png in Resources */,
 				5B3743871CC0CBFD00AF2897 /* ios_reminder-300.png in Resources */,
+				5B01FC5E1CD34D6700047C15 /* arrow_up_circle-18@2x.png in Resources */,
 				5B3743BC1CC0CBFD00AF2897 /* forward-24@3x.png in Resources */,
+				5B01FC5B1CD34D6700047C15 /* arrow_down_circle-18@2x.png in Resources */,
 				5B09CF741CBB98D70042C70B /* hamburger-224.png in Resources */,
 				5BDBCBF31CBE4A8A00655A61 /* mozaic_activities.png in Resources */,
 				5B3744241CC0CBFD00AF2897 /* user_male4-24@2x.png in Resources */,
@@ -1346,6 +1375,7 @@
 				5B3743EB1CC0CBFD00AF2897 /* picture-24@3x.png in Resources */,
 				5B04A2481CBCE64D00FA5CCA /* female03.png in Resources */,
 				5B04A2561CBCEABE00FA5CCA /* group03.png in Resources */,
+				5B01FC5F1CD34D6700047C15 /* arrow_up_circle-18@3x.png in Resources */,
 				5B3743A71CC0CBFD00AF2897 /* directions-24@3x.png in Resources */,
 				5B3743D51CC0CBFD00AF2897 /* like-24.png in Resources */,
 				5B3743721CC0CBFD00AF2897 /* handshake-24@2x.png in Resources */,
@@ -1357,7 +1387,6 @@
 				5B3743C61CC0CBFD00AF2897 /* help-24.png in Resources */,
 				5B04A2471CBCE64D00FA5CCA /* female02.png in Resources */,
 				5B3743EC1CC0CBFD00AF2897 /* picture-512.png in Resources */,
-				5BE7BBB71CD1E5D500BDFCE1 /* plus-32@3x.png in Resources */,
 				5B3743DC1CC0CBFD00AF2897 /* location-24@2x.png in Resources */,
 				5BDBCC041CBE518900655A61 /* clip-18.png in Resources */,
 				5BDBCC051CBE518900655A61 /* clip-18@2x.png in Resources */,
@@ -1399,7 +1428,6 @@
 				5B04A24F1CBCE64E00FA5CCA /* male06.png in Resources */,
 				5B3744011CC0CBFD00AF2897 /* sent-24@2x.png in Resources */,
 				5B37439B1CC0CBFD00AF2897 /* bookmark-24@3x.png in Resources */,
-				5BE7BBB51CD1E5D500BDFCE1 /* plus-32.png in Resources */,
 				5B3743F11CC0CBFD00AF2897 /* price_tag-24.png in Resources */,
 				5B37442A1CC0CBFD00AF2897 /* zoom_out-24@2x.png in Resources */,
 				5B3743D41CC0CBFD00AF2897 /* left2-24@3x.png in Resources */,
@@ -1461,13 +1489,13 @@
 				5B3743FE1CC0CBFD00AF2897 /* search-24@2x.png in Resources */,
 				5B37442C1CC0CBFD00AF2897 /* calendar-24.png in Resources */,
 				5B3744061CC0CBFD00AF2897 /* speech_bubble-24.png in Resources */,
-				5BE7BBB61CD1E5D500BDFCE1 /* plus-32@2x.png in Resources */,
 				5B37438E1CC0CBFD00AF2897 /* alarm_clock-24@2x.png in Resources */,
 				5B3743781CC0CBFD00AF2897 /* home_background4.jpg in Resources */,
 				5B3743D31CC0CBFD00AF2897 /* left2-24@2x.png in Resources */,
 				5B04A24D1CBCE64E00FA5CCA /* male04.png in Resources */,
 				5B3743EA1CC0CBFD00AF2897 /* picture-24@2x.png in Resources */,
 				5B3743691CC0CBFD00AF2897 /* bed-24.png in Resources */,
+				5B01FC491CD34A8600047C15 /* arrow_down_circle-18.png in Resources */,
 				5B3743B31CC0CBFD00AF2897 /* download-24@3x.png in Resources */,
 				5B3743FD1CC0CBFD00AF2897 /* search-24.png in Resources */,
 				5B3743851CC0CBFD00AF2897 /* ios_notify.psd in Resources */,
@@ -1579,8 +1607,10 @@
 				5B3742741CC0CBAD00AF2897 /* UITextField+HeightToFit.m in Sources */,
 				5B04A2361CBCDEE000FA5CCA /* Connections.swift in Sources */,
 				5B3742691CC0CBAD00AF2897 /* NSString+Trim.m in Sources */,
+				5BF481291CE05169006930CC /* EventDetails.swift in Sources */,
 				5B37425F1CC0CBAD00AF2897 /* NSDate+String.m in Sources */,
 				5B37426F1CC0CBAD00AF2897 /* CommonUtility.m in Sources */,
+				5BFFFDB71CD8958B0099AB3F /* SweetAlert.swift in Sources */,
 				5B3742771CC0CBAD00AF2897 /* UIView+Border.m in Sources */,
 				5B37426A1CC0CBAD00AF2897 /* UITableView+ReloadDataAnimate.m in Sources */,
 				5B01FC411CD2FCB800047C15 /* NSDictionary+ForKey.m in Sources */,
@@ -1592,12 +1622,14 @@
 				5B04A2381CBCDF0300FA5CCA /* Org.swift in Sources */,
 				5B09CEB31CBB4A330042C70B /* AppDelegate.swift in Sources */,
 				5BFF797F1CCF0BC400B50896 /* DatePickerDialog.swift in Sources */,
+				5BFFFDB91CD8AB740099AB3F /* CommonUtilitySwift.swift in Sources */,
 				5B04A23A1CBCDF3400FA5CCA /* Chats.swift in Sources */,
 				5BE7C3111CCE00DF0067334D /* AttachEvent.swift in Sources */,
 				5B3742611CC0CBAD00AF2897 /* PopoverDateViewController.m in Sources */,
 				5B3742601CC0CBAD00AF2897 /* NSInteger+String.m in Sources */,
 				5B3742661CC0CBAD00AF2897 /* NSIndexPath+MockupShortcut.m in Sources */,
 				5B3742751CC0CBAD00AF2897 /* UIView+Positioning.m in Sources */,
+				5BF4812B1CE07166006930CC /* PollDetails.swift in Sources */,
 				5B3742631CC0CBAD00AF2897 /* UIView+Rotate.m in Sources */,
 				5B37426E1CC0CBAD00AF2897 /* CommonConstants.m in Sources */,
 				5B09CF691CBB8E130042C70B /* ForgotPassword.swift in Sources */,

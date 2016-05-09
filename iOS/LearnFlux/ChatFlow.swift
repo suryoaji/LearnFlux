@@ -8,14 +8,22 @@
 
 import Foundation
 import JSQMessagesViewController
+import CZPicker
+
 //import JSMessageBubbleImage
 
-class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPollReturnDelegate {
+class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPollReturnDelegate, CZPickerViewDataSource, CZPickerViewDelegate {
     // MARK: Properties
     let aDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
 
+    var thisChatType : String! = "chat";
+    var thisChatMetadata : NSMutableDictionary!;
+    
+    var popupIndexRow : Int! = -1; // if -2 then it is "thisChatType" popup
+    
     var messages = [JSQMessage]()
-    var messagesMeta = [NSDictionary]()
+    var messagesMeta = [NSMutableDictionary]()
+    var messagesSelection = [String]();
     var outgoingBubbleImageView,
     outgoingBubbleImageViewEvent,
     outgoingBubbleImageViewPoll,
@@ -24,9 +32,13 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     incomingBubbleImageViewPoll: JSQMessagesBubbleImage!
     var attachmentPanelOld : UIView!;
     @IBOutlet var attachmentPanel : UIView!;
+    @IBOutlet var pulldownPanel : UIView!;
     var avatars : NSMutableDictionary!;
     let scrHeight = UIScreen.mainScreen().bounds.height;
     let scrWidth = UIScreen.mainScreen().bounds.width;
+    
+    var attachEventTv : AttachEvent!;
+    @IBOutlet var pulldownPanelContent : UIView!;
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,11 +56,12 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         self.initAttachmentPanel();
         attachmentPanel.y = scrHeight;
         self.view.addSubview(attachmentPanel);
-        
+        pulldownPanel.removeFromSuperview();
+
         addMessage(aDelegate.userId, text: "Hello");
         addMessage("2", text: "Ya?\nYayaya!");
         finishSendingMessage();
-
+        
 //        let attachment = UIButton(type: .System);
 //        attachment.setImage(UIImage(named: "clip-18"), forState: UIControlState.Normal);
 //        self.inputToolbar.contentView.leftBarButtonItem = attachment;
@@ -59,17 +72,40 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated);
+        
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         finishSendingMessage();
+        
+        if (thisChatType != "chat") {
+            let gradient: CAGradientLayer = CAGradientLayer()
+            gradient.frame = pulldownPanel.bounds
+            gradient.colors = [UIColor.whiteColor().CGColor, UIColor.blackColor().CGColor]
+            view.layer.insertSublayer(gradient, atIndex: 0)
+            
+            let length = CGFloat(200);
+            pulldownPanel.frame = CGRectMake((view.width - length) / 2, self.navigationController!.navigationBar.frame.size.height + 20, length, 30)
+            view.addSubview(pulldownPanel);
+            
+//            let meta = thisChatMetadata;
+
+            if (thisChatType == "event") {
+                self.title = "Event"
+            }
+            else if (thisChatType == "poll"){
+                self.title = "Poll";
+            }
+        }
+        else {
+            let meta = thisChatMetadata;
+            self.title = meta.stringForKey("title");
+        }
 //        self.view.bringSubviewToFront(self.view.inputView!);
-    }
-    
-    override func viewDidLayoutSubviews() {
         setTabBarVisible(false, animated: true)
     }
+    
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
     }
@@ -122,8 +158,8 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         btnEvent.tag = 1;
         btnPoll.tag = 2;
         
-        btnEvent.addTarget(self, action: #selector (attachmentClick), forControlEvents: .TouchUpInside);
-        btnPoll.addTarget(self, action: #selector (attachmentClick), forControlEvents: .TouchUpInside);
+        btnEvent.addTarget(self, action: #selector (self.attachmentClick), forControlEvents: .TouchUpInside);
+        btnPoll.addTarget(self, action: #selector (self.attachmentClick), forControlEvents: .TouchUpInside);
         
         container.addSubview(btnEvent);
         container.addSubview(btnPoll);
@@ -197,62 +233,199 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         let eventType = messageMeta.valueForKey("type") as! String;
         
         if (eventType == "event") {
-            let event = messagesMeta[indexPath.row].valueForKey("data") as! AttachedEvent;
+            let event = messagesMeta[indexPath.row].valueForKey("data") as! NSDictionary;
             
             if (messages[indexPath.row].senderId == aDelegate.userId) {
 //                Util.showMessageInViewController(self, title: "You've sent this event to this group. Anyone who tap on this bubble can give response.", message: event.title, completion: nil);
-
-                let alert: UIAlertController = UIAlertController(title: event.title, message: "Your response to this event invitation:", preferredStyle: .ActionSheet)
                 
-                let act1: UIAlertAction = UIAlertAction(title:"I will attend this event", style: .Default, handler: {(action: UIAlertAction) -> Void in
-                    
-                })
-                alert.addAction(act1)
-                let act2: UIAlertAction = UIAlertAction(title:"I will not attend this event", style: .Default, handler: {(action: UIAlertAction) -> Void in
+                //event.stringForKey("title"), subTitle: event.stringForKey("time") + "for \(event.stringForKey("duration")) minutes\n" + event.stringForKey("location")
+                print (event);
 
-                })
-                alert.addAction(act2)
-                let act3: UIAlertAction = UIAlertAction(title:"View event details and chat", style: .Cancel, handler: {(action: UIAlertAction) -> Void in
+                popupEvent(indexPath.row)
+                
+//                SweetAlert().showAlert(event.stringForKey("title"), subTitle: event.stringForKey("date") + " at " + event.stringForKey("time") + "\n\n" + event.stringForKey("location"), style: AlertStyle.None, buttonTitle:"Attend", buttonColor:UIColor.init(red: 57/255, green: 123/255, blue: 233/255, alpha: 1) , secondButtonTitle:  "I can't", secondButtonColor: UIColor.init(red: 221/255, green: 107/255, blue: 85/255, alpha: 1), thirdButtonTitle:"Join talk", thirdButtonColor:UIColor.init(red: 29/255, green: 211/255, blue: 63/255, alpha: 1)) { (selectedButton) -> Void in
+//                    switch (selectedButton) {
+//                    case 0: SweetAlert().showAlert("Thank you!", subTitle: "We wait for your presence.", style: AlertStyle.Success); break;
+//                    case 1: SweetAlert().showAlert("Response sent", subTitle: "Thank you for your response", style: AlertStyle.Success); break;
+//                    case 2:
+//                        delay(1) {
+//                            let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow;
+//                            vc.thisChatType = "event";
+//                            vc.thisChatMetadata = event;
+//                            vc.senderId = "1"
+//                            vc.senderDisplayName = "Jack Joyce"
+//                            self.navigationController?.pushViewController(vc, animated: true);
+//                        }
+//                        break;
+//                    default: break;
+//                    }
+//                };
 
-                })
-                alert.addAction(act3)
-                let cancel: UIAlertAction = UIAlertAction(title:"Cancel", style: .Destructive, handler: {(action: UIAlertAction) -> Void in
-                    
-                })
-                alert.addAction(cancel)
-                self.presentViewController(alert, animated: true, completion: nil)
+//                let alert: UIAlertController = UIAlertController(title: event.stringForKey("title"), message: "Your response to this event invitation:", preferredStyle: .ActionSheet)
+//                
+//                let act1: UIAlertAction = UIAlertAction(title:"I will attend this event", style: .Default, handler: {(action: UIAlertAction) -> Void in
+//                    
+//                })
+//                alert.addAction(act1)
+//                let act2: UIAlertAction = UIAlertAction(title:"I will not attend this event", style: .Default, handler: {(action: UIAlertAction) -> Void in
+//
+//                })
+//                alert.addAction(act2)
+//                let act3: UIAlertAction = UIAlertAction(title:"View event details and chat", style: .Cancel, handler: {(action: UIAlertAction) -> Void in
+//
+//                })
+//                alert.addAction(act3)
+//                let cancel: UIAlertAction = UIAlertAction(title:"Cancel", style: .Destructive, handler: {(action: UIAlertAction) -> Void in
+//                    
+//                })
+//                alert.addAction(cancel)
+//                self.presentViewController(alert, animated: true, completion: nil)
             }
         }
         else if (eventType == "poll") {
             let poll = messagesMeta[indexPath.row].valueForKey("data") as! NSDictionary;
             
-            
             if (messages[indexPath.row].senderId == aDelegate.userId) {
-                let alert: UIAlertController = UIAlertController(title: poll.stringForKey("question")!, message: "", preferredStyle: .ActionSheet)
-                let answers: [String] = poll.valueForKey("answers") as! [String];
                 
-                for answer in answers {
-                    let ans: UIAlertAction = UIAlertAction(title:answer, style: .Default, handler: {(action: UIAlertAction) -> Void in
-                        
-                    })
-                    alert.addAction(ans)
-                }
+                print (poll);
                 
-                let act1: UIAlertAction = UIAlertAction(title:"View poll details and chat", style: .Cancel, handler: {(action: UIAlertAction) -> Void in
-                    
-                })
-                alert.addAction(act1)
+                popupPoll(indexPath.row);
+                
 
-                let cancel: UIAlertAction = UIAlertAction(title:"Cancel", style: .Destructive, handler: {(action: UIAlertAction) -> Void in
-                    
-                })
-                alert.addAction(cancel)
-                self.presentViewController(alert, animated: true, completion: nil)
+                
+//                let alert: UIAlertController = UIAlertController(title: poll.stringForKey("question")!, message: "", preferredStyle: .ActionSheet)
+//                let answers: [String] = poll.valueForKey("answers") as! [String];
+//                
+//                for answer in answers {
+//                    let ans: UIAlertAction = UIAlertAction(title:answer, style: .Default, handler: {(action: UIAlertAction) -> Void in
+//                        
+//                    })
+//                    alert.addAction(ans)
+//                }
+//                
+//                let act1: UIAlertAction = UIAlertAction(title:"View poll details and chat", style: .Cancel, handler: {(action: UIAlertAction) -> Void in
+//                    
+//                })
+//                alert.addAction(act1)
+//
+//                let cancel: UIAlertAction = UIAlertAction(title:"Cancel", style: .Destructive, handler: {(action: UIAlertAction) -> Void in
+//                    
+//                })
+//                alert.addAction(cancel)
+//                self.presentViewController(alert, animated: true, completion: nil)
             }
         }
     }
-
     
+    func getMetadataWithIndex (indexRow : Int) -> NSMutableDictionary {
+        var meta : NSMutableDictionary!;
+        if (indexRow == -2) {
+            meta = thisChatMetadata;
+        }
+        else if (indexRow >= 0) {
+            meta = messagesMeta[indexRow];
+        }
+        else {
+            meta = [:];
+        }
+        
+        return meta;
+    }
+    
+    func popupEvent (indexRow : Int) {
+        let picker = CZPickerView(headerTitle: "Will you attend this event?", cancelButtonTitle: "Event Details", confirmButtonTitle: "Ok");
+        picker.delegate = self;
+        picker.dataSource = self;
+        picker.needFooterView = indexRow != -2;
+        picker.tapBackgroundToDismiss = false;
+        picker.allowMultipleSelection = false;
+        popupIndexRow = indexRow;
+        picker.show();
+    }
+    
+    func popupPoll (indexRow : Int) {
+        var question : String! = "";
+        let meta = getMetadataWithIndex(indexRow);
+        let data = meta["data"] as! NSDictionary;
+        question = data["question"] as! String;
+
+        let picker = CZPickerView(headerTitle: question, cancelButtonTitle: "Poll Details", confirmButtonTitle: "Ok");
+        picker.delegate = self;
+        picker.dataSource = self;
+        picker.needFooterView = indexRow != -2;
+        picker.tapBackgroundToDismiss = false;
+        picker.allowMultipleSelection = false;
+        popupIndexRow = indexRow;
+        picker.show();
+    }
+    
+    
+    func numberOfRowsInPickerView(pickerView: CZPickerView!) -> Int {
+        let meta = getMetadataWithIndex(popupIndexRow);
+        
+        if (meta.stringForKey("type") == "event") {
+            return 2;
+        }
+        else if (meta.stringForKey("type") == "poll") {
+            let data = meta["data"] as! NSDictionary;
+            let answers = data["answers"] as! [String];
+            return answers.count;
+        }
+        return 0;
+    }
+    
+    func czpickerView(pickerView: CZPickerView!, titleForRow row: Int) -> String! {
+        let meta = getMetadataWithIndex(popupIndexRow);
+        
+        if (meta.stringForKey("type") == "event") {
+            var selection = meta.stringForKey("selection");
+            if (selection == nil) {
+                selection = "";
+            }
+            switch (row) {
+            case 0: return (selection == "yes" ? "✔️  " : "") + "Yes, I will attend";
+            case 1: return (selection == "no" ? "✔️  " : "") + "No, I will not attend";
+            default: return "";
+            }
+        }
+        else if (meta.stringForKey("type") == "poll") {
+            var selection = meta.stringForKey("selection");
+            if (selection == nil) {
+                selection = "";
+            }
+            let data = meta["data"] as! NSDictionary;
+            let answers = data["answers"] as! [String];
+            return (selection == "\(row)" ? "✔️  " : "") + answers[row];
+        }
+        return "";
+    }
+    
+    func czpickerView(pickerView: CZPickerView!, didConfirmWithItemAtRow row: Int) {
+        let meta = getMetadataWithIndex(popupIndexRow);
+        
+        if (meta.stringForKey("type") == "event") {
+            switch (row) {
+            case 0: meta.setValue("yes", forKey: "selection");
+            case 1: meta.setValue("no", forKey: "selection");
+            default: break;
+            }
+        }
+        else if (meta.stringForKey("type") == "poll") {
+            meta.setValue("\(row)", forKey: "selection");
+        }
+    }
+    
+    func czpickerViewDidClickCancelButton(pickerView: CZPickerView!) {
+        let meta = getMetadataWithIndex(popupIndexRow);
+        
+        if (meta.stringForKey("type") == "event") {
+            self.performSegueWithIdentifier("EventDetails", sender: meta);
+        }
+        else if (meta.stringForKey("type") == "poll") {
+            self.performSegueWithIdentifier("PollDetails", sender: meta);
+        }
+    }
+
     override func collectionView(collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {
         return messages.count
@@ -302,21 +475,21 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     func addMessage(id: String, text: String) {
         let message = JSQMessage(senderId: id, displayName: "", text: text)
         messages.append(message)
-        let messageMeta = ["type":"text", "data":text];
+        let messageMeta = ["type":"text", "data":text] as NSMutableDictionary;
         messagesMeta.append(messageMeta);
     }
     
-    func addEvent(id: String, text: String, event: AttachedEvent) {
+    func addEvent(id: String, text: String, event: NSDictionary) {
         let message = JSQMessage(senderId: id, displayName: "", text: text)
         messages.append(message)
-        let messageMeta = ["type":"event", "data":event];
+        let messageMeta = ["type":"event", "data":event] as NSMutableDictionary;
         messagesMeta.append(messageMeta);
     }
     
     func addPoll(id: String, text: String, poll: NSDictionary) {
         let message = JSQMessage(senderId: id, displayName: "", text: text)
         messages.append(message)
-        let messageMeta = ["type":"poll", "data":poll];
+        let messageMeta = ["type":"poll", "data":poll] as NSMutableDictionary;
         messagesMeta.append(messageMeta);
     }
     
@@ -388,10 +561,20 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
                 vc.delegate = self;
             }
         }
+        else if (segue.identifier == "EventDetails") {
+            if let vc: EventDetails = segue.destinationViewController as? EventDetails {
+                vc.meta = sender as! NSMutableDictionary;
+            }
+        }
+        else if (segue.identifier == "PollDetails") {
+            if let vc: PollDetails = segue.destinationViewController as? PollDetails {
+                vc.meta = sender as! NSMutableDictionary;
+            }
+        }
     }
     
-    func sendSelectedEventData(event: AttachedEvent) {
-        addEvent(aDelegate.userId, text: "Jack Joyce send an invitation. Tap here to interact.\n\n\(event.title)\n\(event.date), \(event.time)\n\(event.location)", event: event);
+    func sendSelectedEventData(event: NSDictionary) {
+        addEvent(aDelegate.userId, text: "Jack Joyce send an invitation. Tap here to interact.\n\n" + event.stringForKey("title") + "\n" + event.stringForKey("date") + ", " + event.stringForKey("time") + "\n" + event.stringForKey("location"), event: event);
     }
     
     func sendSelectedPollData(poll: NSDictionary) {
@@ -405,6 +588,24 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         }
         //answersStr = "Poll choice: " + answersStr;
         addPoll(aDelegate.userId, text: "Jack Joyce send a poll. Tap here to interact.\n\n\(poll["question"]!)\n\n\(answersStr)", poll: poll);
+    }
+    
+    @IBAction func pulldownClick (sender: AnyObject) {
+//        attachEventTv = AttachEvent();
+//        attachEventTv = Util.getViewControllerID("AttachEvent") as! AttachEvent;
+//        pulldownPanelContent.addSubview(attachEventTv.tableView);
+//        attachEventTv.tableView.frame = pulldownPanelContent.bounds;
+//        attachEventTv.tableView.reloadData();
+//        pulldownPanelContent.clip
+//        self.view.addSubview(pulldownPanelContent);
+        
+        if (thisChatType == "event") {
+            popupEvent(-2);
+        }
+        else if (thisChatType == "poll") {
+            popupPoll(-2);
+        }
+        
     }
     
 //    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {

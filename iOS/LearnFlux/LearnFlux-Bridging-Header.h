@@ -43,3 +43,4 @@
 #import "PKRevealController/PKRevealController.h"
 #import "JSQMessagesViewController/JSQMessagesViewController.h"
 #import "JSQMessagesViewController/JSQMessageMediaData.h"
+#import "CZPicker/CZPicker.h"
