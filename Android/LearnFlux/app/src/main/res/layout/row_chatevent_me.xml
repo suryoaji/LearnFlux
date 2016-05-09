@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/bubbleLayout"
     android:layout_gravity="right"
     android:layout_marginTop="20dp"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:paddingTop="15dp"
-    android:background="@drawable/bubble2" android:paddingBottom="15dp">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="right" android:focusable="true" android:clickable="true">
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" android:background="@drawable/bubble2"
+        android:minWidth="@dimen/min_width_chat_bubble"
+        android:layout_marginLeft="@dimen/margin_chat_bubble" android:focusable="false"
+        android:clickable="false">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -17,7 +22,37 @@
             android:src="@drawable/calendar_add"
             android:tint="@color/abc_secondary_text_material_light"
             android:layout_alignParentTop="true" android:layout_toRightOf="@+id/tvTime"
-            android:layout_alignParentRight="false"/>
+            android:layout_alignParentRight="false" android:focusable="true"
+            android:clickable="true"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text="You have created an event" android:id="@+id/textView12"
+                  android:layout_marginTop="10dp" android:textColor="@color/textColorPrimary"
+                  android:editable="false" android:focusable="false" android:clickable="false"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text="Parent Meeting" android:id="@+id/tvEventTitle"
+                  android:layout_marginTop="10dp" android:textStyle="bold"
+                  android:textColor="@color/textColorPrimary" android:editable="false"
+                  android:focusable="false" android:clickable="false"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="13 April 2016 16:15-12:00"
+            android:id="@+id/tvEventDate" android:textColor="@color/textColorPrimary"
+            android:editable="false" android:focusable="false" android:clickable="false"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text="at Galaxy Mall Surabaya" android:id="@+id/tvEventLocation"
+                  android:textColor="@color/textColorPrimary" android:editable="false"
+                  android:focusable="false" android:clickable="false"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text="click to respond  " android:id="@+id/textView20"
+                  android:layout_marginTop="10dp" android:textStyle="italic"
+                  android:textSize="12dp" android:textColor="@color/textColorPrimary"
+                  android:editable="false" android:focusable="false" android:clickable="false"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,32 +60,13 @@
             android:text="Today - 10.42"
             android:id="@+id/tvTime"
             android:textSize="10dp"
-            android:textColor="@color/bright_foreground_disabled_material_light"
-            android:layout_centerVertical="true" android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"/>
+            android:textColor="@color/textColorPrimary"
+            android:layout_centerVertical="true" android:layout_gravity="right"
+            android:layout_marginTop="3dp" android:editable="false" android:focusable="false"
+            android:clickable="false"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </LinearLayout>
     </LinearLayout>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-          android:textAppearance="?android:attr/textAppearanceSmall"
-          android:text="You has created an event" android:id="@+id/textView12"
-              android:layout_marginTop="10dp"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-          android:textAppearance="?android:attr/textAppearanceSmall"
-          android:text="Parent Meeting" android:id="@+id/tvEventTitle"
-          android:layout_marginTop="10dp" android:textStyle="bold"
-    />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="13 April 2016 16:15"
-        android:id="@+id/tvEventDate"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:textAppearance="?android:attr/textAppearanceSmall"
-              android:text="at Galaxy Mall Surabaya" android:id="@+id/tvEventLocation"
-    />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:textAppearance="?android:attr/textAppearanceSmall"
-              android:text="click to see details" android:id="@+id/textView11"
-              android:layout_marginTop="10dp" android:textStyle="italic"
-              android:textSize="12dp"/>
 </LinearLayout>

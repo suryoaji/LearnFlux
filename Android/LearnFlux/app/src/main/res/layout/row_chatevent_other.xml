@@ -1,29 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_marginTop="20dp"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:paddingTop="15dp"
-    android:background="@drawable/bubble1" android:paddingBottom="15dp">
-    <ImageView
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:id="@+id/ivPhoto" android:src="@drawable/me"/>
+    android:id="@+id/bubbleLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:focusable="true" android:clickable="true">
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_marginLeft="15dp">
-        <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_chat_bubble">
+        <com.android.volley.toolbox.NetworkImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/ivPhoto" android:src="@drawable/me"/>
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+            android:background="@drawable/bubble1"
+            android:paddingBottom="15dp" android:minWidth="@dimen/min_width_chat_bubble"
+            android:focusable="false" android:clickable="false">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Agatha Cynthia"
+                    android:id="@+id/tvName" android:textStyle="bold"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/textColorPrimary" android:layout_weight="8"
+                    android:clickable="false" android:focusable="false"/>
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ivAddToCalendar"
+                    android:src="@drawable/calendar_add"
+                    android:tint="@color/abc_secondary_text_material_light"
+                    android:layout_alignParentTop="true" android:layout_toRightOf="@+id/tvTime"
+                    android:layout_toEndOf="@+id/tvTime" android:layout_weight="2"
+                    android:focusable="true" android:clickable="true"/>
+            </LinearLayout>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceSmall"
+                      android:text="has created an event" android:id="@+id/textView12"
+                      android:textColor="@color/textColorPrimary" android:clickable="false"
+                      android:focusable="false"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceSmall"
+                      android:text="Parent Meeting" android:id="@+id/tvEventTitle"
+                      android:layout_marginTop="10dp" android:textStyle="bold"
+                      android:textColor="@color/textColorPrimary" android:clickable="false"
+                      android:focusable="false"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Agatha Cynthia"
-                android:id="@+id/tvName" android:textStyle="bold"
-                android:layout_centerVertical="true"/>
+                android:text="13 April 2016 16:15-18:15"
+                android:id="@+id/tvEventDate" android:textColor="@color/textColorPrimary"
+                android:clickable="false" android:focusable="false"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceSmall"
+                      android:text="at Galaxy Mall Surabaya" android:id="@+id/tvEventLocation"
+                      android:textColor="@color/textColorPrimary" android:clickable="false"
+                      android:focusable="false"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceSmall"
+                      android:text="click to respond " android:id="@+id/textView10"
+                      android:layout_marginTop="10dp" android:textStyle="italic"
+                      android:textSize="12dp" android:textColor="@color/textColorPrimary"
+                      android:clickable="false" android:focusable="false"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,40 +81,11 @@
                 android:text="Today - 10.42"
                 android:id="@+id/tvTime"
                 android:textSize="10dp"
-                android:textColor="@color/bright_foreground_disabled_material_light"
+                android:textColor="@color/textColorPrimary"
                 android:layout_alignBottom="@+id/tvName" android:layout_toRightOf="@+id/tvName"
-                android:layout_toEndOf="@+id/tvName" android:layout_marginLeft="20dp"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/ivAddToCalendar"
-                android:src="@drawable/calendar_add"
-                android:tint="@color/abc_secondary_text_material_light"
-                android:layout_alignParentTop="true" android:layout_toRightOf="@+id/tvTime"
-                android:layout_toEndOf="@+id/tvTime" android:layout_marginLeft="20dp"/>
-        </RelativeLayout>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceSmall"
-                  android:text="has created an event" android:id="@+id/textView12"
-        />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceSmall"
-                  android:text="Parent Meeting" android:id="@+id/tvEventTitle"
-                  android:layout_marginTop="10dp" android:textStyle="bold"
-        />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="13 April 2016 16:15"
-            android:id="@+id/tvEventDate"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceSmall"
-                  android:text="at Galaxy Mall Surabaya" android:id="@+id/tvEventLocation"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textAppearance="?android:attr/textAppearanceSmall"
-                  android:text="click to respond" android:id="@+id/textView10"
-                  android:layout_marginTop="10dp" android:textStyle="italic"
-                  android:textSize="12dp"/>
+                android:layout_toEndOf="@+id/tvName"
+                android:layout_gravity="right" android:layout_marginTop="3dp"
+                android:clickable="false" android:focusable="false"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

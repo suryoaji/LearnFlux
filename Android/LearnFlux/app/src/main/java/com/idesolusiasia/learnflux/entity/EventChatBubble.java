@@ -7,20 +7,38 @@ import java.util.Calendar;
  */
 public class EventChatBubble extends ChatBubble {
 
-	private Calendar dateTime;
-	private String title, location, aceeptanceStatus;
+	private Calendar timeStart, timeEnd;
+	private String title, location, acceptanceStatus="";
 
 
 	public EventChatBubble() {
 		super();
 	}
 
-	public Calendar getDateTime() {
-		return dateTime;
+	public EventChatBubble(String type, String sender, String userPhoto, String userName, Calendar chatDate,
+	                       String title, String location, String acceptanceStatus, Calendar timeStart, Calendar timeEnd){
+		super(type, sender, userPhoto, userName, chatDate);
+		this.title=title;
+		this.location=location;
+		this.acceptanceStatus =acceptanceStatus;
+		this.timeStart = timeStart;
+		this.timeEnd = timeEnd;
 	}
 
-	public void setDateTime(Calendar dateTime) {
-		this.dateTime = dateTime;
+	public Calendar getTimeEnd() {
+		return timeEnd;
+	}
+
+	public void setTimeEnd(Calendar timeEnd) {
+		this.timeEnd = timeEnd;
+	}
+
+	public Calendar getTimeStart() {
+		return timeStart;
+	}
+
+	public void setTimeStart(Calendar timeStart) {
+		this.timeStart = timeStart;
 	}
 
 	public String getLocation() {
@@ -37,5 +55,13 @@ public class EventChatBubble extends ChatBubble {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getAcceptanceStatus() {
+		return acceptanceStatus;
+	}
+
+	public void setAcceptanceStatus(String acceptanceStatus) {
+		this.acceptanceStatus = acceptanceStatus;
 	}
 }

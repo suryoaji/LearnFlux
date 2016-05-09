@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="@dimen/activity_horizontal_margin"
+              android:minHeight="50dp">
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/editText" android:layout_weight="9" android:layout_gravity="bottom"
+        android:textColor="@color/textColorPrimary"/>
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/ivClose" android:layout_weight="1"
+        android:src="@drawable/ic_clear_black_24dp" android:tint="#FF0000"/>
+</LinearLayout>

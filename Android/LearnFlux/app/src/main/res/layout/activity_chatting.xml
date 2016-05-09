@@ -11,128 +11,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.idesolusiasia.learnflux.ChatbubbleActivity">
 
-    <ScrollView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scrollView2">
-        <LinearLayout android:orientation="vertical"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/chatbubbleLayout">
-            <LinearLayout android:orientation="horizontal"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-            >
-                <ImageView android:layout_width="45dp"
-                           android:layout_height="45dp"
-                           android:id="@+id/imageView4"
-                           android:src="@drawable/girl"/>
-                <LinearLayout android:orientation="vertical"
-                              android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:layout_marginLeft="15dp">
-                    <RelativeLayout android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="?android:attr/textAppearanceSmall"
-                                  android:text="Fiore Chen" android:id="@+id/textView13"
-                                  android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="?android:attr/textAppearanceSmall"
-                                  android:text="Today - 10.42" android:id="@+id/textView14"
-                                  android:layout_centerVertical="true"
-                                  android:layout_toRightOf="@+id/textView13"
-                                  android:layout_toEndOf="@+id/textView13"
-                                  android:layout_marginLeft="30dp" android:textSize="10dp"
-                                  android:textColor="@color/bright_foreground_disabled_material_light"/>
-                    </RelativeLayout>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:textAppearance="?android:attr/textAppearanceSmall"
-                              android:text="You would not believe it!!!" android:id="@+id/textView15"
-                              android:layout_marginTop="10dp"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:textAppearance="?android:attr/textAppearanceSmall"
-                              android:text="Guess who I met just now!!" android:id="@+id/textView16"
-                              android:layout_marginTop="3dp"/>
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout android:orientation="horizontal"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="20dp"
-            >
-                <ImageView android:layout_width="45dp" android:layout_height="45dp"
-                           android:id="@+id/imageView5" android:src="@drawable/me"/>
-                <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
-                              android:layout_height="wrap_content" android:layout_marginLeft="15dp">
-                    <RelativeLayout android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="?android:attr/textAppearanceSmall"
-                                  android:text="Agatha Cynthia" android:id="@+id/textView17"
-                                  android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="?android:attr/textAppearanceSmall"
-                                  android:text="Today - 10.43" android:id="@+id/textView18"
-                                  android:layout_centerVertical="true"
-                                  android:layout_toRightOf="@+id/textView17"
-                                  android:layout_toEndOf="@+id/textView17"
-                                  android:layout_marginLeft="30dp" android:textSize="10dp"
-                                  android:textColor="@color/bright_foreground_disabled_material_light"/>
-                    </RelativeLayout>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                              android:textAppearance="?android:attr/textAppearanceSmall"
-                              android:text="WHO?? Don&apos;t you say you met Ben Affleck!"
-                              android:id="@+id/textView19" android:layout_marginTop="10dp"/>
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
-                          android:layout_height="wrap_content" android:layout_marginTop="20dp">
-                <ImageView android:layout_width="45dp" android:layout_height="45dp"
-                           android:id="@+id/imageView2" android:src="@drawable/girl"/>
-                <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:layout_marginLeft="15dp">
-                    <RelativeLayout android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="?android:attr/textAppearanceSmall"
-                                  android:text="Fiore Chen" android:id="@+id/textView6"
-                                  android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:textAppearance="?android:attr/textAppearanceSmall"
-                                  android:text="Today - 10.42" android:id="@+id/textView7"
-                                  android:layout_centerVertical="true"
-                                  android:layout_toRightOf="@+id/textView6"
-                                  android:layout_toEndOf="@+id/textView6"
-                                  android:layout_marginLeft="30dp" android:textSize="10dp"
-                                  android:textColor="@color/bright_foreground_disabled_material_light"/>
-                    </RelativeLayout>
-                    <TextView android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:textAppearance="?android:attr/textAppearanceSmall"
-                              android:text="No! Hahaha.."
-                              android:id="@+id/textView8" android:layout_marginTop="10dp"/>
-                    <TextView android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:textAppearance="?android:attr/textAppearanceSmall"
-                              android:text="But I really want to watch Batman vs Superman" android:id="@+id/textView9"
-                              android:layout_marginTop="3dp"/>
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="wrap_content"
+        android:id="@+id/listView" android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+        android:layout_above="@+id/linearLayout"
+        android:divider="#00ffffff"/>
     <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:weightSum="1" android:layout_alignBottom="@+id/scrollView2"
+                  android:weightSum="1"
+                  android:background="#fafafa" android:layout_alignParentBottom="true"
                   android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-                  android:background="#fafafa">
+                  android:id="@+id/linearLayout" android:focusable="true">
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -179,5 +70,6 @@
                 android:tint="@color/colorPrimaryDark"/>
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>
 

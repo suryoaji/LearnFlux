@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_margin="@dimen/activity_horizontal_margin"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:minWidth="250dp"
+>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Parent Meeting"
+        android:id="@+id/tvTitle" android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="28 September 2016"
+        android:id="@+id/tvDate" android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" android:textColor="#000000"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="12:00 - 13:00"
+        android:id="@+id/tvTime" android:layout_gravity="center_horizontal"
+        android:textColor="#000000"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="at Galaxy Hall"
+        android:id="@+id/tvLocation" android:layout_gravity="center_horizontal"
+        android:textColor="#000000"/>
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:id="@+id/rgEvent">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I will attend"
+            android:id="@+id/rbAttend" android:checked="false"/>
+        <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     android:text="I will not attend" android:id="@+id/rbNotAttend"
+                     android:checked="false"/>
+    </RadioGroup>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Detail"
+            android:id="@+id/btnChatRoom" android:layout_weight="1"/>
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:id="@+id/btnOK" android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>

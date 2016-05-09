@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:minWidth="250dp"
               android:layout_margin="@dimen/activity_horizontal_margin"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
@@ -39,19 +40,44 @@
                    android:id="@+id/imageView6" android:src="@drawable/ic_time_24dp"
                    android:layout_gravity="center_vertical"/>
         <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content" android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp">
 
-        <EditText
-            android:id="@+id/add_event_time"
-            android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/add_event_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Start"
+                android:imeOptions="actionUnspecified"
+                android:maxLines="1"
+                android:singleLine="true" android:focusable="false"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        </android.support.design.widget.TextInputLayout>
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Event's Time"
-            android:imeOptions="actionUnspecified"
-            android:maxLines="1"
-            android:singleLine="true" android:focusable="false"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="-"
+            android:id="@+id/textView6" android:layout_gravity="center_vertical"/>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp">
+
+            <EditText
+                android:id="@+id/add_event_end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event End"
+                android:imeOptions="actionUnspecified"
+                android:maxLines="1"
+                android:singleLine="true" android:focusable="false"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+            />
 
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>

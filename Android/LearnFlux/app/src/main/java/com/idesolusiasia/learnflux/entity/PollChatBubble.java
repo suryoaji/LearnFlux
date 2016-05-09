@@ -1,13 +1,28 @@
 package com.idesolusiasia.learnflux.entity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by NAIT ADMIN on 21/04/2016.
  */
-public class PollChatBubble {
-	private String question, answerStatus, answer;
-	private ArrayList<String> choices;
+public class PollChatBubble extends ChatBubble {
+	private String question, answerStatus, answer="";
+	private List<String> choices;
+
+	public PollChatBubble(String answerStatus, List<String> choices, String question) {
+		this.answerStatus = answerStatus;
+		this.choices = choices;
+		this.question = question;
+	}
+
+	public PollChatBubble(String type, String sender, String userPhoto, String userName, Calendar chatDate, String answerStatus, List<String> choices, String question) {
+		super(type, sender, userPhoto, userName, chatDate);
+		this.answerStatus = answerStatus;
+		this.choices = choices;
+		this.question = question;
+	}
 
 	public String getQuestion() {
 		return question;
@@ -33,7 +48,7 @@ public class PollChatBubble {
 		this.answerStatus = answerStatus;
 	}
 
-	public ArrayList<String> getChoices() {
+	public List<String> getChoices() {
 		return choices;
 	}
 

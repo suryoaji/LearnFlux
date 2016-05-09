@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:minWidth="250dp"
+              android:layout_width="match_parent"
+              android:layout_margin="@dimen/activity_horizontal_margin"
+              android:layout_height="match_parent">
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp" android:id="@+id/view">
+
+        <EditText
+            android:id="@+id/add_poll_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Question"
+            android:imeOptions="actionUnspecified"
+            android:maxLines="1"
+            android:singleLine="true" android:focusable="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:enabled="true" android:editable="true"/>
+
+    </android.support.design.widget.TextInputLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:visibility="visible"
+        android:layout_below="@+id/view" android:layout_alignRight="@+id/view"
+        android:layout_alignEnd="@+id/view" android:id="@+id/linearLayout2"
+        android:layout_marginLeft="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Answers"
+            android:id="@+id/textView7" android:layout_marginLeft="10dp" android:layout_weight="5"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Add Answer"
+            android:id="@+id/btnAddAnswer" android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_weight="2.5"/>
+    </LinearLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewPoll" android:visibility="visible"
+        android:layout_below="@+id/linearLayout2" android:layout_above="@+id/btnSavePoll"
+        android:layout_marginLeft="10dp" android:divider="#00ffffff"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save and Send Poll"
+        android:id="@+id/btnSavePoll" android:visibility="visible"
+        android:layout_alignParentBottom="true" android:layout_alignRight="@+id/view"
+        android:layout_alignEnd="@+id/view" android:layout_marginLeft="10dp"/>
+</RelativeLayout>

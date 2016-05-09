@@ -1,31 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_marginTop="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingTop="15dp"
-    android:id="@+id/chatbubbleParent" android:background="@drawable/bubble1"
-    android:paddingBottom="15dp">
-    <ImageView
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:id="@+id/ivPhoto" android:src="@drawable/me"/>
+    android:id="@+id/bubbleLayout"
+>
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_marginLeft="15dp">
-        <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_chat_bubble">
+        <com.android.volley.toolbox.NetworkImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/ivPhoto" android:src="@drawable/me"/>
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+            android:background="@drawable/bubble1"
+        >
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Agatha Cynthia "
+                    android:id="@+id/tvName" android:textStyle="bold"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/textColorPrimary"
+                    android:layout_toLeftOf="@+id/ivImportant"
+                    android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_important_24dp"
+                    android:tint="#ff0000" android:id="@+id/ivImportant"
+                    android:visibility="visible"
+                    android:layout_gravity="right" android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Agatha Cynthia"
-                android:id="@+id/tvName" android:textStyle="bold"
-                android:layout_centerVertical="true"/>
+                android:text="Who is that??"
+                android:id="@+id/tvMessage" android:layout_marginTop="10dp"
+                android:textColor="@color/textColorPrimary"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -33,24 +58,10 @@
                 android:text="Today - 10.42"
                 android:id="@+id/tvTime" android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/tvName"
-                android:layout_toEndOf="@+id/tvName" android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@+id/tvName"
                 android:textSize="10dp"
-                android:textColor="@color/bright_foreground_disabled_material_light"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_important_24dp"
-                android:layout_alignParentTop="false" android:layout_toRightOf="@+id/tvTime"
-                android:layout_toEndOf="@+id/tvTime" android:layout_marginLeft="19dp"
-                android:layout_marginStart="19dp" android:layout_centerVertical="true"
-                android:tint="#ff0000" android:id="@+id/ivImpotantStatus"
-                android:visibility="gone"/>
-        </RelativeLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="You would not believe it!!!"
-            android:id="@+id/tvMessage" android:layout_marginTop="10dp"/>
+                android:textColor="@color/textColorPrimary" android:layout_gravity="right"
+                android:layout_marginTop="3dp"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
