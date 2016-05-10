@@ -11,7 +11,7 @@ import Foundation
 class Home: UICollectionViewController {
     
     let screenWidth = UIScreen.mainScreen().bounds.width;
-    let separator: CGFloat = 10.0;
+    let separator: CGFloat = 65.0;
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,38 +54,49 @@ class Home: UICollectionViewController {
         
         cell.width = (screenWidth - separator) / 2;
         cell.height = cell.width;
-        let srow = CGFloat(Int(indexPath.row) / 2);
-        let scol = CGFloat(Int(indexPath.row) % 2);
-        cell.x = scol * (screenWidth + separator) / 2;
-        cell.y = srow * (screenWidth + separator) / 2;
+//        let srow = CGFloat(Int(indexPath.row) / 2);
+//        let scol = CGFloat(Int(indexPath.row) % 2);
+//        cell.x = scol * (screenWidth + separator) / 2;
+//        cell.y = srow * (screenWidth + separator) / 2;
         for view in cell.subviews {
             let a = view.description;
             NSLog("view = \(a)");
         }
         let bg = cell.viewWithTag(10) as! UIImageView;
+        let icon = cell.viewWithTag(11) as! UIImageView;
         let label = cell.viewWithTag(21) as! UILabel;
         NSLog("label = \(label.text), x = \(label.x), y = \(label.y), w = \(label.width), h = \(label.height)");
         cell.bringSubviewToFront(label);
         if (indexPath.row == 0) {
             bg.image = UIImage(named: "mozaic_organization.png");
+            icon.image = UIImage(named: "globe_white-512.png");
             label.text = "Organization";
         }
         else if (indexPath.row == 1) {
             bg.image = UIImage(named: "mozaic_activities.png");
+            icon.image = UIImage(named: "headphones_white-512.png");
             label.text = "Activities";
         }
         else if (indexPath.row == 2) {
             bg.image = UIImage(named: "mozaic_settings.png");
+            icon.image = UIImage(named: "wrench_white-512.png");
             label.text = "Settings";
         }
         else if (indexPath.row == 3) {
             bg.image = UIImage(named: "mozaic_chat.png");
+            icon.image = UIImage(named: "speech_bubble_white-512.png");
             label.text = "Chats";
         }
         cell.sendSubviewToBack(bg)
 
         return cell;
     }
+    
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        return CGSizeMake((screenWidth - separator) / 2, (screenWidth - separator) / 2);
+    }
+
     
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if (indexPath.row == 3) {
