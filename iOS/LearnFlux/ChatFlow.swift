@@ -574,7 +574,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     }
     
     func sendSelectedEventData(event: NSDictionary) {
-        addEvent(aDelegate.userId, text: "Jack Joyce send an invitation. Tap here to interact.\n\n" + event.stringForKey("title") + "\n" + event.stringForKey("date") + ", " + event.stringForKey("time") + "\n" + event.stringForKey("location"), event: event);
+        addEvent(aDelegate.userId, text: "📅 EVENT\n\nJack Joyce send an invitation. Tap here to interact.\n\n" + event.stringForKey("title") + "\n" + event.stringForKey("date") + ", " + event.stringForKey("time") + "\n" + event.stringForKey("location"), event: event);
     }
     
     func sendSelectedPollData(poll: NSDictionary) {
@@ -587,7 +587,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
             answersStr += "\(i + 1). \(answers[i])";
         }
         //answersStr = "Poll choice: " + answersStr;
-        addPoll(aDelegate.userId, text: "Jack Joyce send a poll. Tap here to interact.\n\n\(poll["question"]!)\n\n\(answersStr)", poll: poll);
+        addPoll(aDelegate.userId, text: "📊 POLL\n\nJack Joyce send a poll. Tap here to interact.\n\n\(poll["question"]!)\n\n\(answersStr)", poll: poll);
     }
     
     @IBAction func pulldownClick (sender: AnyObject) {
