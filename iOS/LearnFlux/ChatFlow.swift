@@ -27,9 +27,11 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     var outgoingBubbleImageView,
     outgoingBubbleImageViewEvent,
     outgoingBubbleImageViewPoll,
+    outgoingBubbleImageViewImportant,
     incomingBubbleImageView,
     incomingBubbleImageViewEvent,
-    incomingBubbleImageViewPoll: JSQMessagesBubbleImage!
+    incomingBubbleImageViewPoll,
+    incomingBubbleImageViewImportant : JSQMessagesBubbleImage!
     var attachmentPanelOld : UIView!;
     @IBOutlet var attachmentPanel : UIView!;
     @IBOutlet var pulldownPanel : UIView!;
@@ -40,10 +42,37 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     var attachEventTv : AttachEvent!;
     @IBOutlet var pulldownPanelContent : UIView!;
     
+    var isImportantMessage : Bool = false;
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "ChatChat"
         setupBubbles()
+        
+        
+        let height = self.inputToolbar.contentView.leftBarButtonContainerView.frame.size.height
+        var image = UIImage(named: "clip-18.png");
+        let attachButton: UIButton = UIButton(type: .Custom)
+        attachButton.setImage(image, forState: .Normal)
+        attachButton.addTarget(self, action: #selector(self.attachButtonTouched), forControlEvents: .TouchUpInside)
+        attachButton.frame = CGRectMake(0, 0, 25, height)
+        attachButton.tag = 10;
+        image = UIImage(named: "important_red-18.png");
+        let importantButton: UIButton = UIButton(type: .Custom)
+        importantButton.setImage(image, forState: .Normal)
+        importantButton.addTarget(self, action: #selector(self.importantButtonTouched), forControlEvents: .TouchUpInside)
+        importantButton.frame = CGRectMake(30, 0, 25, height)
+        importantButton.tag = 11;
+        self.inputToolbar.contentView.leftBarButtonItemWidth = 55
+        //        self.inputToolbar.contentView.rightBarButtonItemWidth = 50
+        self.inputToolbar.contentView.leftBarButtonContainerView.addSubview(attachButton)
+        self.inputToolbar.contentView.leftBarButtonContainerView.addSubview(importantButton)
+        //        self.inputToolbar.contentView.rightBarButtonItem.setImage(UIImage(named: "sendButton"), forState: .Normal)
+        //        self.inputToolbar.contentView.rightBarButtonItem.setTitle("", forState: .Normal)
+        self.inputToolbar.contentView.leftBarButtonItem.hidden = true
+        //        self.inputToolbar.contentView.rightBarButtonItem.hidden = false;
+
+        
         let img = UIImage(named: "male07.png");
         let aimg = JSQMessagesAvatarImageFactory.circularAvatarImage(img, withDiameter:48);
         let img2 = UIImage(named: "male01.png");
@@ -68,7 +97,8 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
 //        // No avatars
 //        collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
 //        collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
-    }
+        
+            }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated);
@@ -438,13 +468,18 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         incomingBubbleImageView = factory.incomingMessagesBubbleImageWithColor(
             UIColor.jsq_messageBubbleLightGrayColor())
         outgoingBubbleImageViewEvent = factory.outgoingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleBlueColor())
+            UIColor.jsq_messageBubbleRedColor())
         outgoingBubbleImageViewPoll = factory.outgoingMessagesBubbleImageWithColor(
             UIColor.jsq_messageBubbleRedColor())
+        outgoingBubbleImageViewImportant = factory.outgoingMessagesBubbleImageWithColor(
+            UIColor.jsq_messageBubbleRedColor())
         incomingBubbleImageViewEvent = factory.incomingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleBlueColor())
+            UIColor.jsq_messageBubbleRedColor())
         incomingBubbleImageViewPoll = factory.incomingMessagesBubbleImageWithColor(
             UIColor.jsq_messageBubbleRedColor())
+        incomingBubbleImageViewImportant = factory.incomingMessagesBubbleImageWithColor(
+            UIColor.jsq_messageBubbleRedColor())
+        
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!,
@@ -457,6 +492,14 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
             }
             else if ((messageMeta["type"]! as! String) == "poll") {
                 return outgoingBubbleImageViewPoll;
+            }
+            else if ((messageMeta["type"]! as! String) == "chat") {
+                if (messageMeta.stringForKey("important") == "yes") {
+                    return outgoingBubbleImageViewImportant;
+                }
+                else {
+                    return outgoingBubbleImageView;
+                }
             }
             else {
                 return outgoingBubbleImageView
@@ -475,8 +518,10 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     func addMessage(id: String, text: String) {
         let message = JSQMessage(senderId: id, displayName: "", text: text)
         messages.append(message)
-        let messageMeta = ["type":"text", "data":text] as NSMutableDictionary;
+        let messageMeta = ["type":"chat", "data":text, "important": (isImportantMessage ? "yes" : "no")] as NSMutableDictionary;
         messagesMeta.append(messageMeta);
+        isImportantMessage = true;
+        importantButtonTouched();
     }
     
     func addEvent(id: String, text: String, event: NSDictionary) {
@@ -543,6 +588,21 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     override func didPressAccessoryButton(sender: UIButton!) {
         setAttachmentPanelVisible(!isAttachmentPanelVisible(), animated: true);
         
+    }
+    
+    @IBAction func attachButtonTouched () {
+        setAttachmentPanelVisible(!isAttachmentPanelVisible(), animated: true);
+    }
+    
+    @IBAction func importantButtonTouched () {
+        let importantButton = self.inputToolbar.contentView.viewWithTag(11) as! UIButton;
+        isImportantMessage = !isImportantMessage;
+        if (isImportantMessage) {
+            importantButton.backgroundColor = UIColor.lightGrayColor();
+        }
+        else {
+            importantButton.backgroundColor = UIColor.clearColor();
+        }
     }
     
     @IBAction func attachmentClick (sender: AnyObject) {
