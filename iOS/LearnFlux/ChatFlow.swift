@@ -105,6 +105,13 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         
     }
     
+    override func textViewDidBeginEditing(textView: UITextView) {
+//        print ("yess");
+        setAttachmentPanelVisible(false, animated: false);
+        
+    }
+
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         finishSendingMessage();
@@ -219,16 +226,23 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         let height = frame.size.height + 43
         let offsetY = (visible ? -height : height)
         
-        // zero duration means no animation
-        let duration:NSTimeInterval = (animated ? 0.3 : 0.0)
+        if (animated) {
         
-        //  animate the tabBar
-        UIView.animateWithDuration(duration) {
+            // zero duration means no animation
+            let duration:NSTimeInterval = 0.3;
+            
+            //  animate the tabBar
+            UIView.animateWithDuration(duration) {
+                self.attachmentPanel.frame = CGRectOffset(frame, 0, offsetY)
+                return
+            }
+        }
+        else {
             self.attachmentPanel.frame = CGRectOffset(frame, 0, offsetY)
-            return
         }
         
-        self.inputToolbar.contentView.inputView?.resignFirstResponder();
+//        self.inputToolbar.contentView.textView.resignFirstResponder();
+//        self.view.window?.endEditing(true);
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!,
@@ -592,6 +606,10 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     @IBAction func attachButtonTouched () {
         setAttachmentPanelVisible(!isAttachmentPanelVisible(), animated: true);
+        if (isAttachmentPanelVisible()) {
+            self.inputToolbar.contentView.textView.resignFirstResponder();
+        }
+        
     }
     
     @IBAction func importantButtonTouched () {
