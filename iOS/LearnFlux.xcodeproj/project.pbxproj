@@ -37,6 +37,12 @@
 		5B04A25B1CBCEE2F00FA5CCA /* group05a.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5B04A25A1CBCEE2F00FA5CCA /* group05a.jpg */; };
 		5B04A25D1CBCF1DF00FA5CCA /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A25C1CBCF1DF00FA5CCA /* Register.swift */; };
 		5B04A25F1CBCFB6D00FA5CCA /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A25E1CBCFB6D00FA5CCA /* Chat.swift */; };
+		5B0514431CE2DC1C006F5C7E /* calendar_star-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B05143D1CE2DC1C006F5C7E /* calendar_star-24.png */; };
+		5B0514441CE2DC1C006F5C7E /* calendar_star-24@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B05143E1CE2DC1C006F5C7E /* calendar_star-24@2x.png */; };
+		5B0514451CE2DC1C006F5C7E /* calendar_star-24@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B05143F1CE2DC1C006F5C7E /* calendar_star-24@3x.png */; };
+		5B0514461CE2DC1C006F5C7E /* calendar2-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0514401CE2DC1C006F5C7E /* calendar2-24.png */; };
+		5B0514471CE2DC1C006F5C7E /* calendar2-24@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0514411CE2DC1C006F5C7E /* calendar2-24@2x.png */; };
+		5B0514481CE2DC1C006F5C7E /* calendar2-24@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0514421CE2DC1C006F5C7E /* calendar2-24@3x.png */; };
 		5B09CEB31CBB4A330042C70B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B09CEB21CBB4A330042C70B /* AppDelegate.swift */; };
 		5B09CEB51CBB4A330042C70B /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B09CEB41CBB4A330042C70B /* Login.swift */; };
 		5B09CEB81CBB4A330042C70B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B09CEB61CBB4A330042C70B /* Main.storyboard */; };
@@ -377,6 +383,12 @@
 		5B04A25A1CBCEE2F00FA5CCA /* group05a.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = group05a.jpg; path = "Images Mockup/group05a.jpg"; sourceTree = "<group>"; };
 		5B04A25C1CBCF1DF00FA5CCA /* Register.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Register.swift; sourceTree = "<group>"; };
 		5B04A25E1CBCFB6D00FA5CCA /* Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		5B05143D1CE2DC1C006F5C7E /* calendar_star-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "calendar_star-24.png"; path = "Icons/calendar_star-24.png"; sourceTree = "<group>"; };
+		5B05143E1CE2DC1C006F5C7E /* calendar_star-24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "calendar_star-24@2x.png"; path = "Icons/calendar_star-24@2x.png"; sourceTree = "<group>"; };
+		5B05143F1CE2DC1C006F5C7E /* calendar_star-24@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "calendar_star-24@3x.png"; path = "Icons/calendar_star-24@3x.png"; sourceTree = "<group>"; };
+		5B0514401CE2DC1C006F5C7E /* calendar2-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "calendar2-24.png"; path = "Icons/calendar2-24.png"; sourceTree = "<group>"; };
+		5B0514411CE2DC1C006F5C7E /* calendar2-24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "calendar2-24@2x.png"; path = "Icons/calendar2-24@2x.png"; sourceTree = "<group>"; };
+		5B0514421CE2DC1C006F5C7E /* calendar2-24@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "calendar2-24@3x.png"; path = "Icons/calendar2-24@3x.png"; sourceTree = "<group>"; };
 		5B09CEAF1CBB4A330042C70B /* LearnFlux.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LearnFlux.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B09CEB21CBB4A330042C70B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B09CEB41CBB4A330042C70B /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
@@ -913,6 +925,12 @@
 		5B09CF6C1CBB98C90042C70B /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				5B05143D1CE2DC1C006F5C7E /* calendar_star-24.png */,
+				5B05143E1CE2DC1C006F5C7E /* calendar_star-24@2x.png */,
+				5B05143F1CE2DC1C006F5C7E /* calendar_star-24@3x.png */,
+				5B0514401CE2DC1C006F5C7E /* calendar2-24.png */,
+				5B0514411CE2DC1C006F5C7E /* calendar2-24@2x.png */,
+				5B0514421CE2DC1C006F5C7E /* calendar2-24@3x.png */,
 				5BAF77F11CE1A60C004D2A3E /* speech_bubble_white2-512.png */,
 				5BAF77EB1CE18064004D2A3E /* headphones_white-512.png */,
 				5BAF77EC1CE18064004D2A3E /* speech_bubble_white-512.png */,
@@ -1362,9 +1380,11 @@
 				5B3744441CC0CBFD00AF2897 /* trash2-16.png in Resources */,
 				5B3743701CC0CBFD00AF2897 /* caution_sign-512.png in Resources */,
 				5B37439D1CC0CBFD00AF2897 /* clock-24@2x.png in Resources */,
+				5B0514471CE2DC1C006F5C7E /* calendar2-24@2x.png in Resources */,
 				5B3743CA1CC0CBFD00AF2897 /* home-24@2x.png in Resources */,
 				5B3744001CC0CBFD00AF2897 /* sent-24.png in Resources */,
 				5B01FC5C1CD34D6700047C15 /* arrow_down_circle-18@3x.png in Resources */,
+				5B0514441CE2DC1C006F5C7E /* calendar_star-24@2x.png in Resources */,
 				5B37437F1CC0CBFD00AF2897 /* home_background11.jpg in Resources */,
 				5B3744101CC0CBFD00AF2897 /* trash-24@2x.png in Resources */,
 				5B37438B1CC0CBFD00AF2897 /* shower-24@3x.png in Resources */,
@@ -1392,10 +1412,12 @@
 				5B04A2481CBCE64D00FA5CCA /* female03.png in Resources */,
 				5B04A2561CBCEABE00FA5CCA /* group03.png in Resources */,
 				5B01FC5F1CD34D6700047C15 /* arrow_up_circle-18@3x.png in Resources */,
+				5B0514461CE2DC1C006F5C7E /* calendar2-24.png in Resources */,
 				5B3743A71CC0CBFD00AF2897 /* directions-24@3x.png in Resources */,
 				5B3743D51CC0CBFD00AF2897 /* like-24.png in Resources */,
 				5B3743721CC0CBFD00AF2897 /* handshake-24@2x.png in Resources */,
 				5B37442B1CC0CBFD00AF2897 /* zoom_out-24@3x.png in Resources */,
+				5B0514431CE2DC1C006F5C7E /* calendar_star-24.png in Resources */,
 				5B09CF731CBB98D70042C70B /* hamburger-36@3x.png in Resources */,
 				5B37439A1CC0CBFD00AF2897 /* bookmark-24@2x.png in Resources */,
 				5B04A25B1CBCEE2F00FA5CCA /* group05a.jpg in Resources */,
@@ -1516,10 +1538,12 @@
 				5B3743EA1CC0CBFD00AF2897 /* picture-24@2x.png in Resources */,
 				5B3743691CC0CBFD00AF2897 /* bed-24.png in Resources */,
 				5B01FC491CD34A8600047C15 /* arrow_down_circle-18.png in Resources */,
+				5B0514451CE2DC1C006F5C7E /* calendar_star-24@3x.png in Resources */,
 				5B3743B31CC0CBFD00AF2897 /* download-24@3x.png in Resources */,
 				5B3743FD1CC0CBFD00AF2897 /* search-24.png in Resources */,
 				5B3743851CC0CBFD00AF2897 /* ios_notify.psd in Resources */,
 				5B37436E1CC0CBFD00AF2897 /* caution_sign-24@2x.png in Resources */,
+				5B0514481CE2DC1C006F5C7E /* calendar2-24@3x.png in Resources */,
 				5B3743B01CC0CBFD00AF2897 /* down4-24@3x.png in Resources */,
 				5B3744021CC0CBFD00AF2897 /* sent-24@3x.png in Resources */,
 				5B3743611CC0CBFD00AF2897 /* asset-default2.jpg in Resources */,
