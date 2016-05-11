@@ -6,3 +6,4 @@ use_frameworks!
 pod 'PKRevealController'
 pod 'JSQMessagesViewController'
 pod 'CZPicker'
+pod "RAReorderableLayout"

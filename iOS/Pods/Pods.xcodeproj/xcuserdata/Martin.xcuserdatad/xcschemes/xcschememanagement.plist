@@ -29,15 +29,25 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>RAReorderableLayout.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>4EDD0CB87F273872DF0F998B8CA08414</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>5175F644067F38615BF8C24EFDC4B156</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8CA16E334FAB09FECB383B5C5596BF10</key>
+		<key>88E02924E8576274D587D4ADAAE92C80</key>
 		<dict>
 			<key>primary</key>
 			<true/>
