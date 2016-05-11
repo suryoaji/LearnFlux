@@ -482,15 +482,15 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         incomingBubbleImageView = factory.incomingMessagesBubbleImageWithColor(
             UIColor.jsq_messageBubbleLightGrayColor())
         outgoingBubbleImageViewEvent = factory.outgoingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleRedColor())
+            UIColor.jsq_messageBubbleBlueColor())
         outgoingBubbleImageViewPoll = factory.outgoingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleRedColor())
+            UIColor.jsq_messageBubbleBlueColor())
         outgoingBubbleImageViewImportant = factory.outgoingMessagesBubbleImageWithColor(
             UIColor.jsq_messageBubbleRedColor())
         incomingBubbleImageViewEvent = factory.incomingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleRedColor())
+            UIColor.jsq_messageBubbleBlueColor())
         incomingBubbleImageViewPoll = factory.incomingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleRedColor())
+            UIColor.jsq_messageBubbleBlueColor())
         incomingBubbleImageViewImportant = factory.incomingMessagesBubbleImageWithColor(
             UIColor.jsq_messageBubbleRedColor())
         
@@ -500,6 +500,8 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
                                  messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
         let message = messages[indexPath.item] // 1
         let messageMeta = messagesMeta[indexPath.item];
+//        print ("\(indexPath.row) = " + messageMeta.stringForKey("important"));
+
         if message.senderId == senderId { // 2
             if ((messageMeta["type"]! as! String) == "event") {
                 return outgoingBubbleImageViewEvent;
@@ -541,14 +543,14 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     func addEvent(id: String, text: String, event: NSDictionary) {
         let message = JSQMessage(senderId: id, displayName: "", text: text)
         messages.append(message)
-        let messageMeta = ["type":"event", "data":event] as NSMutableDictionary;
+        let messageMeta = ["type":"event", "data":event, "important":"no"] as NSMutableDictionary;
         messagesMeta.append(messageMeta);
     }
     
     func addPoll(id: String, text: String, poll: NSDictionary) {
         let message = JSQMessage(senderId: id, displayName: "", text: text)
         messages.append(message)
-        let messageMeta = ["type":"poll", "data":poll] as NSMutableDictionary;
+        let messageMeta = ["type":"poll", "data":poll, "important":"no"] as NSMutableDictionary;
         messagesMeta.append(messageMeta);
     }
     
@@ -609,7 +611,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         if (isAttachmentPanelVisible()) {
             self.inputToolbar.contentView.textView.resignFirstResponder();
         }
-        
     }
     
     @IBAction func importantButtonTouched () {
@@ -653,6 +654,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     func sendSelectedEventData(event: NSDictionary) {
         addEvent(aDelegate.userId, text: "📅 EVENT\n\nJack Joyce send an invitation. Tap here to interact.\n\n" + event.stringForKey("title") + "\n" + event.stringForKey("date") + ", " + event.stringForKey("time") + "\n" + event.stringForKey("location"), event: event);
+        setAttachmentPanelVisible(false, animated: false);
     }
     
     func sendSelectedPollData(poll: NSDictionary) {
@@ -666,6 +668,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         }
         //answersStr = "Poll choice: " + answersStr;
         addPoll(aDelegate.userId, text: "📊 POLL\n\nJack Joyce send a poll. Tap here to interact.\n\n\(poll["question"]!)\n\n\(answersStr)", poll: poll);
+        setAttachmentPanelVisible(false, animated: false);
     }
     
     @IBAction func pulldownClick (sender: AnyObject) {
