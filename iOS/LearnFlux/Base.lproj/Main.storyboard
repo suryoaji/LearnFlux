@@ -59,7 +59,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="5cj-ZP-Twp" kind="push" identifier="Login" id="dCV-XE-8G4"/>
+                                    <segue destination="BLG-h9-YEU" kind="push" id="U6G-on-gFf"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -90,7 +90,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="0-0" id="iwl-XN-hzV">
-                                <rect key="frame" x="85" y="84" width="150" height="150"/>
+                                <rect key="frame" x="85" y="20" width="150" height="150"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
@@ -135,6 +135,110 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DZj-aw-Kkq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1217" y="344"/>
+        </scene>
+        <!--Home-->
+        <scene sceneID="rdx-I1-BRW">
+            <objects>
+                <viewController id="BLG-h9-YEU" customClass="NewHome" customModule="LearnFlux" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8od-Ix-7Y6">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="eTN-Wg-zgz">
+                                <rect key="frame" x="0.0" y="66" width="320" height="502"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" id="xhT-Op-2SY">
+                                        <rect key="frame" x="217" y="180" width="88" height="83"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" tag="5" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mosaic_attendance.png" id="Adv-si-Bgq">
+                                                <rect key="frame" x="0.0" y="0.0" width="88" height="83"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.95686274510000002" green="0.035467094290000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" id="FA6-Gh-DlC">
+                                        <rect key="frame" x="217" y="83" width="88" height="85"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" tag="4" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mosaic_polls.png" id="bP7-ea-l7W">
+                                                <rect key="frame" x="0.0" y="0.0" width="88" height="85"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.95686274510000002" green="0.035467094291187475" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" id="Pwh-Wu-q1g">
+                                        <rect key="frame" x="15" y="83" width="190" height="180"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" tag="3" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mosaic_gallery.png" id="1HA-og-mu8">
+                                                <rect key="frame" x="0.0" y="0.0" width="190" height="180"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.95686274510000002" green="0.035467094290000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" id="mLM-JB-YoG">
+                                        <rect key="frame" x="167" y="13" width="138" height="59"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" tag="2" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mosaic_chat.png" id="12f-PJ-YkV">
+                                                <rect key="frame" x="0.0" y="0.0" width="138" height="59"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.95686274510000002" green="0.035467094290000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" id="t1u-rd-fyo">
+                                        <rect key="frame" x="15" y="13" width="139" height="59"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mosaic_calendar.png" id="08Q-o2-CtD">
+                                                <rect key="frame" x="0.0" y="0.0" width="139" height="59"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.95686274510000002" green="0.035467094290000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" id="VL7-Mi-SJR">
+                                        <rect key="frame" x="140" y="274" width="165" height="84"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" tag="7" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mosaic_settings.png" id="NEh-Kw-flI">
+                                                <rect key="frame" x="0.0" y="0.0" width="165" height="84"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.95686274510000002" green="0.035467094290000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" id="fHG-vD-gxg">
+                                        <rect key="frame" x="15" y="274" width="111" height="84"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" tag="6" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mosaic_interestgroup.png" id="J1B-DB-5IG">
+                                                <rect key="frame" x="0.0" y="0.0" width="111" height="84"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.95686274510000002" green="0.035467094290000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Home" id="I9p-fU-uji"/>
+                    <connections>
+                        <segue destination="Rh2-Qn-7zs" kind="push" identifier="chat" id="LXE-qM-iFt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8qf-w8-mVz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1601" y="344"/>
         </scene>
         <!--Menu-->
         <scene sceneID="w4k-2k-D7E">
@@ -422,7 +526,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="jlf-ck-nit">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <rect key="frame" x="0.0" y="64" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -443,6 +547,52 @@
             </objects>
             <point key="canvasLocation" x="2240" y="934"/>
         </scene>
+        <!--Org2-->
+        <scene sceneID="03d-ev-Lly">
+            <objects>
+                <viewController id="8GY-XD-56h" customClass="Org" customModule="LearnFlux" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5Q3-mj-7kr">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="vA6-ie-IQS">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Cmf-cD-KaX">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="verticalCell" reuseIdentifier="verticalCell" id="Tvd-lE-2jG" customClass="RACollectionViewCell" customModule="LearnFlux" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="8GY-XD-56h" id="OgL-GN-kqR"/>
+                                    <outlet property="delegate" destination="8GY-XD-56h" id="Gop-3N-o33"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Org2" image="globe-24.png" id="32c-bI-3Sf"/>
+                    <connections>
+                        <outlet property="collectionView" destination="vA6-ie-IQS" id="wdu-yT-tfr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Idx-Db-fvh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2585" y="934"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="qGg-5R-WqV">
             <objects>
@@ -457,6 +607,7 @@
                         <segue destination="e6e-BH-bj6" kind="relationship" relationship="viewControllers" id="IwA-Ge-Vu6"/>
                         <segue destination="rO2-gH-KGc" kind="relationship" relationship="viewControllers" id="U0g-uh-CSC"/>
                         <segue destination="ZPi-GB-2s2" kind="relationship" relationship="viewControllers" id="3Yl-gb-aWm"/>
+                        <segue destination="8GY-XD-56h" kind="relationship" relationship="viewControllers" id="q8v-BE-HWt"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a2i-AP-abZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -535,13 +686,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.95060649671052633" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="vP9-IX-TWs">
-                            <rect key="frame" x="0.0" y="178" width="320" height="0.0"/>
+                            <rect key="frame" x="0.0" y="242" width="320" height="0.0"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-0" rowHeight="50" id="cie-wS-3m8">
-                                <rect key="frame" x="0.0" y="28" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="92" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cie-wS-3m8" id="cPA-6U-ivk">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -562,7 +713,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-1" rowHeight="50" id="XyO-PD-hU4">
-                                <rect key="frame" x="0.0" y="78" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="142" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XyO-PD-hU4" id="EnV-zl-ko1">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -583,7 +734,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-2" rowHeight="50" id="0MB-2A-OI5">
-                                <rect key="frame" x="0.0" y="128" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="192" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0MB-2A-OI5" id="zDv-cU-psG">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -1964,6 +2115,13 @@ Label</string>
         <image name="location-24.png" width="24" height="24"/>
         <image name="male01.png" width="512" height="512"/>
         <image name="male07.png" width="512" height="512"/>
+        <image name="mosaic_attendance.png" width="183" height="155"/>
+        <image name="mosaic_calendar.png" width="275" height="112"/>
+        <image name="mosaic_chat.png" width="273" height="112"/>
+        <image name="mosaic_gallery.png" width="364" height="336"/>
+        <image name="mosaic_interestgroup.png" width="211" height="172"/>
+        <image name="mosaic_polls.png" width="183" height="168"/>
+        <image name="mosaic_settings.png" width="336" height="172"/>
         <image name="mozaic_organization.png" width="512" height="512"/>
         <image name="picture-24.png" width="24" height="24"/>
         <image name="plus-24.png" width="24" height="24"/>
@@ -1971,6 +2129,6 @@ Label</string>
         <image name="user_male-24.png" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ijq-R4-gNR"/>
+        <segue reference="pTT-Xb-Bsv"/>
     </inferredMetricsTieBreakers>
 </document>
