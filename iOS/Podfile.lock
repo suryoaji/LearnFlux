@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (3.4.0)
   - CZPicker (0.4.2)
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
@@ -7,12 +8,14 @@ PODS:
   - RAReorderableLayout (0.4.1)
 
 DEPENDENCIES:
+  - Alamofire
   - CZPicker
   - JSQMessagesViewController
   - PKRevealController
   - RAReorderableLayout
 
 SPEC CHECKSUMS:
+  Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
   CZPicker: df3d8d0511595b7cd2f032263c82c611d45a9b8e
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d

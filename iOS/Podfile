@@ -7,3 +7,4 @@ pod 'PKRevealController'
 pod 'JSQMessagesViewController'
 pod 'CZPicker'
 pod "RAReorderableLayout"
+pod "Alamofire"
