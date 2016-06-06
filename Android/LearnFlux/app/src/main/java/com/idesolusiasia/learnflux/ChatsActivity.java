@@ -91,6 +91,8 @@ public class ChatsActivity extends BaseActivity {
 			// Return a PlaceholderFragment (defined as a static inner class below).
 			if (position==2){
 				return ChatroomFragment.newInstance();
+			}else if (position==1){
+				return OrganizationsFragment.newInstance();
 			}
 			return PlaceholderFragment.newInstance(position + 1);
 		}

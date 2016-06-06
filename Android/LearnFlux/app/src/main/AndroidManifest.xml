@@ -45,7 +45,12 @@
             android:label="Chatting"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".EventChat">
+        <activity android:name=".EventChat"
+                  android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".OrgDetailActivity"
+                  android:label="Organizations"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

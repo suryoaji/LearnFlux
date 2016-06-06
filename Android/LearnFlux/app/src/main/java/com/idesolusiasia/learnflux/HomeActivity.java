@@ -1,12 +1,12 @@
 package com.idesolusiasia.learnflux;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.idesolusiasia.learnflux.adapter.TileRecyclerViewAdapter;
+import android.view.View;
+import android.widget.ImageView;
 
 public class HomeActivity extends BaseActivity {
 
@@ -17,14 +17,14 @@ public class HomeActivity extends BaseActivity {
 		setContentView(R.layout.activity_home);
 		super.onCreateDrawer(savedInstanceState);
 
-		RecyclerView mosaicRecycler = (RecyclerView) findViewById(R.id.mosaic_recycler_view);
-		mosaicRecycler.setHasFixedSize(true);
-
-		gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-		mosaicRecycler.setLayoutManager(gaggeredGridLayoutManager);
-
-		TileRecyclerViewAdapter adapter = new TileRecyclerViewAdapter(this);
-		mosaicRecycler.setAdapter(adapter);
+		ImageView ivChat= (ImageView) findViewById(R.id.ivChat);
+		ivChat.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(HomeActivity.this,ChatsActivity.class);
+				startActivity(i);
+			}
+		});
 	}
 
 

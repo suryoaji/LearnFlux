@@ -1,15 +1,14 @@
 package com.idesolusiasia.learnflux;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.idesolusiasia.learnflux.adapter.TileRecyclerViewAdapter;
+import android.widget.ImageView;
 
 public class MosaicFragment extends Fragment {
 
@@ -36,14 +35,14 @@ public class MosaicFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.activity_home, container, false);
 
-		RecyclerView mosaicRecycler = (RecyclerView) v.findViewById(R.id.mosaic_recycler_view);
-		mosaicRecycler.setHasFixedSize(true);
-
-		gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-		mosaicRecycler.setLayoutManager(gaggeredGridLayoutManager);
-
-		TileRecyclerViewAdapter adapter = new TileRecyclerViewAdapter(getContext());
-		mosaicRecycler.setAdapter(adapter);
+		ImageView ivChat= (ImageView) v.findViewById(R.id.ivChat);
+		ivChat.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(getActivity(),ChatsActivity.class);
+				startActivity(i);
+			}
+		});
 		return v;
 	}
 

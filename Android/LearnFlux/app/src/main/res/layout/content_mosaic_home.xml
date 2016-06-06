@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_margin="5dp"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" android:layout_weight="4">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/ivCalendar" android:layout_weight="10" android:background="#f00000"
+            android:layout_margin="3dp" android:src="@drawable/mosaic_calendar"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/ivChat" android:layout_weight="10" android:background="#006aff"
+            android:layout_margin="3dp" android:src="@drawable/mosaic_chat"
+            android:scaleType="centerCrop"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" android:layout_weight="13">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/ivGallery" android:layout_weight="12" android:background="#82ffbf"
+            android:layout_margin="3dp" android:src="@drawable/mosaic_gallery"
+            android:scaleType="centerCrop"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" android:layout_weight="7">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/ivPolls" android:layout_weight="6"
+                android:background="#00d0e7" android:layout_margin="3dp"
+                android:scaleType="centerCrop" android:src="@drawable/mosaic_polls"/>
+            <ImageView android:layout_width="match_parent" android:layout_height="0dp"
+                       android:id="@+id/ivattendance" android:layout_weight="5.5"
+                       android:background="#ffa560" android:layout_margin="3dp"
+                       android:scaleType="centerCrop" android:src="@drawable/mosaic_attendance"/>
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/ivFavourite" android:layout_weight="6" android:background="#da94ff"
+        android:layout_margin="3dp" android:src="@drawable/mosaic_favourite"
+        android:scaleType="centerCrop"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" android:layout_weight="6">
+        <ImageView android:layout_width="0dp" android:layout_height="match_parent"
+                   android:id="@+id/ivInterest" android:layout_weight="7.5"
+                   android:background="#72ff6b" android:layout_margin="3dp"
+                   android:src="@drawable/mosaic_interestgroup" android:scaleType="centerCrop"/>
+        <ImageView android:layout_width="0dp" android:layout_height="match_parent"
+                   android:id="@+id/ivSettings" android:layout_weight="12"
+                   android:background="#ff61a3" android:layout_margin="3dp"
+                   android:src="@drawable/mosaic_settings" android:scaleType="centerCrop"/>
+    </LinearLayout>
+</LinearLayout>

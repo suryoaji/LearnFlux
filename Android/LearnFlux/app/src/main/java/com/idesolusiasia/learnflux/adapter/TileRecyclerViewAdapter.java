@@ -8,46 +8,36 @@ import android.view.ViewGroup;
 
 import com.idesolusiasia.learnflux.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by NAIT ADMIN on 12/04/2016.
  */
 public class TileRecyclerViewAdapter extends RecyclerView.Adapter<TileViewHolder> {
-	private List<String> itemTitle;
-	private List<Integer> itemImage;
+	private List<String> itemList;
+	private Context context;
 
-	public TileRecyclerViewAdapter(Context context) {
-		this.itemTitle=new ArrayList<>();
-		this.itemImage=new ArrayList<>();
-		itemTitle.add("Activities");
-		itemImage.add(R.drawable.activities);
-		itemTitle.add("Organization");
-		itemImage.add(R.drawable.organization);
-		itemTitle.add("Chat");
-		itemImage.add(R.drawable.chatting);
-		itemTitle.add("Settings");
-		itemImage.add(R.drawable.settings);
-
+	public TileRecyclerViewAdapter(Context context, List<String> itemList) {
+		this.itemList = itemList;
+		this.context = context;
 	}
 
 	@Override
 	public TileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-		View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_mosaic_tile, null);
+		View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_organization, null);
 		TileViewHolder rcv = new TileViewHolder(layoutView);
 		return rcv;
 	}
 
 	@Override
 	public void onBindViewHolder(TileViewHolder holder, int position) {
-		holder.text.setText(itemTitle.get(position));
-		holder.image.setImageResource(itemImage.get(position));
+		holder.tvName.setText(itemList.get(position));
+
 	}
 
 	@Override
 	public int getItemCount() {
-		return this.itemImage.size();
+		return this.itemList.size();
 	}
 }
