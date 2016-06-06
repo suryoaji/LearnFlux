@@ -45,7 +45,6 @@
 		5B04A2591CBCEC3100FA5CCA /* group05.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B04A2581CBCEC3100FA5CCA /* group05.png */; };
 		5B04A25B1CBCEE2F00FA5CCA /* group05a.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5B04A25A1CBCEE2F00FA5CCA /* group05a.jpg */; };
 		5B04A25D1CBCF1DF00FA5CCA /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A25C1CBCF1DF00FA5CCA /* Register.swift */; };
-		5B04A25F1CBCFB6D00FA5CCA /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A25E1CBCFB6D00FA5CCA /* Chat.swift */; };
 		5B04EA981CE3191800D961BF /* company1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B04EA951CE3191800D961BF /* company1.png */; };
 		5B04EA991CE3191800D961BF /* company2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B04EA961CE3191800D961BF /* company2.png */; };
 		5B04EA9A1CE3191800D961BF /* company3.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B04EA971CE3191800D961BF /* company3.png */; };
@@ -402,7 +401,6 @@
 		5B04A2581CBCEC3100FA5CCA /* group05.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = group05.png; path = "Images Mockup/group05.png"; sourceTree = "<group>"; };
 		5B04A25A1CBCEE2F00FA5CCA /* group05a.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = group05a.jpg; path = "Images Mockup/group05a.jpg"; sourceTree = "<group>"; };
 		5B04A25C1CBCF1DF00FA5CCA /* Register.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Register.swift; sourceTree = "<group>"; };
-		5B04A25E1CBCFB6D00FA5CCA /* Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 		5B04EA951CE3191800D961BF /* company1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = company1.png; path = "Images Mockup/company1.png"; sourceTree = "<group>"; };
 		5B04EA961CE3191800D961BF /* company2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = company2.png; path = "Images Mockup/company2.png"; sourceTree = "<group>"; };
 		5B04EA971CE3191800D961BF /* company3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = company3.png; path = "Images Mockup/company3.png"; sourceTree = "<group>"; };
@@ -845,7 +843,6 @@
 				5B04A2351CBCDEE000FA5CCA /* Connections.swift */,
 				5B04A2371CBCDF0300FA5CCA /* Org.swift */,
 				5B04A2391CBCDF3400FA5CCA /* Chats.swift */,
-				5B04A25E1CBCFB6D00FA5CCA /* Chat.swift */,
 				5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */,
 				5BE7C3101CCE00DF0067334D /* AttachEvent.swift */,
 				5BE7BBB01CD1DE2500BDFCE1 /* AttachPoll.swift */,
@@ -1730,7 +1727,6 @@
 				5B6DECBA1D01649100E16650 /* Singleton.swift in Sources */,
 				5B09CF691CBB8E130042C70B /* ForgotPassword.swift in Sources */,
 				5B04A25D1CBCF1DF00FA5CCA /* Register.swift in Sources */,
-				5B04A25F1CBCFB6D00FA5CCA /* Chat.swift in Sources */,
 				5B09CF7E1CBBAAF10042C70B /* Menu.swift in Sources */,
 				5B3742651CC0CBAD00AF2897 /* UIViewController+Popover.m in Sources */,
 				5B3742681CC0CBAD00AF2897 /* UITableViewCell+Separator.m in Sources */,
