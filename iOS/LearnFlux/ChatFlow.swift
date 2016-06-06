@@ -626,7 +626,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     @IBAction func attachmentClick (sender: AnyObject) {
         let btn = sender as! UIButton;
-        Util.showMessageInViewController(self, title: "yes", message: "\(btn.tag)", completion: nil)
+        Util.showMessageInViewController(self, title: "yes", message: "\(btn.tag)")
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

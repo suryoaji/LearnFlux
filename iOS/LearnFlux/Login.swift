@@ -18,6 +18,7 @@ class Login: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
         
         var temp = tfUsername;
@@ -116,5 +117,20 @@ class Login: UIViewController, UITextFieldDelegate {
         self.globalResignFirstResponderRec(self.view!)
         //    CGPoint touchPoint=[gesture locationInView:scrollView];
     }
+    
+    @IBAction func login (sender: AnyObject) {
+        Engine.login(self, username: tfUsername.text!, password: tfPassword.text!) { status, JSON in
+            if (JSON == nil) {
+                self.tfUsername.becomeFirstResponder();
+            }
+            else {
+                Engine.me() { status, JSON in
+                    self.performSegueWithIdentifier("Home", sender: self);
+                }
+            }
+        };
+    }
+    
+    
 }
 

@@ -37,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKRevealing {
         self.window!.rootViewController = self.revealController
         self.window!.makeKeyAndVisible()
 
-        
 //        for family: String in UIFont.familyNames()
 //        {
 //            print("\(family)")
