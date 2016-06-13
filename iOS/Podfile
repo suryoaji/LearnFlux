@@ -8,3 +8,4 @@ pod 'JSQMessagesViewController'
 pod 'CZPicker'
 pod "RAReorderableLayout"
 pod "Alamofire"
+pod 'AZDropdownMenu'

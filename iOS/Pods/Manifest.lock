@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (3.4.0)
+  - AZDropdownMenu (1.1.1)
   - CZPicker (0.4.2)
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
@@ -9,6 +10,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - AZDropdownMenu
   - CZPicker
   - JSQMessagesViewController
   - PKRevealController
@@ -16,6 +18,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
+  AZDropdownMenu: 0ba09d5f7b1b8dc795824ec281c4dde8515f4498
   CZPicker: df3d8d0511595b7cd2f032263c82c611d45a9b8e
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d

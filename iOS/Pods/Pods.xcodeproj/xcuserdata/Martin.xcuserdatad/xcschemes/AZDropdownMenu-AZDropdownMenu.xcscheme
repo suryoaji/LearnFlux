@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '697C999E203FF3EE3606B14F'
-               BlueprintName = 'RAReorderableLayout'
+               BlueprintIdentifier = '9B07DF0C9A648672ACDC9CE3'
+               BlueprintName = 'AZDropdownMenu-AZDropdownMenu'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'RAReorderableLayout.framework'>
+               BuildableName = 'AZDropdownMenu.bundle'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
