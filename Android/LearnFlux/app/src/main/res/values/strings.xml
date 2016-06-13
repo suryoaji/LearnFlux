@@ -120,4 +120,10 @@
         <item>Interested</item>
         <item>Not Going</item>
     </string-array>
+    <string name="BASE_URL">http://lfapp.learnflux.net/</string>
+    <string name="LOGIN">oauth/v2/token</string>
+    <string name="client_id">57453e293a603f8c168b4567_5gj7ywf0ocsoosw0sc8sgsgk8gckkc80o8co8gg00o08g88c4o</string>
+    <string name="client_secret">2hwdia2smbk00sko0wokowcwokswc0k448gsk0okwswcsgcw0g</string>
+    <string name="ME">v1/me</string>
+    <string name="MESSAGES">v1/messages</string>
 </resources>

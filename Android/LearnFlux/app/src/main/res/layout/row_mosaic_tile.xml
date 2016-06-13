@@ -28,7 +28,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:src="@drawable/activities"
+            android:src="@drawable/icon_activities"
             android:adjustViewBounds="true"/>
         <TextView
             android:layout_width="wrap_content"

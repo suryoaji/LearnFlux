@@ -1,67 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
+              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:paddingTop="7dp"
+              android:layout_height="wrap_content" android:paddingBottom="7dp">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal" android:layout_weight="1.5"
-    >
-        <TextView
-            android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="15-03-2016"
-            android:id="@+id/textView15"
-            android:layout_gravity="center" android:gravity="center_vertical|center_horizontal"
-            android:textStyle="bold"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="09:00"
-            android:id="@+id/textView16"
-            android:layout_gravity="center_horizontal"/>
+            android:gravity="center_horizontal" android:layout_weight="1.25"
+            android:layout_marginTop="3dp">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:background="@drawable/border_black"
+            >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mar"
+                    android:id="@+id/textView15"
+                    android:layout_gravity="center" android:gravity="center_vertical|center_horizontal"
+                    android:textStyle="bold"
+                    android:paddingTop="3dp" android:background="#d50000"
+                    android:textColor="#ffffff"
+                    android:paddingBottom="3dp" android:layout_marginLeft="1dp"
+                    android:layout_marginTop="1dp" android:layout_marginRight="1dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8"
+                    android:id="@+id/textView18" android:layout_gravity="center_horizontal"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:gravity="center_horizontal" android:layout_marginTop="-3dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="2016" android:id="@+id/textView19"
+                          android:gravity="center_vertical|center_horizontal"
+                          android:paddingLeft="3dp" android:paddingRight="3dp" android:textSize="12dp"
+                          android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+                          android:layout_marginTop="-3dp"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="09:00"
+                android:id="@+id/textView16"
+                android:layout_gravity="center_horizontal"
+            />
+        </LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary" android:visibility="gone"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="4"
+            android:layout_marginLeft="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Parental Meeting"
+                android:id="@+id/textView17"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Diamond Hall"
+                android:drawableLeft="@drawable/ic_place_black_24dp"
+                android:id="@+id/tvVenue"
+                android:layout_gravity="center_vertical" android:gravity="center_vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Parent - Teacher meeting"
+                android:id="@+id/textView24" android:layout_marginLeft="5dp"/>
+        </LinearLayout>
     </LinearLayout>
-    <View
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary"/>
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content" android:layout_weight="4"
-        android:layout_marginLeft="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Parental Meeting"
-            android:id="@+id/textView17"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="at Diamond Hall"
-            android:id="@+id/tvVenue"
-            android:layout_gravity="center_vertical" android:gravity="center_vertical"/>
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:layout_marginTop="5dp"
-            android:gravity="right">
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.25" android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal">
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:id="@+id/imageView9" android:src="@drawable/ic_email_black_24dp"
-                android:padding="5dp" android:tint="@color/colorPrimary"/>
-            <ImageView android:layout_width="35dp" android:layout_height="35dp"
+                android:padding="5dp" android:tint="@color/colorPrimary"
+                android:layout_alignBottom="@+id/imageView10"
+                android:layout_toLeftOf="@+id/imageView10"
+                android:layout_toStartOf="@+id/imageView10"/>
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
                        android:id="@+id/imageView10" android:src="@drawable/ic_event_black_24dp"
-                       android:background="@drawable/round_background_green" android:padding="5dp"
-                       android:layout_marginLeft="10dp" android:layout_marginRight="10dp"/>
+                       android:padding="5dp" android:tint="@color/colorPrimary"
+                       android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+                       android:layout_alignParentEnd="true"/>
+        </LinearLayout>
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/invitee_status"
+            android:id="@+id/spinner" android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            android:layout_weight="4" android:visibility="gone"
+            android:layout_gravity="center_vertical" android:gravity="center_vertical"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" android:visibility="visible"
+            android:layout_weight="4" android:gravity="center_vertical|center_horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Going"
+                android:id="@+id/textView21" android:layout_weight="1"
+                android:gravity="center_horizontal" android:background="@drawable/border_green"
+                android:paddingBottom="2dp" android:paddingTop="2dp"/>
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceSmall"
+                      android:text="Interested" android:id="@+id/textView22"
+                      android:layout_weight="1" android:gravity="center_horizontal"
+                      android:background="@drawable/border_green" android:paddingBottom="2dp"
+                      android:paddingTop="2dp"/>
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceSmall"
+                      android:text="Not Going" android:id="@+id/textView23"
+                      android:layout_weight="1" android:gravity="center_horizontal"
+                      android:background="@drawable/border_green" android:paddingBottom="2dp"
+                      android:paddingTop="2dp"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

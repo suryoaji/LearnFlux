@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.idesolusiasia.learnflux.util.Engine;
+
 public class ChatsActivity extends BaseActivity {
 
 
@@ -27,6 +29,9 @@ public class ChatsActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chats);
 		super.onCreateDrawer(savedInstanceState);
+
+		Engine.postMessages(getApplicationContext(),new int[]{7,8});
+
 
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

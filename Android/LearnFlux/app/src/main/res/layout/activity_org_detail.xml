@@ -16,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:id="@+id/imageView2" android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
             android:src="@drawable/ic_attendance_24dp"/>
@@ -33,70 +33,117 @@
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="30dp" android:layout_weight="1"
-            android:background="@drawable/border" android:clickable="true" android:focusable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:clickable="true" android:focusable="true"
             android:id="@+id/tabGroups">
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:id="@+id/imageView11"
+                    android:src="@drawable/icon_groups" android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                    android:layout_gravity="center_horizontal"/>
+                <TextView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="3"
+                    android:id="@+id/tvNotifGroups"
+                    android:background="@drawable/round_background_green" android:gravity="center_vertical|center_horizontal"
+                    android:textColor="#ffffff" android:textSize="10dp"
+                    android:layout_alignParentTop="true" android:layout_alignRight="@+id/imageView11"
+                    android:layout_alignEnd="@+id/imageView11"
+                    android:layout_gravity="right|bottom"/>
+            </FrameLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Groups  "
-                android:id="@+id/tvGroups" android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" android:textColor="@color/colorPrimary"
-            />
-            <TextView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="3"
-                android:id="@+id/tvNotifGroups"
-                android:layout_alignParentTop="true" android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" android:layout_marginRight="5dp"
-                android:background="@drawable/round_background_green" android:gravity="center_vertical|center_horizontal"
-                android:layout_marginTop="2dp" android:textColor="#ffffff" android:textSize="10dp"/>
-        </RelativeLayout>
-        <RelativeLayout android:layout_width="0dp" android:layout_height="30dp"
-                        android:layout_weight="1" android:background="@color/colorPrimary"
-                        android:clickable="true" android:focusable="true"
-                        android:id="@+id/tabEvents">
+                android:text="Groups"
+                android:id="@+id/textView27" android:textSize="12dp"
+                android:layout_gravity="center_horizontal"/>
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp" android:background="@color/colorPrimary"
+                android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal" android:id="@+id/indicator_groups"
+                android:visibility="gone"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:clickable="true" android:focusable="true"
+                      android:id="@+id/tabEvents" android:layout_marginLeft="10dp"
+                      android:layout_marginRight="10dp">
+            <FrameLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <ImageView android:layout_width="45dp" android:layout_height="45dp"
+                           android:id="@+id/imageView14" android:src="@drawable/icon_events"
+                           android:layout_alignParentTop="true"
+                           android:layout_alignParentLeft="true"
+                           android:layout_alignParentStart="true"
+                           android:layout_gravity="center_horizontal"/>
+                <TextView android:layout_width="15dp" android:layout_height="15dp"
+                          android:textAppearance="?android:attr/textAppearanceSmall"
+                          android:text="3" android:id="@+id/tvNotifEvents"
+                          android:background="@drawable/round_background_green"
+                          android:gravity="center_vertical|center_horizontal"
+                          android:textColor="#ffffff" android:textSize="10dp"
+                          android:layout_alignParentTop="true"
+                          android:layout_alignRight="@+id/imageView14"
+                          android:layout_alignEnd="@+id/imageView14"
+                          android:layout_gravity="right|bottom"/>
+            </FrameLayout>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceSmall"
-                      android:text="Events  " android:id="@+id/tvEvents"
-                      android:layout_centerVertical="true" android:layout_centerHorizontal="true"
-                      android:textColor="#ffffff"/>
-            <TextView android:layout_width="20dp" android:layout_height="20dp"
-                      android:textAppearance="?android:attr/textAppearanceSmall" android:text="3"
-                      android:id="@+id/tvNotifEvents" android:layout_alignParentTop="true"
-                      android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-                      android:layout_marginRight="5dp"
-                      android:background="@drawable/round_background_white"
-                      android:gravity="center_vertical|center_horizontal"
-                      android:layout_marginTop="2dp" android:textColor="@color/colorPrimary"
-                      android:textSize="10dp"/>
-        </RelativeLayout>
-        <RelativeLayout android:layout_width="0dp" android:layout_height="30dp"
-                        android:layout_weight="1" android:background="@drawable/border"
-                        android:clickable="true" android:focusable="true"
-                        android:id="@+id/tabActivities">
+                      android:text="Events" android:id="@+id/textView28" android:textSize="12dp"
+                      android:layout_gravity="center_horizontal"/>
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp" android:background="@color/colorPrimary"
+                android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal" android:id="@+id/indicator_events"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:clickable="true" android:focusable="true"
+                      android:orientation="vertical"
+                      android:id="@+id/tabActivities">
+            <FrameLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <ImageView android:layout_width="45dp" android:layout_height="45dp"
+                           android:id="@+id/imageView12" android:src="@drawable/icon_activities"
+                           android:layout_alignParentTop="true"
+                           android:layout_alignParentLeft="true"
+                           android:layout_alignParentStart="true"
+                           android:layout_gravity="center_horizontal"/>
+                <TextView android:layout_width="15dp" android:layout_height="15dp"
+                          android:textAppearance="?android:attr/textAppearanceSmall"
+                          android:text="3" android:id="@+id/tvNotifActivities"
+                          android:background="@drawable/round_background_green"
+                          android:gravity="center_vertical|center_horizontal"
+                          android:textColor="#ffffff" android:textSize="10dp"
+                          android:layout_alignParentTop="true"
+                          android:layout_alignRight="@+id/imageView12"
+                          android:layout_alignEnd="@+id/imageView12"
+                          android:layout_gravity="right|bottom"/>
+            </FrameLayout>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceSmall"
-                      android:text="Activities  " android:id="@+id/tvActivities"
-                      android:layout_centerVertical="true" android:layout_centerHorizontal="true"
-                      android:textColor="@color/colorPrimary"/>
-            <TextView android:layout_width="20dp" android:layout_height="20dp"
-                      android:textAppearance="?android:attr/textAppearanceSmall" android:text="3"
-                      android:id="@+id/tvNotifActivities" android:layout_alignParentTop="true"
-                      android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-                      android:layout_marginRight="5dp"
-                      android:background="@drawable/round_background_green"
-                      android:gravity="center_vertical|center_horizontal"
-                      android:layout_marginTop="2dp" android:textColor="#ffffff"
-                      android:textSize="10dp"/>
-        </RelativeLayout>
+                      android:text="Activities" android:id="@+id/textView29"
+                      android:textSize="12dp" android:layout_gravity="center_horizontal"/>
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp" android:background="@color/colorPrimary"
+                android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal" android:id="@+id/indicator_act"
+                android:visibility="gone"/>
+        </LinearLayout>
     </LinearLayout>
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"

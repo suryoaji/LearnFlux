@@ -1,7 +1,5 @@
 package com.idesolusiasia.learnflux;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -13,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.util.OrgEventFragment;
@@ -21,8 +19,9 @@ import com.idesolusiasia.learnflux.util.OrgEventFragment;
 public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
-	RelativeLayout tabGroups, tabEvents, tabActivities;
-	TextView tvGroups, tvEvents, tvActivities, tvNotifGroups, tvNotifActivities, tvNotifEvents;
+	LinearLayout tabGroups, tabEvents, tabActivities;
+	View indicatorGroups, indicatorEvents, indicatorAct;
+	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents;
 	static final int ITEMS = 3;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +44,15 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		mAdap = new FragmentAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mAdap);
-		tabGroups=(RelativeLayout) findViewById(R.id.tabGroups);
-		tabEvents=(RelativeLayout) findViewById(R.id.tabEvents);
-		tabActivities=(RelativeLayout) findViewById(R.id.tabActivities);
+		tabGroups=(LinearLayout) findViewById(R.id.tabGroups);
+		tabEvents=(LinearLayout) findViewById(R.id.tabEvents);
+		tabActivities=(LinearLayout) findViewById(R.id.tabActivities);
 		tabGroups.setOnClickListener(this);
 		tabEvents.setOnClickListener(this);
 		tabActivities.setOnClickListener(this);
-		tvGroups=(TextView) findViewById(R.id.tvGroups);
-		tvEvents=(TextView) findViewById(R.id.tvEvents);
-		tvActivities=(TextView) findViewById(R.id.tvActivities);
+		indicatorGroups=(View) findViewById(R.id.indicator_groups);
+		indicatorEvents=(View) findViewById(R.id.indicator_events);
+		indicatorAct=(View) findViewById(R.id.indicator_act);
 		tvNotifActivities=(TextView) findViewById(R.id.tvNotifActivities);
 		tvNotifEvents=(TextView) findViewById(R.id.tvNotifEvents);
 		tvNotifGroups=(TextView) findViewById(R.id.tvNotifGroups);
@@ -91,57 +90,15 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 	}
 
 	void selectTab(int pos){
+		indicatorAct.setVisibility(View.GONE);
+		indicatorEvents.setVisibility(View.GONE);
+		indicatorGroups.setVisibility(View.GONE);
 		if (pos==0){
-			tabGroups.setBackgroundColor(Color.parseColor(getString(R.string.color_primary)));
-			tvGroups.setTextColor(Color.parseColor("#FFFFFF"));
-
-			tabEvents.setBackgroundResource(R.drawable.border);
-			tvEvents.setTextColor(Color.parseColor(getString(R.string.color_primary)));
-			tabActivities.setBackgroundResource(R.drawable.border);
-			tvActivities.setTextColor(Color.parseColor(getString(R.string.color_primary)));
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				tvNotifGroups.setBackground(getDrawable(R.drawable.round_background_white));
-				tvNotifGroups.setTextColor(Color.parseColor(getString(R.string.color_primary)));
-
-				tvNotifEvents.setBackground(getDrawable(R.drawable.round_background_green));
-				tvNotifEvents.setTextColor(Color.parseColor("#FFFFFF"));
-				tvNotifActivities.setBackground(getDrawable(R.drawable.round_background_green));
-				tvNotifActivities.setTextColor(Color.parseColor("#FFFFFF"));
-			}
+			indicatorGroups.setVisibility(View.VISIBLE);
 		}else if(pos==1) {
-			tabEvents.setBackgroundColor(Color.parseColor(getString(R.string.color_primary)));
-			tvEvents.setTextColor(Color.parseColor("#FFFFFF"));
-
-			tabGroups.setBackgroundResource(R.drawable.border);
-			tvGroups.setTextColor(Color.parseColor(getString(R.string.color_primary)));
-			tabActivities.setBackgroundResource(R.drawable.border);
-			tvActivities.setTextColor(Color.parseColor(getString(R.string.color_primary)));
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				tvNotifEvents.setBackground(getDrawable(R.drawable.round_background_white));
-				tvNotifEvents.setTextColor(Color.parseColor(getString(R.string.color_primary)));
-
-				tvNotifGroups.setBackground(getDrawable(R.drawable.round_background_green));
-				tvNotifGroups.setTextColor(Color.parseColor("#FFFFFF"));
-				tvNotifActivities.setBackground(getDrawable(R.drawable.round_background_green));
-				tvNotifActivities.setTextColor(Color.parseColor("#FFFFFF"));
-			}
+			indicatorEvents.setVisibility(View.VISIBLE);
 		}else{
-			tabActivities.setBackgroundColor(Color.parseColor(getString(R.string.color_primary)));
-			tvActivities.setTextColor(Color.parseColor("#FFFFFF"));
-
-			tabGroups.setBackgroundResource(R.drawable.border);
-			tvGroups.setTextColor(Color.parseColor(getString(R.string.color_primary)));
-			tabEvents.setBackgroundResource(R.drawable.border);
-			tvEvents.setTextColor(Color.parseColor(getString(R.string.color_primary)));
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				tvNotifActivities.setBackground(getDrawable(R.drawable.round_background_white));
-				tvNotifActivities.setTextColor(Color.parseColor(getString(R.string.color_primary)));
-
-				tvNotifGroups.setBackground(getDrawable(R.drawable.round_background_green));
-				tvNotifGroups.setTextColor(Color.parseColor("#FFFFFF"));
-				tvNotifEvents.setBackground(getDrawable(R.drawable.round_background_green));
-				tvNotifEvents.setTextColor(Color.parseColor("#FFFFFF"));
-			}
+			indicatorAct.setVisibility(View.VISIBLE);
 		}
 	}
 

@@ -27,6 +27,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +69,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+	    Engine.login(getApplicationContext(), "admin", "admin", new RequestTemplate.serviceCallback() {
+		    @Override
+		    public void execute(JSONObject obj) {
+			    Engine.getMe(getApplicationContext());
+		    }
+	    });
+
+
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
