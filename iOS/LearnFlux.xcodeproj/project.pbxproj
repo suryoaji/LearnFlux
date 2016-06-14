@@ -72,6 +72,10 @@
 		5B09CF7B1CBB9FAE0042C70B /* hamburger-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B09CF791CBB9FAE0042C70B /* hamburger-18@2x.png */; };
 		5B09CF7C1CBB9FAE0042C70B /* hamburger-18@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B09CF7A1CBB9FAE0042C70B /* hamburger-18@3x.png */; };
 		5B09CF7E1CBBAAF10042C70B /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B09CF7D1CBBAAF10042C70B /* Menu.swift */; };
+		5B0B534D1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0B534C1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift */; };
+		5B13560F1D096DBC0058BBA5 /* activities-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B13560C1D096DBC0058BBA5 /* activities-70.png */; };
+		5B1356101D096DBC0058BBA5 /* events-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B13560D1D096DBC0058BBA5 /* events-70.png */; };
+		5B1356111D096DBC0058BBA5 /* groups-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B13560E1D096DBC0058BBA5 /* groups-70.png */; };
 		5B137B361D050954004F26F9 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B137B351D050954004F26F9 /* Engine.swift */; };
 		5B37425F1CC0CBAD00AF2897 /* NSDate+String.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B37422D1CC0CBAD00AF2897 /* NSDate+String.m */; };
 		5B3742601CC0CBAD00AF2897 /* NSInteger+String.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B37422F1CC0CBAD00AF2897 /* NSInteger+String.m */; };
@@ -431,6 +435,10 @@
 		5B09CF791CBB9FAE0042C70B /* hamburger-18@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hamburger-18@2x.png"; path = "Icons/hamburger-18@2x.png"; sourceTree = "<group>"; };
 		5B09CF7A1CBB9FAE0042C70B /* hamburger-18@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hamburger-18@3x.png"; path = "Icons/hamburger-18@3x.png"; sourceTree = "<group>"; };
 		5B09CF7D1CBBAAF10042C70B /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		5B0B534C1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "JSQMessageCollectionViewCell+Action.swift"; path = "Library/JSQMessageCollectionViewCell+Action.swift"; sourceTree = "<group>"; };
+		5B13560C1D096DBC0058BBA5 /* activities-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "activities-70.png"; path = "IconsOfficial/activities-70.png"; sourceTree = "<group>"; };
+		5B13560D1D096DBC0058BBA5 /* events-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "events-70.png"; path = "IconsOfficial/events-70.png"; sourceTree = "<group>"; };
+		5B13560E1D096DBC0058BBA5 /* groups-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "groups-70.png"; path = "IconsOfficial/groups-70.png"; sourceTree = "<group>"; };
 		5B137B351D050954004F26F9 /* Engine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Engine.swift; path = Engine/Engine.swift; sourceTree = "<group>"; };
 		5B37422C1CC0CBAD00AF2897 /* NSDate+String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+String.h"; path = "Library/NSDate+String.h"; sourceTree = "<group>"; };
 		5B37422D1CC0CBAD00AF2897 /* NSDate+String.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+String.m"; path = "Library/NSDate+String.m"; sourceTree = "<group>"; };
@@ -818,7 +826,7 @@
 			isa = PBXGroup;
 			children = (
 				5B09CF1B1CBB5A580042C70B /* Library */,
-				5B09CF6C1CBB98C90042C70B /* Icons */,
+				5B13560B1D096DA10058BBA5 /* IconsOfficial */,
 				5B04A23B1CBCE01200FA5CCA /* Images Mockup */,
 				5B09CF181CBB52510042C70B /* Images */,
 				5B6DECB81D015FB100E16650 /* Core */,
@@ -946,6 +954,7 @@
 				5B01FC3F1CD2FC5F00047C15 /* NSDictionary+ForKey.h */,
 				5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */,
 				5BFFFDB61CD8958B0099AB3F /* SweetAlert.swift */,
+				5B0B534C1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift */,
 			);
 			name = Library;
 			sourceTree = "<group>";
@@ -992,6 +1001,17 @@
 				5B09CF701CBB98D70042C70B /* hamburger-224.png */,
 			);
 			name = Icons;
+			sourceTree = "<group>";
+		};
+		5B13560B1D096DA10058BBA5 /* IconsOfficial */ = {
+			isa = PBXGroup;
+			children = (
+				5B13560C1D096DBC0058BBA5 /* activities-70.png */,
+				5B13560D1D096DBC0058BBA5 /* events-70.png */,
+				5B13560E1D096DBC0058BBA5 /* groups-70.png */,
+				5B09CF6C1CBB98C90042C70B /* Icons */,
+			);
+			name = IconsOfficial;
 			sourceTree = "<group>";
 		};
 		5B3742781CC0CBF000AF2897 /* Icons2 */ = {
@@ -1412,6 +1432,7 @@
 				5B3743911CC0CBFD00AF2897 /* archive-24@2x.png in Resources */,
 				5B04EA981CE3191800D961BF /* company1.png in Resources */,
 				5B09CF7B1CBB9FAE0042C70B /* hamburger-18@2x.png in Resources */,
+				5B1356101D096DBC0058BBA5 /* events-70.png in Resources */,
 				5B3743741CC0CBFD00AF2897 /* handshake-512.png in Resources */,
 				5B37440C1CC0CBFD00AF2897 /* thumb_up-24.png in Resources */,
 				5BE7BBBB1CD206A800BDFCE1 /* checkmark-24.png in Resources */,
@@ -1432,6 +1453,7 @@
 				5B0514441CE2DC1C006F5C7E /* calendar_star-24@2x.png in Resources */,
 				5B37437F1CC0CBFD00AF2897 /* home_background11.jpg in Resources */,
 				5B3744101CC0CBFD00AF2897 /* trash-24@2x.png in Resources */,
+				5B1356111D096DBC0058BBA5 /* groups-70.png in Resources */,
 				5B37438B1CC0CBFD00AF2897 /* shower-24@3x.png in Resources */,
 				5B3743871CC0CBFD00AF2897 /* ios_reminder-300.png in Resources */,
 				5B01FC5E1CD34D6700047C15 /* arrow_up_circle-18@2x.png in Resources */,
@@ -1602,6 +1624,7 @@
 				5BDBCC061CBE518900655A61 /* clip-18@3x.png in Resources */,
 				5BEB834A1CBC9AF700EB818C /* OpenSans-CondLightItalic.ttf in Resources */,
 				5B3743EE1CC0CBFD00AF2897 /* plus-24@2x.png in Resources */,
+				5B13560F1D096DBC0058BBA5 /* activities-70.png in Resources */,
 				5B3744251CC0CBFD00AF2897 /* user_male4-24@3x.png in Resources */,
 				5B3743F41CC0CBFD00AF2897 /* print-24.png in Resources */,
 				5B3743861CC0CBFD00AF2897 /* ios_phone-220.png in Resources */,
@@ -1692,6 +1715,7 @@
 				5B3742711CC0CBAD00AF2897 /* OSTextField.m in Sources */,
 				5B3742761CC0CBAD00AF2897 /* UIViewController+FrequentTools.m in Sources */,
 				5B3742731CC0CBAD00AF2897 /* UILabel+HeightToFit.m in Sources */,
+				5B0B534D1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift in Sources */,
 				5B09CEBB1CBB4A330042C70B /* LearnFlux.xcdatamodeld in Sources */,
 				5B3742641CC0CBAD00AF2897 /* UIView+RoundedRect.m in Sources */,
 				5B3742741CC0CBAD00AF2897 /* UITextField+HeightToFit.m in Sources */,

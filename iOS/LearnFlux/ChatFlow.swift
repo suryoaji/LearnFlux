@@ -14,6 +14,11 @@ import CZPicker
 
 class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPollReturnDelegate, CZPickerViewDataSource, CZPickerViewDelegate {
     // MARK: Properties
+    var chatId : String = "";
+    var participantsId = [Dictionary<String, Int>]();
+    var participants = [AnyObject]();
+    var localChat : Array<AnyObject>! = [];
+    
     let aDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
 
     var thisChatType : String! = "chat";
@@ -44,12 +49,60 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     var isImportantMessage : Bool = false;
     
+    func initChat (title: String, chatType: String, chatId: String, participants: [AnyObject], chatMetadata: NSDictionary) {
+        self.title = title;
+        self.chatId = chatId;
+        self.participants = participants;
+        self.thisChatType = chatType;
+        self.thisChatMetadata = chatMetadata.mutableCopy() as! NSMutableDictionary;
+        let me = Data.defaults.valueForKey("me")! as! NSDictionary;
+        self.senderId = String(me.valueForKey("id")!);
+        self.senderDisplayName = "";
+        
+        Engine.getThreadMessages(self, threadId: chatId) { status, JSON in
+            self.updateChatView(JSON);
+        }
+    }
+    
+    func updateChatView (JSON : AnyObject? = nil){
+        let oldCount = localChat.count;
+        
+        if (JSON == nil) {
+            if (Data.defaults.valueForKey(chatId) != nil) {
+                localChat = Data.defaults.valueForKey(chatId)! as! Array<AnyObject>
+            }
+        }
+        else {
+            let data = JSON!.valueForKey("data")!;
+            print (data);
+            let messages = data.valueForKey("messages")!;
+            print(messages);
+            if (messages.isKindOfClass(NSArray)) {
+                self.localChat = messages as! Array<AnyObject>;
+            }
+        }
+        
+        if localChat.count > oldCount {
+            for i in oldCount..<localChat.count {
+                let curChat = localChat[i] as! NSDictionary;
+                let senderWrapper = curChat.valueForKey("sender")! as! NSDictionary;
+                let senderId = senderWrapper.valueForKey("id")! as! Int;
+                let messageBody = curChat.valueForKey("body")! as! String;
+                let timeStamp = curChat.valueForKey("created_at")! as! Double;
+                addMessage("\(senderId)", text: messageBody, timeInterval: timeStamp);
+            }
+        }
+        
+        self.performSelectorOnMainThread(#selector(finishSendingMessage), withObject: nil, waitUntilDone: true);
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "ChatChat"
         setupBubbles()
-        
-        
+        print ("Chat Flow =======");
+        print ("Chat ID = \(chatId)");
+        print ("Chat Participants ID: \(participantsId)");
         let height = self.inputToolbar.contentView.leftBarButtonContainerView.frame.size.height
         var image = UIImage(named: "clip-18.png");
         let attachButton: UIButton = UIButton(type: .Custom)
@@ -87,8 +140,8 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         self.view.addSubview(attachmentPanel);
         pulldownPanel.removeFromSuperview();
 
-        addMessage(aDelegate.userId, text: "Hello");
-        addMessage("2", text: "Ya?\nYayaya!");
+//        addMessage(aDelegate.userId, text: "Hello");
+//        addMessage("2", text: "Ya?\nYayaya!");
         finishSendingMessage();
         
 //        let attachment = UIButton(type: .System);
@@ -97,11 +150,12 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
 //        // No avatars
 //        collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
 //        collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
-        
             }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated);
+        
+        
         
     }
     
@@ -137,7 +191,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         }
         else {
             let meta = thisChatMetadata;
-            self.title = meta.stringForKey("title");
+            self.title = meta.valueForKey("title") as? String;
         }
 //        self.view.bringSubviewToFront(self.view.inputView!);
         setTabBarVisible(false, animated: true)
@@ -527,12 +581,17 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     override func collectionView(collectionView: JSQMessagesCollectionView!,
                                  avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
-        
-        return avatars.valueForKey(messages[indexPath.row].senderId) as! JSQMessagesAvatarImage;
+        return avatars.valueForKey("2") as! JSQMessagesAvatarImage;
+//        return avatars.valueForKey(messages[indexPath.row].senderId) as! JSQMessagesAvatarImage;
+//        return nil;
     }
     
-    func addMessage(id: String, text: String) {
-        let message = JSQMessage(senderId: id, displayName: "", text: text)
+    func addMessage(id: String, text: String, timeInterval: Double) {
+        addMessage(id, text:text, date:NSDate(timeIntervalSince1970: timeInterval));
+    }
+    
+    func addMessage(id: String, text: String, date: NSDate = NSDate()) {
+        let message = JSQMessage(senderId: id, senderDisplayName: "", date: date, text: text)
         messages.append(message)
         let messageMeta = ["type":"chat", "data":text, "important": (isImportantMessage ? "yes" : "no")] as NSMutableDictionary;
         messagesMeta.append(messageMeta);
@@ -540,15 +599,23 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         importantButtonTouched();
     }
     
-    func addEvent(id: String, text: String, event: NSDictionary) {
-        let message = JSQMessage(senderId: id, displayName: "", text: text)
+    func addEvent(id: String, text: String, event: NSDictionary, timeInterval: Double) {
+        addEvent(id, text:text, event:event, date:NSDate(timeIntervalSince1970: timeInterval));
+    }
+    
+    func addEvent(id: String, text: String, event: NSDictionary, date: NSDate = NSDate()) {
+        let message = JSQMessage(senderId: id, senderDisplayName: "", date: date, text: text)
         messages.append(message)
         let messageMeta = ["type":"event", "data":event, "important":"no"] as NSMutableDictionary;
         messagesMeta.append(messageMeta);
     }
+
+    func addPoll(id: String, text: String, poll: NSDictionary, timeInterval: Double) {
+        addPoll(id, text:text, poll:poll, date:NSDate(timeIntervalSince1970: timeInterval));
+    }
     
-    func addPoll(id: String, text: String, poll: NSDictionary) {
-        let message = JSQMessage(senderId: id, displayName: "", text: text)
+    func addPoll(id: String, text: String, poll: NSDictionary, date: NSDate = NSDate()) {
+        let message = JSQMessage(senderId: id, senderDisplayName: "", date:date, text: text)
         messages.append(message)
         let messageMeta = ["type":"poll", "data":poll, "important":"no"] as NSMutableDictionary;
         messagesMeta.append(messageMeta);
@@ -562,6 +629,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
 //            "text": text,
 //            "senderId": senderId
 //        ]
+        Engine.sendThreadMessage(threadId: chatId, body: text);
         addMessage(senderId, text: text);
         //        itemRef.setValue(messageItem) // 3
         
@@ -614,13 +682,19 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     }
     
     @IBAction func importantButtonTouched () {
-        let importantButton = self.inputToolbar.contentView.viewWithTag(11) as! UIButton;
         isImportantMessage = !isImportantMessage;
-        if (isImportantMessage) {
-            importantButton.backgroundColor = UIColor.lightGrayColor();
-        }
-        else {
-            importantButton.backgroundColor = UIColor.clearColor();
+        let inputToolbar = self.inputToolbar;
+        let contentView = inputToolbar.contentView;
+        let theBtn = contentView?.viewWithTag(11);
+        if (theBtn != nil) {
+            let importantButton = self.inputToolbar.contentView.viewWithTag(11) as! UIButton;
+            
+            if (isImportantMessage) {
+                importantButton.backgroundColor = UIColor.lightGrayColor();
+            }
+            else {
+                importantButton.backgroundColor = UIColor.clearColor();
+            }
         }
     }
     
@@ -669,6 +743,18 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         //answersStr = "Poll choice: " + answersStr;
         addPoll(aDelegate.userId, text: "📊 POLL\n\nJack Joyce send a poll. Tap here to interact.\n\n\(poll["question"]!)\n\n\(answersStr)", poll: poll);
         setAttachmentPanelVisible(false, animated: false);
+    }
+    
+    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+        return (action == #selector(self.deleteMessage(_:)) || action == #selector(self.copyMessage(_:)));
+    }
+    
+    func deleteMessage(sender:AnyObject) {
+        print ("delete")
+    }
+    
+    func copyMessage(sender:AnyObject) {
+        print ("copy")
     }
     
     @IBAction func pulldownClick (sender: AnyObject) {

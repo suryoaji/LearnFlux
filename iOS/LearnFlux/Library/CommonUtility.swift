@@ -72,11 +72,11 @@ class Util : NSObject {
         viewController!.presentViewController(alertController, animated: true, completion: nil)
     }
     
-//    static func showMessageInViewController(viewController: UIViewController, title: String, message: String, buttonOKTitle: String = "Ok") -> () {
-//        showMessageInViewController(viewController, title: title, message: message, buttonOKTitle: buttonOKTitle, callback:nil);
-//    }
-
-    static func showIndicatorDarkOverlay (view: UIView) {
+    static func showIndicatorDarkOverlay (view: UIView, message: String = "") {
+        if (view.viewWithTag(12937) != nil) {
+            stopIndicator(view);
+        }
+        
         let overlay = UIView(frame: view.frame);
         overlay.backgroundColor = UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.3);
         overlay.tag = 12937;
@@ -90,6 +90,18 @@ class Util : NSObject {
         view.bringSubviewToFront(overlay);
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         indicator.startAnimating();
+        
+        let label = UILabel();
+        label.text = message;
+        label.font = label.font.fontWithSize(15);
+        label.textColor = UIColor.whiteColor();
+        label.center = overlay.center;
+        
+        if (message != "") {
+            indicator.y -= 20;
+            label.y += 20;
+        }
+        
     }
     
     static func stopIndicator (view: UIView) {

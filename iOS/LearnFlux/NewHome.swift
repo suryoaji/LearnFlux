@@ -20,8 +20,7 @@ class NewHome : UIViewController {
         item.target = self;
         
         self.addTapHandlerToAllImages(self.view);
-        
-        Util.showMessageInViewController(self, title: "Hello", message: "Hello, \(Data.defaults.valueForKey("me")!.valueForKey!("email")! as! String)");
+//        Util.showMessageInViewController(self, title: "Hello", message: "Hello, \(Data.defaults.valueForKey("me")!.valueForKey!("email")! as! String)");
     }
     
     override func viewDidAppear(animated: Bool) {

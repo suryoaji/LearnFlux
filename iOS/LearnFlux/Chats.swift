@@ -7,30 +7,65 @@
 //
 
 import Foundation
+import AZDropdownMenu
 
 class Chats : UITableViewController {
+    
+//    @IBOutlet var navigationItem: UINavigationItem!;
+    
+    var localThread : Array<AnyObject> = []
+    var menu : AZDropdownMenu!;
     
     override func viewDidLoad() {
         super.viewDidLoad();
         
+        let menuTitle = ["Create Group Chat...", "Delete Chats...", "Delete All Chats"];
+        menu = AZDropdownMenu(titles: menuTitle);
+        
+        updateThreadView();
+        
+        Engine.getThreads(self) { status, JSON in
+            self.updateThreadView(JSON);
+        }
+        
+        let navItem = self.parentViewController!.navigationItem;
+        
         self.tabBarController?.title = "Chats";
         
-        let left:UIBarButtonItem! = UIBarButtonItem();
-        left.image = UIImage(named: "hamburger-18.png");
-        self.navigationItem.leftBarButtonItem = left;
-        left.action = #selector(self.revealMenu);
-        left.target = self;
+//        let left:UIBarButtonItem! = UIBarButtonItem();
+//        left.image = UIImage(named: "hamburger-18.png");
+//        navItem.leftBarButtonItem = left;
+//        left.action = #selector(self.revealMenu);
+//        left.target = self;
 
         let right:UIBarButtonItem! = UIBarButtonItem();
-        right.title = "All";
-        self.navigationItem.rightBarButtonItem = right;
-        right.action = #selector(self.filter);
+        right.title = "Menu";
+        navItem.rightBarButtonItem = right;
+        right.action = #selector(self.showMenu);
         right.target = self;
+    }
+    
+    func updateThreadView (JSON : AnyObject? = nil) {
+        if (JSON == nil) {
+            if (Data.defaults.valueForKey("threads") != nil) {
+                let threads = Data.defaults.valueForKey("threads")!;
+                localThread =  threads as! Array<AnyObject>
+            }
+        }
+        else {
+            let data = JSON!.valueForKey("data")!;
+            self.localThread = JSON!["data"]! as! Array<AnyObject>;
+        }
+        self.tableView.performSelectorOnMainThread(#selector(UITableView.reloadData), withObject: nil, waitUntilDone: true)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated);
         setTabBarVisible(true, animated: true);
+        
+        Engine.getThreads(self) { status, JSON in
+            self.updateThreadView(JSON);
+        }
     }
     
     @IBAction func revealMenu (sender: AnyObject) {
@@ -38,28 +73,67 @@ class Chats : UITableViewController {
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2;
+        return 1;
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return tableView.dequeueReusableCellWithIdentifier(indexPath.code)!.height;
+        return tableView.dequeueReusableCellWithIdentifier("1-0")!.height;
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch (section) {
-        case 1: return 6;
-        default: return 0;
-        }
+        print (localThread);
+        return localThread.count;
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let code = indexPath.code;
-        NSLog(code);
-        let cell = tableView.dequeueReusableCellWithIdentifier(code)!;
+        let cell = tableView.dequeueReusableCellWithIdentifier("1-0")!;
         cell.setSeparatorType(CellSeparatorFull);
+        let threadName = cell.viewWithTag(1) as! UILabel;
+        let threadLastMessage = cell.viewWithTag(2) as! UILabel;
+//        let threadLastUpdated = cell.viewWithTag(3) as! UILabel;
+        threadLastMessage.text = "Description";
+        let selectedThread = localThread[indexPath.row] as! NSDictionary;
+        threadName.text = Engine.generateThreadName (selectedThread);
         let pp = cell.viewWithTag(10) as! UIImageView;
         pp.makeRounded();
         return cell;
+    }
+    
+    @IBAction func showMenu(sender: AnyObject) {
+        if (menu.isDescendantOfView(self.view) == true) {
+            menu.hideMenu()
+        } else {
+            menu.showMenuFromView(self.view)
+        }
+        
+        menu.cellTapHandler = { [weak self] (indexPath: NSIndexPath) -> Void in
+            switch (indexPath.row) {
+            case 0: break;
+            case 1: break;
+            case 2:
+                Util.showChoiceInViewController(self, title: "Confirmation", message: "Are you sure you want to erase all the chat threads?", buttonTitle: ["Yes", "Cancel"], buttonStyle: [UIAlertActionStyle.Destructive, UIAlertActionStyle.Cancel], callback: { selectedBtn in
+                    var selectedThreads = Array<String>();
+                    if (selectedBtn == 0) {
+                        for thread in self!.localThread {
+                            let t = thread as! NSDictionary;
+//                            if (selectedThreads.count < 1) {
+                                selectedThreads.append(t.valueForKey("id") as! String)
+//                            }
+                        }
+                    }
+                    self!.localThread = self!.localThread.filter() { el in !selectedThreads.contains (el.valueForKey("id")! as! String) }
+                    Engine.deleteThreads(self, threadIds: selectedThreads) { status, JSON in
+                        
+                        Engine.getThreads(self) { status, JSON in
+                            self!.updateThreadView(JSON);
+                        }
+                        
+                        self!.tableView.reloadData();
+                    }
+                })
+            default: break;
+            }
+        }
     }
     
     @IBAction func filter(sender: AnyObject) {
@@ -93,13 +167,19 @@ class Chats : UITableViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
-        let chatVc = segue.destinationViewController as! ChatFlow
-        let cell = sender as! UITableViewCell;
-        let title = cell.viewWithTag(1) as! UILabel;
-        chatVc.senderId = "1"
-        chatVc.senderDisplayName = "Jack Joyce"
-        chatVc.thisChatType = "chat";
-        chatVc.thisChatMetadata = ["title":title.text!];
+        if (segue.identifier == "Open Chat") {
+            let cell = sender as! UITableViewCell;
+            let indexPath = self.tableView.indexPathForCell(cell)!;
+            
+            let selectedThread = localThread[indexPath.row] as! NSDictionary;
+            let chatVc = segue.destinationViewController as! ChatFlow
+            
+//            let title = cell.viewWithTag(1) as! UILabel;
+            let chatId = selectedThread.valueForKey("id")! as! String;
+            let participants = selectedThread.valueForKey("participants")! as! [AnyObject];
+            let threadName = Engine.generateThreadName(selectedThread)
+            chatVc.initChat(threadName, chatType: "chat", chatId: chatId, participants: participants, chatMetadata: ["title": threadName])
+        }
     }
     
     func setTabBarVisible(visible:Bool, animated:Bool) {

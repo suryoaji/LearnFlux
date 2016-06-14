@@ -10,6 +10,7 @@ import Foundation
 import Alamofire
 
 class Data : NSObject {
+    static let isProduction = false;
     static let defaults = NSUserDefaults.standardUserDefaults();
 
     static let clientId = "57453e293a603f8c168b4567_5gj7ywf0ocsoosw0sc8sgsgk8gckkc80o8co8gg00o08g88c4o";
@@ -21,4 +22,5 @@ class Data : NSObject {
     
     static var accessToken : String! = "";
     
+    static var newMessageCreated : String! = "";
 }

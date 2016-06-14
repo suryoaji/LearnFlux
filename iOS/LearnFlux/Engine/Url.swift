@@ -14,5 +14,5 @@ class Url : NSObject {
     
     static let token = base + "/oauth/v2/token";
     static let me = base + "/v1/me";
-    
+    static let messages = base + "/v1/messages";
 }
