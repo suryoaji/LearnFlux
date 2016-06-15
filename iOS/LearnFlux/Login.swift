@@ -21,22 +21,8 @@ class Login: UIViewController, UITextFieldDelegate {
         
         // Do any additional setup after loading the view, typically from a nib.
         
-        var temp = tfUsername;
-        
-        temp.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10);
-        temp.borderStyle = .Line;
-        temp.layer.borderWidth = 2;
-        temp.layer.borderColor = UIColor(red: 0.93, green: 0.93, blue: 0.93, alpha: 1).CGColor;
-        temp.height = 50;
-        
-        temp = tfPassword;
-
-        temp.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10);
-        temp.borderStyle = .Line;
-        temp.layer.borderWidth = 2;
-        temp.layer.borderColor = UIColor(red: 0.93, green: 0.93, blue: 0.93, alpha: 1).CGColor;
-        temp.height = 50;
-        
+        tfUsername = Util.designTextField(tfUsername);
+        tfPassword = Util.designTextField(tfPassword);        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -52,9 +38,6 @@ class Login: UIViewController, UITextFieldDelegate {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "Login") {
-            aDelegate.userId = "1";
-        }
     }
     
     // MARK: magic code for adjusting text field into view.
@@ -107,7 +90,7 @@ class Login: UIViewController, UITextFieldDelegate {
             self.globalResignFirstResponderRec(subview)
         }
     }
-    
+
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.globalResignFirstResponderRec(self.view!)
     }
@@ -128,7 +111,7 @@ class Login: UIViewController, UITextFieldDelegate {
                     self.performSegueWithIdentifier("Home", sender: self);
                 }
             }
-        };
+        }
     }
     
     

@@ -99,9 +99,16 @@ class Engine : NSObject {
                 let restat = statusMaker(res, JSON: JSON);
                 print ("Request: " + geturl + "\nStatus code: \(res)" + "\nStatus : \(restat)");
                 if (restat == .CustomError) {
-                    Util.showMessageInViewController(viewController, title: "Error", message: JSON!["error_description"] as! String) {
-                        dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                    };
+                    if (JSON!["error_description"] != nil) {
+                        Util.showMessageInViewController(viewController, title: "Error", message: JSON!["error_description"] as! String) {
+                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+                        }
+                    }
+                    else {
+                        Util.showMessageInViewController(viewController, title: "Error", message: "\(JSON!["error"])") {
+                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+                        }
+                    }
                 }
                 else if (restat == .InvalidAccessToken) {
                     dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
@@ -220,14 +227,20 @@ class Engine : NSObject {
                             JSON = try NSJSONSerialization.JSONObjectWithData(data!, options:[])
                         }
                         let restat = statusMaker((httpResponse?.statusCode)!, JSON: JSON);
+                        print (JSON);
                         switch (restat) {
                         case .Success:
                             if (callback != nil) { callback! (restat, JSON); }
                             break;
                         case .CustomError:
-                            Util.showMessageInViewController(viewController, title: "Error", message: JSON["error_description"] as! String) {
+                            if let errorDesc = JSON["error_description"]! {
+                                Util.showMessageInViewController(viewController, title: "Error", message: errorDesc as! String) {
+                                    if (callback != nil) { callback! (restat, JSON); }
+                                }
+                            }
+                            else {
                                 if (callback != nil) { callback! (restat, JSON); }
-                            };
+                            }
                             break;
                         case .InvalidAccessToken:
                             if (!locked) {
@@ -333,7 +346,8 @@ class Engine : NSObject {
             let participantId = participant.valueForKey("id")! as! Int;
             if (participantId != selfId) {
                 if (chatName != "") { chatName += ", "; }
-                chatName += participant["username"] as! String;
+                chatName += String(participant["id"] as! Int);
+//                chatName += participant["username"] as! String;
             }
         }
         return chatName;
@@ -390,6 +404,28 @@ class Engine : NSObject {
                         })
                     }
                 }
+            }
+        }
+    }
+    
+    static func register (viewController: UIViewController? = nil, username: String, firstName: String, lastName: String, email: String, password: String, passwordConfirm: String, callback: JSONreturn? = nil) {
+        let param = ["username":username,
+                     "firstName":firstName,
+                     "lastName":lastName,
+                     "email":email,
+                     "password":password,
+                     "passwordConfirm":passwordConfirm];
+        makeRequest2(viewController, method: .POST, url: Url.register, param: param) { status, JSON in
+            if (JSON != nil) {
+                print (JSON);
+            }
+            if (status == .Success) {
+                Util.showMessageInViewController(viewController, title: "Success", message: "You have successfully registered. Please allow some time for the system to process your registration. You will get notification on your email when your account has been activated. Thank you.", buttonOKTitle: "Ok") {
+                    if (callback != nil) { callback! (status, JSON); }
+                }
+            }
+            else {
+                if (callback != nil) { callback! (status, JSON); }
             }
         }
     }

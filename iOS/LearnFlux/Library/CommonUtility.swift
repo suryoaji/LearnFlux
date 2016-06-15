@@ -26,7 +26,9 @@ class Util : NSObject {
             if (callback != nil) { callback!(); }
         }
         alertController.addAction(actionOk)
-        viewController!.presentViewController(alertController, animated: true, completion: nil)
+        dispatch_async(dispatch_get_main_queue()) {
+            viewController!.presentViewController(alertController, animated: true, completion: nil)
+        }
     }
     
     static func showChoiceInViewController(viewController: UIViewController?, title: String, message: String, buttonTitle: [String], buttonStyle: [UIAlertActionStyle?]?,callback: ((Int)->Void)?) -> () {
@@ -47,7 +49,9 @@ class Util : NSObject {
             alertController.addAction(action)
         }
         
-        viewController!.presentViewController(alertController, animated: true, completion: nil)
+        dispatch_async(dispatch_get_main_queue()) {
+            viewController!.presentViewController(alertController, animated: true, completion: nil)
+        }
     }
   
     
@@ -68,8 +72,10 @@ class Util : NSObject {
             }
         }
         alertController.addAction(actionCancel)
-        
-        viewController!.presentViewController(alertController, animated: true, completion: nil)
+
+        dispatch_async(dispatch_get_main_queue()) {
+            viewController!.presentViewController(alertController, animated: true, completion: nil)
+        }
     }
     
     static func showIndicatorDarkOverlay (view: UIView, message: String = "") {
@@ -116,6 +122,20 @@ class Util : NSObject {
 
     static func getViewControllerID(vcname: String, fromStoryboard storyboardName: String = "Main") -> UIViewController {
         return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewControllerWithIdentifier(vcname)
+    }
+    
+    static func designTextField (textField : OSTextField, leftInset: CGFloat) -> OSTextField {
+        return designTextField(textField, insets: UIEdgeInsets (top: 10, left: leftInset, bottom: 10, right: 10));
+    }
+    
+    static func designTextField (textField : OSTextField, insets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)) -> OSTextField {
+        let temp = textField;
+        temp.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10);
+        temp.borderStyle = .Line;
+        temp.layer.borderWidth = 2;
+        temp.layer.borderColor = UIColor(red: 0.93, green: 0.93, blue: 0.93, alpha: 1).CGColor;
+        temp.height = 50;
+        return temp;
     }
     
 }

@@ -72,6 +72,8 @@
 		5B09CF7B1CBB9FAE0042C70B /* hamburger-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B09CF791CBB9FAE0042C70B /* hamburger-18@2x.png */; };
 		5B09CF7C1CBB9FAE0042C70B /* hamburger-18@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B09CF7A1CBB9FAE0042C70B /* hamburger-18@3x.png */; };
 		5B09CF7E1CBBAAF10042C70B /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B09CF7D1CBBAAF10042C70B /* Menu.swift */; };
+		5B0AC9A01D110A4D00594E4C /* OrgFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0AC99F1D110A4D00594E4C /* OrgFlow.swift */; };
+		5B0AC9A21D110BEF00594E4C /* messages-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0AC9A11D110BEF00594E4C /* messages-70.png */; };
 		5B0B534D1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0B534C1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift */; };
 		5B13560F1D096DBC0058BBA5 /* activities-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B13560C1D096DBC0058BBA5 /* activities-70.png */; };
 		5B1356101D096DBC0058BBA5 /* events-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B13560D1D096DBC0058BBA5 /* events-70.png */; };
@@ -435,6 +437,8 @@
 		5B09CF791CBB9FAE0042C70B /* hamburger-18@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hamburger-18@2x.png"; path = "Icons/hamburger-18@2x.png"; sourceTree = "<group>"; };
 		5B09CF7A1CBB9FAE0042C70B /* hamburger-18@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hamburger-18@3x.png"; path = "Icons/hamburger-18@3x.png"; sourceTree = "<group>"; };
 		5B09CF7D1CBBAAF10042C70B /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		5B0AC99F1D110A4D00594E4C /* OrgFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgFlow.swift; sourceTree = "<group>"; };
+		5B0AC9A11D110BEF00594E4C /* messages-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "messages-70.png"; path = "IconsOfficial/messages-70.png"; sourceTree = "<group>"; };
 		5B0B534C1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "JSQMessageCollectionViewCell+Action.swift"; path = "Library/JSQMessageCollectionViewCell+Action.swift"; sourceTree = "<group>"; };
 		5B13560C1D096DBC0058BBA5 /* activities-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "activities-70.png"; path = "IconsOfficial/activities-70.png"; sourceTree = "<group>"; };
 		5B13560D1D096DBC0058BBA5 /* events-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "events-70.png"; path = "IconsOfficial/events-70.png"; sourceTree = "<group>"; };
@@ -850,6 +854,7 @@
 				5B09CF7D1CBBAAF10042C70B /* Menu.swift */,
 				5B04A2351CBCDEE000FA5CCA /* Connections.swift */,
 				5B04A2371CBCDF0300FA5CCA /* Org.swift */,
+				5B0AC99F1D110A4D00594E4C /* OrgFlow.swift */,
 				5B04A2391CBCDF3400FA5CCA /* Chats.swift */,
 				5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */,
 				5BE7C3101CCE00DF0067334D /* AttachEvent.swift */,
@@ -1006,6 +1011,7 @@
 		5B13560B1D096DA10058BBA5 /* IconsOfficial */ = {
 			isa = PBXGroup;
 			children = (
+				5B0AC9A11D110BEF00594E4C /* messages-70.png */,
 				5B13560C1D096DBC0058BBA5 /* activities-70.png */,
 				5B13560D1D096DBC0058BBA5 /* events-70.png */,
 				5B13560E1D096DBC0058BBA5 /* groups-70.png */,
@@ -1373,6 +1379,7 @@
 				5BE7BBBD1CD206A800BDFCE1 /* checkmark-24@3x.png in Resources */,
 				5B3744411CC0CBFD00AF2897 /* star-128.png in Resources */,
 				5B04A24E1CBCE64E00FA5CCA /* male05.png in Resources */,
+				5B0AC9A21D110BEF00594E4C /* messages-70.png in Resources */,
 				5B37437E1CC0CBFD00AF2897 /* home_background10.jpg in Resources */,
 				5B3743B11CC0CBFD00AF2897 /* download-24.png in Resources */,
 				5B3743E31CC0CBFD00AF2897 /* opened_folder-24.png in Resources */,
@@ -1712,6 +1719,7 @@
 				5BE7BBB11CD1DE2500BDFCE1 /* AttachPoll.swift in Sources */,
 				5B98B59B1CC8DB190070AE97 /* ChatFlow.swift in Sources */,
 				5B6DECBC1D016BA000E16650 /* Url.swift in Sources */,
+				5B0AC9A01D110A4D00594E4C /* OrgFlow.swift in Sources */,
 				5B3742711CC0CBAD00AF2897 /* OSTextField.m in Sources */,
 				5B3742761CC0CBAD00AF2897 /* UIViewController+FrequentTools.m in Sources */,
 				5B3742731CC0CBAD00AF2897 /* UILabel+HeightToFit.m in Sources */,
