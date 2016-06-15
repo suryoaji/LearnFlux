@@ -84,6 +84,7 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods/AMPopTip.framework"
   install_framework "Pods/AZDropdownMenu.framework"
   install_framework "Pods/Alamofire.framework"
   install_framework "Pods/CZPicker.framework"
@@ -93,6 +94,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/RAReorderableLayout.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods/AMPopTip.framework"
   install_framework "Pods/AZDropdownMenu.framework"
   install_framework "Pods/Alamofire.framework"
   install_framework "Pods/CZPicker.framework"

@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (3.4.0)
+  - AMPopTip (1.0.3)
   - AZDropdownMenu (1.1.1)
   - CZPicker (0.4.2)
   - JSQMessagesViewController (7.2.0):
@@ -10,6 +11,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - AMPopTip
   - AZDropdownMenu
   - CZPicker
   - JSQMessagesViewController
@@ -18,6 +20,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
+  AMPopTip: 42ab801c5d4519093908d14134c8c9d7ffc435b4
   AZDropdownMenu: 0ba09d5f7b1b8dc795824ec281c4dde8515f4498
   CZPicker: df3d8d0511595b7cd2f032263c82c611d45a9b8e
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5

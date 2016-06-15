@@ -9,3 +9,4 @@ pod 'CZPicker'
 pod "RAReorderableLayout"
 pod "Alamofire"
 pod 'AZDropdownMenu'
+pod 'AMPopTip'
