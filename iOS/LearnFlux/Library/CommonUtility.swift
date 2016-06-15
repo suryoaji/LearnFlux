@@ -134,7 +134,7 @@ class Util : NSObject {
         temp.borderStyle = .Line;
         temp.layer.borderWidth = 2;
         temp.layer.borderColor = UIColor(red: 0.93, green: 0.93, blue: 0.93, alpha: 1).CGColor;
-        temp.height = 50;
+//        temp.height = 50;
         return temp;
     }
     

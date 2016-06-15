@@ -26,7 +26,6 @@
 		5B02265B1CEAFB7200C5E8EE /* mosaic_polls.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0226531CEAFB7200C5E8EE /* mosaic_polls.png */; };
 		5B02265C1CEAFB7200C5E8EE /* mosaic_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0226541CEAFB7200C5E8EE /* mosaic_settings.png */; };
 		5B04A2361CBCDEE000FA5CCA /* Connections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2351CBCDEE000FA5CCA /* Connections.swift */; };
-		5B04A2381CBCDF0300FA5CCA /* Org.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2371CBCDF0300FA5CCA /* Org.swift */; };
 		5B04A23A1CBCDF3400FA5CCA /* Chats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2391CBCDF3400FA5CCA /* Chats.swift */; };
 		5B04A2461CBCE64D00FA5CCA /* female01.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B04A23C1CBCE64D00FA5CCA /* female01.png */; };
 		5B04A2471CBCE64D00FA5CCA /* female02.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B04A23D1CBCE64D00FA5CCA /* female02.png */; };
@@ -388,7 +387,6 @@
 		5B0226531CEAFB7200C5E8EE /* mosaic_polls.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mosaic_polls.png; path = Images/mosaic_polls.png; sourceTree = "<group>"; };
 		5B0226541CEAFB7200C5E8EE /* mosaic_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mosaic_settings.png; path = Images/mosaic_settings.png; sourceTree = "<group>"; };
 		5B04A2351CBCDEE000FA5CCA /* Connections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connections.swift; sourceTree = "<group>"; };
-		5B04A2371CBCDF0300FA5CCA /* Org.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Org.swift; sourceTree = "<group>"; };
 		5B04A2391CBCDF3400FA5CCA /* Chats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chats.swift; sourceTree = "<group>"; };
 		5B04A23C1CBCE64D00FA5CCA /* female01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = female01.png; path = "Images Mockup/female01.png"; sourceTree = "<group>"; };
 		5B04A23D1CBCE64D00FA5CCA /* female02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = female02.png; path = "Images Mockup/female02.png"; sourceTree = "<group>"; };
@@ -853,7 +851,6 @@
 				5B02264B1CEAD67A00C5E8EE /* NewHome.swift */,
 				5B09CF7D1CBBAAF10042C70B /* Menu.swift */,
 				5B04A2351CBCDEE000FA5CCA /* Connections.swift */,
-				5B04A2371CBCDF0300FA5CCA /* Org.swift */,
 				5B0AC99F1D110A4D00594E4C /* OrgFlow.swift */,
 				5B04A2391CBCDF3400FA5CCA /* Chats.swift */,
 				5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */,
@@ -1742,7 +1739,6 @@
 				5B3742671CC0CBAD00AF2897 /* UIImageView+RoundedRect.m in Sources */,
 				5B3742721CC0CBAD00AF2897 /* UIImageView+ResizeProportionally.m in Sources */,
 				5B37426C1CC0CBAD00AF2897 /* UIViewController+FirstResponder.m in Sources */,
-				5B04A2381CBCDF0300FA5CCA /* Org.swift in Sources */,
 				5B09CEB31CBB4A330042C70B /* AppDelegate.swift in Sources */,
 				5BFF797F1CCF0BC400B50896 /* DatePickerDialog.swift in Sources */,
 				5BFFFDB91CD8AB740099AB3F /* CommonUtility.swift in Sources */,
