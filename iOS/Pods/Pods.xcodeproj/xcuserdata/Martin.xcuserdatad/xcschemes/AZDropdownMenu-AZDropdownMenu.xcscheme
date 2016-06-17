@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'B9E9872CA1021C0C67C776E6'
+               BlueprintIdentifier = '30EC56F260D27C1F7AF9E002'
                BlueprintName = 'AZDropdownMenu-AZDropdownMenu'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'AZDropdownMenu.bundle'>
