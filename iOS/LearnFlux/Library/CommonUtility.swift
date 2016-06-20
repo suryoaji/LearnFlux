@@ -134,8 +134,14 @@ class Util : NSObject {
         temp.borderStyle = .Line;
         temp.layer.borderWidth = 2;
         temp.layer.borderColor = UIColor(red: 0.93, green: 0.93, blue: 0.93, alpha: 1).CGColor;
-//        temp.height = 50;
         return temp;
+    }
+    
+    static func labelPerfectHeight (mylabel : UILabel)->CGFloat {
+        let str = mylabel.text!;
+        
+        return str.boundingRectWithSize(CGSizeMake(mylabel.frame.size.width, 10000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: mylabel.font], context: nil).size.height;
+        
     }
     
 }

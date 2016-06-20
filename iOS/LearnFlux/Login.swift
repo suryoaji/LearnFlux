@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import AMPopTip
 
 class Login: UIViewController, UITextFieldDelegate {
 
     let aDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+    let popTip = AMPopTip();
     
     @IBOutlet weak var tfUsername: OSTextField!;
     @IBOutlet weak var tfPassword: OSTextField!;
@@ -38,6 +40,7 @@ class Login: UIViewController, UITextFieldDelegate {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        self.globalResignFirstResponder();
     }
     
     // MARK: magic code for adjusting text field into view.
@@ -83,6 +86,7 @@ class Login: UIViewController, UITextFieldDelegate {
     }
     
     override func globalResignFirstResponderRec(view: UIView) {
+        self.view.window?.endEditing(true);
         if view.respondsToSelector(#selector(self.resignFirstResponder)) {
             view.resignFirstResponder()
         }
@@ -92,6 +96,7 @@ class Login: UIViewController, UITextFieldDelegate {
     }
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        self.view.window?.endEditing(true);
         self.globalResignFirstResponderRec(self.view!)
     }
     
@@ -102,6 +107,19 @@ class Login: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func login (sender: AnyObject) {
+        self.globalResignFirstResponder();
+        popTip.hide();
+        if (self.tfUsername.text == "") {
+            self.popTip.showText("Enter your username", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfUsername.frame);
+            self.tfUsername.becomeFirstResponder();
+            return;
+        }
+        else if (self.tfPassword.text == "") {
+            self.popTip.showText("Enter your password", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfPassword.frame);
+            self.tfPassword.becomeFirstResponder();
+            return;
+        }
+        
         Engine.login(self, username: tfUsername.text!, password: tfPassword.text!) { status, JSON in
             if (JSON == nil) {
                 self.tfUsername.becomeFirstResponder();
@@ -114,6 +132,12 @@ class Login: UIViewController, UITextFieldDelegate {
         }
     }
     
+    @IBAction func beginEdit (sender: AnyObject) {
+        popTip.hide();
+    }
     
+    
+    
+
 }
 

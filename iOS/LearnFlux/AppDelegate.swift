@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import PKRevealController
+import DropDown
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, PKRevealing {
@@ -51,6 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKRevealing {
 //        Open Sans
 //        == OpenSans-CondensedLightItalic
 //        == OpenSans-CondensedLight
+        
+        DropDown.startListeningToKeyboard()
         
         return true
     }

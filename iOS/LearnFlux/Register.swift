@@ -39,35 +39,61 @@ class Register : UIViewController {
     
     @IBAction func submit (sender: AnyObject) {
         popTip.hide()
+        if (self.tfUsername.text == "") {
+            self.popTip.showText("Enter your desired username", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfUsername.frame);
+            return;
+        }
+        else if (self.tfEmail.text == "") {
+            self.popTip.showText("Enter valid email address", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfEmail.frame);
+            return;
+        }
+        else if (self.tfFirstName.text == "") {
+            self.popTip.showText("Enter your firstname", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfFirstName.frame);
+            return;
+        }
+        else if (self.tfLastName.text == "") {
+            self.popTip.showText("Enter your lastname (use '-' if there isn't any)", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfLastName.frame);
+            return;
+        }
+        else if (self.tfPassword.text == "") {
+            self.popTip.showText("Enter desired password", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfPassword.frame);
+            return;
+        }
+        else if (self.tfConfirm.text == "") {
+            self.popTip.showText("Please re-enter your password", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfConfirm.frame);
+            return;
+        }
+        
         Engine.register(self, username: tfUsername.text!, firstName: tfFirstName.text!, lastName: tfLastName.text!, email: tfEmail.text!, password: tfPassword.text!, passwordConfirm: tfConfirm.text!) { status, JSON in
             if (status == .CustomError) {
-                let error = JSON!["error"]! as! NSDictionary;
-                print (error);
-                dispatch_async(dispatch_get_main_queue()) {
-                    if let errMsg = error.valueForKey("username") as? String {
-                        self.tfUsername.becomeFirstResponder();
-                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view, fromFrame: self.tfUsername.frame)
-                    }
-                    else if let errMsg = error.valueForKey("email") as? String {
-                        self.tfEmail.becomeFirstResponder();
-                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view, fromFrame: self.tfEmail.frame)
-                    }
-                    else if let errMsg = error.valueForKey("password") as? String {
-                        self.tfPassword.becomeFirstResponder();
-                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view, fromFrame: self.tfPassword.frame)
-                    }
-                    else if let errMsg = error.valueForKey("passwordEqualToConfirmationPassword") as? String {
-                        self.tfPassword.becomeFirstResponder();
-                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view, fromFrame: self.tfPassword.frame)
-                    }
-                    else if let errMsg = error.valueForKey("passwordConfirm") as? String {
-                        self.tfConfirm.becomeFirstResponder();
-                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view, fromFrame: self.tfConfirm.frame)
-                    }
-                    else {
-                        self.popTip.showText("Sorry, unhandled error occured.", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view, fromFrame: self.tfConfirm.frame)
-                    }
-                }
+//                let errorWrapper = JSON!["errors"]! as! NSDictionary;
+//                let error = errorWrapper.valueForKey("messages")! as! NSDictionary;
+//                print (error);
+//                dispatch_async(dispatch_get_main_queue()) {
+//                    if let errMsg = error.valueForKey("username") as? String {
+//                        self.tfUsername.becomeFirstResponder();
+//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfUsername.frame)
+//                    }
+//                    else if let errMsg = error.valueForKey("email") as? String {
+//                        self.tfEmail.becomeFirstResponder();
+//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfEmail.frame)
+//                    }
+//                    else if let errMsg = error.valueForKey("password") as? String {
+//                        self.tfPassword.becomeFirstResponder();
+//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfPassword.frame)
+//                    }
+//                    else if let errMsg = error.valueForKey("passwordEqualToConfirmationPassword") as? String {
+//                        self.tfPassword.becomeFirstResponder();
+//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfPassword.frame)
+//                    }
+//                    else if let errMsg = error.valueForKey("passwordConfirm") as? String {
+//                        self.tfConfirm.becomeFirstResponder();
+//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfConfirm.frame)
+//                    }
+//                    else {
+//                        self.popTip.showText("Sorry, unhandled error occured.", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfConfirm.frame)
+//                    }
+//                }
             }
             else if (status == .Success) {
                 self.navigationController?.popViewControllerAnimated(true);

@@ -122,13 +122,10 @@ class Chats : UITableViewController {
                         }
                     }
                     self!.localThread = self!.localThread.filter() { el in !selectedThreads.contains (el.valueForKey("id")! as! String) }
+                    Engine.getThreads(self) { status, JSON in self!.tableView.reloadData(); }
                     Engine.deleteThreads(self, threadIds: selectedThreads) { status, JSON in
                         
-                        Engine.getThreads(self) { status, JSON in
-                            self!.updateThreadView(JSON);
-                        }
-                        
-                        self!.tableView.reloadData();
+                        Engine.getThreads(self) { status, JSON in self!.updateThreadView(JSON); }
                     }
                 })
             default: break;

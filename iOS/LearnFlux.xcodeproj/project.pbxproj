@@ -25,6 +25,10 @@
 		5B02265A1CEAFB7200C5E8EE /* mosaic_interestgroup.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0226521CEAFB7200C5E8EE /* mosaic_interestgroup.png */; };
 		5B02265B1CEAFB7200C5E8EE /* mosaic_polls.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0226531CEAFB7200C5E8EE /* mosaic_polls.png */; };
 		5B02265C1CEAFB7200C5E8EE /* mosaic_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0226541CEAFB7200C5E8EE /* mosaic_settings.png */; };
+		5B0455241D129E880078032B /* OrgDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0455231D129E880078032B /* OrgDetails.swift */; };
+		5B0455261D129F380078032B /* OrgGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0455251D129F380078032B /* OrgGroups.swift */; };
+		5B0455281D129F530078032B /* OrgEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0455271D129F530078032B /* OrgEvents.swift */; };
+		5B04552A1D129F690078032B /* OrgActivities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0455291D129F690078032B /* OrgActivities.swift */; };
 		5B04A2361CBCDEE000FA5CCA /* Connections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2351CBCDEE000FA5CCA /* Connections.swift */; };
 		5B04A23A1CBCDF3400FA5CCA /* Chats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B04A2391CBCDF3400FA5CCA /* Chats.swift */; };
 		5B04A2461CBCE64D00FA5CCA /* female01.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B04A23C1CBCE64D00FA5CCA /* female01.png */; };
@@ -71,7 +75,7 @@
 		5B09CF7B1CBB9FAE0042C70B /* hamburger-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B09CF791CBB9FAE0042C70B /* hamburger-18@2x.png */; };
 		5B09CF7C1CBB9FAE0042C70B /* hamburger-18@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B09CF7A1CBB9FAE0042C70B /* hamburger-18@3x.png */; };
 		5B09CF7E1CBBAAF10042C70B /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B09CF7D1CBBAAF10042C70B /* Menu.swift */; };
-		5B0AC9A01D110A4D00594E4C /* OrgFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0AC99F1D110A4D00594E4C /* OrgFlow.swift */; };
+		5B0AC9A01D110A4D00594E4C /* Org.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0AC99F1D110A4D00594E4C /* Org.swift */; };
 		5B0AC9A21D110BEF00594E4C /* messages-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0AC9A11D110BEF00594E4C /* messages-70.png */; };
 		5B0B534D1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0B534C1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift */; };
 		5B13560F1D096DBC0058BBA5 /* activities-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B13560C1D096DBC0058BBA5 /* activities-70.png */; };
@@ -332,6 +336,13 @@
 		5B3744441CC0CBFD00AF2897 /* trash2-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B37435D1CC0CBFD00AF2897 /* trash2-16.png */; };
 		5B3744451CC0CBFD00AF2897 /* trash2-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B37435E1CC0CBFD00AF2897 /* trash2-16@2x.png */; };
 		5B3744461CC0CBFD00AF2897 /* trash2-16@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B37435F1CC0CBFD00AF2897 /* trash2-16@3x.png */; };
+		5B52C0121D139CCF00900EE2 /* Calendar-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C00F1D139CCF00900EE2 /* Calendar-24.png */; };
+		5B52C0131D139CCF00900EE2 /* Calendar-24@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C0101D139CCF00900EE2 /* Calendar-24@2x.png */; };
+		5B52C0141D139CCF00900EE2 /* Calendar-24@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C0111D139CCF00900EE2 /* Calendar-24@3x.png */; };
+		5B52C0181D13A16800900EE2 /* Expand Arrow-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C0151D13A16800900EE2 /* Expand Arrow-16.png */; };
+		5B52C0191D13A16800900EE2 /* Expand Arrow-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C0161D13A16800900EE2 /* Expand Arrow-16@2x.png */; };
+		5B52C01A1D13A16800900EE2 /* Expand Arrow-16@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C0171D13A16800900EE2 /* Expand Arrow-16@3x.png */; };
+		5B52C01C1D13EF6800900EE2 /* OrgProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B52C01B1D13EF6800900EE2 /* OrgProfile.swift */; };
 		5B6DECBA1D01649100E16650 /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DECB91D01649100E16650 /* Singleton.swift */; };
 		5B6DECBC1D016BA000E16650 /* Url.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DECBB1D016BA000E16650 /* Url.swift */; };
 		5B98B59B1CC8DB190070AE97 /* ChatFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */; };
@@ -386,6 +397,10 @@
 		5B0226521CEAFB7200C5E8EE /* mosaic_interestgroup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mosaic_interestgroup.png; path = Images/mosaic_interestgroup.png; sourceTree = "<group>"; };
 		5B0226531CEAFB7200C5E8EE /* mosaic_polls.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mosaic_polls.png; path = Images/mosaic_polls.png; sourceTree = "<group>"; };
 		5B0226541CEAFB7200C5E8EE /* mosaic_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mosaic_settings.png; path = Images/mosaic_settings.png; sourceTree = "<group>"; };
+		5B0455231D129E880078032B /* OrgDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgDetails.swift; sourceTree = "<group>"; };
+		5B0455251D129F380078032B /* OrgGroups.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgGroups.swift; sourceTree = "<group>"; };
+		5B0455271D129F530078032B /* OrgEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgEvents.swift; sourceTree = "<group>"; };
+		5B0455291D129F690078032B /* OrgActivities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgActivities.swift; sourceTree = "<group>"; };
 		5B04A2351CBCDEE000FA5CCA /* Connections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connections.swift; sourceTree = "<group>"; };
 		5B04A2391CBCDF3400FA5CCA /* Chats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chats.swift; sourceTree = "<group>"; };
 		5B04A23C1CBCE64D00FA5CCA /* female01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = female01.png; path = "Images Mockup/female01.png"; sourceTree = "<group>"; };
@@ -435,7 +450,7 @@
 		5B09CF791CBB9FAE0042C70B /* hamburger-18@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hamburger-18@2x.png"; path = "Icons/hamburger-18@2x.png"; sourceTree = "<group>"; };
 		5B09CF7A1CBB9FAE0042C70B /* hamburger-18@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hamburger-18@3x.png"; path = "Icons/hamburger-18@3x.png"; sourceTree = "<group>"; };
 		5B09CF7D1CBBAAF10042C70B /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
-		5B0AC99F1D110A4D00594E4C /* OrgFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgFlow.swift; sourceTree = "<group>"; };
+		5B0AC99F1D110A4D00594E4C /* Org.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Org.swift; sourceTree = "<group>"; };
 		5B0AC9A11D110BEF00594E4C /* messages-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "messages-70.png"; path = "IconsOfficial/messages-70.png"; sourceTree = "<group>"; };
 		5B0B534C1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "JSQMessageCollectionViewCell+Action.swift"; path = "Library/JSQMessageCollectionViewCell+Action.swift"; sourceTree = "<group>"; };
 		5B13560C1D096DBC0058BBA5 /* activities-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "activities-70.png"; path = "IconsOfficial/activities-70.png"; sourceTree = "<group>"; };
@@ -722,6 +737,13 @@
 		5B37435D1CC0CBFD00AF2897 /* trash2-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trash2-16.png"; path = "Icons2/trash2-16.png"; sourceTree = "<group>"; };
 		5B37435E1CC0CBFD00AF2897 /* trash2-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trash2-16@2x.png"; path = "Icons2/trash2-16@2x.png"; sourceTree = "<group>"; };
 		5B37435F1CC0CBFD00AF2897 /* trash2-16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trash2-16@3x.png"; path = "Icons2/trash2-16@3x.png"; sourceTree = "<group>"; };
+		5B52C00F1D139CCF00900EE2 /* Calendar-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Calendar-24.png"; path = "Icons Better/Calendar-24.png"; sourceTree = "<group>"; };
+		5B52C0101D139CCF00900EE2 /* Calendar-24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Calendar-24@2x.png"; path = "Icons Better/Calendar-24@2x.png"; sourceTree = "<group>"; };
+		5B52C0111D139CCF00900EE2 /* Calendar-24@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Calendar-24@3x.png"; path = "Icons Better/Calendar-24@3x.png"; sourceTree = "<group>"; };
+		5B52C0151D13A16800900EE2 /* Expand Arrow-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Expand Arrow-16.png"; path = "Icons Better/Expand Arrow-16.png"; sourceTree = "<group>"; };
+		5B52C0161D13A16800900EE2 /* Expand Arrow-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Expand Arrow-16@2x.png"; path = "Icons Better/Expand Arrow-16@2x.png"; sourceTree = "<group>"; };
+		5B52C0171D13A16800900EE2 /* Expand Arrow-16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Expand Arrow-16@3x.png"; path = "Icons Better/Expand Arrow-16@3x.png"; sourceTree = "<group>"; };
+		5B52C01B1D13EF6800900EE2 /* OrgProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgProfile.swift; sourceTree = "<group>"; };
 		5B6DECB91D01649100E16650 /* Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Singleton.swift; path = Engine/Singleton.swift; sourceTree = "<group>"; };
 		5B6DECBB1D016BA000E16650 /* Url.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Url.swift; path = Engine/Url.swift; sourceTree = "<group>"; };
 		5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatFlow.swift; sourceTree = "<group>"; };
@@ -851,7 +873,12 @@
 				5B02264B1CEAD67A00C5E8EE /* NewHome.swift */,
 				5B09CF7D1CBBAAF10042C70B /* Menu.swift */,
 				5B04A2351CBCDEE000FA5CCA /* Connections.swift */,
-				5B0AC99F1D110A4D00594E4C /* OrgFlow.swift */,
+				5B0AC99F1D110A4D00594E4C /* Org.swift */,
+				5B0455231D129E880078032B /* OrgDetails.swift */,
+				5B52C01B1D13EF6800900EE2 /* OrgProfile.swift */,
+				5B0455251D129F380078032B /* OrgGroups.swift */,
+				5B0455271D129F530078032B /* OrgEvents.swift */,
+				5B0455291D129F690078032B /* OrgActivities.swift */,
 				5B04A2391CBCDF3400FA5CCA /* Chats.swift */,
 				5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */,
 				5BE7C3101CCE00DF0067334D /* AttachEvent.swift */,
@@ -1008,6 +1035,7 @@
 		5B13560B1D096DA10058BBA5 /* IconsOfficial */ = {
 			isa = PBXGroup;
 			children = (
+				5B52C00E1D139CB600900EE2 /* IconsBetter */,
 				5B0AC9A11D110BEF00594E4C /* messages-70.png */,
 				5B13560C1D096DBC0058BBA5 /* activities-70.png */,
 				5B13560D1D096DBC0058BBA5 /* events-70.png */,
@@ -1256,6 +1284,19 @@
 			name = Icons2;
 			sourceTree = "<group>";
 		};
+		5B52C00E1D139CB600900EE2 /* IconsBetter */ = {
+			isa = PBXGroup;
+			children = (
+				5B52C0151D13A16800900EE2 /* Expand Arrow-16.png */,
+				5B52C0161D13A16800900EE2 /* Expand Arrow-16@2x.png */,
+				5B52C0171D13A16800900EE2 /* Expand Arrow-16@3x.png */,
+				5B52C00F1D139CCF00900EE2 /* Calendar-24.png */,
+				5B52C0101D139CCF00900EE2 /* Calendar-24@2x.png */,
+				5B52C0111D139CCF00900EE2 /* Calendar-24@3x.png */,
+			);
+			name = IconsBetter;
+			sourceTree = "<group>";
+		};
 		5B6DECB81D015FB100E16650 /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -1407,6 +1448,7 @@
 				5B37441A1CC0CBFD00AF2897 /* user_male-24.png in Resources */,
 				5B3743FF1CC0CBFD00AF2897 /* search-24@3x.png in Resources */,
 				5B3743A01CC0CBFD00AF2897 /* compas-24@2x.png in Resources */,
+				5B52C0181D13A16800900EE2 /* Expand Arrow-16.png in Resources */,
 				5B3744321CC0CBFD00AF2897 /* edit-16@3x.png in Resources */,
 				5B3744151CC0CBFD00AF2897 /* update-24.png in Resources */,
 				5B3743D61CC0CBFD00AF2897 /* like-24@2x.png in Resources */,
@@ -1481,6 +1523,7 @@
 				5B3743EB1CC0CBFD00AF2897 /* picture-24@3x.png in Resources */,
 				5B04A2481CBCE64D00FA5CCA /* female03.png in Resources */,
 				5B04A2561CBCEABE00FA5CCA /* group03.png in Resources */,
+				5B52C0191D13A16800900EE2 /* Expand Arrow-16@2x.png in Resources */,
 				5B01FC5F1CD34D6700047C15 /* arrow_up_circle-18@3x.png in Resources */,
 				5B0514461CE2DC1C006F5C7E /* calendar2-24.png in Resources */,
 				5B3743A71CC0CBFD00AF2897 /* directions-24@3x.png in Resources */,
@@ -1500,6 +1543,7 @@
 				5BDBCC041CBE518900655A61 /* clip-18.png in Resources */,
 				5BDBCC051CBE518900655A61 /* clip-18@2x.png in Resources */,
 				5B3744111CC0CBFD00AF2897 /* trash-24@3x.png in Resources */,
+				5B52C0131D139CCF00900EE2 /* Calendar-24@2x.png in Resources */,
 				5B3743E91CC0CBFD00AF2897 /* picture-24.png in Resources */,
 				5B3743AE1CC0CBFD00AF2897 /* down4-24.png in Resources */,
 				5B3743961CC0CBFD00AF2897 /* bar_chart-24.png in Resources */,
@@ -1530,6 +1574,7 @@
 				5B3743F91CC0CBFD00AF2897 /* reload-24@3x.png in Resources */,
 				5B3743D91CC0CBFD00AF2897 /* line_chart-24@2x.png in Resources */,
 				5B3743C91CC0CBFD00AF2897 /* home-24.png in Resources */,
+				5B52C0121D139CCF00900EE2 /* Calendar-24.png in Resources */,
 				5B3743B51CC0CBFD00AF2897 /* download2-24@2x.png in Resources */,
 				5B3743C71CC0CBFD00AF2897 /* help-24@2x.png in Resources */,
 				5B37442E1CC0CBFD00AF2897 /* calendar-24@3x.png in Resources */,
@@ -1565,6 +1610,7 @@
 				5B09CF761CBB9F200042C70B /* hamburger-24.png in Resources */,
 				5B37443E1CC0CBFD00AF2897 /* star_full-24@2x.png in Resources */,
 				5B37439F1CC0CBFD00AF2897 /* compas-24.png in Resources */,
+				5B52C01A1D13A16800900EE2 /* Expand Arrow-16@3x.png in Resources */,
 				5B3744311CC0CBFD00AF2897 /* edit-16@2x.png in Resources */,
 				5B3743A11CC0CBFD00AF2897 /* compas-24@3x.png in Resources */,
 				5B37436B1CC0CBFD00AF2897 /* bed-24@3x.png in Resources */,
@@ -1636,6 +1682,7 @@
 				5B3743B41CC0CBFD00AF2897 /* download2-24.png in Resources */,
 				5B3744391CC0CBFD00AF2897 /* star_empty-24.png in Resources */,
 				5B37437C1CC0CBFD00AF2897 /* home_background8.jpg in Resources */,
+				5B52C0141D139CCF00900EE2 /* Calendar-24@3x.png in Resources */,
 				5B3743821CC0CBFD00AF2897 /* ios_mail-448.png in Resources */,
 				5B3743771CC0CBFD00AF2897 /* home_background3.jpg in Resources */,
 				5B3744171CC0CBFD00AF2897 /* update-24@3x.png in Resources */,
@@ -1716,7 +1763,7 @@
 				5BE7BBB11CD1DE2500BDFCE1 /* AttachPoll.swift in Sources */,
 				5B98B59B1CC8DB190070AE97 /* ChatFlow.swift in Sources */,
 				5B6DECBC1D016BA000E16650 /* Url.swift in Sources */,
-				5B0AC9A01D110A4D00594E4C /* OrgFlow.swift in Sources */,
+				5B0AC9A01D110A4D00594E4C /* Org.swift in Sources */,
 				5B3742711CC0CBAD00AF2897 /* OSTextField.m in Sources */,
 				5B3742761CC0CBAD00AF2897 /* UIViewController+FrequentTools.m in Sources */,
 				5B3742731CC0CBAD00AF2897 /* UILabel+HeightToFit.m in Sources */,
@@ -1731,12 +1778,15 @@
 				5B37425F1CC0CBAD00AF2897 /* NSDate+String.m in Sources */,
 				5B37426F1CC0CBAD00AF2897 /* CommonUtility.m in Sources */,
 				5BFFFDB71CD8958B0099AB3F /* SweetAlert.swift in Sources */,
+				5B04552A1D129F690078032B /* OrgActivities.swift in Sources */,
 				5B3742771CC0CBAD00AF2897 /* UIView+Border.m in Sources */,
+				5B0455281D129F530078032B /* OrgEvents.swift in Sources */,
 				5B37426A1CC0CBAD00AF2897 /* UITableView+ReloadDataAnimate.m in Sources */,
 				5B01FC411CD2FCB800047C15 /* NSDictionary+ForKey.m in Sources */,
 				5B09CF6B1CBB94C60042C70B /* Home.swift in Sources */,
 				5B37426B1CC0CBAD00AF2897 /* UIView+Slide.m in Sources */,
 				5B3742671CC0CBAD00AF2897 /* UIImageView+RoundedRect.m in Sources */,
+				5B52C01C1D13EF6800900EE2 /* OrgProfile.swift in Sources */,
 				5B3742721CC0CBAD00AF2897 /* UIImageView+ResizeProportionally.m in Sources */,
 				5B37426C1CC0CBAD00AF2897 /* UIViewController+FirstResponder.m in Sources */,
 				5B09CEB31CBB4A330042C70B /* AppDelegate.swift in Sources */,
@@ -1750,9 +1800,11 @@
 				5B3742661CC0CBAD00AF2897 /* NSIndexPath+MockupShortcut.m in Sources */,
 				5B3742751CC0CBAD00AF2897 /* UIView+Positioning.m in Sources */,
 				5BF4812B1CE07166006930CC /* PollDetails.swift in Sources */,
+				5B0455261D129F380078032B /* OrgGroups.swift in Sources */,
 				5B3742631CC0CBAD00AF2897 /* UIView+Rotate.m in Sources */,
 				5B37426E1CC0CBAD00AF2897 /* CommonConstants.m in Sources */,
 				5B6DECBA1D01649100E16650 /* Singleton.swift in Sources */,
+				5B0455241D129E880078032B /* OrgDetails.swift in Sources */,
 				5B09CF691CBB8E130042C70B /* ForgotPassword.swift in Sources */,
 				5B04A25D1CBCF1DF00FA5CCA /* Register.swift in Sources */,
 				5B09CF7E1CBBAAF10042C70B /* Menu.swift in Sources */,

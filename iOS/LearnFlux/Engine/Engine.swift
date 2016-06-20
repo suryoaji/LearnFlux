@@ -52,7 +52,7 @@ class Engine : NSObject {
     
     static func statusMaker (statusCode : Int, JSON : AnyObject?)->RequestStatusType {
         if (JSON != nil) {
-            if (JSON!.objectForKey("error") != nil) {
+            if (JSON!.objectForKey("error") != nil || JSON!.objectForKey("errors") != nil) {
                 return .CustomError;
             }
         }
@@ -187,11 +187,20 @@ class Engine : NSObject {
     }
     
     static func makeRequest2  (viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
-        let headers = [
-            "authorization": "Bearer \(Data.accessToken)",
-            "content-type": "application/json",
-            "cache-control": "no-cache"
-        ]
+        var headers : [String: String]!
+        if url == Url.register {
+            headers = [
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
+            ]
+        }
+        else {
+            headers = [
+                "authorization": "Bearer \(Data.accessToken)",
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
+            ]
+        }
         
         do {
             let mparam = (param == nil ? [:] : param!);
@@ -281,7 +290,7 @@ class Engine : NSObject {
         }
 
     }
-    
+        
     static func login (viewController: UIViewController? = nil, username : String, password : String, callback: JSONreturn? = nil) {
         Data.username = username;
         Data.password = password;
@@ -384,29 +393,38 @@ class Engine : NSObject {
         }
     }
     
+//    static func deleteThreads (viewController: UIViewController? = nil, threadIds: [String], callback: JSONreturn? = nil) {
+//        var executed : Int = 0;
+//        var failed : Int = 0;
+//        for threadId in threadIds {
+//            let param = ["id":threadId];
+//            makeRequest2(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
+//                executed += 1;
+//                if (status != RequestStatusType.Success) { failed += 1; }
+//                if (executed == threadIds.count) {
+//                    if (failed > 0) {
+//                        Util.showMessageInViewController(viewController, title: "Failed", message: "From \(executed) threads to delete, \(failed) threads failed to delete.", buttonOKTitle: "Ok", callback: {
+//                            if (callback != nil) { callback! (.GeneralError, JSON); }
+//                        })
+//                    }
+//                    else {
+//                        Util.showMessageInViewController(viewController, title: "Success", message: "\(executed) threads deleted successfully.", buttonOKTitle: "Ok", callback: {
+//                            if (callback != nil) { callback! (status, JSON); }
+//                        })
+//                    }
+//                }
+//            }
+//        }
+//    }
+  
     static func deleteThreads (viewController: UIViewController? = nil, threadIds: [String], callback: JSONreturn? = nil) {
-        var executed : Int = 0;
-        var failed : Int = 0;
-        for threadId in threadIds {
-            let param = ["id":threadId];
-            makeRequest2(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
-                executed += 1;
-                if (status != RequestStatusType.Success) { failed += 1; }
-                if (executed == threadIds.count) {
-                    if (failed > 0) {
-                        Util.showMessageInViewController(viewController, title: "Failed", message: "From \(executed) threads to delete, \(failed) threads failed to delete.", buttonOKTitle: "Ok", callback: {
-                            if (callback != nil) { callback! (.GeneralError, JSON); }
-                        })
-                    }
-                    else {
-                        Util.showMessageInViewController(viewController, title: "Success", message: "\(executed) threads deleted successfully.", buttonOKTitle: "Ok", callback: {
-                            if (callback != nil) { callback! (status, JSON); }
-                        })
-                    }
-                }
-            }
+        let param = ["ids":threadIds];
+        makeRequest2(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
+            if (JSON != nil) { print (JSON!); }
+            if (callback != nil) { callback! (status, JSON); }
         }
     }
+
     
     static func register (viewController: UIViewController? = nil, username: String, firstName: String, lastName: String, email: String, password: String, passwordConfirm: String, callback: JSONreturn? = nil) {
         let param = ["username":username,
