@@ -16,7 +16,9 @@ class Connections : UITableViewController {
         ["name":"tester2", "id":8]
     ];
     
-    var connect2 = Array<AnyObject>();
+    var actualConnect = Array<AnyObject>();
+    
+    var selectedConnect : Array<Bool> = [];
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -29,11 +31,58 @@ class Connections : UITableViewController {
         
         for myConnect in connect {
             if (myConnect["id"] != (Data.defaults.valueForKey("me")!.valueForKey("id")! as! Int)) {
-                connect2.append(myConnect);
+                actualConnect.append(myConnect);
+                selectedConnect.append(false);
             }
         }
         
         self.tabBarController?.title = "Connections";
+    }
+    
+    lazy var flowDirection : String! = "";
+    lazy var flowData : NSMutableDictionary! = [:];
+    
+    func setupDoneButton () {
+        let right:UIBarButtonItem! = UIBarButtonItem();
+        right.title = "Done";
+        right.action = #selector(self.next);
+        right.target = self;
+        self.navigationItem.rightBarButtonItem = right;
+    }
+    
+    func inFlow (flowDirection : String, flowData : NSMutableDictionary = [:]) {
+        self.flowDirection = flowDirection;
+        self.flowData = flowData;
+        
+        if (flowDirection == "NewGroups") {
+            self.title = "Select Participants"
+            setupDoneButton();
+        }
+    }
+    
+    func next () {
+        if (self.flowDirection == "NewGroups") {
+            let title = flowData.valueForKey("title")! as! String;
+            var userId : Array<Int> = [];
+            for i in 0..<selectedConnect.count {
+                if (selectedConnect[i]) {
+                    let el = connect[i] as NSDictionary;
+                    userId.append(el.valueForKey("id")! as! Int);
+                }
+            }
+            Engine.createThread(self, title: title, userId: userId) { status, JSON in
+                Util.mainThread() {
+                    let chatFlow = Util.getViewControllerID("ChatFlow") as! ChatFlow;
+                    chatFlow.initChat(threadJSON: JSON);
+                    self.navigationController?.pushViewController(chatFlow, animated: true);
+                    let count = self.navigationController!.viewControllers.count;
+                    var vcs = self.navigationController?.viewControllers;
+                    vcs?.removeAtIndex(count - 2);
+                    vcs?.removeAtIndex(count - 3);
+                    self.navigationController?.viewControllers = vcs!;
+                }
+            }
+        }
     }
     
     @IBAction func revealMenu (sender: AnyObject) {
@@ -46,7 +95,7 @@ class Connections : UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (section) {
-        case 1: return connect2.count;
+        case 1: return actualConnect.count;
         default: return 0;
         }
     }
@@ -59,34 +108,48 @@ class Connections : UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("1-0")!;
         cell.setSeparatorType(CellSeparatorFull);
         let lbl = cell.viewWithTag(1) as! UILabel;
-        let row = connect2[indexPath.row];
+        let row = actualConnect[indexPath.row];
         lbl.text = row.valueForKey("name") as? String;
         let img = cell.viewWithTag(10) as! UIImageView;
         img.makeRounded();
+        
+        if (selectedConnect[indexPath.row]) {
+            cell.accessoryType = .Checkmark;
+        }
+        else {
+            cell.accessoryType = .None;
+        }
         return cell;
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
-        let row = connect2[indexPath.row];
-        var arrUserId = Array<Int>();
-        arrUserId.append((row.valueForKey("id") as? Int)!)
-        Engine.createThread(self, userId: arrUserId) { status, JSON in
-            if (JSON != nil) {
-                dispatch_async(dispatch_get_main_queue()) {
-    //                self.performSegueWithIdentifier("InitiateChat", sender: JSON);
-                    let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow;
-    //                let JSON = sender as! Dictionary<String, AnyObject>
-                    let data = JSON!["data"]!!;
-                    print (data);
-                    vc.chatId = data["id"] as! String;
-                    let me = Data.defaults.valueForKey("me")!;
-                    vc.senderId = String(me.valueForKey("id")!);
-                    vc.senderDisplayName = "";
-                    vc.participants = data["participants"] as! [Dictionary<String,AnyObject>];
-                    vc.thisChatType = "chat";
-                    vc.thisChatMetadata = ["title":"User ID = " + String(arrUserId[0])];
-                    self.navigationController?.pushViewController(vc, animated: true);
+        
+        if (flowDirection == "NewGroups") {
+            selectedConnect[indexPath.row] = !selectedConnect[indexPath.row];
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None);
+        }
+        else {
+            let row = actualConnect[indexPath.row];
+            var arrUserId = Array<Int>();
+            arrUserId.append((row.valueForKey("id") as? Int)!)
+            Engine.createThread(self, userId: arrUserId) { status, JSON in
+                if (JSON != nil) {
+                    dispatch_async(dispatch_get_main_queue()) {
+        //                self.performSegueWithIdentifier("InitiateChat", sender: JSON);
+                        let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow;
+        //                let JSON = sender as! Dictionary<String, AnyObject>
+                        let data = JSON!["data"]!!;
+                        print (data);
+                        vc.chatId = data["id"] as! String;
+                        let me = Data.defaults.valueForKey("me")!;
+                        vc.senderId = String(me.valueForKey("id")!);
+                        vc.senderDisplayName = "";
+                        vc.participants = data["participants"] as! [Dictionary<String,AnyObject>];
+                        vc.thisChatType = "chat";
+                        vc.thisChatMetadata = ["title":"User ID = " + String(arrUserId[0])];
+                        self.navigationController?.pushViewController(vc, animated: true);
+                    }
                 }
             }
         }
