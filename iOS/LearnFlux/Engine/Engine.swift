@@ -50,18 +50,23 @@ class Engine : NSObject {
         return header;
     }
     
-    static func statusMaker (statusCode : Int, JSON : AnyObject?)->RequestStatusType {
+    static func statusMaker (statusCode : Int?, JSON : AnyObject?)->RequestStatusType {
         if (JSON != nil) {
             if (JSON!.objectForKey("error") != nil || JSON!.objectForKey("errors") != nil) {
                 return .CustomError;
             }
         }
 
-        switch (statusCode) {
-        case 200...299: return .Success;
-        case 401: return .InvalidAccessToken;
-        case 500: return .ServerError;
-        default: return .GeneralError;
+        if (statusCode == nil) {
+            return .GeneralError;
+        }
+        else {
+            switch (statusCode!) {
+            case 200...299: return .Success;
+            case 401: return .InvalidAccessToken;
+            case 500: return .ServerError;
+            default: return .GeneralError;
+            }
         }
     }
     
@@ -93,11 +98,16 @@ class Engine : NSObject {
         print (geturl);
         Alamofire.request(method, geturl, parameters: postparam, headers: nil)
             .responseJSON { response in
-                let res = response.response!.statusCode;
+                var res : Int? = nil;
+                res = response.response?.statusCode;
                 let JSON = response.result.value
                 print ("JSON: \(JSON)");
                 let restat = statusMaker(res, JSON: JSON);
                 print ("Request: " + geturl + "\nStatus code: \(res)" + "\nStatus : \(restat)");
+                if (res == nil) {
+                    if (callback != nil) { callback!(restat, JSON); }
+                    return;
+                }
                 if (restat == .CustomError) {
                     if (JSON!["error_description"] != nil) {
                         Util.showMessageInViewController(viewController, title: "Error", message: JSON!["error_description"] as! String) {
@@ -236,7 +246,7 @@ class Engine : NSObject {
                             JSON = try NSJSONSerialization.JSONObjectWithData(data!, options:[])
                         }
                         let restat = statusMaker((httpResponse?.statusCode)!, JSON: JSON);
-                        print (JSON);
+//                        print (JSON);
                         switch (restat) {
                         case .Success:
                             if (callback != nil) { callback! (restat, JSON); }
@@ -321,13 +331,20 @@ class Engine : NSObject {
         }
     }
     
-    static func createThread (viewController: UIViewController? = nil, userId: [Int], callback: JSONreturn? = nil) {
-        let param = ["participants":userId];
-        print (getJSON(param));
+    static func createThread (viewController: UIViewController? = nil, title: String = "", userId: [Int], callback: JSONreturn? = nil) {
+        let param = ["participants":userId, "title":title] as [String: AnyObject];
+        print (self.getJSON(param));
         
         makeRequest2(viewController, method: .POST, url: Url.messages, param: param) { status, JSON in
             if (JSON != nil) { print (JSON!); }
-            if (callback != nil) { callback! (status, JSON); }
+            if (!Data.saveNewThreadInfo(threadJSON: JSON)) {
+                Util.showMessageInViewController(viewController, title: "Failed to create new thread", message: "Sorry, there's problems on creating new thread for these participants. Please try again later.") {
+                    if (callback != nil) { callback! (status, JSON); }
+                }
+            }
+            else {
+                if (callback != nil) { callback! (status, JSON); }
+            }
         }
     }
     
@@ -347,6 +364,9 @@ class Engine : NSObject {
     }
     
     static func generateThreadName (thread: NSDictionary) -> String {
+        if (thread.valueForKey("title") != nil) {
+            return thread.valueForKey("title")! as! String;
+        }
         let participants = thread.valueForKey("participants")! as! Array<NSDictionary>;
         var chatName = "";
         for participant in participants {
@@ -365,7 +385,7 @@ class Engine : NSObject {
     static func getThreadMessages (viewController: UIViewController? = nil, threadId: String, callback: JSONreturn? = nil) {
         makeRequest2(viewController, method: .GET, url: Url.messages + "/" + threadId, param: nil) { status, JSON in
             if (JSON != nil) {
-                print ("thread messages: \(JSON!)");
+//                print ("thread messages: \(JSON!)");
                 if (JSON!.valueForKey("data") != nil) {
                     let data = JSON!.valueForKey("data")!;
                     let messages = data.valueForKey("messages")!;

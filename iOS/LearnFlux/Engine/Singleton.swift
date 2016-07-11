@@ -23,4 +23,21 @@ class Data : NSObject {
     static var accessToken : String! = "";
     
     static var newMessageCreated : String! = "";
+    
+    // saveNewThreadInfo just add the newly created thread header data into the array of Threads.
+    static func saveNewThreadInfo (threadJSON JSON: AnyObject?)->Bool {
+        if (JSON == nil) { return false; }
+        if (JSON?.valueForKey("data") != nil) {
+            return saveNewThreadInfo(threadJSON: JSON!.valueForKey("data"));
+        }
+        
+        var threads = defaults.valueForKey("threads") as? Array<AnyObject?>;
+        if (threads == nil) {
+            threads = Array<AnyObject?>();
+        }
+        threads!.append(JSON);
+        defaults.setValue(threads as? AnyObject, forKey: "Threads")
+        defaults.synchronize();
+        return true;
+    }
 }
