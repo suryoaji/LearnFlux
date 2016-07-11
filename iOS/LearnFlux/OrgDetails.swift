@@ -22,6 +22,8 @@ class OrgDetails : UIViewController {
         tabs.addObject(Util.getViewControllerID("OrgActivities"))
         tabs.addObject(Util.getViewControllerID("OrgProfile"))
         changeView(0);
+        
+        self.title = "Details";
     }
     
     func changeView (index : Int) {

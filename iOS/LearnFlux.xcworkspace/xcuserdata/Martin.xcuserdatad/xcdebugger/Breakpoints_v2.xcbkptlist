@@ -6,16 +6,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LearnFlux/Connections.swift"
-            timestampString = "487142544.558301"
+            filePath = "LearnFlux/Chats.swift"
+            timestampString = "488866543.868705"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "tableView(_:didSelectRowAtIndexPath:)"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "showMenuOld(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,29 +25,29 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LearnFlux/Engine/Engine.swift"
-            timestampString = "487736698.573573"
+            filePath = "LearnFlux/ChatFlow.swift"
+            timestampString = "488950145.159722"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "430"
-            endingLineNumber = "430"
-            landmarkName = "register(_:username:firstName:lastName:email:password:passwordConfirm:callback:)"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
+            landmarkName = "scrollViewDidScroll(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "LearnFlux/Engine/Engine.swift"
-            timestampString = "487736698.573573"
+            filePath = "LearnFlux/Engine/Singleton.swift"
+            timestampString = "489912683.365672"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "437"
-            endingLineNumber = "437"
-            landmarkName = "register(_:username:firstName:lastName:email:password:passwordConfirm:callback:)"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "saveNewThreadInfo(threadJSON:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
