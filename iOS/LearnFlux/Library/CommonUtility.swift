@@ -144,4 +144,31 @@ class Util : NSObject {
         
     }
     
+    static func showAlertMenu (viewController: UIViewController, title: String = "", message: String = "", choices: [String], styles: [UIAlertActionStyle?], addCancel : Bool = true, callback: ((Int)->Void)?) {
+        let alert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
+
+        var useStyle = UIAlertActionStyle.Default;
+        for i in 0..<choices.count {
+            if (i < styles.count) { if (styles[i] != nil) { useStyle = styles[i]!; } }
+            let act: UIAlertAction = UIAlertAction(title:choices[i], style: useStyle, handler: {(action: UIAlertAction) -> Void in
+                if (callback != nil) { callback! (i); }
+            });
+            alert.addAction(act)
+        }
+        
+        if (addCancel) {
+            let act: UIAlertAction = UIAlertAction(title:"Cancel", style: .Cancel, handler: {(action: UIAlertAction) -> Void in
+                if (callback != nil) { callback! (choices.count); }
+            });
+            alert.addAction(act)
+        }
+        
+        viewController.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    static func mainThread (callback: (()->Void)) {
+        dispatch_async(dispatch_get_main_queue()) {
+            callback();
+        }
+    }    
 }
