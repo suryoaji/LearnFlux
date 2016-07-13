@@ -137,8 +137,11 @@ class Util : NSObject {
         return temp;
     }
     
-    static func labelPerfectHeight (mylabel : UILabel)->CGFloat {
-        let str = mylabel.text!;
+    static func labelPerfectHeight (mylabel : UILabel, textToFit : String = "")->CGFloat {
+        var str = textToFit;
+        if (str == "") {
+            str = mylabel.text!;
+        }
         
         return str.boundingRectWithSize(CGSizeMake(mylabel.frame.size.width, 10000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: mylabel.font], context: nil).size.height;
         

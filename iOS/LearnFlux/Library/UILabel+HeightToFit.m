@@ -25,4 +25,15 @@
     [self setFrame:framex];
 }
 
+-(CGFloat) getPerfectHeight {
+    CGRect oriFrame = self.frame;
+    CGRect framex = oriFrame;
+    framex.size.height = 10000;
+    [self setFrame:framex];
+    [self heightToFit];
+    CGFloat perfectHeight = self.frame.size.height;
+    self.frame = oriFrame;
+    return perfectHeight;
+}
+
 @end

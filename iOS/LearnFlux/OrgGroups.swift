@@ -14,11 +14,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     
     func setupDummyData () {
         groups.append(["title":"Ma Fine Arts", "description":"", "color":UIColor.init(red: 0/255, green: 190/255, blue: 143/255, alpha: 1)]);
-        groups.append(["title":"Summer Classes", "description":"", "color":UIColor.init(red: 236/255, green: 105/255, blue: 140/255, alpha: 1)]);
-        groups.append(["title":"Ma Fine Arts", "description":"May - July 2016", "color":UIColor.init(red: 0/255, green: 190/255, blue: 143/255, alpha: 1)]);
         groups.append(["title":"Summer Classes", "description":"May - July 2016", "color":UIColor.init(red: 236/255, green: 105/255, blue: 140/255, alpha: 1)]);
-        groups.append(["title":"Ma Fine Arts", "description":"This Winter, October - December 2016", "color":UIColor.init(red: 0/255, green: 190/255, blue: 143/255, alpha: 1)]);
-        groups.append(["title":"Winter Classes", "description":"This Winter, October - December 2016", "color":UIColor.init(red: 236/255, green: 105/255, blue: 140/255, alpha: 1)]);
         groups.append(["title":"Faculty of Design", "description":"", "color":UIColor.init(red: 160/255, green: 213/255, blue: 80/255, alpha: 1)]);
         groups.append(["title":"Faculty Research", "description":"", "color":UIColor.init(red: 189/255, green: 63/255, blue: 232/255, alpha: 1)]);
     }

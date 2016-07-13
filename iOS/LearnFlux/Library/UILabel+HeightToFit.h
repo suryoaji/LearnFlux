@@ -11,5 +11,6 @@
 @interface UILabel (HeightToFit)
 
 -(void) heightToFit;
+-(CGFloat) getPerfectHeight;
 
 @end

@@ -18,6 +18,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var oriDescHeight : CGFloat! = 0;
     var oriBtnHeight : CGFloat! = 0;
+    var oriCellHeight : CGFloat! = 0;
     var expDescHeight : Array<CGFloat> = [];
     
     
@@ -33,9 +34,8 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         oriDescHeight = (tv.dequeueReusableCellWithIdentifier("cell")!.viewWithTag(3) as! UILabel).height;
         oriBtnHeight = (tv.dequeueReusableCellWithIdentifier("cell")!.viewWithTag(10) as! UIButton).height;
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        oriCellHeight = tv.dequeueReusableCellWithIdentifier("cell")!.height;
+        
         while (attendance.count < 10) {
             attendance.append("Going");
             expanded.append(false);
@@ -44,6 +44,10 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
             //label.text =
             expDescHeight.append(Util.labelPerfectHeight(label));
         }
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
         return 10;
     }
     
@@ -51,10 +55,10 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell")!;
         if expanded[indexPath.row] {
             let expandedHeight = cell.height + expDescHeight[indexPath.row] - (oriDescHeight + oriBtnHeight);
-            return expandedHeight;
+            return max(expandedHeight, oriCellHeight);
         }
         else {
-            return cell.height;
+            return oriCellHeight;
         }
     }
     
@@ -79,7 +83,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
         let lblDesc = cell.viewWithTag(3)! as! UILabel;
         let btnExpand = cell.viewWithTag(10)! as! UIButton;
         if expanded[indexPath.row] {
-            lblDesc.height = Util.labelPerfectHeight(lblDesc);
+            lblDesc.height = expDescHeight[indexPath.row];
             btnExpand.hidden = true;
         }
         else {
@@ -108,9 +112,13 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBAction func expand (sender: AnyObject) {
         let btn = sender as! UIButton;
         let cell = btn.superview!.superview as! UITableViewCell;
+        let lblDesc = cell.viewWithTag(3)! as! UILabel;
         let indexPath = tv.indexPathForCell(cell)!;
+        // lblDesc.text = text[indexPath.row]
+
         expanded[indexPath.row] = true;
-        tv.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        expDescHeight[indexPath.row] = lblDesc.getPerfectHeight();
+       tv.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
     
 }
