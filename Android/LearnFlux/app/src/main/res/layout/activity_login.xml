@@ -9,16 +9,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.idesolusiasia.learnflux.LoginActivity">
-
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"/>
-
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -41,14 +31,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <AutoCompleteTextView
-                android:id="@+id/email"
+            <EditText
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_email"
-                android:inputType="textEmailAddress"
+                android:hint="@string/prompt_username"
+                android:inputType="text"
                 android:maxLines="1"
-                android:singleLine="true" android:text="admin@learnflux.com"/>
+                android:singleLine="true" android:text="admin"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -62,11 +52,11 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
                 android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeActionLabel="@string/action_sign_in"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:singleLine="true" android:text="password"/>
+                android:singleLine="true" android:text="admin"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -88,9 +78,9 @@
                 android:layout_marginTop="5dp"/>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceMedium"
-                      android:text="REGISTER" android:id="@+id/textView5"
+                      android:text="Create Account" android:id="@+id/tvRegister"
                       android:layout_gravity="center_horizontal" android:layout_marginTop="15dp"
-                      android:textColor="@color/colorPrimaryDark" android:visibility="gone"/>
+                      android:textColor="@color/colorPrimaryDark" android:visibility="visible"/>
 
         </LinearLayout>
     </ScrollView>

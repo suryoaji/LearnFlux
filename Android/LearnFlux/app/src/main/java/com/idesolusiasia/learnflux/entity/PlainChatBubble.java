@@ -1,35 +1,32 @@
 package com.idesolusiasia.learnflux.entity;
 
-import java.util.Calendar;
-
 /**
  * Created by NAIT ADMIN on 20/04/2016.
  */
 public class PlainChatBubble extends ChatBubble {
 
-	private String message;
+	private String body;
 	private boolean important;
 	public PlainChatBubble() {
 		super();
 	}
 
-	public PlainChatBubble(boolean important, String message) {
+	public PlainChatBubble(boolean important, String body) {
 		this.important = important;
-		this.message = message;
+		this.body = body;
 	}
 
-	public PlainChatBubble(String type, String sender, String userPhoto, String userName, Calendar chatCalendar, boolean important, String message) {
-		super(type, sender, userPhoto, userName, chatCalendar);
-		this.important = important;
-		this.message = message;
+	public PlainChatBubble(long created_at, String id, Participant sender, String type, String body) {
+		super(created_at, id, sender, type);
+		this.body = body;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getBody() {
+		return body;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setBody(String body) {
+		this.body = body;
 	}
 
 	public boolean isImportant() {

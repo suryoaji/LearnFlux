@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.idesolusiasia.learnflux.adapter.TileRecyclerViewAdapter;
+import com.idesolusiasia.learnflux.adapter.OrganizationGridRecyclerViewAdapter;
 import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class OrganizationsFragment extends Fragment {
 		ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.item_offset);
 		rView.addItemDecoration(itemDecoration);
 
-		TileRecyclerViewAdapter rcAdapter = new TileRecyclerViewAdapter(getContext(), rowListItem);
+		OrganizationGridRecyclerViewAdapter rcAdapter = new OrganizationGridRecyclerViewAdapter(getContext(), rowListItem);
 		rView.setAdapter(rcAdapter);
 		return v;
 	}

@@ -2,13 +2,12 @@ package com.idesolusiasia.learnflux.entity;
 
 import java.util.Calendar;
 
-/**
- * Created by NAIT ADMIN on 21/04/2016.
- */
+
+
 public class EventChatBubble extends ChatBubble {
 
 	private Calendar timeStart, timeEnd;
-	private String title, location, acceptanceStatus="";
+	private String title, location, acceptanceStatus, description="";
 
 
 	public EventChatBubble() {
@@ -17,7 +16,7 @@ public class EventChatBubble extends ChatBubble {
 
 	public EventChatBubble(String type, String sender, String userPhoto, String userName, Calendar chatDate,
 	                       String title, String location, String acceptanceStatus, Calendar timeStart, Calendar timeEnd){
-		super(type, sender, userPhoto, userName, chatDate);
+		super();
 		this.title=title;
 		this.location=location;
 		this.acceptanceStatus =acceptanceStatus;
@@ -63,5 +62,13 @@ public class EventChatBubble extends ChatBubble {
 
 	public void setAcceptanceStatus(String acceptanceStatus) {
 		this.acceptanceStatus = acceptanceStatus;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

@@ -1,4 +1,4 @@
-package com.idesolusiasia.learnflux.util;
+package com.idesolusiasia.learnflux;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -16,16 +15,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.adapter.OrganizationEventAdapter;
 import com.idesolusiasia.learnflux.entity.EventChatBubble;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class OrgEventFragment extends Fragment {
 	ListView listView;
-	ArrayAdapter<String> adap;
+	OrganizationEventAdapter adap;
 	String[] value;
 	public static OrgEventFragment newInstance() {
 		OrgEventFragment fragment = new OrgEventFragment();
@@ -47,20 +47,31 @@ public class OrgEventFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View v= inflater.inflate(R.layout.fragment_org_event, container, false);
 		listView=(ListView) v.findViewById(R.id.listView);
-		value=new String[]{"Diamond Hall", "Swan Ballroom","Main Hall"};
-		adap= new ArrayAdapter<String>(getContext(),R.layout.row_events,R.id.tvVenue,value);
-		listView.setAdapter(adap);
+		initEvent();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Calendar cal = Calendar.getInstance();
-				cal.set(2016,3,15,9,0);
-				EventChatBubble e = new EventChatBubble("event","me","","Agatha Cynthia", cal, "Parental Meeting",
-						"Diamond Hall", "", cal, cal);
-				eventDetails(e);
+				Toast.makeText(getContext(), adap.getItem(position).getTitle(), Toast.LENGTH_SHORT).show();
 			}
 		});
 		return v;
+	}
+
+	void initEvent(){
+		Calendar cal = Calendar.getInstance();
+		cal.set(2016,3,15,9,0);
+
+		ArrayList<EventChatBubble> arrEvent = new ArrayList<>();
+		for (int i=0; i<5;i++){
+			cal.set(2016,i+2,15+i,9,0);
+			EventChatBubble e=new EventChatBubble("event","me","","Agatha Cynthia", cal, "Parental Meeting",
+					"Diamond Hall" + i, "", cal, cal);
+			e.setDescription("Parents can have a talk with the teachers to know " +
+					"better about their children activities and improvements in school");
+			arrEvent.add(e);
+		}
+		adap= new OrganizationEventAdapter(getContext(), arrEvent);
+		listView.setAdapter(adap);
 	}
 
 	void eventDetails(final EventChatBubble e){

@@ -12,10 +12,12 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bubble2" android:layout_marginLeft="@dimen/margin_chat_bubble">
+        android:background="@drawable/chat2" android:layout_marginLeft="@dimen/margin_chat_bubble"
+        android:paddingLeft="10dp" android:paddingTop="10dp" android:paddingRight="30dp"
+        android:paddingBottom="10dp">
         <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
                    android:src="@drawable/ic_important_24dp" android:tint="#ff0000"
-                   android:id="@+id/ivImportant" android:visibility="visible"
+                   android:id="@+id/ivImportant" android:visibility="gone"
                    android:layout_alignParentTop="true"
                    android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
         <TextView
@@ -24,7 +26,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="You would not believe it!!!"
             android:id="@+id/tvMessage"
-            android:textColor="@color/textColorPrimary"/>
+            android:textColor="@color/textColorPrimary" android:textIsSelectable="true"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

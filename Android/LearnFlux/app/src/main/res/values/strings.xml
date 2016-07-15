@@ -1,16 +1,27 @@
 <resources>
     <string name="app_name">LearnFlux</string>
 
-    <!-- Strings related to login -->
+    <!--font-->
+    <string name="font_groups_grid">"fonts/arial-narrow.ttf"</string>
+
+    <!-- Strings related to login and register -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_firstname">First Name</string>
+    <string name="prompt_lastname">Last Name</string>
+    <string name="prompt_confirm">Confirm Password</string>
+
     <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_register">Register</string>
+
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_confirm">Passwords don\'t match</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
+
+    <string name="permission_rationale">"Some permissions are needed for providing email
         completions."
     </string>
     <string name="title_activity_home">Home</string>
@@ -26,93 +37,41 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_event_chat">EventChat</string>
     <string name="large_text">
-        "Material is the metaphor.\n\n"
-
-        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
-        "technologically advanced and open to imagination and magic.\n"
-        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
-        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "flexibility of the material creates new affordances that supercede those in the physical "
-        "world, without breaking the rules of physics.\n"
-        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
-        "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "seams, divides space, and indicates moving parts.\n\n"
-
-        "Bold, graphic, intentional.\n\n"
-
-        "The foundational elements of print based design typography, grids, space, scale, color, "
-        "and use of imagery guide visual treatments. These elements do far more than please the "
-        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
-        "imagery, large scale typography, and intentional white space create a bold and graphic "
-        "interface that immerse the user in the experience.\n"
-        "An emphasis on user actions makes core functionality immediately apparent and provides "
-        "waypoints for the user.\n\n"
-
-        "Motion provides meaning.\n\n"
-
-        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
-        "inflection points that initiate motion, transforming the whole design.\n"
-        "All action takes place in a single environment. Objects are presented to the user without "
-        "breaking the continuity of experience even as they transform and reorganize.\n"
-        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
-        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
-
-        "3D world.\n\n"
-
-        "The material environment is a 3D space, which means all objects have x, y, and z "
-        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
-        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
-        "position along the z-axis and has a standard 1dp thickness.\n"
-        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
-        "emulated by manipulating the y-axis.\n\n"
-
-        "Light and shadow.\n\n"
-
-        "Within the material environment, virtual lights illuminate the scene. Key lights create "
-        "directional shadows, while ambient light creates soft shadows from all angles.\n"
-        "Shadows in the material environment are cast by these two light sources. In Android "
-        "development, shadows occur when light sources are blocked by sheets of material at "
-        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
-        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
-
-        "Resting elevation.\n\n"
-
-        "All material objects, regardless of size, have a resting elevation, or default elevation "
-        "that does not change. If an object changes elevation, it should return to its resting "
-        "elevation as soon as possible.\n\n"
-
-        "Component elevations.\n\n"
-
-        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
-        "does not vary from 6dp in one app to 16dp in another app).\n"
-        "Components may have different resting elevations across platforms, depending on the depth "
-        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
-
-        "Responsive elevation and dynamic elevation offsets.\n\n"
-
-        "Some component types have responsive elevation, meaning they change elevation in response "
-        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
-        "changes are consistently implemented using dynamic elevation offsets.\n"
-        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
-        "to the component’s resting state. They ensure that elevation changes are consistent "
-        "across actions and component types. For example, all components that lift on press have "
-        "the same elevation change relative to their resting elevation.\n"
-        "Once the input event is completed or cancelled, the component will return to its resting "
-        "elevation.\n\n"
-
-        "Avoiding elevation interference.\n\n"
-
-        "Components with responsive elevations may encounter other components as they move between "
-        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
-        "through other material, components avoid interfering with one another any number of ways, "
-        "whether on a per component basis or using the entire app layout.\n"
-        "On a component level, components can move or be removed before they cause interference. "
-        "For example, a floating action button (FAB) can disappear or move off screen before a "
-        "user picks up a card, or it can move if a snackbar appears.\n"
-        "On the layout level, design your app layout to minimize opportunities for interference. "
-        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
-        "when a user tries to pick up one of cards.\n\n"
+        LASALLE College of the Arts provides a supportive, progressive and truly inspiring
+        environment for our students.
+        \nWith a focus on nurturing creative expression, innovation and independence of thought,
+        we encourage students to be inquisitive and original artists and designers.
+        They become highly skilled, and excel both in their chosen specialisms and in their
+        collaborations
+        with practitioners from other disciplines.
+    </string>
+    <string name="large_text_1">
+        LASALLE College of the Arts provides a supportive, progressive and truly inspiring
+        environment for our students.
+        \nWith a focus on nurturing creative expression, innovation and independence of thought,
+        we encourage students to be inquisitive and original artists and designers.
+        They become highly skilled, and excel both in their chosen specialisms and in their
+        collaborations
+        with practitioners from other disciplines.
+        \nThe College prepares graduates for sustained and successful careers in the creative
+        industries through
+        a practice-based and industry-led pedagogy. It is a demanding and immersive learning
+        experience guided
+        by an outstanding international faculty, professional artists, and industry mentors.
+        We foster high-level creative skills, but allow our students to assert their freedom to be
+        different,
+        and to chart imaginative new territories – and this is what prepares them for real and
+        sustainable careers in the arts.
+        \nWe offer an exceptional range of Diploma, Bachelors and Masters degree programmes that are
+        well respected
+        in the global arts arena. With a strategic and central location in Singapore\'s cultural
+        district,
+        our award-winning, open campus provides a magnificent space and inspirational setting for
+        study and creative exchange.
+        \nAt LASALLE College of Arts we work continually to innovate in our teaching and research,
+        and to set new benchmarks in arts education. We believe in our students and their ability to
+        be the pioneers
+        who will help to define the future of contemporary arts practice.
     </string>
     <string name="color_primary">#8BC34A</string>
     <string-array name="invitee_status">
@@ -121,9 +80,20 @@
         <item>Not Going</item>
     </string-array>
     <string name="BASE_URL">http://lfapp.learnflux.net/</string>
-    <string name="LOGIN">oauth/v2/token</string>
-    <string name="client_id">57453e293a603f8c168b4567_5gj7ywf0ocsoosw0sc8sgsgk8gckkc80o8co8gg00o08g88c4o</string>
+    <string name="URL_LOGIN">oauth/v2/token</string>
+    <string name="client_id">
+        57453e293a603f8c168b4567_5gj7ywf0ocsoosw0sc8sgsgk8gckkc80o8co8gg00o08g88c4o
+    </string>
     <string name="client_secret">2hwdia2smbk00sko0wokowcwokswc0k448gsk0okwswcsgcw0g</string>
-    <string name="ME">v1/me</string>
-    <string name="MESSAGES">v1/messages</string>
+    <string name="URL_VERSION">v1/</string>
+    <string name="URL_ME">me</string>
+    <string name="URL_MESSAGES">messages</string>
+    <string name="URL_THREAD_MESSAGES">messages/%s</string>
+    <string name="URL_REGISTER">register</string>
+
+    //alert
+    <string name="success_registration">You have successfully registered.
+        Please allow some time for the system to process your registration.
+        You will get notification on your email when your account has been activated. Thank you.
+    </string>
 </resources>

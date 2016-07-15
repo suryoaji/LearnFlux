@@ -2,21 +2,26 @@ package com.idesolusiasia.learnflux.util;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by NAIT ADMIN on 07/06/2016.
  */
 public class Engine {
-	public static void login(Context context, final String username, final String password, final RequestTemplate.serviceCallback callback){
-		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.LOGIN);
+	public static void login(final Context context, final String username, final String password,
+	                         final RequestTemplate.ServiceCallback callback, final RequestTemplate.ErrorCallback errorCallback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_LOGIN);
 		HashMap<String,String> params = new HashMap<>();
 		params.put("username",username);
 		params.put("password",password);
@@ -27,7 +32,7 @@ public class Engine {
 		Log.i("map", "getParams: "+params.toString());
 
 
-		RequestTemplate.OAuth(context, url, params, new RequestTemplate.serviceCallback() {
+		RequestTemplate.OAuth(context, url, params, new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				Log.i("response",obj.toString());
@@ -42,58 +47,210 @@ public class Engine {
 					e.printStackTrace();
 				}
 			}
-		});
-	}
-
-	public static void getMe(final Context context){
-		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.ME);
-
-		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			login(context, User.getUser().getUsername(), User.getUser().getPassword(), new RequestTemplate.serviceCallback() {
-				@Override
-				public void execute(JSONObject obj) {
-					getMe(context);
-				}
-			});
-		}else {
-			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.serviceCallback() {
-				@Override
-				public void execute(JSONObject obj) {
-					Log.i("response_ME", obj.toString());
-				}
-			});
-		}
-
-	}
-
-	public static void postMessages(final Context context, final int[] ids){
-
-		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.MESSAGES);
-		HashMap<String,int[]> par = new HashMap<>();
-		par.put("participants",ids);
-		JSONObject params = new JSONObject(par);
-
-		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			login(context, User.getUser().getUsername(), User.getUser().getPassword(), new RequestTemplate.serviceCallback() {
-				@Override
-				public void execute(JSONObject obj) {
-					postMessages(context,ids);
-				}
-			});
-		}else {
-			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.serviceCallback() {
-				@Override
-				public void execute(JSONObject obj) {
-					Log.i("response_POST_MSG", obj.toString());
+		}, new RequestTemplate.ErrorCallback() {
+			@Override
+			public void execute(JSONObject error) {
+				if (error!=null){
 					try {
-						Log.i("response_POST_MSG", obj.getJSONObject("data").getString("type"));
-						Log.i("response_POST_MSG", obj.getJSONObject("data").getString("id"));
+						String message = error.getString("error_description");
+						Functions.showAlert(context,"Error", message);
+						if (errorCallback!=null){
+							errorCallback.execute(error);
+						}
+
+
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 				}
-			});
+			}
+
+		});
+	}
+
+	public static void getMe(final Context context){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME);
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			Functions.reLogin(context);
+		}else {
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					Log.i("response_ME", obj.toString());
+					try {
+						User.getUser().setID(obj.getJSONObject("data").getInt("id"));
+						User.getUser().setEmail(obj.getJSONObject("data").getString("email"));
+
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			},null);
 		}
 
 	}
+
+	public static void createThread(final Context context, final int[] ids, String title){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
+		HashMap<String,int[]> par = new HashMap<>();
+		par.put("participants",ids);
+		JSONObject params = new JSONObject(par);
+		try {
+			params.put("title", title);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			Functions.reLogin(context);
+		}else {
+			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if (obj!=null){
+						Log.i("response_POST_MSG", obj.toString());
+						try {
+							Log.i("response_POST_MSG", obj.getJSONObject("data").getString("type"));
+							Log.i("response_POST_MSG", obj.getJSONObject("data").getString("id"));
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+
+				}
+			},null);
+		}
+	}
+
+	public static void getThreads(final Context context, final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			Functions.reLogin(context);
+		}else {
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+
+					Log.i("response_GET_Threads", obj.toString());
+					callback.execute(obj);
+				}
+			},null);
+		}
+	}
+
+
+	public static void deleteThread(final Context context, List<Thread> deleted,
+	                                final RequestTemplate.ServiceCallback callback) {
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			Functions.reLogin(context);
+		}else {
+			String[] ids = new String[deleted.size()];
+			for (int i = 0; i < deleted.size(); i++) {
+				ids[i]=deleted.get(i).getId();
+			}
+			HashMap<String,String[]> hashMap = new HashMap<>();
+			hashMap.put("ids",ids);
+			JSONObject params = new JSONObject(hashMap);
+			RequestTemplate.DELETEJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if (obj!=null && callback!=null){
+						Log.i("response_DEL_Threads", obj.toString());
+						callback.execute(obj);
+					}
+
+				}
+			}, new RequestTemplate.ErrorCallback() {
+				@Override
+				public void execute(JSONObject error) {
+					if (error!=null){
+						try {
+							JSONArray messages = error.getJSONObject("errors").getJSONArray("messages");
+							Toast.makeText(context, messages.toString(), Toast.LENGTH_SHORT).show();
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			});
+		}
+	}
+	public static void registerUser(final Context context, final HashMap<String,String> par){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_REGISTER);
+		JSONObject params = new JSONObject(par);
+
+		RequestTemplate.POSTJsonRequestWithoutAuth(context, url, params, new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				if (obj != null) {
+					Log.i("response_POST_MSG", obj.toString());
+				}
+				Functions.showAlert(context, context.getString(R.string.URL_REGISTER), context.getString(R.string.success_registration));
+
+			}
+		}, new RequestTemplate.ErrorCallback() {
+			@Override
+			public void execute(JSONObject error) {
+				if (error!=null){
+					try {
+						JSONArray messages = error.getJSONObject("errors").getJSONArray("messages");
+						Functions.showAlert(context,"Errors",messages.toString());
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+	}
+
+	public static void getThreadMessages(final Context context, final RequestTemplate.ServiceCallback callback,
+	                                     String idThread){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_THREAD_MESSAGES,idThread);
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			Functions.reLogin(context);
+		}else {
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					Log.i("response_GET_Messages", obj.toString());
+					if (callback!=null){
+						callback.execute(obj);
+					}
+
+				}
+			},null);
+		}
+	}
+
+	public static void sendMessage(final Context context, String idThread, String message, final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_THREAD_MESSAGES,idThread);
+
+		JSONObject params = new JSONObject();
+		try {
+			params.put("body", message);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			Functions.reLogin(context);
+		}else {
+			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+
+					if (obj!=null){
+						Log.i("send_message", obj.toString());
+					}
+					callback.execute(obj);
+				}
+			},null);
+		}
+	}
+
+
 }

@@ -1,5 +1,6 @@
 package com.idesolusiasia.learnflux;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -13,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.idesolusiasia.learnflux.util.OrgEventFragment;
 
 public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
@@ -56,6 +55,15 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		tvNotifActivities=(TextView) findViewById(R.id.tvNotifActivities);
 		tvNotifEvents=(TextView) findViewById(R.id.tvNotifEvents);
 		tvNotifGroups=(TextView) findViewById(R.id.tvNotifGroups);
+
+		LinearLayout titleLayout = (LinearLayout) findViewById(R.id.titleLayout);
+		titleLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent i = new Intent(OrgDetailActivity.this, OrgProfileActivity.class);
+				startActivity(i);
+			}
+		});
 
 
 		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -112,11 +120,11 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		public Fragment getItem(int position) {
 			switch (position) {
 				case 0:
-					return PlaceholderFragment.newInstance(0);
+					return OrgGroupFragment.newInstance();
 				case 1:
 					return OrgEventFragment.newInstance();
 				default:
-					return PlaceholderFragment.newInstance(2);
+					return OrgActivityFragment.newInstance();
 			}
 		}
 

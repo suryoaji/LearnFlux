@@ -1,8 +1,11 @@
 package com.idesolusiasia.learnflux.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,14 +13,45 @@ import android.widget.Toast;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
 
+import java.util.List;
+
 /**
  * Created by NAIT ADMIN on 12/04/2016.
  */
-public class TileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<OrgTileHolder> {
+	private List<String> itemList;
+	private Context context;
+
+	public OrganizationGridRecyclerViewAdapter(Context context, List<String> itemList) {
+		this.itemList = itemList;
+		this.context = context;
+	}
+
+	@Override
+	public OrgTileHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+		View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_organization, null);
+		OrgTileHolder rcv = new OrgTileHolder(layoutView);
+		return rcv;
+	}
+
+	@Override
+	public void onBindViewHolder(OrgTileHolder holder, int position) {
+		holder.tvName.setText(itemList.get(position));
+
+	}
+
+	@Override
+	public int getItemCount() {
+		return this.itemList.size();
+	}
+}
+
+class OrgTileHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 	public TextView tvName, tvLastSeen, tvCountMessage, tvCountEvent, tvCountActivities;
 	public ImageView ivLogo;
 
-	public TileViewHolder(View itemView) {
+	public OrgTileHolder(View itemView) {
 		super(itemView);
 		itemView.setOnClickListener(this);
 		tvName = (TextView) itemView.findViewById(R.id.tvName);
@@ -39,7 +73,4 @@ public class TileViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 			view.getContext().startActivity(i);
 		}*/
 	}
-
-
-
 }

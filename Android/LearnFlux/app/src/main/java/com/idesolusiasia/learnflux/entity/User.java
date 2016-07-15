@@ -5,6 +5,7 @@ package com.idesolusiasia.learnflux.entity;
  */
 public class User {
 	private static User u;
+	private int ID;
 	private String access_token, name, email, phone, password, username;
 
 	private User(){
@@ -14,6 +15,7 @@ public class User {
 		phone="";
 		password="";
 		username="";
+		ID=0;
 	}
 
 	public static synchronized User getUser() {
@@ -21,6 +23,15 @@ public class User {
 			u = new User();
 		}
 		return u;
+	}
+
+
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int ID) {
+		this.ID = ID;
 	}
 
 	public String getAccess_token() {

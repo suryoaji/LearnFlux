@@ -7,12 +7,14 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -22,12 +24,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
-import com.idesolusiasia.learnflux.adapter.AddPollAnswerAdapter;
+import com.google.gson.Gson;
 import com.idesolusiasia.learnflux.adapter.ChatBubbleAdapter;
 import com.idesolusiasia.learnflux.entity.ChatBubble;
 import com.idesolusiasia.learnflux.entity.EventChatBubble;
 import com.idesolusiasia.learnflux.entity.PlainChatBubble;
-import com.idesolusiasia.learnflux.entity.PollChatBubble;
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +46,15 @@ public class ChattingActivity extends BaseActivity {
 	boolean important = false;
 	ChatBubbleAdapter adap;
 	ListView listView;
+	String idThread = "";
+	Gson gson= new Gson();
+	boolean firstTime = true;
+	int positionLast =0;
+	ImageView ivScrollDown;
+	boolean pause=false;
+
+	private int mInterval = 5000; // 5 seconds by default, can be changed later
+	private Handler mHandler;
 
 	private static final String TAG  = "Chatting";
 	@Override
@@ -46,6 +62,8 @@ public class ChattingActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_base);
 		super.onCreateDrawer(savedInstanceState);
+
+		idThread = getIntent().getStringExtra("idThread");
 
 		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -56,10 +74,38 @@ public class ChattingActivity extends BaseActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.hide();
+		ivScrollDown = (ImageView) findViewById(R.id.ivScrollDown);
+		ivScrollDown.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (adap!=null){
+					listView.setSelection(adap.getCount() - 1);
+					listView.refreshDrawableState();
+				}
+			}
+		});
 
 		listView = (ListView) findViewById(R.id.listView);
+		listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView absListView, int i) {
+
+			}
+
+			@Override
+			public void onScroll(AbsListView absListView, int firstVisible, int visibleItemCount, int i2) {
+				positionLast=firstVisible+visibleItemCount;
+				if (adap!=null){
+					if (positionLast<(adap.getCount()-3)){
+						ivScrollDown.setVisibility(View.VISIBLE);
+					}else {
+						ivScrollDown.setVisibility(View.GONE);
+					}
+				}
+
+			}
+		});
+
 
 		final EditText etMessage = (EditText) findViewById(R.id.etMessage);
 		ImageView ivSend = (ImageView) findViewById(R.id.ivSend);
@@ -107,8 +153,17 @@ public class ChattingActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 
+				if (!TextUtils.isEmpty(etMessage.getText())){
+					Engine.sendMessage(ChattingActivity.this, idThread, etMessage.getText().toString(), new RequestTemplate.ServiceCallback() {
+						@Override
+						public void execute(JSONObject obj) {
+							initChatBubble();
+							etMessage.setText("");
+						}
+					});
+				}
 
-				Calendar cal = Calendar.getInstance();
+				/*Calendar cal = Calendar.getInstance();
 				cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
 				PlainChatBubble bubble = new PlainChatBubble("plain", "me","","Agatha Cynthia",cal,
 						important,etMessage.getText().toString());
@@ -117,7 +172,7 @@ public class ChattingActivity extends BaseActivity {
 					adap.notifyDataSetChanged();
 					listView.setSelection(adap.getCount() - 1);
 				}
-				etMessage.setText("");
+				etMessage.setText("");*/
 			}
 		});
 
@@ -135,17 +190,82 @@ public class ChattingActivity extends BaseActivity {
 		addPoll.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				addPollProcess();
+				//addPollProcess();
 			}
 		});
 
 		initChatBubble();
+		etMessage.clearFocus();
+
+
+		mHandler = new Handler();
+		startRepeatingTask();
 	}
 
+	Runnable r = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				initChatBubble();
+			} finally {
+				// 100% guarantee that this always happens, even if
+				// your update method throws an exception
+				mHandler.postDelayed(r, mInterval);
+			}
+		}
+	};
 
+	void startRepeatingTask() {
+		r.run();
+	}
+
+	void stopRepeatingTask() {
+		mHandler.removeCallbacks(r);
+	}
 
 	void initChatBubble(){
-		ArrayList<ChatBubble> arr = new ArrayList<>();
+		Log.i(TAG, "initChatBubble: ");
+		Engine.getThreadMessages(this, new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				Log.i(TAG, obj.toString());
+				try {
+					ArrayList<ChatBubble> arr = new ArrayList<>();
+					JSONArray messages = obj.getJSONObject("data").getJSONArray("messages");
+					for (int i = 0; i <messages.length() ; i++) {
+						arr.add(gson.fromJson(messages.getJSONObject(i).toString(), PlainChatBubble.class));
+					}
+					if (adap==null){
+						adap=new ChatBubbleAdapter(ChattingActivity.this,arr);
+						listView.setAdapter(adap);
+						listView.setSelection(adap.getCount() - 1);
+						listView.refreshDrawableState();
+					}else{
+						boolean scroll = false;
+						boolean in = false;
+						if (positionLast>=(adap.getCount()-3)){
+							scroll=true;
+						}
+						for (int i=adap.getCount();i<arr.size();i++){
+							adap.add(arr.get(i));
+							in=true;
+
+						}
+						adap.notifyDataSetChanged();
+						if (scroll&&in){
+							listView.setSelection(adap.getCount() - 1);
+							listView.refreshDrawableState();
+						}
+
+					}
+
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}, idThread);
+
+		/*ArrayList<ChatBubble> arr = new ArrayList<>();
 		ChatBubble bubble;
 		Calendar cal = Calendar.getInstance();
 		cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),12,00);
@@ -187,7 +307,7 @@ public class ChattingActivity extends BaseActivity {
 
 		adap = new ChatBubbleAdapter(ChattingActivity.this,arr);
 		listView.setAdapter(adap);
-		listView.setSelection(adap.getCount() - 1);
+		listView.setSelection(adap.getCount() - 1);*/
 
 	}
 
@@ -274,7 +394,7 @@ public class ChattingActivity extends BaseActivity {
 		dialog.show();
 	}
 
-	void addPollProcess(){
+	/*void addPollProcess(){
 		final Dialog dialog = new Dialog(ChattingActivity.this);
 		dialog.setTitle("Create Poll");
 		dialog.setContentView(R.layout.dialog_add_poll);
@@ -285,7 +405,7 @@ public class ChattingActivity extends BaseActivity {
 		Button btnSave = (Button) dialog.findViewById(R.id.btnSavePoll);
 		ArrayList<String> arr = new ArrayList<>();
 		arr.add(" ");
-		final AddPollAnswerAdapter pollAnswerAdapter = new AddPollAnswerAdapter(getApplicationContext(),R.layout.dialog_add_poll,arr);
+		final AddPollAnswerAdapter pollAnswerAdapter = new AddPollAnswerAdapter(ChattingActivity.this,R.layout.dialog_add_poll,arr);
 		listView.setAdapter(pollAnswerAdapter);
 		adap.notifyDataSetChanged();
 
@@ -313,12 +433,12 @@ public class ChattingActivity extends BaseActivity {
 
 			}
 		});
-
-
 		dialog.show();
+	}*/
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		stopRepeatingTask();
 	}
-
-
-
 }

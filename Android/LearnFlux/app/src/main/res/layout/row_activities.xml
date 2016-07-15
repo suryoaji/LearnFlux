@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:paddingTop="7dp"
+              android:layout_height="wrap_content" android:paddingBottom="7dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" android:layout_weight="1.25"
+            android:layout_marginTop="3dp">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:background="@drawable/border_black"
+            >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mar"
+                    android:id="@+id/tvMonth"
+                    android:layout_gravity="center" android:gravity="center_vertical|center_horizontal"
+                    android:textStyle="bold"
+                    android:paddingTop="3dp" android:background="#d50000"
+                    android:textColor="#ffffff"
+                    android:paddingBottom="3dp" android:layout_marginLeft="1dp"
+                    android:layout_marginTop="1dp" android:layout_marginRight="1dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8"
+                    android:id="@+id/tvDay" android:layout_gravity="center_horizontal"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:gravity="center_horizontal" android:layout_marginTop="-3dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="2016" android:id="@+id/tvYear"
+                          android:gravity="center_vertical|center_horizontal"
+                          android:paddingLeft="3dp" android:paddingRight="3dp" android:textSize="12dp"
+                          android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+                          android:layout_marginTop="-3dp"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="09:00"
+                android:id="@+id/tvTime"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary" android:visibility="gone"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="4"
+            android:layout_marginLeft="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Parental Meeting"
+                android:id="@+id/tvTitle"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Diamond Hall"
+                android:drawableLeft="@drawable/ic_place_black_24dp"
+                android:id="@+id/tvLocation"
+                android:layout_gravity="center_vertical" android:gravity="center_vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Parent - Teacher meeting asdfasdfas adkfkkdfj dvdfv kjflsk  skdjf  skdjf s&apos;dlkf ;lsdfk &apos;sdl;fadsfkafsj;dkflj s"
+                android:id="@+id/tvDescription" android:layout_marginLeft="5dp"
+                android:ellipsize="end"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="see more"
+                android:id="@+id/tvSeeMore" android:layout_gravity="center_horizontal"
+                android:textColor="@color/colorPrimaryDark" android:textStyle="italic"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal">
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:id="@+id/ivInvite" android:src="@drawable/ic_email_black_24dp"
+                android:padding="5dp" android:tint="@color/colorPrimary"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_alignBottom="@+id/ivAddEvent"
+                android:layout_toLeftOf="@+id/ivAddEvent"
+                android:layout_toStartOf="@+id/ivAddEvent"/>
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                       android:id="@+id/ivAddEvent" android:src="@drawable/ic_event_black_24dp"
+                       android:padding="5dp" android:tint="@color/colorPrimary"
+                       android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+                       android:foreground="?attr/selectableItemBackground"
+                       android:clickable="true"
+                       android:layout_alignParentEnd="true"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" android:visibility="gone"
+            android:layout_weight="4" android:gravity="center_vertical|center_horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Going"
+                android:id="@+id/textView21" android:layout_weight="1"
+                android:gravity="center_horizontal" android:background="@drawable/border_green"
+                android:paddingBottom="2dp" android:paddingTop="2dp"/>
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceSmall"
+                      android:text="Interested" android:id="@+id/textView22"
+                      android:layout_weight="1" android:gravity="center_horizontal"
+                      android:background="@drawable/border_green" android:paddingBottom="2dp"
+                      android:paddingTop="2dp"/>
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceSmall"
+                      android:text="Not Going" android:id="@+id/textView23"
+                      android:layout_weight="1" android:gravity="center_horizontal"
+                      android:background="@drawable/border_green" android:paddingBottom="2dp"
+                      android:paddingTop="2dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

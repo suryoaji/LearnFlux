@@ -20,8 +20,9 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_marginLeft="5dp"
-            android:background="@drawable/bubble1"
-        >
+            android:background="@drawable/chat1"
+            android:paddingLeft="30dp" android:paddingTop="10dp" android:paddingRight="10dp"
+            android:paddingBottom="10dp">
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -50,7 +51,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Who is that??"
                 android:id="@+id/tvMessage" android:layout_marginTop="10dp"
-                android:textColor="@color/textColorPrimary"/>
+                android:textColor="@color/textColorPrimary" android:textIsSelectable="true"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

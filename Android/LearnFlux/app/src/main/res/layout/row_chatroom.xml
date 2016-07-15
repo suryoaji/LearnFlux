@@ -3,26 +3,51 @@
               android:id="@+id/bubbleLayout"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content" android:paddingBottom="10dp">
+              android:layout_height="wrap_content" android:paddingBottom="10dp"
+>
     <com.idesolusiasia.learnflux.component.RoundedImageView
         android:layout_width="65dp"
-        android:layout_height="65dp" android:src="@drawable/girl"/>
+        android:layout_height="65dp" android:src="@drawable/abc_ic_star_black_16dp" android:id="@+id/ivRoundPic"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Fiore Chen"
-            android:id="@+id/textView3" android:textStyle="bold"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Fiore Chen"
+                android:id="@+id/tvChatRoomTitle" android:textStyle="bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=" - "
+                android:id="@+id/textView"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="14/06/2016"
+                android:id="@+id/tvDate" android:textSize="12dp"
+                android:layout_marginRight="5dp"/>
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="I really want to watch that movie!"
-            android:id="@+id/textView4" android:layout_marginTop="5dp"/>
+            android:id="@+id/tvLastMessage" android:layout_marginTop="5dp" android:ellipsize="end"
+            android:maxLines="1"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/checkBox" android:layout_gravity="right" android:checked="false"/>
     </LinearLayout>
 </LinearLayout>
