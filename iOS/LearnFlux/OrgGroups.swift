@@ -11,6 +11,7 @@ import Foundation
 class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     var groups : Array<Dictionary<String, AnyObject>> = [];
+    var pushDelegate : PushDelegate!;
     
     func setupDummyData () {
         groups.append(["title":"Ma Fine Arts", "description":"", "color":UIColor.init(red: 0/255, green: 190/255, blue: 143/255, alpha: 1)]);
@@ -40,6 +41,12 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         cell.backgroundColor = group["color"] as? UIColor;
         
         return cell;
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        let vc = Util.getViewControllerID("GroupDetails") as! GroupDetails;
+        vc.initFromCall(groups[indexPath.row]);
+        pushDelegate.pushViewController(vc, animated: true);
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {

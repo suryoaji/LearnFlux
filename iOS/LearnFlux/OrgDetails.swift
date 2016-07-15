@@ -8,7 +8,11 @@
 
 import Foundation
 
-class OrgDetails : UIViewController {
+protocol PushDelegate {
+    func pushViewController (viewController: UIViewController, animated: Bool);
+}
+
+class OrgDetails : UIViewController, PushDelegate {
 
     @IBOutlet var viewSelection : UIView!;
     @IBOutlet var viewTabs : UIView!;
@@ -21,6 +25,8 @@ class OrgDetails : UIViewController {
         tabs.addObject(Util.getViewControllerID("OrgEvents"))
         tabs.addObject(Util.getViewControllerID("OrgActivities"))
         tabs.addObject(Util.getViewControllerID("OrgProfile"))
+        
+        (tabs[0] as! OrgGroups).pushDelegate = self;
         changeView(0);
         
         self.title = "Details";
@@ -54,5 +60,9 @@ class OrgDetails : UIViewController {
         let btn = sender as! UIButton;
         let idx = btn.tag - 100;
         changeView(idx);
+    }
+    
+    func pushViewController(viewController: UIViewController, animated: Bool) {
+        self.navigationController?.pushViewController(viewController, animated: animated)
     }
 }

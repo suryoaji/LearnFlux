@@ -336,6 +336,11 @@
 		5B3744441CC0CBFD00AF2897 /* trash2-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B37435D1CC0CBFD00AF2897 /* trash2-16.png */; };
 		5B3744451CC0CBFD00AF2897 /* trash2-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B37435E1CC0CBFD00AF2897 /* trash2-16@2x.png */; };
 		5B3744461CC0CBFD00AF2897 /* trash2-16@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B37435F1CC0CBFD00AF2897 /* trash2-16@3x.png */; };
+		5B493C9C1D35D49600FABC67 /* groups_disabled-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B493C9B1D35D49600FABC67 /* groups_disabled-70.png */; };
+		5B493CA01D35D7C000FABC67 /* GroupDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B493C9F1D35D7C000FABC67 /* GroupDetails.swift */; };
+		5B4D10CD1D376F5800AB9449 /* calendar-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4D10CB1D376F5800AB9449 /* calendar-40.png */; };
+		5B4D10CE1D376F5800AB9449 /* email-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4D10CC1D376F5800AB9449 /* email-40.png */; };
+		5B4D10D01D37754F00AB9449 /* GroupProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4D10CF1D37754F00AB9449 /* GroupProfile.swift */; };
 		5B4F53891D235EA800309BCB /* Chats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4F53881D235EA800309BCB /* Chats.swift */; };
 		5B52C0121D139CCF00900EE2 /* Calendar-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C00F1D139CCF00900EE2 /* Calendar-24.png */; };
 		5B52C0131D139CCF00900EE2 /* Calendar-24@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C0101D139CCF00900EE2 /* Calendar-24@2x.png */; };
@@ -740,6 +745,11 @@
 		5B37435D1CC0CBFD00AF2897 /* trash2-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trash2-16.png"; path = "Icons2/trash2-16.png"; sourceTree = "<group>"; };
 		5B37435E1CC0CBFD00AF2897 /* trash2-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trash2-16@2x.png"; path = "Icons2/trash2-16@2x.png"; sourceTree = "<group>"; };
 		5B37435F1CC0CBFD00AF2897 /* trash2-16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "trash2-16@3x.png"; path = "Icons2/trash2-16@3x.png"; sourceTree = "<group>"; };
+		5B493C9B1D35D49600FABC67 /* groups_disabled-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "groups_disabled-70.png"; path = "IconsOfficial/groups_disabled-70.png"; sourceTree = "<group>"; };
+		5B493C9F1D35D7C000FABC67 /* GroupDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupDetails.swift; sourceTree = "<group>"; };
+		5B4D10CB1D376F5800AB9449 /* calendar-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "calendar-40.png"; path = "IconsOfficial/calendar-40.png"; sourceTree = "<group>"; };
+		5B4D10CC1D376F5800AB9449 /* email-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "email-40.png"; path = "IconsOfficial/email-40.png"; sourceTree = "<group>"; };
+		5B4D10CF1D37754F00AB9449 /* GroupProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupProfile.swift; sourceTree = "<group>"; };
 		5B4F53881D235EA800309BCB /* Chats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chats.swift; sourceTree = "<group>"; };
 		5B52C00F1D139CCF00900EE2 /* Calendar-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Calendar-24.png"; path = "Icons Better/Calendar-24.png"; sourceTree = "<group>"; };
 		5B52C0101D139CCF00900EE2 /* Calendar-24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Calendar-24@2x.png"; path = "Icons Better/Calendar-24@2x.png"; sourceTree = "<group>"; };
@@ -886,6 +896,8 @@
 				5B0455251D129F380078032B /* OrgGroups.swift */,
 				5B0455271D129F530078032B /* OrgEvents.swift */,
 				5B0455291D129F690078032B /* OrgActivities.swift */,
+				5B493C9F1D35D7C000FABC67 /* GroupDetails.swift */,
+				5B4D10CF1D37754F00AB9449 /* GroupProfile.swift */,
 				5B4F53881D235EA800309BCB /* Chats.swift */,
 				5B0C83561D2231E60069F877 /* NewGroups.swift */,
 				5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */,
@@ -1045,6 +1057,9 @@
 			isa = PBXGroup;
 			children = (
 				5B52C00E1D139CB600900EE2 /* IconsBetter */,
+				5B4D10CB1D376F5800AB9449 /* calendar-40.png */,
+				5B4D10CC1D376F5800AB9449 /* email-40.png */,
+				5B493C9B1D35D49600FABC67 /* groups_disabled-70.png */,
 				5B0AC9A11D110BEF00594E4C /* messages-70.png */,
 				5B13560C1D096DBC0058BBA5 /* activities-70.png */,
 				5B13560D1D096DBC0058BBA5 /* events-70.png */,
@@ -1472,6 +1487,7 @@
 				5B3743DB1CC0CBFD00AF2897 /* location-24.png in Resources */,
 				5B3743AB1CC0CBFD00AF2897 /* down-24.png in Resources */,
 				5B01FC611CD3657600047C15 /* close_window.png in Resources */,
+				5B493C9C1D35D49600FABC67 /* groups_disabled-70.png in Resources */,
 				5B3744271CC0CBFD00AF2897 /* zoom_in-24@2x.png in Resources */,
 				5B37443D1CC0CBFD00AF2897 /* star_full-24.png in Resources */,
 				5B3743FA1CC0CBFD00AF2897 /* right-24.png in Resources */,
@@ -1535,6 +1551,7 @@
 				5B52C0191D13A16800900EE2 /* Expand Arrow-16@2x.png in Resources */,
 				5B01FC5F1CD34D6700047C15 /* arrow_up_circle-18@3x.png in Resources */,
 				5B0514461CE2DC1C006F5C7E /* calendar2-24.png in Resources */,
+				5B4D10CE1D376F5800AB9449 /* email-40.png in Resources */,
 				5B3743A71CC0CBFD00AF2897 /* directions-24@3x.png in Resources */,
 				5B3743D51CC0CBFD00AF2897 /* like-24.png in Resources */,
 				5B3743721CC0CBFD00AF2897 /* handshake-24@2x.png in Resources */,
@@ -1636,6 +1653,7 @@
 				5B5BCB511D1CEB6C00D8E89C /* menu_background.jpg in Resources */,
 				5B3743D71CC0CBFD00AF2897 /* like-24@3x.png in Resources */,
 				5B3743651CC0CBFD00AF2897 /* ios_contact-512 in Resources */,
+				5B4D10CD1D376F5800AB9449 /* calendar-40.png in Resources */,
 				5B37440F1CC0CBFD00AF2897 /* trash-24.png in Resources */,
 				5B37439C1CC0CBFD00AF2897 /* clock-24.png in Resources */,
 				5B37441F1CC0CBFD00AF2897 /* user_male2-24@3x.png in Resources */,
@@ -1777,6 +1795,7 @@
 				5B3742711CC0CBAD00AF2897 /* OSTextField.m in Sources */,
 				5B3742761CC0CBAD00AF2897 /* UIViewController+FrequentTools.m in Sources */,
 				5B3742731CC0CBAD00AF2897 /* UILabel+HeightToFit.m in Sources */,
+				5B493CA01D35D7C000FABC67 /* GroupDetails.swift in Sources */,
 				5B0B534D1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift in Sources */,
 				5B4F53891D235EA800309BCB /* Chats.swift in Sources */,
 				5B09CEBB1CBB4A330042C70B /* LearnFlux.xcdatamodeld in Sources */,
@@ -1789,6 +1808,7 @@
 				5B37425F1CC0CBAD00AF2897 /* NSDate+String.m in Sources */,
 				5B37426F1CC0CBAD00AF2897 /* CommonUtility.m in Sources */,
 				5BFFFDB71CD8958B0099AB3F /* SweetAlert.swift in Sources */,
+				5B4D10D01D37754F00AB9449 /* GroupProfile.swift in Sources */,
 				5B5BCB531D1CF2BA00D8E89C /* Menu2.swift in Sources */,
 				5B04552A1D129F690078032B /* OrgActivities.swift in Sources */,
 				5B3742771CC0CBAD00AF2897 /* UIView+Border.m in Sources */,
