@@ -34,6 +34,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Eureka.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>JSQMessagesViewController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -62,12 +67,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>15CE932F6386965DBF8E44471767B523</key>
+		<key>336B93337DFC5EE58B564606FF93F15D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>336B93337DFC5EE58B564606FF93F15D</key>
+		<key>4332352E97A37C729DC7D9B3B8A4BB15</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -87,7 +92,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>78443545E95643EDC94A6F2496D2AFD6</key>
+		<key>65BCE6BAC98658DFFBB89A6EF1E2E491</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -103,6 +108,11 @@
 			<true/>
 		</dict>
 		<key>9F766ADB76A46AB732825D44C4BAAABF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D6F33A0D2BECD190A06437CAD9DEDA1B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

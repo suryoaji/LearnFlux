@@ -4,6 +4,7 @@ PODS:
   - AZDropdownMenu (1.1.1)
   - CZPicker (0.4.2)
   - DropDown (1.0)
+  - Eureka (1.7.0)
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
@@ -16,6 +17,7 @@ DEPENDENCIES:
   - AZDropdownMenu
   - CZPicker
   - DropDown
+  - Eureka (~> 1.7)
   - JSQMessagesViewController
   - PKRevealController
   - RAReorderableLayout
@@ -26,6 +28,7 @@ SPEC CHECKSUMS:
   AZDropdownMenu: 0ba09d5f7b1b8dc795824ec281c4dde8515f4498
   CZPicker: df3d8d0511595b7cd2f032263c82c611d45a9b8e
   DropDown: 8fcb6247170f310be8ac3a2f0dfca725ce14d0bc
+  Eureka: 2020d9faeef7b7e9adeb9e3d8af779e5931c1897
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   PKRevealController: ffb45a16f5a5032ad90a3d16e5cbb0d8e035bd58

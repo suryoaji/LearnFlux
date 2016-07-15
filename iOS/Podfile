@@ -11,3 +11,4 @@ pod "Alamofire"
 pod 'AZDropdownMenu'
 pod 'AMPopTip'
 pod 'DropDown'
+pod 'Eureka', '~> 1.7'
