@@ -78,19 +78,25 @@ public class RequestTemplate {
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
 					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
-				}else if(error instanceof AuthFailureError){
-					Toast.makeText(context,"Authentic Error",Toast.LENGTH_SHORT).show();
-					Functions.reLogin(context);
 				}else {
 					Log.i(TAG, error.getMessage());
-					if (error.networkResponse!=null){
-						Log.i(TAG, String.valueOf(error.networkResponse.statusCode));
-					}
-					if (errorCallback!=null){
-						try {
-							errorCallback.execute(new JSONObject(error.getMessage()));
-						} catch (JSONException e) {
-							e.printStackTrace();
+					if(error.getMessage().contains("token")){
+						Functions.reLogin(context, new ServiceCallback() {
+							@Override
+							public void execute(JSONObject obj) {
+								POSTJsonRequest(context, url, params, callback, errorCallback);
+							}
+						});
+					}else{
+						if (error.networkResponse!=null){
+							Log.i(TAG, String.valueOf(error.networkResponse.statusCode));
+						}
+						if (errorCallback!=null){
+							try {
+								errorCallback.execute(new JSONObject(error.getMessage()));
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -127,9 +133,6 @@ public class RequestTemplate {
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
 					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
-				}else if(error instanceof AuthFailureError){
-					Toast.makeText(context,"Authentic Error",Toast.LENGTH_SHORT).show();
-					Functions.reLogin(context);
 				}else {
 					Log.i(TAG, error.getMessage());
 					if (error.networkResponse!=null){
@@ -175,19 +178,25 @@ public class RequestTemplate {
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
 					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
-				}else if(error instanceof AuthFailureError){
-					Toast.makeText(context,"Authentic Error",Toast.LENGTH_SHORT).show();
-					Functions.reLogin(context);
 				}else {
 					Log.i(TAG, error.getMessage());
-					if (error.networkResponse!=null){
-						Log.i(TAG, String.valueOf(error.networkResponse.statusCode));
-					}
-					if (errorCallback!=null){
-						try {
-							errorCallback.execute(new JSONObject(error.getMessage()));
-						} catch (JSONException e) {
-							e.printStackTrace();
+					if(error.getMessage().contains("token")){
+						Functions.reLogin(context, new ServiceCallback() {
+							@Override
+							public void execute(JSONObject obj) {
+								DELETEJsonRequest(context, url, params, callback, errorCallback);
+							}
+						});
+					}else{
+						if (error.networkResponse!=null){
+							Log.i(TAG, String.valueOf(error.networkResponse.statusCode));
+						}
+						if (errorCallback!=null){
+							try {
+								errorCallback.execute(new JSONObject(error.getMessage()));
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -226,19 +235,25 @@ public class RequestTemplate {
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
 					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
-				}else if(error instanceof AuthFailureError){
-					Toast.makeText(context,"Authentic Error",Toast.LENGTH_SHORT).show();
-					Functions.reLogin(context);
 				}else {
 					Log.i(TAG, error.getMessage());
-					if (error.networkResponse!=null){
-						Log.i(TAG, String.valueOf(error.networkResponse.statusCode));
-					}
-					if (errorCallback!=null){
-						try {
-							errorCallback.execute(new JSONObject(error.getMessage()));
-						} catch (JSONException e) {
-							e.printStackTrace();
+					if(error.getMessage().contains("token")){
+						Functions.reLogin(context, new ServiceCallback() {
+							@Override
+							public void execute(JSONObject obj) {
+								GETJsonRequest(context, url, params, callback, errorCallback);
+							}
+						});
+					}else{
+						if (error.networkResponse!=null){
+							Log.i(TAG, String.valueOf(error.networkResponse.statusCode));
+						}
+						if (errorCallback!=null){
+							try {
+								errorCallback.execute(new JSONObject(error.getMessage()));
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}

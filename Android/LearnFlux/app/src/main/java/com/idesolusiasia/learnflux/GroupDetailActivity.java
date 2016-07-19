@@ -1,6 +1,5 @@
 package com.idesolusiasia.learnflux;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -14,13 +13,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
+public class GroupDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents;
-	static final int ITEMS = 3;
+	static final int ITEMS = 2;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,7 +29,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View childLayout = layoutInflater.inflate(
-				R.layout.activity_org_detail, null);
+				R.layout.activity_group_detail, null);
 		parentLayout.addView(childLayout);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -55,16 +54,6 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		tvNotifEvents=(TextView) findViewById(R.id.tvNotifEvents);
 		tvNotifGroups=(TextView) findViewById(R.id.tvNotifGroups);
 
-		LinearLayout titleLayout = (LinearLayout) findViewById(R.id.titleLayout);
-		titleLayout.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent i = new Intent(OrgDetailActivity.this, OrgProfileActivity.class);
-				startActivity(i);
-			}
-		});
-
-
 		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -87,22 +76,17 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 
 	@Override
 	public void onClick(View v) {
-		if (v==tabGroups){
+		if (v==tabEvents){
 			mViewPager.setCurrentItem(0);
-		}else if (v==tabEvents){
-			mViewPager.setCurrentItem(1);
 		}else if (v==tabActivities){
-			mViewPager.setCurrentItem(2);
+			mViewPager.setCurrentItem(1);
 		}
 	}
 
 	void selectTab(int pos){
 		indicatorAct.setVisibility(View.GONE);
 		indicatorEvents.setVisibility(View.GONE);
-		indicatorGroups.setVisibility(View.GONE);
-		if (pos==0){
-			indicatorGroups.setVisibility(View.VISIBLE);
-		}else if(pos==1) {
+		if(pos==0) {
 			indicatorEvents.setVisibility(View.VISIBLE);
 		}else{
 			indicatorAct.setVisibility(View.VISIBLE);
@@ -119,8 +103,6 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		public Fragment getItem(int position) {
 			switch (position) {
 				case 0:
-					return OrgGroupFragment.newInstance();
-				case 1:
 					return OrgEventFragment.newInstance();
 				default:
 					return OrgActivityFragment.newInstance();

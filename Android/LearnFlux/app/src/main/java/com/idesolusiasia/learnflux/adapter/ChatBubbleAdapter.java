@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +23,7 @@ import java.util.List;
 /**
  * Created by NAIT ADMIN on 21/04/2016.
  */
-public class ChatBubbleAdapter extends ArrayAdapter<ChatBubble>{
+public class ChatBubbleAdapter extends ArrayAdapter<ChatBubble> implements Filterable{
 
 	public List<ChatBubble> chatBubbles=null;
 	int meID = 6;
@@ -101,6 +103,11 @@ public class ChatBubbleAdapter extends ArrayAdapter<ChatBubble>{
 		return row;
 	}
 
+	@Override
+	public Filter getFilter() {
+		return super.getFilter();
+	}
+
 	private class ViewHolderPlainOther{
 		NetworkImageView ivUser;
 		ImageView ivImportant;
@@ -110,6 +117,7 @@ public class ChatBubbleAdapter extends ArrayAdapter<ChatBubble>{
 		TextView message, timestamp;
 		ImageView ivImportant;
 	}
+
 
 
 

@@ -1,6 +1,7 @@
 package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Functions;
@@ -72,8 +74,8 @@ class GroupsTileHolder extends RecyclerView.ViewHolder implements View.OnClickLi
 	@Override
 	public void onClick(View view) {
 		Toast.makeText(view.getContext(), tvGroupName.getText() + " clicked", Toast.LENGTH_SHORT).show();
-		//Intent i = new Intent(view.getContext(), OrgDetailActivity.class);
-		//view.getContext().startActivity(i);
+		Intent i = new Intent(view.getContext(), GroupDetailActivity.class);
+		view.getContext().startActivity(i);
 		//Toast.makeText(view.getContext(), "Clicked Position = " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
 		/*if (text.getText().toString().equalsIgnoreCase("chat")){
 			Intent i = new Intent(view.getContext(),ChatsActivity.class);

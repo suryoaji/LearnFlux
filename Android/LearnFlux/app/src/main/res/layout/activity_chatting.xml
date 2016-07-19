@@ -17,7 +17,8 @@
         android:id="@+id/listView" android:layout_alignParentTop="true"
         android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
         android:layout_above="@+id/linearLayout"
-        android:divider="#00ffffff"/>
+        android:divider="#00ffffff" android:transcriptMode="normal" android:smoothScrollbar="false"
+        android:stackFromBottom="true"/>
     <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:weightSum="1"

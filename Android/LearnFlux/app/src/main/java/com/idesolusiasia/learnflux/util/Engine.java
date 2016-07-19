@@ -72,7 +72,7 @@ public class Engine {
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME);
 
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context);
+			Functions.reLogin(context, null);
 		}else {
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
@@ -91,7 +91,7 @@ public class Engine {
 
 	}
 
-	public static void createThread(final Context context, final int[] ids, String title){
+	public static void createThread(final Context context, final int[] ids, final String title){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
 		HashMap<String,int[]> par = new HashMap<>();
 		par.put("participants",ids);
@@ -103,7 +103,12 @@ public class Engine {
 		}
 
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context);
+			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					createThread(context, ids, title);
+				}
+			});
 		}else {
 			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
 				@Override
@@ -126,7 +131,12 @@ public class Engine {
 	public static void getThreads(final Context context, final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context);
+			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					getThreads(context,callback);
+				}
+			});
 		}else {
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
@@ -140,11 +150,16 @@ public class Engine {
 	}
 
 
-	public static void deleteThread(final Context context, List<Thread> deleted,
+	public static void deleteThread(final Context context, final List<Thread> deleted,
 	                                final RequestTemplate.ServiceCallback callback) {
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context);
+			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					deleteThread(context,deleted,callback);
+				}
+			});
 		}else {
 			String[] ids = new String[deleted.size()];
 			for (int i = 0; i < deleted.size(); i++) {
@@ -206,11 +221,16 @@ public class Engine {
 	}
 
 	public static void getThreadMessages(final Context context, final RequestTemplate.ServiceCallback callback,
-	                                     String idThread){
+	                                     final String idThread){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
 				context.getString(R.string.URL_THREAD_MESSAGES,idThread);
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context);
+			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					getThreadMessages(context, callback, idThread);
+				}
+			});
 		}else {
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
@@ -225,7 +245,7 @@ public class Engine {
 		}
 	}
 
-	public static void sendMessage(final Context context, String idThread, String message, final RequestTemplate.ServiceCallback callback){
+	public static void sendMessage(final Context context, final String idThread, final String message, final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
 				context.getString(R.string.URL_THREAD_MESSAGES,idThread);
 
@@ -237,7 +257,12 @@ public class Engine {
 		}
 
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context);
+			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					sendMessage(context, idThread, message, callback);
+				}
+			});
 		}else {
 			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
 				@Override

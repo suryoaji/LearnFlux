@@ -32,11 +32,15 @@ public class Functions {
 		alertDialog.show();
 	}
 
-	public static void reLogin(final Context context){
+	public static void reLogin(final Context context, final RequestTemplate.ServiceCallback reDo){
 		Engine.login(context, User.getUser().getUsername(), User.getUser().getPassword(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				Engine.getMe(context);
+				if (reDo!=null){
+					reDo.execute(obj);
+				}
+
 			}
 		}, new RequestTemplate.ErrorCallback() {
 			@Override

@@ -9,7 +9,7 @@ public class User {
 	private String access_token, name, email, phone, password, username;
 
 	private User(){
-		access_token="";
+		access_token="57453e293a603f8c168b4567_5gj7ywf0ocsoosw0sc8sgsgk8gckkc80o8co8gg00o08g88c4o";
 		name="";
 		email="";
 		phone="";
