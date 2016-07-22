@@ -10,64 +10,22 @@ import Foundation
 
 class ForgotPassword : UIViewController {
     
-    @IBOutlet weak var tfEmail: OSTextField!;
+    @IBOutlet weak var tfEmail: OSTextfieldR!;
     var animatedDistance: Double = 0;
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let temp = tfEmail;
-        
-        temp.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10);
-        temp.borderStyle = .Line;
-        temp.layer.borderWidth = 2;
-        temp.layer.borderColor = UIColor(red: 0.93, green: 0.93, blue: 0.93, alpha: 1).CGColor;
-        temp.height = 50;
+        tfEmail.height = 50.0
     }
-
-    
-    
     
     // MARK: magic code for adjusting text field into view.
     
     func textFieldDidBeginEditing(textField: UITextField) {
-        let textFieldRect: CGRect = self.view.window!.convertRect(textField.bounds, fromView: textField)
-        let viewRect: CGRect = self.view.window!.convertRect(self.view.bounds, fromView: self.view!)
-        let midline: CGFloat = textFieldRect.origin.y + 0.5 * textFieldRect.size.height
-        let numerator: CGFloat = midline - viewRect.origin.y - MINIMUM_SCROLL_FRACTION * viewRect.size.height
-        let denominator: CGFloat = (MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION) * viewRect.size.height
-        var heightFraction: CGFloat = numerator / denominator
-        if heightFraction < 0.0 {
-            heightFraction = 0.0
-        }
-        else if heightFraction > 1.0 {
-            heightFraction = 1.0
-        }
-        
-        let orientation: UIInterfaceOrientation = UIApplication.sharedApplication().statusBarOrientation
-        if orientation == .Portrait || orientation == .PortraitUpsideDown {
-            animatedDistance = floor(Double(PORTRAIT_KEYBOARD_HEIGHT * heightFraction))
-        }
-        else {
-            animatedDistance = floor(Double(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction))
-        }
-        var viewFrame: CGRect = self.view.frame
-        viewFrame.origin.y -= CGFloat(animatedDistance)
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true);
-        UIView.setAnimationDuration(Double(KEYBOARD_ANIMATION_DURATION))
-        self.view!.frame = viewFrame
-        UIView.commitAnimations()
+        Util.animateSetFocus(self, toView: textField, distance: &animatedDistance, keyboardHeight: nil)
     }
     
     func textFieldDidEndEditing(textfield: UITextField) {
-        var viewFrame: CGRect = self.view.frame
-        viewFrame.origin.y += CGFloat(animatedDistance)
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true);
-        UIView.setAnimationDuration(Double(KEYBOARD_ANIMATION_DURATION))
-        self.view!.frame = viewFrame
-        UIView.commitAnimations()
+        Util.animateDismissSetFocus(self, distance: &animatedDistance)
     }
     
     override func globalResignFirstResponderRec(view: UIView) {

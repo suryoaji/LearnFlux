@@ -32,7 +32,7 @@ class NewHome : UIViewController {
     
     func addTapHandlerToAllImages (view: UIView) {
         if let v = view as? UIImageView {
-            let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(self.imageTapped(_:)))
+            let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(self.imageTapped))
             v.userInteractionEnabled = true
             v.addGestureRecognizer(tapGestureRecognizer)
         }

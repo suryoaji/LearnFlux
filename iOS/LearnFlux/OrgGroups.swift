@@ -11,7 +11,7 @@ import Foundation
 class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     var groups : Array<Dictionary<String, AnyObject>> = [];
-    var pushDelegate : PushDelegate!;
+    var pushDelegate : PushDelegate!
     
     func setupDummyData () {
         groups.append(["title":"Ma Fine Arts", "description":"", "color":UIColor.init(red: 0/255, green: 190/255, blue: 143/255, alpha: 1)]);

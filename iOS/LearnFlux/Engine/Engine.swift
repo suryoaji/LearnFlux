@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
 
 enum RequestStatusType {
     case InternetNotWorking
@@ -19,11 +20,16 @@ enum RequestStatusType {
     case Success
 }
 
+enum RequestType{
+    case MakeToken
+    case None
+}
+
 typealias JSONreturn = ((RequestStatusType, AnyObject?)->Void);
 
-
 class Engine : NSObject {
-    static var locked : Bool = false;
+    static var clientData = Data.sharedInstance
+    private static var locked : Bool = false;
     
     static func getJSON (param: [String: AnyObject])->String {
         do {
@@ -38,25 +44,17 @@ class Engine : NSObject {
     }
     
     static func printErrorCode (statusCode: Int) -> String {
-        return (Data.isProduction ? "" : "\nStatus code: \n\(statusCode)")
+        return (clientData.getIsProduction() ? "" : "\nStatus code: \n\(statusCode)")
     }
     
-    static func authHeaders() -> Dictionary<String, String> {
-        let header : Dictionary<String, String> = [
-            "Content-Type":"application/json",
-            "Authorization":"Bearer \(Data.accessToken)"
-        ];
-        print ("header: \(header)");
-        return header;
-    }
-    
-    static func statusMaker (statusCode : Int?, JSON : AnyObject?)->RequestStatusType {
-        if (JSON != nil) {
-            if (JSON!.objectForKey("error") != nil || JSON!.objectForKey("errors") != nil) {
-                return .CustomError;
+    private static func statusMaker (statusCode : Int?, JSON : AnyObject?)->RequestStatusType {
+        if let json = JSON{
+            if let dicJSON = json as? NSDictionary{
+                if (dicJSON.objectForKey("error") != nil || dicJSON.objectForKey("errors") != nil) {
+                    return .CustomError;
+                }
             }
         }
-
         if (statusCode == nil) {
             return .GeneralError;
         }
@@ -70,7 +68,7 @@ class Engine : NSObject {
         }
     }
     
-    static func makeQueryString (param: Dictionary<String,AnyObject>)->String {
+    private static func makeQueryString (param: Dictionary<String,AnyObject>)->String {
         var result = "";
         for (key, value) in param {
             if (result != "") { result += "&"; }
@@ -82,228 +80,116 @@ class Engine : NSObject {
     }
     
     static func makeToken (viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
-        var mparam : Dictionary<String,AnyObject> = (param != nil ? param! : [:]);
+        var mparam : Dictionary<String,AnyObject> = (param != nil ? param! : [:])
         mparam["grant_type"] = "password";
-        mparam["client_id"] = Data.clientId;
-        mparam["client_secret"] = Data.clientSecret;
-        mparam["username"] = Data.username;
-        mparam["password"] = Data.password;
-        mparam["scope"] = Data.scope;
-        var getparam = Dictionary<String, AnyObject>();
-        var postparam = Dictionary<String, AnyObject>();
-        if (method == .GET) { getparam = mparam; }
-        else if (method == .POST) { postparam = mparam; }
-        
-        let geturl = (url + makeQueryString(getparam));
-        print (geturl);
-        Alamofire.request(method, geturl, parameters: postparam, headers: nil)
-            .responseJSON { response in
-                var res : Int? = nil;
-                res = response.response?.statusCode;
-                let JSON = response.result.value
-                print ("JSON: \(JSON)");
-                let restat = statusMaker(res, JSON: JSON);
-                print ("Request: " + geturl + "\nStatus code: \(res)" + "\nStatus : \(restat)");
-                if (res == nil) {
-                    if (callback != nil) { callback!(restat, JSON); }
-                    return;
-                }
-                if (restat == .CustomError) {
-                    if (JSON!["error_description"] != nil) {
-                        Util.showMessageInViewController(viewController, title: "Error", message: JSON!["error_description"] as! String) {
-                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                        }
-                    }
-                    else {
-                        Util.showMessageInViewController(viewController, title: "Error", message: "\(JSON!["error"])") {
-                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                        }
-                    }
-                }
-                else if (restat == .InvalidAccessToken) {
-                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                }
-                else if (response.response?.statusCode != 200) {
-                    Util.showMessageInViewController(viewController, title: "Error", message: "An error occured. Error code: \(response.response!.statusCode)")
-                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                    print ("AN ERROR OCCURED while making request for url = \(geturl)\nWith param: \(mparam)\nError code: \(response.response!.statusCode)");
-                }
-                else {
-                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                }
-        }
+        mparam["client_id"] = clientData.getClientID()
+        mparam["client_secret"] = clientData.getClientSecret()
+        mparam["username"] = clientData.getUsername()
+        mparam["password"] = clientData.getPassword()
+        mparam["scope"] = clientData.getScope()
+        let urlReq = createURLRequest(url, method: method, param: mparam)
+        self.makeRequestAlamofire(viewController, method: method, url: urlReq.URLString, param: method == .GET ? nil : mparam, requestType: .MakeToken, callback: callback)
     }
     
     static func refreshToken (viewController: UIViewController? = nil, callback: JSONreturn? = nil) {
         self.makeToken(viewController, method: .GET, url: Url.token, param: nil) { status, JSON in
             if (status == .Success) {
-                Data.accessToken = JSON!["access_token"]! as! String;
+                clientData.setAccessToken(JSON!["access_token"]! as! String)
                 dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (status, JSON); } } );
             }
         }
     }
     
-    static func makeRequest (viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
-        let mparam : Dictionary<String,AnyObject> = (param != nil ? param! : [:]);
-        var getparam = Dictionary<String, AnyObject>();
-        var postparam = Dictionary<String, AnyObject>();
-        if (method == .GET) { getparam = mparam; }
-        else if (method == .POST) { postparam = mparam; }
-        
-        let geturl = (url + makeQueryString(getparam));
-        print (geturl);
-        Alamofire.request(method, geturl, parameters: postparam, headers: authHeaders())
+    static func makeRequestAlamofire(viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, requestType : RequestType = .None, callback: JSONreturn? = nil) {
+        let urlReq = self.createURLRequest(url, method: method, param: param)
+        Alamofire.request(method, urlReq.URLString, parameters: method == .GET ? nil : param, encoding: .JSON, headers: urlReq.allHTTPHeaderFields)
             .responseJSON { response in
-                print("Request result ===============================")
-                print(response);
-                let res = response.response!.statusCode;
-                let JSON = response.result.value
-                let restat = statusMaker(res, JSON: JSON);
-                print ("Request: " + geturl + "\nStatus code: \(res)" + "\nStatus : \(restat)");
-                print ("JSON: \(JSON)");
-                if (restat == .CustomError) {
-                    Util.showMessageInViewController(viewController, title: "Error", message: JSON!["error_description"] as! String) {
-                        dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                    };
-                }
-                else if (restat == .InvalidAccessToken) {
-                    refreshToken() { status, JSON in
-                        if JSON == nil {
-                            Util.showMessageInViewController(viewController, title: "Error", message: "There's an error with the network. Please try again later.") {
-                                print ("CANNOT OBTAIN ACCESS TOKEN ERROR occured while making request for url = \(geturl)\nWith param: \(mparam)\nError code: \(response.response?.statusCode)");
-                                dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+                if let json = response.result.value{
+                    let restat = statusMaker(response.response!.statusCode, JSON: json)
+                    switch (restat) {
+                    case .Success:
+                        if (callback != nil) { callback! (restat, json); }
+                        break;
+                    case .CustomError:
+                        if let errorDesc = json["error_description"]! {
+                            Util.showMessageInViewController(viewController, title: "Error", message: errorDesc as! String) {
+                                if (callback != nil) { callback! (restat, json); }
                             }
                         }
                         else {
-                            if (!locked) {
-                                locked = true;
-                                makeRequest(viewController, method: method, url: url, param: param) { status, JSON in
-                                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                                    locked = false;
-                                }
-                            }
+                            if (callback != nil) { callback! (restat, json); }
                         }
-                    }
-                }
-                else if (response.response?.statusCode != 200) {
-                    Util.showMessageInViewController(viewController, title: "Error", message: "An error occured. Error code: \(response.response!.statusCode)")
-                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                    print ("AN ERROR OCCURED while making request for url = \(geturl)\nWith param: \(mparam)\nError code: \(response.response!.statusCode)");
-                }
-                else {
-                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                }
-        }
-    }
-    
-    static func makeRequest2  (viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
-        var headers : [String: String]!
-        if url == Url.register {
-            headers = [
-                "Content-Type": "application/json",
-                "cache-control": "no-cache"
-            ]
-        }
-        else {
-            headers = [
-                "authorization": "Bearer \(Data.accessToken)",
-                "Content-Type": "application/json",
-                "cache-control": "no-cache"
-            ]
-        }
-        
-        do {
-            let mparam = (param == nil ? [:] : param!);
-            var getparam = Dictionary<String, AnyObject>();
-            var postparam = Dictionary<String, AnyObject>();
-            if (method == .GET) { getparam = mparam; }
-            else if (method == .POST) { postparam = mparam; }
-            
-            if (method == .DELETE && url == Url.messages) { postparam = mparam; }
-            
-            let geturl = (url + makeQueryString(getparam));
-
-            let postData = try NSJSONSerialization.dataWithJSONObject(postparam, options: NSJSONWritingOptions.PrettyPrinted)
-//            let postData = NSData(data: getJSON(postparam).dataUsingEncoding(NSUTF8StringEncoding)!)
-            let request = NSMutableURLRequest(URL: NSURL(string: geturl)!,
-                                              cachePolicy: .UseProtocolCachePolicy,
-                                              timeoutInterval: 10.0)
-            request.HTTPMethod = "\(method)";
-            request.allHTTPHeaderFields = headers
-            if (postparam.count > 0) {
-                request.HTTPBody = postData;
-            }
-            
-            let session = NSURLSession.sharedSession()
-            let dataTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                if (error != nil) {
-                    print(error)
-                } else {
-                    do {
-                        let httpResponse = response as? NSHTTPURLResponse
-                        var JSON : AnyObject = [:];
-                        if (httpResponse?.statusCode != 204) {
-                            JSON = try NSJSONSerialization.JSONObjectWithData(data!, options:[])
-                        }
-                        let restat = statusMaker((httpResponse?.statusCode)!, JSON: JSON);
-//                        print (JSON);
-                        switch (restat) {
-                        case .Success:
-                            if (callback != nil) { callback! (restat, JSON); }
-                            break;
-                        case .CustomError:
-                            if let errorDesc = JSON["error_description"]! {
-                                Util.showMessageInViewController(viewController, title: "Error", message: errorDesc as! String) {
-                                    if (callback != nil) { callback! (restat, JSON); }
-                                }
-                            }
-                            else {
-                                if (callback != nil) { callback! (restat, JSON); }
-                            }
-                            break;
-                        case .InvalidAccessToken:
+                        break;
+                    case .InvalidAccessToken:
+                        if requestType == .MakeToken{
+                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, json); } } );
+                        }else{
                             if (!locked) {
                                 locked = true;
                                 refreshToken() { status, JSON in
                                     if JSON == nil {
                                         Util.showMessageInViewController(viewController, title: "Error", message: "There's an error with the network. Please try again later.") {
-                                            print ("CANNOT OBTAIN ACCESS TOKEN ERROR occured while making request for url = \(geturl)\nWith param: \(mparam)\nError code: \(httpResponse!.statusCode)");
+                                            print ("CANNOT OBTAIN ACCESS TOKEN ERROR occured while making request for url = \(urlReq.URLString)\nWith param: \(param)\nError code: \((response.response?.statusCode)!)");
                                             dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
                                         }
                                     }
                                     else {
-                                        makeRequest2(viewController, method: method, url: url, param: param) { status, JSON in
+                                        makeRequestAlamofire(viewController, method: method, url: url, param: param) { status, JSON in
                                             dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
                                         }
                                     }
                                 }
                             }
                             locked = false;
-                            break;
-                        default:
-                            Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later." + printErrorCode(httpResponse!.statusCode)) {
-                                dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                            };
-                            break;
                         }
-                    } catch let error as NSError {
-                        print(error)
-                        Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later.")
-                        dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (RequestStatusType.GeneralError, nil); } } );
+                        break;
+                    default:
+                        Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later." + printErrorCode((response.response?.statusCode)!)) {
+                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, json); } } );
+                        };
+                        break;
                     }
                 }
-            })
-            
-            dataTask.resume()
-        } catch let error as NSError {
-            print(error)
         }
-
     }
-        
+    
+    private static func createURLRequest(string: String, method: Alamofire.Method, param: Dictionary<String,AnyObject>?) -> (NSMutableURLRequest){
+        let headers = authHeaders(string)
+        var newUrl = string
+        let urlReq = NSMutableURLRequest()
+        if let tParam = param{
+            if method == .GET {
+                newUrl += makeQueryString(tParam)
+            }else if method == .POST || (method == .DELETE && string == Url.messages){
+                do{
+                    let post = try NSJSONSerialization.dataWithJSONObject(tParam, options: .PrettyPrinted)
+                    urlReq.HTTPBody = post
+                }catch let error as NSError{
+                    print("Make JSON error : \(error)")
+                }
+                
+            }
+        }
+        urlReq.URL = NSURL(string: newUrl)!
+        urlReq.cachePolicy = .UseProtocolCachePolicy
+        urlReq.timeoutInterval = 10.0
+        urlReq.HTTPMethod = "\(method)"
+        urlReq.allHTTPHeaderFields = headers
+        return urlReq
+    }
+    
+    private static func authHeaders(urlString: String) -> (Dictionary<String, String>){
+        let headers : Dictionary<String, String> = [
+            "Content-Type"  : "application/json",
+            "cache-control" : "no-cache",
+            "Authorization" : urlString == Url.register ? "" : "Bearer \(clientData.getAccessToken())"
+        ]
+        return headers
+    }
+    
     static func login (viewController: UIViewController? = nil, username : String, password : String, callback: JSONreturn? = nil) {
-        Data.username = username;
-        Data.password = password;
+        clientData.setUsername(username)
+        clientData.setPassword(password)
         refreshToken(viewController) { status, JSON in
             if (JSON == nil) {
                 if (status == .GeneralError) {
@@ -317,17 +203,39 @@ class Engine : NSObject {
         }
     }
     
-    static func me (viewController: UIViewController? = nil, callback: JSONreturn? = nil) {
-        makeRequest(url: Url.me, param: nil) { status, JSON in
+    static func me(viewController: UIViewController? = nil, callback: JSONreturn? = nil) {
+//        makeRequest(url: Url.me, param: nil) { status, JSON in
+        makeRequestAlamofire(url: Url.me, param: nil) { status, JSON in
             if (JSON != nil) {
                 print ("me: \(JSON!)");
                 if (JSON!.valueForKey("data") != nil) {
                     let data = JSON!.valueForKey("data")!;
-                    Data.defaults.setValue(data, forKey: "me");
-                    Data.defaults.synchronize();
+                    clientData.defaults.setValue(data, forKey: "me");
+                    clientData.defaults.synchronize();
                 }
             }
             if (callback != nil) { callback! (status, JSON); }
+        }
+    }
+    
+    private static func setMyEvents(events: Array<Dictionary<String, AnyObject>>){
+        clientData.setMyEvents(events)
+    }
+    
+    static func getMyEvents() -> [Event]?{
+        return clientData.getMyEvents()
+    }
+    
+    static func getEvents(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
+        makeRequestAlamofire(viewController, url: Url.events, param: nil){ status, dataJSON in
+            if let rawJSON = dataJSON{
+                let json = JSON(rawJSON).dictionaryObject
+                if let data = json?["data"]{
+                    let arrData = data as! Array<Dictionary<String, AnyObject>>
+                    self.setMyEvents(arrData)
+                }
+            }
+            if callback != nil{ callback!(status, dataJSON) }
         }
     }
     
@@ -335,9 +243,10 @@ class Engine : NSObject {
         let param = ["participants":userId, "title":title] as [String: AnyObject];
         print (self.getJSON(param));
         
-        makeRequest2(viewController, method: .POST, url: Url.messages, param: param) { status, JSON in
+//        makeRequest2(viewController, method: .POST, url: Url.messages, param: param) { status, JSON in
+        makeRequestAlamofire(viewController, method: .POST, url: Url.messages, param: param) { status, JSON in
             if (JSON != nil) { print (JSON!); }
-            if (!Data.saveNewThreadInfo(threadJSON: JSON)) {
+            if (!clientData.saveNewThreadInfo(threadJSON: JSON)) {
                 Util.showMessageInViewController(viewController, title: "Failed to create new thread", message: "Sorry, there's problems on creating new thread for these participants. Please try again later.") {
                     if (callback != nil) { callback! (status, JSON); }
                 }
@@ -349,14 +258,15 @@ class Engine : NSObject {
     }
     
     static func getThreads (viewController: UIViewController? = nil, callback: JSONreturn? = nil) {
-        makeRequest2(viewController, method: .GET, url: Url.messages, param: nil) { status, JSON in
+//        makeRequest2(viewController, method: .GET, url: Url.messages, param: nil) { status, JSON in
+        makeRequestAlamofire(viewController, method: .GET, url: Url.messages, param: nil) { status, JSON in
             if (JSON != nil) {
                 print ("threads: \(JSON!)");
                 if (JSON!.valueForKey("data") != nil) {
                     let data = JSON!.valueForKey("data")!;
                     print ("threads data: \(data)");
-                    Data.defaults.setObject(data, forKey: "threads");
-                    Data.defaults.synchronize();
+                    clientData.defaults.setObject(data, forKey: "threads");
+                    clientData.defaults.synchronize();
                 }
             }
             if (callback != nil) { callback! (status, JSON); }
@@ -370,7 +280,7 @@ class Engine : NSObject {
         let participants = thread.valueForKey("participants")! as! Array<NSDictionary>;
         var chatName = "";
         for participant in participants {
-            let me = Data.defaults.valueForKey("me")! as! NSDictionary;
+            let me = clientData.defaults.valueForKey("me")! as! NSDictionary;
             let selfId = me.valueForKey("id")! as! Int;
             let participantId = participant.valueForKey("id")! as! Int;
             if (participantId != selfId) {
@@ -383,14 +293,15 @@ class Engine : NSObject {
     }
     
     static func getThreadMessages (viewController: UIViewController? = nil, threadId: String, callback: JSONreturn? = nil) {
-        makeRequest2(viewController, method: .GET, url: Url.messages + "/" + threadId, param: nil) { status, JSON in
+//        makeRequest2(viewController, method: .GET, url: Url.messages + "/" + threadId, param: nil) { status, JSON in
+        makeRequestAlamofire(viewController, method: .GET, url: Url.messages + "/" + threadId, param: nil) { status, JSON in
             if (JSON != nil) {
 //                print ("thread messages: \(JSON!)");
                 if (JSON!.valueForKey("data") != nil) {
                     let data = JSON!.valueForKey("data")!;
                     let messages = data.valueForKey("messages")!;
-                    Data.defaults.setObject(messages, forKey: threadId);
-                    Data.defaults.synchronize();
+                    clientData.defaults.setObject(messages, forKey: threadId);
+                    clientData.defaults.synchronize();
                 }
             }
             if (callback != nil) { callback! (status, JSON); }
@@ -399,14 +310,15 @@ class Engine : NSObject {
     
     static func sendThreadMessage (viewController: UIViewController? = nil, threadId: String, body: String, callback: JSONreturn? = nil) {
         let param = ["body":body];
-        makeRequest2(viewController, method: .POST, url: Url.messages + "/" + threadId, param: param) { status, JSON in
+//        makeRequest2(viewController, method: .POST, url: Url.messages + "/" + threadId, param: param) { status, JSON in
+        makeRequestAlamofire(viewController, method: .POST, url: Url.messages + "/" + threadId, param: param) { status, JSON in
             if (JSON != nil) {
                 print ("thread messages: \(JSON!)");
                 if (JSON!.valueForKey("data") != nil) {
                     let data = JSON!.valueForKey("data")!;
                     let messages = data.valueForKey("messages")!;
-                    Data.defaults.setObject(messages, forKey: threadId);
-                    Data.defaults.synchronize();
+                    clientData.defaults.setObject(messages, forKey: threadId);
+                    clientData.defaults.synchronize();
                 }
             }
             if (callback != nil) { callback! (status, JSON); }
@@ -439,7 +351,8 @@ class Engine : NSObject {
   
     static func deleteThreads (viewController: UIViewController? = nil, threadIds: [String], callback: JSONreturn? = nil) {
         let param = ["ids":threadIds];
-        makeRequest2(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
+//        makeRequest2(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
+        makeRequestAlamofire(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
             if (JSON != nil) { print (JSON!); }
             if (callback != nil) { callback! (status, JSON); }
         }
@@ -453,7 +366,7 @@ class Engine : NSObject {
                      "email":email,
                      "password":password,
                      "passwordConfirm":passwordConfirm];
-        makeRequest2(viewController, method: .POST, url: Url.register, param: param) { status, JSON in
+        makeRequestAlamofire(viewController, method: .POST, url: Url.register, param: param) { status, JSON in
             if (JSON != nil) {
                 print (JSON);
             }
@@ -468,5 +381,282 @@ class Engine : NSObject {
         }
     }
 
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////                                                                    OLD REQUEST METHOD                                                                              /////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    static func makeRequest (viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
+//        let mparam : Dictionary<String,AnyObject> = (param != nil ? param! : [:]);
+//        var getparam = Dictionary<String, AnyObject>();
+//        var postparam = Dictionary<String, AnyObject>();
+//        if (method == .GET) { getparam = mparam; }
+//        else if (method == .POST) { postparam = mparam; }
+//        
+//        let geturl = (url + makeQueryString(getparam));
+//        print (geturl);
+//        Alamofire.request(method, geturl, parameters: postparam, headers: authHeaders())
+//            .responseJSON { response in
+//                print("Request result ===============================")
+//                print(response);
+//                let res = response.response!.statusCode;
+//                let JSON = response.result.value
+//                let restat = statusMaker(res, JSON: JSON);
+//                print ("Request: " + geturl + "\nStatus code: \(res)" + "\nStatus : \(restat)");
+//                print ("JSON: \(JSON)");
+//                if (restat == .CustomError) {
+//                    Util.showMessageInViewController(viewController, title: "Error", message: JSON!["error_description"] as! String) {
+//                        dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                    };
+//                }
+//                else if (restat == .InvalidAccessToken) {
+//                    refreshToken() { status, JSON in
+//                        if JSON == nil {
+//                            Util.showMessageInViewController(viewController, title: "Error", message: "There's an error with the network. Please try again later.") {
+//                                print ("CANNOT OBTAIN ACCESS TOKEN ERROR occured while making request for url = \(geturl)\nWith param: \(mparam)\nError code: \(response.response?.statusCode)");
+//                                dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                            }
+//                        }
+//                        else {
+//                            if (!locked) {
+//                                locked = true;
+//                                makeRequest(viewController, method: method, url: url, param: param) { status, JSON in
+//                                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                                    locked = false;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                else if (response.response?.statusCode != 200) {
+//                    Util.showMessageInViewController(viewController, title: "Error", message: "An error occured. Error code: \(response.response!.statusCode)")
+//                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                    print ("AN ERROR OCCURED while making request for url = \(geturl)\nWith param: \(mparam)\nError code: \(response.response!.statusCode)");
+//                }
+//                else {
+//                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                }
+//        }
+//    }
+//    
+//    static func makeRequest2  (viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
+//        var headers : [String: String] = ["Content-Type": "application/json",
+//                                          "cache-control": "no-cache"]
+//        if url != Url.register{
+//            headers["authorization"] = "Bearer \(Data.accessToken)"
+//        }
+//        
+//        do {
+//            let mparam = (param == nil ? [:] : param!);
+//            var getparam = Dictionary<String, AnyObject>();
+//            var postparam = Dictionary<String, AnyObject>();
+//            if (method == .GET) { getparam = mparam; }
+//            else if (method == .POST) { postparam = mparam; }
+//            
+//            if (method == .DELETE && url == Url.messages) { postparam = mparam; }
+//            
+//            let geturl = (url + makeQueryString(getparam));
+//            
+//            let postData = try NSJSONSerialization.dataWithJSONObject(postparam, options: NSJSONWritingOptions.PrettyPrinted)
+//            //            let postData = NSData(data: getJSON(postparam).dataUsingEncoding(NSUTF8StringEncoding)!)
+//            let request = NSMutableURLRequest(URL: NSURL(string: geturl)!,
+//                                              cachePolicy: .UseProtocolCachePolicy,
+//                                              timeoutInterval: 10.0)
+//            request.HTTPMethod = "\(method)";
+//            request.allHTTPHeaderFields = headers
+//            if (postparam.count > 0) {
+//                request.HTTPBody = postData;
+//            }
+//            
+//            let session = NSURLSession.sharedSession()
+//            let dataTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+//                if (error != nil) {
+//                    print(error)
+//                } else {
+//                    do {
+//                        let httpResponse = response as? NSHTTPURLResponse
+//                        var JSON : AnyObject = [:];
+//                        if (httpResponse?.statusCode != 204) {
+//                            JSON = try NSJSONSerialization.JSONObjectWithData(data!, options:[])
+//                        }
+//                        let restat = statusMaker((httpResponse?.statusCode)!, JSON: JSON);
+//                        //                        print (JSON);
+//                        switch (restat) {
+//                        case .Success:
+//                            if (callback != nil) { callback! (restat, JSON); }
+//                            break;
+//                        case .CustomError:
+//                            if let errorDesc = JSON["error_description"]! {
+//                                Util.showMessageInViewController(viewController, title: "Error", message: errorDesc as! String) {
+//                                    if (callback != nil) { callback! (restat, JSON); }
+//                                }
+//                            }
+//                            else {
+//                                if (callback != nil) { callback! (restat, JSON); }
+//                            }
+//                            break;
+//                        case .InvalidAccessToken:
+//                            if (!locked) {
+//                                locked = true;
+//                                refreshToken() { status, JSON in
+//                                    if JSON == nil {
+//                                        Util.showMessageInViewController(viewController, title: "Error", message: "There's an error with the network. Please try again later.") {
+//                                            print ("CANNOT OBTAIN ACCESS TOKEN ERROR occured while making request for url = \(geturl)\nWith param: \(mparam)\nError code: \(httpResponse!.statusCode)");
+//                                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                                        }
+//                                    }
+//                                    else {
+//                                        makeRequest2(viewController, method: method, url: url, param: param) { status, JSON in
+//                                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            locked = false;
+//                            break;
+//                        default:
+//                            Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later." + printErrorCode(httpResponse!.statusCode)) {
+//                                dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                            };
+//                            break;
+//                        }
+//                    } catch let error as NSError {
+//                        print(error)
+//                        Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later.")
+//                        dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (RequestStatusType.GeneralError, nil); } } );
+//                    }
+//                }
+//            })
+//            
+//            dataTask.resume()
+//        } catch let error as NSError {
+//            print(error)
+//        }
+//        
+//    }
+//    
+//    static func makeRequestRemake(viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
+//        let urlReq = self.makeURLRequest(url, method: method, param: param)
+//        self.requestURL(urlReq){ (data, response, error) in
+//            if (error != nil) {
+//                print(error)
+//            } else {
+//                do {
+//                    let httpResponse = response as? NSHTTPURLResponse
+//                    var JSON : AnyObject = [:];
+//                    if (httpResponse?.statusCode != 204) {
+//                        JSON = try NSJSONSerialization.JSONObjectWithData(data!, options:[])
+//                    }
+//                    let restat = statusMaker((httpResponse?.statusCode)!, JSON: JSON);
+//                    //                        print (JSON);
+//                    switch (restat) {
+//                    case .Success:
+//                        if (callback != nil) { callback! (restat, JSON); }
+//                        break;
+//                    case .CustomError:
+//                        if let errorDesc = JSON["error_description"]! {
+//                            Util.showMessageInViewController(viewController, title: "Error", message: errorDesc as! String) {
+//                                if (callback != nil) { callback! (restat, JSON); }
+//                            }
+//                        }
+//                        else {
+//                            if (callback != nil) { callback! (restat, JSON); }
+//                        }
+//                        break;
+//                    case .InvalidAccessToken:
+//                        if (!locked) {
+//                            locked = true;
+//                            refreshToken() { status, JSON in
+//                                if JSON == nil {
+//                                    Util.showMessageInViewController(viewController, title: "Error", message: "There's an error with the network. Please try again later.") {
+//                                        print ("CANNOT OBTAIN ACCESS TOKEN ERROR occured while making request for url = \(urlReq.URLString)\nWith param: \(param!)\nError code: \(httpResponse!.statusCode)");
+//                                        dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                                    }
+//                                }
+//                                else {
+//                                    makeRequestRemake(viewController, method: method, url: url, param: param!) { status, JSON in
+//                                        dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        locked = false;
+//                        break;
+//                    default:
+//                        Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later." + printErrorCode(httpResponse!.statusCode)) {
+//                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                        };
+//                        break;
+//                    }
+//                } catch let error as NSError {
+//                    print(error)
+//                    Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later.")
+//                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (RequestStatusType.GeneralError, nil); } } );
+//                }
+//            }
+//        }
+//    }
+//    
+//    static func requestURL(urlRequest: NSMutableURLRequest, completionHandler: (NSData?, NSURLResponse?, NSError?)->Void){
+//        let session = NSURLSession.sharedSession()
+//        let dataTask = session.dataTaskWithRequest(urlRequest, completionHandler: completionHandler)
+//        dataTask.resume()
+//    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////                                                                    OLD MAKETOKEN METHOD                                                                            /////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    static func makeToken (viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
+//        var mparam : Dictionary<String,AnyObject> = (param != nil ? param! : [:])
+//        mparam["grant_type"] = "password";
+//        mparam["client_id"] = Data.clientId;
+//        mparam["client_secret"] = Data.clientSecret;
+//        mparam["username"] = Data.username;
+//        mparam["password"] = Data.password;
+//        mparam["scope"] = Data.scope;
+//        
+//        let urlReq = makeURLRequest(url, method: method, param: mparam)
+//        Alamofire.request(method, urlReq.URLString, parameters: method == .GET ? nil : mparam)
+//            .responseJSON { response in
+//                var res : Int? = nil;
+//                res = response.response?.statusCode;
+//                let JSON = response.result.value
+//                print ("JSON: \(JSON)");
+//                let restat = statusMaker(res, JSON: JSON);
+//                print ("Request: " + urlReq.URLString + "\nStatus code: \(res)" + "\nStatus : \(restat)");
+//                if (res == nil) {
+//                    if (callback != nil) { callback!(restat, JSON); }
+//                    return;
+//                }
+//                if (restat == .CustomError) {
+//                    if (JSON!["error_description"] != nil) {
+//                        Util.showMessageInViewController(viewController, title: "Error", message: JSON!["error_description"] as! String) {
+//                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                        }
+//                    }
+//                    else {
+//                        Util.showMessageInViewController(viewController, title: "Error", message: "\(JSON!["error"])") {
+//                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                        }
+//                    }
+//                }
+//                else if (restat == .InvalidAccessToken) {
+//                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                }
+//                else if (response.response?.statusCode != 200) {
+//                    Util.showMessageInViewController(viewController, title: "Error", message: "An error occured. Error code: \(response.response!.statusCode)")
+//                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                    print ("AN ERROR OCCURED while making request for url = \(urlReq.URLString)\nWith param: \(mparam)\nError code: \(response.response!.statusCode)");
+//                }
+//                else {
+//                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+//                }
+//        }
+//    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
 }

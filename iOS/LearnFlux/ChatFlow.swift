@@ -60,7 +60,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         self.participants = participants;
         self.thisChatType = chatType;
         self.thisChatMetadata = chatMetadata.mutableCopy() as! NSMutableDictionary;
-        let me = Data.defaults.valueForKey("me")! as! NSDictionary;
+        let me = Engine.clientData.defaults.valueForKey("me")! as! NSDictionary;
         self.senderId = String(me.valueForKey("id")!);
         self.senderDisplayName = "";
         
@@ -91,8 +91,8 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         let oldCount = localChat.count;
         
         if (JSON == nil) {
-            if (Data.defaults.valueForKey(chatId) != nil) {
-                localChat = Data.defaults.valueForKey(chatId)! as! Array<AnyObject>
+            if (Engine.clientData.defaults.valueForKey(chatId) != nil) {
+                localChat = Engine.clientData.defaults.valueForKey(chatId)! as! Array<AnyObject>
             }
         }
         else {

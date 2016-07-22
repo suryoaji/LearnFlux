@@ -30,7 +30,7 @@ class Connections : UITableViewController {
         item.target = self;
         
         for myConnect in connect {
-            if (myConnect["id"] != (Data.defaults.valueForKey("me")!.valueForKey("id")! as! Int)) {
+            if (myConnect["id"] != (Engine.clientData.defaults.valueForKey("me")!.valueForKey("id")! as! Int)) {
                 actualConnect.append(myConnect);
                 selectedConnect.append(false);
             }
@@ -142,7 +142,7 @@ class Connections : UITableViewController {
                         let data = JSON!["data"]!!;
                         print (data);
                         vc.chatId = data["id"] as! String;
-                        let me = Data.defaults.valueForKey("me")!;
+                        let me = Engine.clientData.defaults.valueForKey("me")!;
                         vc.senderId = String(me.valueForKey("id")!);
                         vc.senderDisplayName = "";
                         vc.participants = data["participants"] as! [Dictionary<String,AnyObject>];

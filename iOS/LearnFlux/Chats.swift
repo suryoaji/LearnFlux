@@ -53,8 +53,8 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func updateThreadView (JSON : AnyObject? = nil) {
         if (JSON == nil) {
-            if (Data.defaults.valueForKey("threads") != nil) {
-                let threads = Data.defaults.valueForKey("threads")!;
+            if (Engine.clientData.defaults.valueForKey("threads") != nil) {
+                let threads = Engine.clientData.defaults.valueForKey("threads")!;
                 localThread =  threads as! Array<AnyObject>
             }
         }
