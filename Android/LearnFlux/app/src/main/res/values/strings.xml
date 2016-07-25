@@ -87,6 +87,7 @@
     <string name="client_secret">2hwdia2smbk00sko0wokowcwokswc0k448gsk0okwswcsgcw0g</string>
     <string name="URL_VERSION">v1/</string>
     <string name="URL_ME">me</string>
+    <string name="URL_FRIEND">me/friend</string>
     <string name="URL_MESSAGES">messages</string>
     <string name="URL_THREAD_MESSAGES">messages/%s</string>
     <string name="URL_REGISTER">register</string>

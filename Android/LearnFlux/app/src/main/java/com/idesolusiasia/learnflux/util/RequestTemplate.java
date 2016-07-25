@@ -81,7 +81,7 @@ public class RequestTemplate {
 				}else {
 					Log.i(TAG, error.getMessage());
 					if(error.getMessage().contains("token")){
-						Functions.reLogin(context, new ServiceCallback() {
+						Engine.reLogin(context, new ServiceCallback() {
 							@Override
 							public void execute(JSONObject obj) {
 								POSTJsonRequest(context, url, params, callback, errorCallback);
@@ -181,7 +181,7 @@ public class RequestTemplate {
 				}else {
 					Log.i(TAG, error.getMessage());
 					if(error.getMessage().contains("token")){
-						Functions.reLogin(context, new ServiceCallback() {
+						Engine.reLogin(context, new ServiceCallback() {
 							@Override
 							public void execute(JSONObject obj) {
 								DELETEJsonRequest(context, url, params, callback, errorCallback);
@@ -238,7 +238,7 @@ public class RequestTemplate {
 				}else {
 					Log.i(TAG, error.getMessage());
 					if(error.getMessage().contains("token")){
-						Functions.reLogin(context, new ServiceCallback() {
+						Engine.reLogin(context, new ServiceCallback() {
 							@Override
 							public void execute(JSONObject obj) {
 								GETJsonRequest(context, url, params, callback, errorCallback);

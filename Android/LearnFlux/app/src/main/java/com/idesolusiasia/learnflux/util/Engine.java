@@ -1,10 +1,13 @@
 package com.idesolusiasia.learnflux.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.idesolusiasia.learnflux.LoginActivity;
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.db.DatabaseFunction;
 import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
 
@@ -12,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,11 +72,32 @@ public class Engine {
 		});
 	}
 
+	public static void reLogin(final Context context, final RequestTemplate.ServiceCallback reDo){
+		login(context, User.getUser().getUsername(), User.getUser().getPassword(), new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				getMe(context);
+				if (reDo!=null){
+					reDo.execute(obj);
+				}
+
+			}
+		}, new RequestTemplate.ErrorCallback() {
+			@Override
+			public void execute(JSONObject error) {
+				Intent i = new Intent(context, LoginActivity.class);
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				context.startActivity(i);
+
+			}
+		});
+	}
+
 	public static void getMe(final Context context){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME);
 
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context, null);
+			reLogin(context, null);
 		}else {
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
@@ -91,6 +116,26 @@ public class Engine {
 
 	}
 
+	public static void getMyFriend(final Context context, final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_FRIEND);
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, null);
+		}else {
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					Log.i("GET_FRIEND", obj.toString());
+					if (callback!=null){
+						callback.execute(obj);
+					}
+
+				}
+			},null);
+		}
+
+	}
+
 	public static void createThread(final Context context, final int[] ids, final String title){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
 		HashMap<String,int[]> par = new HashMap<>();
@@ -103,7 +148,7 @@ public class Engine {
 		}
 
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
 					createThread(context, ids, title);
@@ -128,13 +173,14 @@ public class Engine {
 		}
 	}
 
-	public static void getThreads(final Context context, final RequestTemplate.ServiceCallback callback){
-		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
+	public static void getThreads(final Context context, final RequestTemplate.ServiceCallback callback, final long lastSync){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_MESSAGES)+"?lastSync="+lastSync;
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					getThreads(context,callback);
+					getThreads(context,callback,lastSync);
 				}
 			});
 		}else {
@@ -146,6 +192,8 @@ public class Engine {
 					callback.execute(obj);
 				}
 			},null);
+
+
 		}
 	}
 
@@ -154,7 +202,7 @@ public class Engine {
 	                                final RequestTemplate.ServiceCallback callback) {
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
 					deleteThread(context,deleted,callback);
@@ -225,7 +273,7 @@ public class Engine {
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
 				context.getString(R.string.URL_THREAD_MESSAGES,idThread);
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
 					getThreadMessages(context, callback, idThread);
@@ -236,10 +284,21 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					Log.i("response_GET_Messages", obj.toString());
-					if (callback!=null){
-						callback.execute(obj);
-					}
+					try {
+						JSONArray array = obj.getJSONArray("data");
+						ArrayList<Thread> arrThread = new ArrayList<Thread>();
+						for(int i=0;i<array.length();i++){
+							Thread t = Converter.convertThread(array.getJSONObject(i));
+							arrThread.add(t);
+						}
+						DatabaseFunction.insertThread(context,arrThread);
+						if (callback!=null){
+							callback.execute(obj);
+						}
 
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 				}
 			},null);
 		}
@@ -257,7 +316,7 @@ public class Engine {
 		}
 
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			Functions.reLogin(context, new RequestTemplate.ServiceCallback() {
+			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
 					sendMessage(context, idThread, message, callback);
@@ -276,6 +335,7 @@ public class Engine {
 			},null);
 		}
 	}
+
 
 
 }

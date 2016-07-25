@@ -7,6 +7,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.idesolusiasia.learnflux.entity.Message;
+import com.idesolusiasia.learnflux.entity.Participant;
+import com.idesolusiasia.learnflux.entity.Thread;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +56,20 @@ public class DataSource {
 		values.put(DatabaseHelper.COLUMN_THREAD_ID,t.getId());
 		values.put(DatabaseHelper.COLUMN_THREAD_TITLE,t.getTitle());
 		values.put(DatabaseHelper.COLUMN_THREAD_IMAGE,t.getImage());
-		db.insert(DatabaseHelper.TABLE_THREAD,null,values);
+
+		db.beginTransaction();
+		try {
+			db.insertWithOnConflict(DatabaseHelper.TABLE_THREAD,null,values,SQLiteDatabase.CONFLICT_IGNORE);
+			if (t.getMessages()!=null){
+				for (Message m:t.getMessages()) {
+					createMessage(m, t.getId());
+				}
+			}
+
+			db.setTransactionSuccessful();
+		}finally {
+			db.endTransaction();
+		}
 	}
 	public void deleteThread(Thread t) {
 		String id = t.getId();
@@ -75,7 +92,27 @@ public class DataSource {
 		}
 		// make sure to close the cursor
 		cursor.close();
+
+		for (Thread t:threads) {
+			t.setLastMessage(getLastMessageByThread(t.getId()));
+		}
 		return threads;
+	}
+	public Thread getThreadByID(String id){
+		Thread t=new Thread();
+		Cursor cursor = db.query(DatabaseHelper.TABLE_THREAD,
+				allColumnsThread,DatabaseHelper.COLUMN_THREAD_ID+"=?",new String[] {id},null,null,null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			t = cursorToThread(cursor);
+			cursor.moveToNext();
+		}
+		// make sure to close the cursor
+		cursor.close();
+
+		t.setMessages(getAllMessageByThread(t.getId()));
+		return t;
 	}
 	private Thread cursorToThread(Cursor cursor) {
 		Thread t = new Thread();
@@ -86,17 +123,17 @@ public class DataSource {
 	}
 
 	//Messages
-	public void createMessage(Message m){
+	public void createMessage(Message m, String threadID){
 		ContentValues values= new ContentValues();
-		values.put(DatabaseHelper.COLUMN_MESSAGE_ID,m.getID());
-		values.put(DatabaseHelper.COLUMN_MESSAGE_SENDER,m.getSender());
+		values.put(DatabaseHelper.COLUMN_MESSAGE_ID,m.getId());
+		values.put(DatabaseHelper.COLUMN_MESSAGE_SENDER,m.getSender().getId());
 		values.put(DatabaseHelper.COLUMN_MESSAGE_BODY,m.getBody());
 		values.put(DatabaseHelper.COLUMN_MESSAGE_CREATEDAT,m.getCreatedAt());
-		values.put(DatabaseHelper.COLUMN_MESSAGE_THREADID,m.getThreadID());
+		values.put(DatabaseHelper.COLUMN_MESSAGE_THREADID,threadID);
 		db.insert(DatabaseHelper.TABLE_MESSAGE,null,values);
 	}
 	public void deleteMessage(Message m) {
-		String id = m.getID();
+		String id = m.getId();
 		System.out.println("Message deleted with id: " + id);
 		db.delete(DatabaseHelper.TABLE_MESSAGE, DatabaseHelper.COLUMN_MESSAGE_ID
 				+ "=?", new String[]{id});
@@ -118,26 +155,48 @@ public class DataSource {
 		cursor.close();
 		return messages;
 	}
+	public Message getLastMessageByThread(String threadID){
+		Message message = new Message();
+
+		Cursor cursor = db.query(DatabaseHelper.TABLE_MESSAGE,
+				allColumnsMESSAGE,DatabaseHelper.COLUMN_MESSAGE_THREADID+"=?",new String[] {threadID},null,null,
+				DatabaseHelper.COLUMN_MESSAGE_ID+" desc","1");
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			message = cursorToMessage(cursor);
+			cursor.moveToNext();
+		}
+		// make sure to close the cursor
+		cursor.close();
+		return message;
+	}
 	private Message cursorToMessage(Cursor cursor) {
 		Message m = new Message();
-		m.setID(cursor.getString(0));
-		m.setSender(cursor.getString(1));
+		m.setId(cursor.getString(0));
+		m.setSender(getParticipantByID(cursor.getString(1)));
 		m.setBody(cursor.getString(2));
 		m.setCreatedAt(cursor.getLong(3));
-		m.setThreadID(cursor.getString(4));
 		return m;
 	}
 
 	//Participants
 	public void createParticipant(Participant p){
 		ContentValues values= new ContentValues();
-		values.put(DatabaseHelper.COLUMN_PARTICIPANT_ID,p.getID());
-		values.put(DatabaseHelper.COLUMN_PARTICIPANT_NAME,p.getName());
-		values.put(DatabaseHelper.COLUMN_PARTICIPANT_IMAGE,p.getImage());
-		db.insert(DatabaseHelper.TABLE_PARTICIPANT,null,values);
+		values.put(DatabaseHelper.COLUMN_PARTICIPANT_ID,p.getId());
+		values.put(DatabaseHelper.COLUMN_PARTICIPANT_NAME,p.getFirstName());
+		values.put(DatabaseHelper.COLUMN_PARTICIPANT_IMAGE,p.getPhoto());
+		try {
+			db.insertOrThrow(DatabaseHelper.TABLE_PARTICIPANT,null,values);
+			//Log.d("participant", "insert");
+		}catch (SQLException e){
+			db.update(DatabaseHelper.TABLE_PARTICIPANT,values,DatabaseHelper.COLUMN_PARTICIPANT_ID+"=?",
+					new String[]{String.valueOf(p.getId())});
+			//Log.d("participant", "update");
+		}
 	}
 	public void deleteParticipant(Participant p) {
-		String id = p.getID();
+		String id = String.valueOf(p.getId());
 		System.out.println("Participant deleted with id: " + id);
 		db.delete(DatabaseHelper.TABLE_PARTICIPANT, DatabaseHelper.COLUMN_PARTICIPANT_ID
 				+ "=?", new String[]{id});
@@ -158,9 +217,9 @@ public class DataSource {
 	}
 	private Participant cursorToParticipant(Cursor cursor) {
 		Participant p = new Participant();
-		p.setID(cursor.getString(0));
-		p.setName(cursor.getString(1));
-		p.setImage(cursor.getString(2));
+		p.setId(Integer.parseInt(cursor.getString(0)));
+		p.setFirstName(cursor.getString(1));
+		p.setPhoto(cursor.getString(2));
 		return p;
 	}
 }

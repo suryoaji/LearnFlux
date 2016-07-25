@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.idesolusiasia.learnflux.db.DataSource;
-import com.idesolusiasia.learnflux.db.Message;
-import com.idesolusiasia.learnflux.db.Thread;
 
 public class DBActivity extends AppCompatActivity {
 	DataSource ds;
@@ -16,11 +14,11 @@ public class DBActivity extends AppCompatActivity {
 
 		ds = new DataSource(getApplicationContext());
 		ds.open();
-		initThread();
+		//initThread();
 
 	}
 
-	void initThread(){
+	/*void initThread(){
 		Thread t = new Thread();
 		t.setTitle("Thread 1");
 		t.setId("T001");
@@ -58,7 +56,7 @@ public class DBActivity extends AppCompatActivity {
 
 		ds.getAllThread();
 		ds.getAllMessageByThread("T001");
-	}
+	}*/
 
 	@Override
 	protected void onStop() {

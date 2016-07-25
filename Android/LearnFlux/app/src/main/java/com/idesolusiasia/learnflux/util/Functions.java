@@ -2,23 +2,21 @@ package com.idesolusiasia.learnflux.util;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 
-import com.idesolusiasia.learnflux.LoginActivity;
 import com.idesolusiasia.learnflux.R;
-import com.idesolusiasia.learnflux.entity.User;
 
-import org.json.JSONObject;
-
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Random;
 
 /**
  * Created by NAIT ADMIN on 24/06/2016.
  */
 public class Functions {
+
 	public static void showAlert(Context context,String title, String message){
 		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AppTheme)).create();
 		alertDialog.setTitle(title);
@@ -30,27 +28,6 @@ public class Functions {
 					}
 				});
 		alertDialog.show();
-	}
-
-	public static void reLogin(final Context context, final RequestTemplate.ServiceCallback reDo){
-		Engine.login(context, User.getUser().getUsername(), User.getUser().getPassword(), new RequestTemplate.ServiceCallback() {
-			@Override
-			public void execute(JSONObject obj) {
-				Engine.getMe(context);
-				if (reDo!=null){
-					reDo.execute(obj);
-				}
-
-			}
-		}, new RequestTemplate.ErrorCallback() {
-			@Override
-			public void execute(JSONObject error) {
-				Intent i = new Intent(context, LoginActivity.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				context.startActivity(i);
-
-			}
-		});
 	}
 
 	public static int generateRandomPastelColor() {
@@ -66,4 +43,10 @@ public class Functions {
 
 		return Color.rgb(red,green,blue);
 	}
+
+	public static String convertSecondToDate(long second){
+		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+		return simpleDateFormat.format(second*1000);
+	}
+
 }

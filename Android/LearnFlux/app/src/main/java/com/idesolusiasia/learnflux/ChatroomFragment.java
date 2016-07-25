@@ -17,13 +17,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.idesolusiasia.learnflux.adapter.ThreadAdapter;
-import com.idesolusiasia.learnflux.entity.Converter;
+import com.idesolusiasia.learnflux.db.DatabaseFunction;
 import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -118,20 +116,10 @@ public class ChatroomFragment extends Fragment {
 		Engine.getThreads(getContext(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
-				try {
-					JSONArray array = obj.getJSONArray("data");
-					ArrayList<Thread> arrThread = new ArrayList<Thread>();
-					for(int i=0;i<array.length();i++){
-						arrThread.add(Converter.convertThread(array.getJSONObject(i)));
-					}
-					adap = new ThreadAdapter(getContext(),arrThread);
-					listView.setAdapter(adap);
-
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+				adap = new ThreadAdapter(getContext(),DatabaseFunction.getThreadList(getContext()));
+				listView.setAdapter(adap);
 			}
-		});
+		},0);
 
 		return v;
 	}
