@@ -3,7 +3,7 @@ package com.idesolusiasia.learnflux.entity;
 /**
  * Created by NAIT ADMIN on 20/04/2016.
  */
-public class PlainChatBubble extends ChatBubble {
+public class PlainChatBubble extends Message {
 
 	private String body;
 	private boolean important;
@@ -17,7 +17,8 @@ public class PlainChatBubble extends ChatBubble {
 	}
 
 	public PlainChatBubble(long created_at, String id, Participant sender, String type, String body) {
-		super(created_at, id, sender, type);
+		//super(created_at, id, sender, type);
+		super();
 		this.body = body;
 	}
 

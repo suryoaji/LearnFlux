@@ -1,13 +1,22 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.idesolusiasia.learnflux.ChattingActivity;
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Participant;
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -27,14 +36,29 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = participants.get(position);
         holder.tvName.setText(participants.get(position).getFirstName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
+	            int[] ids = new int[]{participants.get(position).getId()};
+	            Engine.createThread(v.getContext(), ids, participants.get(position).getFirstName(), new RequestTemplate.ServiceCallback() {
+		            @Override
+		            public void execute(JSONObject obj) {
+			            try {
+				            Log.i("response_POST_MSG", obj.getJSONObject("data").getString("type"));
+				            String id = obj.getJSONObject("data").getString("id");
+				            Intent i = new Intent(v.getContext(),ChattingActivity.class);
+				            i.putExtra("idThread",id);
+				            v.getContext().startActivity(i);
+			            } catch (JSONException e) {
+				            e.printStackTrace();
+			            }
 
+		            }
+	            });
             }
         });
     }

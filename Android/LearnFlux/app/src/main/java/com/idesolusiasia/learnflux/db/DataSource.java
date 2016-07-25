@@ -49,6 +49,11 @@ public class DataSource {
 		dbHelper.close();
 	}
 
+	public void deleteDB(){
+		open();
+		dbHelper.clearDatabase(db);
+		close();
+	}
 
 	//Threads
 	public void createThread(Thread t){
@@ -148,7 +153,7 @@ public class DataSource {
 		while (!cursor.isAfterLast()) {
 			Message m = cursorToMessage(cursor);
 			messages.add(m);
-			Log.i("Message", m.toString());
+			Log.i("Message", String.valueOf(m.getSender().getId()));
 			cursor.moveToNext();
 		}
 		// make sure to close the cursor
@@ -204,7 +209,8 @@ public class DataSource {
 	public Participant getParticipantByID(String participantID){
 
 		Cursor cursor = db.query(DatabaseHelper.TABLE_PARTICIPANT,
-				allColumnsPARTICIPANTS,null,null,null,null,null);
+				allColumnsPARTICIPANTS,DatabaseHelper.COLUMN_PARTICIPANT_ID+"=?",new String[] {participantID},null,null,
+				DatabaseHelper.COLUMN_MESSAGE_ID+" desc","1");
 
 		if (cursor != null)
 			cursor.moveToFirst();

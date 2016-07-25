@@ -27,18 +27,14 @@ import android.widget.TimePicker;
 
 import com.google.gson.Gson;
 import com.idesolusiasia.learnflux.adapter.ChatBubbleAdapter;
-import com.idesolusiasia.learnflux.entity.ChatBubble;
-import com.idesolusiasia.learnflux.entity.EventChatBubble;
-import com.idesolusiasia.learnflux.entity.PlainChatBubble;
+import com.idesolusiasia.learnflux.db.DatabaseFunction;
+import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -53,6 +49,7 @@ public class ChattingActivity extends BaseActivity {
 	int positionLast =0;
 	ImageView ivScrollDown;
 	boolean pause=false;
+	Thread thread;
 
 	private int mInterval = 5000; // 5 seconds by default, can be changed later
 	private Handler mHandler;
@@ -226,7 +223,41 @@ public class ChattingActivity extends BaseActivity {
 
 	void initChatBubble(){
 		Log.i(TAG, "initChatBubble: ");
-		Engine.getThreadMessages(this, new RequestTemplate.ServiceCallback() {
+
+		Engine.getThreads(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				thread = DatabaseFunction.getThreadDetail(getApplicationContext(),idThread);
+				if (adap==null){
+					adap=new ChatBubbleAdapter(ChattingActivity.this,thread.getMessages());
+					listView.setAdapter(adap);
+					listView.setSelection(adap.getCount() - 1);
+					listView.refreshDrawableState();
+				}else{
+					boolean scroll = false;
+					boolean in = false;
+					if (positionLast>=(adap.getCount()-3)){
+						scroll=true;
+					}
+					for (int i=adap.getCount();i<thread.getMessages().size();i++){
+						adap.add(thread.getMessages().get(i));
+						in=true;
+					}
+					adap.notifyDataSetChanged();
+					if (scroll&&in){
+						listView.setSelection(adap.getCount() - 1);
+						listView.refreshDrawableState();
+					}
+
+				}
+			}
+		},0);
+
+
+
+
+
+		/*Engine.getThreadMessages(this, new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				Log.i(TAG, obj.toString());
@@ -264,7 +295,7 @@ public class ChattingActivity extends BaseActivity {
 					e.printStackTrace();
 				}
 			}
-		}, idThread);
+		}, idThread);*/
 
 		/*ArrayList<ChatBubble> arr = new ArrayList<>();
 		ChatBubble bubble;
@@ -382,13 +413,13 @@ public class ChattingActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 
-				Calendar calendar = Calendar.getInstance();
+				/*Calendar calendar = Calendar.getInstance();
 				calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));
 				EventChatBubble bubble = new EventChatBubble("event", "me","","Agatha Cynthia",calendar,
 						etTitle.getText().toString(), "Galaxy Hall", "", calStart, calEnd);
 				adap.add(bubble);
 				adap.notifyDataSetChanged();
-				listView.setSelection(adap.getCount() - 1);
+				listView.setSelection(adap.getCount() - 1);*/
 				dialog.dismiss();
 			}
 		});

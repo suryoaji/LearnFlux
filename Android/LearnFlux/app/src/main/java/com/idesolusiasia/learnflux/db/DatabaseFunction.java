@@ -41,4 +41,14 @@ public class DatabaseFunction {
 
 		return ts;
 	}
+
+	public static Thread getThreadDetail(Context c, String id){
+		DataSource ds = new DataSource(c.getApplicationContext());
+		ds.open();
+		Thread ts= ds.getThreadByID(id);
+		ds.close();
+		ds=null;
+
+		return ts;
+	}
 }

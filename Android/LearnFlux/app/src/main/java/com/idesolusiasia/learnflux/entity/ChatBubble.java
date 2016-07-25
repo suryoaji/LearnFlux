@@ -1,16 +1,15 @@
-package com.idesolusiasia.learnflux.entity;
+/*package com.idesolusiasia.learnflux.entity;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-/**
+*//**
  * Created by NAIT ADMIN on 20/04/2016.
- */
+ *//*
 public class ChatBubble {
 
 	private String id="";
 	private String type="plain";
-	private boolean isMe=true;
 	private Participant sender;
 	private long created_at;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy kk:mm", Locale.US);
@@ -58,7 +57,7 @@ public class ChatBubble {
 		this.type = type;
 	}
 
-	/*private String id,type, sender, userPhoto, userName;
+	*//*private String id,type, sender, userPhoto, userName;
 	private int createdAt;
 
 	ChatBubble(){}
@@ -109,7 +108,7 @@ public class ChatBubble {
 
 	public void setUserPhoto(String userPhoto) {
 		this.userPhoto = userPhoto;
-	}*/
+	}*//*
 
 
-}
+}*/

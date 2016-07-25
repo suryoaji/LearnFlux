@@ -10,7 +10,7 @@ public class Participant {
 
 	private int id;
 	@SerializedName("first_name")
-	private String firstName="First Name";
+	private String firstName="No Name";
 	private String lastName="";
 	@SerializedName("profile_picture")
 	private String photo="";

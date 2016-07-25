@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.idesolusiasia.learnflux.db.DataSource;
 import com.idesolusiasia.learnflux.entity.User;
 
 
@@ -96,6 +97,9 @@ public class BaseActivity extends AppCompatActivity
 			Intent i = new Intent(BaseActivity.this, LoginActivity.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
+
+			DataSource ds = new DataSource(getApplicationContext());
+			ds.deleteDB();
 
 		}
 

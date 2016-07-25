@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 
 
-public class EventChatBubble extends ChatBubble {
+public class EventChatBubble extends Message {
 
 	private Calendar timeStart, timeEnd;
 	private String title, location, acceptanceStatus, description="";

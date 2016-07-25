@@ -136,7 +136,7 @@ public class Engine {
 
 	}
 
-	public static void createThread(final Context context, final int[] ids, final String title){
+	public static void createThread(final Context context, final int[] ids, final String title, final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
 		HashMap<String,int[]> par = new HashMap<>();
 		par.put("participants",ids);
@@ -151,7 +151,7 @@ public class Engine {
 			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					createThread(context, ids, title);
+					createThread(context, ids, title, callback);
 				}
 			});
 		}else {
@@ -160,12 +160,16 @@ public class Engine {
 				public void execute(JSONObject obj) {
 					if (obj!=null){
 						Log.i("response_POST_MSG", obj.toString());
-						try {
+						//Engine.getThreads(context,callback,0);
+						/*try {
 							Log.i("response_POST_MSG", obj.getJSONObject("data").getString("type"));
 							Log.i("response_POST_MSG", obj.getJSONObject("data").getString("id"));
 						} catch (JSONException e) {
 							e.printStackTrace();
+						}*/if (callback!=null){
+							callback.execute(obj);
 						}
+
 					}
 
 				}
@@ -189,7 +193,21 @@ public class Engine {
 				public void execute(JSONObject obj) {
 
 					Log.i("response_GET_Threads", obj.toString());
-					callback.execute(obj);
+					try {
+						JSONArray array = obj.getJSONArray("data");
+						ArrayList<Thread> arrThread = new ArrayList<Thread>();
+						for(int i=0;i<array.length();i++){
+							Thread t = Converter.convertThread(array.getJSONObject(i));
+							arrThread.add(t);
+						}
+						DatabaseFunction.insertThread(context,arrThread);
+						if (callback!=null){
+							callback.execute(obj);
+						}
+
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 				}
 			},null);
 
@@ -249,6 +267,9 @@ public class Engine {
 			public void execute(JSONObject obj) {
 				if (obj != null) {
 					Log.i("response_POST_MSG", obj.toString());
+					Intent i = new Intent(context,LoginActivity.class);
+					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+					context.startActivity(i);
 				}
 				Functions.showAlert(context, context.getString(R.string.URL_REGISTER), context.getString(R.string.success_registration));
 
@@ -259,7 +280,14 @@ public class Engine {
 				if (error!=null){
 					try {
 						JSONArray messages = error.getJSONObject("errors").getJSONArray("messages");
-						Functions.showAlert(context,"Errors",messages.toString());
+						if (messages.toString().contains("have successfully registered")){
+							Intent i = new Intent(context,LoginActivity.class);
+							i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+							context.startActivity(i);
+						}else{
+							Functions.showAlert(context,"Errors",messages.toString());
+						}
+
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
