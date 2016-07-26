@@ -78,6 +78,7 @@ public class DataSource {
 	}
 	public void deleteThread(Thread t) {
 		String id = t.getId();
+		Log.i("deleteThread ",id);
 		System.out.println("Thread deleted with id: " + id);
 		db.delete(DatabaseHelper.TABLE_THREAD, DatabaseHelper.COLUMN_THREAD_ID
 				+ "=?", new String[]{id});
@@ -92,7 +93,6 @@ public class DataSource {
 		while (!cursor.isAfterLast()) {
 			Thread t = cursorToThread(cursor);
 			threads.add(t);
-			Log.i("Threads", t.toString());
 			cursor.moveToNext();
 		}
 		// make sure to close the cursor
@@ -136,6 +136,8 @@ public class DataSource {
 		values.put(DatabaseHelper.COLUMN_MESSAGE_CREATEDAT,m.getCreatedAt());
 		values.put(DatabaseHelper.COLUMN_MESSAGE_THREADID,threadID);
 		db.insert(DatabaseHelper.TABLE_MESSAGE,null,values);
+
+		createParticipant(m.getSender());
 	}
 	public void deleteMessage(Message m) {
 		String id = m.getId();

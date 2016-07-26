@@ -51,4 +51,14 @@ public class DatabaseFunction {
 
 		return ts;
 	}
+
+	public static void deleteThread(Context c, List<Thread> deleted){
+		DataSource ds = new DataSource(c.getApplicationContext());
+		ds.open();
+		for (Thread t:deleted) {
+			ds.deleteThread(t);
+		}
+		ds.close();
+		ds=null;
+	}
 }

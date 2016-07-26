@@ -239,11 +239,12 @@ public class Engine {
 			HashMap<String,String[]> hashMap = new HashMap<>();
 			hashMap.put("ids",ids);
 			JSONObject params = new JSONObject(hashMap);
+			Log.i("params_delete", params.toString());
 			RequestTemplate.DELETEJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
+					DatabaseFunction.deleteThread(context,deleted);
 					if (obj!=null && callback!=null){
-						Log.i("response_DEL_Threads", obj.toString());
 						callback.execute(obj);
 					}
 

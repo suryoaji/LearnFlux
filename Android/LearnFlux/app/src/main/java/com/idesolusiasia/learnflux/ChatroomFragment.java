@@ -112,7 +112,13 @@ public class ChatroomFragment extends Fragment {
 				Log.i("Chatroom", adap.getItem(position).getTitle());
 			}
 		});
+		initThreads();
 
+
+		return v;
+	}
+
+	void initThreads(){
 		Engine.getThreads(getContext(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
@@ -120,8 +126,6 @@ public class ChatroomFragment extends Fragment {
 				listView.setAdapter(adap);
 			}
 		});
-
-		return v;
 	}
 
 	void deleteThreads(){
