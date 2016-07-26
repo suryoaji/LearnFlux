@@ -251,7 +251,7 @@ public class ChattingActivity extends BaseActivity {
 
 				}
 			}
-		},0);
+		});
 
 
 

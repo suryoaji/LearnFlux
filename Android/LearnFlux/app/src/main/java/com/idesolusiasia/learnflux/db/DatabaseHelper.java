@@ -60,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
-		Log.i("message", DATABASE_CREATE_MESSAGE);
+		//Log.i("message", DATABASE_CREATE_MESSAGE);
 		db.execSQL(DATABASE_CREATE_THREAD);
 		db.execSQL(DATABASE_CREATE_MESSAGE);
 		db.execSQL(DATABASE_CREATE_PARTICIPANT);

@@ -2,11 +2,16 @@ package com.idesolusiasia.learnflux.util;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 
+import com.idesolusiasia.learnflux.LoginActivity;
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.db.DataSource;
+import com.idesolusiasia.learnflux.entity.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -45,8 +50,40 @@ public class Functions {
 	}
 
 	public static String convertSecondToDate(long second){
-		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-		return simpleDateFormat.format(second*1000);
+		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MMM-yyyy kk:mm", Locale.US);
+		second=second*1000;
+		String a = simpleDateFormat.format(second);
+		return a;
+	}
+
+	public static void saveLastSync(Context c, String lastSync){
+		SharedPreferences sharedPref = c.getApplicationContext().getSharedPreferences("com.idesolusiasia.learnflux",Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		editor.putString("lastSync",lastSync);
+		editor.commit();
+	}
+
+	public static String getLastSync(Context c){
+		SharedPreferences sharedPref = c.getApplicationContext().getSharedPreferences("com.idesolusiasia.learnflux",Context.MODE_PRIVATE);
+		return sharedPref.getString("lastSync","0");
+	}
+
+	public static void logout(Context c){
+		SharedPreferences sharedPref = c.getApplicationContext().getSharedPreferences("com.idesolusiasia.learnflux",Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPref.edit();
+		editor.putString("username","");
+		editor.putString("password","");
+		editor.putString("lastSync","0");
+		editor.commit();
+		User.getUser().setUsername("");
+		User.getUser().setPassword("");
+
+		Intent i = new Intent(c, LoginActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+		c.startActivity(i);
+
+		DataSource ds = new DataSource(c.getApplicationContext());
+		ds.deleteDB();
 	}
 
 }

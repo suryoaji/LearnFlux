@@ -72,7 +72,11 @@ public class Message {
 		this.body = body;
 	}
 
-	public String getCreatedAt() {
+	public long getCreatedAt() {
+		return createdAt;
+	}
+
+	public String getCreatedAtDate() {
 		return Functions.convertSecondToDate(createdAt);
 	}
 

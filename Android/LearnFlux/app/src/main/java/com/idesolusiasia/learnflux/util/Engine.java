@@ -44,12 +44,14 @@ public class Engine {
 					User.getUser().setAccess_token(obj.getString("access_token"));
 					User.getUser().setUsername(username);
 					User.getUser().setPassword(password);
+					Functions.saveLastSync(context,"0");
 					if (callback!=null){
 						callback.execute(obj);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+
 			}
 		}, new RequestTemplate.ErrorCallback() {
 			@Override
@@ -129,7 +131,6 @@ public class Engine {
 					if (callback!=null){
 						callback.execute(obj);
 					}
-
 				}
 			},null);
 		}
@@ -177,14 +178,16 @@ public class Engine {
 		}
 	}
 
-	public static void getThreads(final Context context, final RequestTemplate.ServiceCallback callback, final long lastSync){
+	public static void getThreads(final Context context, final RequestTemplate.ServiceCallback callback){
+		String lastSync = Functions.getLastSync(context);
+		Log.i("lastSync", lastSync);
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
 				context.getString(R.string.URL_MESSAGES)+"?lastSync="+lastSync;
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
 			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					getThreads(context,callback,lastSync);
+					getThreads(context,callback);
 				}
 			});
 		}else {
@@ -194,6 +197,9 @@ public class Engine {
 
 					Log.i("response_GET_Threads", obj.toString());
 					try {
+						Log.i("lastSync", "save "+obj.getString("lastSync"));
+						Functions.saveLastSync(context,obj.getString("lastSync"));
+
 						JSONArray array = obj.getJSONArray("data");
 						ArrayList<Thread> arrThread = new ArrayList<Thread>();
 						for(int i=0;i<array.length();i++){
@@ -204,7 +210,6 @@ public class Engine {
 						if (callback!=null){
 							callback.execute(obj);
 						}
-
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -272,7 +277,6 @@ public class Engine {
 					context.startActivity(i);
 				}
 				Functions.showAlert(context, context.getString(R.string.URL_REGISTER), context.getString(R.string.success_registration));
-
 			}
 		}, new RequestTemplate.ErrorCallback() {
 			@Override

@@ -14,8 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.idesolusiasia.learnflux.db.DataSource;
 import com.idesolusiasia.learnflux.entity.User;
+import com.idesolusiasia.learnflux.util.Functions;
 
 
 public class BaseActivity extends AppCompatActivity
@@ -86,20 +86,7 @@ public class BaseActivity extends AppCompatActivity
 			//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
 		}else if (id == R.id.nav_logout){
-			sharedPref = getApplicationContext().getSharedPreferences("com.idesolusiasia.learnflux",MODE_PRIVATE);
-			SharedPreferences.Editor editor = sharedPref.edit();
-			editor.putString("username","");
-			editor.putString("password","");
-			editor.commit();
-			User.getUser().setUsername("");
-			User.getUser().setPassword("");
-
-			Intent i = new Intent(BaseActivity.this, LoginActivity.class);
-			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(i);
-
-			DataSource ds = new DataSource(getApplicationContext());
-			ds.deleteDB();
+			Functions.logout(getApplicationContext());
 
 		}
 

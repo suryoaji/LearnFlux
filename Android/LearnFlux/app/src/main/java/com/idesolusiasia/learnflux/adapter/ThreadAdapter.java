@@ -79,7 +79,7 @@ public class ThreadAdapter extends ArrayAdapter<Thread> {
 			}
 			if (e.getLastMessage()!=null){
 				String message = e.getLastMessage().getBody();
-				String date = e.getLastMessage().getCreatedAt();
+				String date = e.getLastMessage().getCreatedAtDate();
 				tvDate.setText(date);
 				tvLastMessage.setText(message);
 			}

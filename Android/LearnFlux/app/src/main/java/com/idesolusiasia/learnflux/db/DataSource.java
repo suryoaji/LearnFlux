@@ -153,7 +153,7 @@ public class DataSource {
 		while (!cursor.isAfterLast()) {
 			Message m = cursorToMessage(cursor);
 			messages.add(m);
-			Log.i("Message", String.valueOf(m.getSender().getId()));
+			//Log.i("Message", String.valueOf(m.getSender().getId()));
 			cursor.moveToNext();
 		}
 		// make sure to close the cursor

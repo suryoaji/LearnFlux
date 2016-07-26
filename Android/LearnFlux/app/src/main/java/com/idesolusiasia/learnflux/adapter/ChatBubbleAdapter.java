@@ -1,7 +1,6 @@
 package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,6 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 		}
 
 		if(e != null){
-			Log.i("ME ID",String.valueOf(meID));
 			LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			if (e.getSender().getId()==meID) {
@@ -74,7 +72,7 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 				}*/
 
 				viewHolder.message.setText(e.getBody());
-				viewHolder.timestamp.setText(e.getCreatedAt());
+				viewHolder.timestamp.setText(e.getCreatedAtDate());
 
 			} else {
 				row = inflater.inflate(R.layout.row_plainbubble_other, null);
@@ -96,7 +94,7 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 
 				viewHolder.ivImportant.setVisibility(View.GONE);
 				viewHolder.message.setText(e.getBody());
-				viewHolder.timestamp.setText(e.getCreatedAt());
+				viewHolder.timestamp.setText(e.getCreatedAtDate());
 				viewHolder.ivUser.setImageUrl(e.getSender().getPhoto(),
 						VolleySingleton.getInstance(getContext().getApplicationContext()).getImageLoader());
 				viewHolder.ivUser.setDefaultImageResId(R.drawable.me);

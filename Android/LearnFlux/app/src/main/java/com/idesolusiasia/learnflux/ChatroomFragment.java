@@ -119,7 +119,7 @@ public class ChatroomFragment extends Fragment {
 				adap = new ThreadAdapter(getContext(),DatabaseFunction.getThreadList(getContext()));
 				listView.setAdapter(adap);
 			}
-		},0);
+		});
 
 		return v;
 	}
