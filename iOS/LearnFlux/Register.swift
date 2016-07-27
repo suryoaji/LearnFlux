@@ -11,31 +11,20 @@ import AMPopTip
 
 class Register : UIViewController {
     
-    @IBOutlet var tfEmail : OSTextField!;
-    @IBOutlet var tfUsername : OSTextField!;
-    @IBOutlet var tfPassword : OSTextField!;
-    @IBOutlet var tfConfirm : OSTextField!;
-    @IBOutlet var tfFirstName : OSTextField!;
-    @IBOutlet var tfLastName : OSTextField!;
+    var textfieldClicked = UITextField()
+    
+    @IBOutlet var tfEmail : OSTextfieldR!;
+    @IBOutlet var tfUsername : OSTextfieldR!;
+    @IBOutlet var tfPassword : OSTextfieldR!;
+    @IBOutlet var tfConfirm : OSTextfieldR!;
+    @IBOutlet var tfFirstName : OSTextfieldR!;
+    @IBOutlet var tfLastName : OSTextfieldR!;
     
     @IBOutlet var btnSubmit : UIButton!;
     
     var popTip = AMPopTip();
     
     var animatedDistance: Double = 0;
-    
-    override func viewDidLoad() {
-        super.viewDidLoad();
-        
-        tfEmail = Util.designTextField(tfEmail);
-        tfUsername = Util.designTextField(tfUsername);
-        tfPassword = Util.designTextField(tfPassword);
-        tfConfirm = Util.designTextField(tfConfirm);
-        tfFirstName = Util.designTextField(tfFirstName);
-        tfLastName = Util.designTextField(tfLastName);
-        
-        self.title = "Register";
-    }
     
     @IBAction func submit (sender: AnyObject) {
         popTip.hide()
@@ -109,67 +98,47 @@ class Register : UIViewController {
         self.navigationController?.popViewControllerAnimated(true);
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad();
+        
+        self.title = "Register";
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(true)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
     
     // MARK: magic code for adjusting text field into view.
     
     func textFieldDidBeginEditing(textField: UITextField) {
-        let textFieldRect: CGRect = self.view.window!.convertRect(textField.bounds, fromView: textField)
-        let viewRect: CGRect = self.view.window!.convertRect(self.view.bounds, fromView: self.view!)
-        let midline: CGFloat = textFieldRect.origin.y + 0.5 * textFieldRect.size.height
-        let numerator: CGFloat = midline - viewRect.origin.y - MINIMUM_SCROLL_FRACTION * viewRect.size.height
-        let denominator: CGFloat = (MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION) * viewRect.size.height
-        var heightFraction: CGFloat = numerator / denominator
-        if heightFraction < 0.0 {
-            heightFraction = 0.0
-        }
-        else if heightFraction > 1.0 {
-            heightFraction = 1.0
-        }
-        
-        let orientation: UIInterfaceOrientation = UIApplication.sharedApplication().statusBarOrientation
-        if orientation == .Portrait || orientation == .PortraitUpsideDown {
-            animatedDistance = floor(Double(PORTRAIT_KEYBOARD_HEIGHT * heightFraction))
-        }
-        else {
-            animatedDistance = floor(Double(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction))
-        }
-        var viewFrame: CGRect = self.view.frame
-        viewFrame.origin.y -= CGFloat(animatedDistance)
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true);
-        UIView.setAnimationDuration(Double(KEYBOARD_ANIMATION_DURATION))
-        self.view!.frame = viewFrame
-        UIView.commitAnimations()
+        textfieldClicked = textField
+    }
+    
+    func keyboardWillShow(notification: NSNotification){
+        let duration = CGFloat(Float(String(notification.userInfo![UIKeyboardAnimationDurationUserInfoKey]!))!)
+        let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().height
+        Util.animateSetFocus(self, toView: textfieldClicked, distance: &animatedDistance, duration: duration, keyboardHeight: keyboardHeight)
     }
     
     func textFieldDidEndEditing(textfield: UITextField) {
-        var viewFrame: CGRect = self.view.frame
-        viewFrame.origin.y += CGFloat(animatedDistance)
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true);
-        UIView.setAnimationDuration(Double(KEYBOARD_ANIMATION_DURATION))
-        self.view!.frame = viewFrame
-        UIView.commitAnimations()
+        Util.animateDismissSetFocus(self, distance: &animatedDistance)
     }
     
     // MARK: magic code to make keyboard go away when tapped outside TextField
-
-    override func globalResignFirstResponderRec(view: UIView) {
-        if view.respondsToSelector(#selector(self.resignFirstResponder)) {
-            view.resignFirstResponder()
-        }
-        for subview: UIView in view.subviews {
-            self.globalResignFirstResponderRec(subview)
-        }
-    }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.globalResignFirstResponderRec(self.view!)
+        self.e_globalResignFirstResponderRec(self.view!)
     }
     
     func singleTapGestureCaptured(gesture: UITapGestureRecognizer) {
         NSLog("touch")
-        self.globalResignFirstResponderRec(self.view!)
+        self.e_globalResignFirstResponderRec(self.view!)
         //    CGPoint touchPoint=[gesture locationInView:scrollView];
     }
 

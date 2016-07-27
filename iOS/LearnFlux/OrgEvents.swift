@@ -20,9 +20,28 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
     var oriBtnHeight : CGFloat! = 0;
     var oriCellHeight : CGFloat! = 0;
     var expDescHeight : Array<CGFloat> = [];
-    
+    var holdView = UIView()
+    var events : [Event]?
     
     @IBOutlet var tv : UITableView!;
+    
+    func loadEvents(target: UIViewController){
+        holdView = UIView(frame: target.view.bounds)
+        holdView.backgroundColor = UIColor(white: 0.93, alpha: 1.0)
+        target.view.addSubview(holdView)
+        Engine.getEvents(target){ status, JSON in
+            self.events = Engine.getMyEvents()
+            self.tv.reloadData()
+        }
+    }
+    
+    func viewShown(notification: NSNotification){
+        if holdView.superview != nil && self.events != nil{
+            if !self.events!.isEmpty{
+                self.holdView.removeFromSuperview()
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -44,11 +63,17 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
             //label.text =
             expDescHeight.append(Util.labelPerfectHeight(label));
         }
+        
+        self.loadEvents(self)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(viewShown), name: "OrgEventsShownNotification", object: nil)
+    }
+    
+    deinit{
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-        return 10;
+        return self.events != nil ? self.events!.count : 0
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -66,9 +91,6 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell")!;
         
         let viewCal = cell.viewWithTag(20)!;
-//        let lblMonth = cell.viewWithTag(21)! as! UILabel;
-//        let lblDay = cell.viewWithTag(22)! as! UILabel;
-//        let lblYear = cell.viewWithTag(23)! as! UILabel;
         viewCal.layer.borderColor = UIColor.blackColor().CGColor;
         viewCal.layer.borderWidth = 1;
         
@@ -90,7 +112,21 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
             lblDesc.height = oriDescHeight;
             btnExpand.hidden = false;
         }
-
+        
+        if events != nil{
+            let lblTitle = cell.viewWithTag(1) as! UILabel
+            let lblDay = cell.viewWithTag(22) as! UILabel
+            let lblMonth = cell.viewWithTag(21) as! UILabel
+            let lblYear = cell.viewWithTag(23) as! UILabel
+            let lblHour = cell.viewWithTag(24) as! UILabel
+            lblTitle.text = "\(events![indexPath.row].type)"
+            
+            lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: events![indexPath.row].time)!)
+            lblDay.text = "\(Util.getElementDate(.Day, stringDate: events![indexPath.row].time)!)"
+            lblYear.text = "\(Util.getElementDate(.Year, stringDate: events![indexPath.row].time)!)"
+            lblHour.text = "\(Util.getElementDate(.Hour, stringDate: events![indexPath.row].time)!):\(Util.getElementDate(.Minute, stringDate: events![indexPath.row].time)!)"
+        }
+        
         return cell;
     }
     

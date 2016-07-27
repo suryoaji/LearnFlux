@@ -10,6 +10,7 @@ PODS:
   - JSQSystemSoundPlayer (2.0.1)
   - PKRevealController (2.0.6)
   - RAReorderableLayout (0.4.1)
+  - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
   - Alamofire
@@ -21,6 +22,7 @@ DEPENDENCIES:
   - JSQMessagesViewController
   - PKRevealController
   - RAReorderableLayout
+  - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
@@ -33,5 +35,6 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   PKRevealController: ffb45a16f5a5032ad90a3d16e5cbb0d8e035bd58
   RAReorderableLayout: d5d3839bfc2a732a0463f08a6c91d76c9951cb77
+  SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
 COCOAPODS: 0.39.0

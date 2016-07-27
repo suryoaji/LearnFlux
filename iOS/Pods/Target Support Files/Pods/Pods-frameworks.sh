@@ -94,6 +94,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/JSQSystemSoundPlayer.framework"
   install_framework "Pods/PKRevealController.framework"
   install_framework "Pods/RAReorderableLayout.framework"
+  install_framework "Pods/SwiftyJSON.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/AMPopTip.framework"
@@ -106,4 +107,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/JSQSystemSoundPlayer.framework"
   install_framework "Pods/PKRevealController.framework"
   install_framework "Pods/RAReorderableLayout.framework"
+  install_framework "Pods/SwiftyJSON.framework"
 fi

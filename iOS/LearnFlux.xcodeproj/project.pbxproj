@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2D3D549154E78BF23D6DC8C8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9376CFD1C1CCB93E6369171A /* Pods.framework */; };
+		4A4985251D40A4FD00B823CA /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4985241D40A4FD00B823CA /* Event.swift */; };
+		4A4E38641D3DD78B00955E6F /* OSTextfieldR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */; };
 		5B01FC411CD2FCB800047C15 /* NSDictionary+ForKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */; };
 		5B01FC491CD34A8600047C15 /* arrow_down_circle-18.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC481CD34A8600047C15 /* arrow_down_circle-18.png */; };
 		5B01FC5B1CD34D6700047C15 /* arrow_down_circle-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC561CD34D6700047C15 /* arrow_down_circle-18@2x.png */; };
@@ -349,8 +351,6 @@
 		5B52C0191D13A16800900EE2 /* Expand Arrow-16@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C0161D13A16800900EE2 /* Expand Arrow-16@2x.png */; };
 		5B52C01A1D13A16800900EE2 /* Expand Arrow-16@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B52C0171D13A16800900EE2 /* Expand Arrow-16@3x.png */; };
 		5B52C01C1D13EF6800900EE2 /* OrgProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B52C01B1D13EF6800900EE2 /* OrgProfile.swift */; };
-		5B5BCB511D1CEB6C00D8E89C /* menu_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5B5BCB501D1CEB6C00D8E89C /* menu_background.jpg */; };
-		5B5BCB531D1CF2BA00D8E89C /* Menu2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5BCB521D1CF2BA00D8E89C /* Menu2.swift */; };
 		5B6DECBA1D01649100E16650 /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DECB91D01649100E16650 /* Singleton.swift */; };
 		5B6DECBC1D016BA000E16650 /* Url.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B6DECBB1D016BA000E16650 /* Url.swift */; };
 		5B98B59B1CC8DB190070AE97 /* ChatFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */; };
@@ -387,6 +387,8 @@
 
 /* Begin PBXFileReference section */
 		488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		4A4985241D40A4FD00B823CA /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSTextfieldR.swift; sourceTree = "<group>"; };
 		5B01FC3F1CD2FC5F00047C15 /* NSDictionary+ForKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+ForKey.h"; path = "Library/NSDictionary+ForKey.h"; sourceTree = "<group>"; };
 		5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+ForKey.m"; path = "Library/NSDictionary+ForKey.m"; sourceTree = "<group>"; };
 		5B01FC481CD34A8600047C15 /* arrow_down_circle-18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_down_circle-18.png"; path = "Icons/arrow_down_circle-18.png"; sourceTree = "<group>"; };
@@ -758,8 +760,6 @@
 		5B52C0161D13A16800900EE2 /* Expand Arrow-16@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Expand Arrow-16@2x.png"; path = "Icons Better/Expand Arrow-16@2x.png"; sourceTree = "<group>"; };
 		5B52C0171D13A16800900EE2 /* Expand Arrow-16@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Expand Arrow-16@3x.png"; path = "Icons Better/Expand Arrow-16@3x.png"; sourceTree = "<group>"; };
 		5B52C01B1D13EF6800900EE2 /* OrgProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgProfile.swift; sourceTree = "<group>"; };
-		5B5BCB501D1CEB6C00D8E89C /* menu_background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = menu_background.jpg; path = Images/menu_background.jpg; sourceTree = "<group>"; };
-		5B5BCB521D1CF2BA00D8E89C /* Menu2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu2.swift; sourceTree = "<group>"; };
 		5B6DECB91D01649100E16650 /* Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Singleton.swift; path = Engine/Singleton.swift; sourceTree = "<group>"; };
 		5B6DECBB1D016BA000E16650 /* Url.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Url.swift; path = Engine/Url.swift; sourceTree = "<group>"; };
 		5B98B59A1CC8DB190070AE97 /* ChatFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatFlow.swift; sourceTree = "<group>"; };
@@ -808,6 +808,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A4985261D40A8DD00B823CA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4A4985241D40A4FD00B823CA /* Event.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		58639674DA4D98FBBE69512E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -870,6 +878,7 @@
 				5B04A23B1CBCE01200FA5CCA /* Images Mockup */,
 				5B09CF181CBB52510042C70B /* Images */,
 				5B6DECB81D015FB100E16650 /* Core */,
+				4A4985261D40A8DD00B823CA /* Model */,
 				5B09CEC81CBB4C170042C70B /* View Controllers */,
 				5B09CEC91CBB4C200042C70B /* StoryBoard */,
 				5B09CF171CBB4D820042C70B /* Others */,
@@ -888,7 +897,6 @@
 				5B09CF6A1CBB94C60042C70B /* Home.swift */,
 				5B02264B1CEAD67A00C5E8EE /* NewHome.swift */,
 				5B09CF7D1CBBAAF10042C70B /* Menu.swift */,
-				5B5BCB521D1CF2BA00D8E89C /* Menu2.swift */,
 				5B04A2351CBCDEE000FA5CCA /* Connections.swift */,
 				5B0AC99F1D110A4D00594E4C /* Org.swift */,
 				5B0455231D129E880078032B /* OrgDetails.swift */,
@@ -931,7 +939,6 @@
 		5B09CF181CBB52510042C70B /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				5B5BCB501D1CEB6C00D8E89C /* menu_background.jpg */,
 				5B02264D1CEAFB7200C5E8EE /* mosaic_attendance.png */,
 				5B02264E1CEAFB7200C5E8EE /* mosaic_calendar.png */,
 				5B02264F1CEAFB7200C5E8EE /* mosaic_chat.png */,
@@ -970,6 +977,7 @@
 				5B3742401CC0CBAD00AF2897 /* NSString+Trim.m */,
 				5B3742511CC0CBAD00AF2897 /* OSTextField.h */,
 				5B3742521CC0CBAD00AF2897 /* OSTextField.m */,
+				4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */,
 				5B3742301CC0CBAD00AF2897 /* PopoverDateViewController.h */,
 				5B3742311CC0CBAD00AF2897 /* PopoverDateViewController.m */,
 				5B3742321CC0CBAD00AF2897 /* PopoverDateViewController.xib */,
@@ -1650,7 +1658,6 @@
 				5B37443C1CC0CBFD00AF2897 /* star_empty-512.png in Resources */,
 				5B3743BD1CC0CBFD00AF2897 /* globe-24.png in Resources */,
 				5B04A2551CBCEABE00FA5CCA /* group02.png in Resources */,
-				5B5BCB511D1CEB6C00D8E89C /* menu_background.jpg in Resources */,
 				5B3743D71CC0CBFD00AF2897 /* like-24@3x.png in Resources */,
 				5B3743651CC0CBFD00AF2897 /* ios_contact-512 in Resources */,
 				5B4D10CD1D376F5800AB9449 /* calendar-40.png in Resources */,
@@ -1809,7 +1816,6 @@
 				5B37426F1CC0CBAD00AF2897 /* CommonUtility.m in Sources */,
 				5BFFFDB71CD8958B0099AB3F /* SweetAlert.swift in Sources */,
 				5B4D10D01D37754F00AB9449 /* GroupProfile.swift in Sources */,
-				5B5BCB531D1CF2BA00D8E89C /* Menu2.swift in Sources */,
 				5B04552A1D129F690078032B /* OrgActivities.swift in Sources */,
 				5B3742771CC0CBAD00AF2897 /* UIView+Border.m in Sources */,
 				5B0455281D129F530078032B /* OrgEvents.swift in Sources */,
@@ -1835,6 +1841,8 @@
 				5B0455261D129F380078032B /* OrgGroups.swift in Sources */,
 				5B3742631CC0CBAD00AF2897 /* UIView+Rotate.m in Sources */,
 				5B37426E1CC0CBAD00AF2897 /* CommonConstants.m in Sources */,
+				4A4E38641D3DD78B00955E6F /* OSTextfieldR.swift in Sources */,
+				4A4985251D40A4FD00B823CA /* Event.swift in Sources */,
 				5B6DECBA1D01649100E16650 /* Singleton.swift in Sources */,
 				5B0455241D129E880078032B /* OrgDetails.swift in Sources */,
 				5B09CF691CBB8E130042C70B /* ForgotPassword.swift in Sources */,

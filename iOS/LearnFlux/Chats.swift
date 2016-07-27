@@ -24,8 +24,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         //        self.toolbarItems = self.parentViewController?.toolbarItems
         
         let menuTitle = ["Create Group Chat...", "Delete Chats...", "Delete All Chats"];
-        menu = AZDropdownMenu(titles: menuTitle);
-        
+        menu = AZDropdownMenu(titles: menuTitle)
         updateThreadView();
         
         Engine.getThreads(self) { status, JSON in
@@ -53,8 +52,8 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func updateThreadView (JSON : AnyObject? = nil) {
         if (JSON == nil) {
-            if (Data.defaults.valueForKey("threads") != nil) {
-                let threads = Data.defaults.valueForKey("threads")!;
+            if(Engine.clientData.defaults.valueForKey("threads") != nil) {
+                let threads = Engine.clientData.defaults.valueForKey("threads")!;
                 localThread =  threads as! Array<AnyObject>
             }
         }
@@ -69,9 +68,9 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewWillAppear(animated);
         setTabBarVisible(true, animated: true);
         
-        Engine.getThreads(self) { status, JSON in
-            self.updateThreadView(JSON);
-        }
+//        Engine.getThreads(self) { status, JSON in
+//            self.updateThreadView(JSON);
+//        }
     }
     
     @IBAction func revealMenu (sender: AnyObject) {
@@ -87,7 +86,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print (localThread);
+//        print (localThread);
         return localThread.count;
     }
     
@@ -136,44 +135,44 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    @IBAction func showMenuOld(sender: AnyObject) {
-        if (menu.isDescendantOfView(tv) == true) {
-            menu.hideMenu()
-            self.view.bringSubviewToFront(tv);
-        } else {
-            menu.showMenuFromView(tv)
-            print (tv.frame);
-            self.view.bringSubviewToFront(viewMenu)
-        }
-        
-        menu.cellTapHandler = { [weak self] (indexPath: NSIndexPath) -> Void in
-            switch (indexPath.row) {
-            case 0:
-                self?.performSegueWithIdentifier("NewGroups", sender: self?.menu);
-                break;
-            case 1: break;
-            case 2:
-                Util.showChoiceInViewController(self, title: "Confirmation", message: "Are you sure you want to erase all the chat threads?", buttonTitle: ["Yes", "Cancel"], buttonStyle: [UIAlertActionStyle.Destructive, UIAlertActionStyle.Cancel], callback: { selectedBtn in
-                    var selectedThreads = Array<String>();
-                    if (selectedBtn == 0) {
-                        for thread in self!.localThread {
-                            let t = thread as! NSDictionary;
-                            //                            if (selectedThreads.count < 1) {
-                            selectedThreads.append(t.valueForKey("id") as! String)
-                            //                            }
-                        }
-                    }
-                    self!.localThread = self!.localThread.filter() { el in !selectedThreads.contains (el.valueForKey("id")! as! String) }
-                    Engine.getThreads(self) { status, JSON in self!.tv.reloadData(); }
-                    Engine.deleteThreads(self, threadIds: selectedThreads) { status, JSON in
-                        
-                        Engine.getThreads(self) { status, JSON in self!.updateThreadView(JSON); }
-                    }
-                })
-            default: break;
-            }
-        }
-    }
+//    @IBAction func showMenuOld(sender: AnyObject) {
+//        if (menu.isDescendantOfView(tv) == true) {
+//            menu.hideMenu()
+//            self.view.bringSubviewToFront(tv);
+//        } else {
+//            menu.showMenuFromView(tv)
+//            print (tv.frame);
+//            self.view.bringSubviewToFront(viewMenu)
+//        }
+//        
+//        menu.cellTapHandler = { [weak self] (indexPath: NSIndexPath) -> Void in
+//            switch (indexPath.row) {
+//            case 0:
+//                self?.performSegueWithIdentifier("NewGroups", sender: self?.menu);
+//                break;
+//            case 1: break;
+//            case 2:
+//                Util.showChoiceInViewController(self, title: "Confirmation", message: "Are you sure you want to erase all the chat threads?", buttonTitle: ["Yes", "Cancel"], buttonStyle: [UIAlertActionStyle.Destructive, UIAlertActionStyle.Cancel], callback: { selectedBtn in
+//                    var selectedThreads = Array<String>();
+//                    if (selectedBtn == 0) {
+//                        for thread in self!.localThread {
+//                            let t = thread as! NSDictionary;
+//                            //                            if (selectedThreads.count < 1) {
+//                            selectedThreads.append(t.valueForKey("id") as! String)
+//                            //                            }
+//                        }
+//                    }
+//                    self!.localThread = self!.localThread.filter() { el in !selectedThreads.contains (el.valueForKey("id")! as! String) }
+//                    Engine.getThreads(self) { status, JSON in self!.tv.reloadData(); }
+//                    Engine.deleteThreads(self, threadIds: selectedThreads) { status, JSON in
+//                        
+//                        Engine.getThreads(self) { status, JSON in self!.updateThreadView(JSON); }
+//                    }
+//                })
+//            default: break;
+//            }
+//        }
+//    }
     
     @IBAction func filter(sender: AnyObject) {
         let alert: UIAlertController = UIAlertController(title:"Select Filter", message: "Select how do you want to filter the chats.", preferredStyle: .ActionSheet)

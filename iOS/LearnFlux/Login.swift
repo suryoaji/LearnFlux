@@ -13,25 +13,27 @@ class Login: UIViewController, UITextFieldDelegate {
 
     let aDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
     let popTip = AMPopTip();
+    var textfieldClicked = UITextField()
     
-    @IBOutlet weak var tfUsername: OSTextField!;
-    @IBOutlet weak var tfPassword: OSTextField!;
+    @IBOutlet weak var tfUsername: OSTextfieldR!
+    @IBOutlet weak var tfPassword: OSTextfieldR!
     var animatedDistance: Double = 0;
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Do any additional setup after loading the view, typically from a nib.
-        
-        tfUsername = Util.designTextField(tfUsername);
-        tfPassword = Util.designTextField(tfPassword);        
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated);
         self.revealController.setMinimumWidth(0, maximumWidth: 0, forViewController: self.revealController.leftViewController)
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
 //        self.revealController.setMinimumWidth(220.0, maximumWidth: 244.0, forViewController: self.revealController.leftViewController)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(true)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     override func didReceiveMemoryWarning() {
@@ -46,63 +48,27 @@ class Login: UIViewController, UITextFieldDelegate {
     // MARK: magic code for adjusting text field into view.
 
     func textFieldDidBeginEditing(textField: UITextField) {
-        let textFieldRect: CGRect = self.view.window!.convertRect(textField.bounds, fromView: textField)
-        let viewRect: CGRect = self.view.window!.convertRect(self.view.bounds, fromView: self.view!)
-        let midline: CGFloat = textFieldRect.origin.y + 0.5 * textFieldRect.size.height
-        let numerator: CGFloat = midline - viewRect.origin.y - MINIMUM_SCROLL_FRACTION * viewRect.size.height
-        let denominator: CGFloat = (MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION) * viewRect.size.height
-        var heightFraction: CGFloat = numerator / denominator
-        if heightFraction < 0.0 {
-            heightFraction = 0.0
-        }
-        else if heightFraction > 1.0 {
-            heightFraction = 1.0
-        }
-        
-        let orientation: UIInterfaceOrientation = UIApplication.sharedApplication().statusBarOrientation
-        if orientation == .Portrait || orientation == .PortraitUpsideDown {
-            animatedDistance = floor(Double(PORTRAIT_KEYBOARD_HEIGHT * heightFraction))
-        }
-        else {
-            animatedDistance = floor(Double(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction))
-        }
-        var viewFrame: CGRect = self.view.frame
-        viewFrame.origin.y -= CGFloat(animatedDistance)
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true);
-        UIView.setAnimationDuration(Double(KEYBOARD_ANIMATION_DURATION))
-        self.view!.frame = viewFrame
-        UIView.commitAnimations()
+        textfieldClicked = textField
+    }
+    
+    func keyboardWillShow(notification: NSNotification){
+        let duration = CGFloat(Float(String(notification.userInfo![UIKeyboardAnimationDurationUserInfoKey]!))!)
+        let keyboardHeight = (notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().height
+        Util.animateSetFocus(self, toView: textfieldClicked, distance: &animatedDistance, duration: duration, keyboardHeight: keyboardHeight)
     }
     
     func textFieldDidEndEditing(textfield: UITextField) {
-        var viewFrame: CGRect = self.view.frame
-        viewFrame.origin.y += CGFloat(animatedDistance)
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true);
-        UIView.setAnimationDuration(Double(KEYBOARD_ANIMATION_DURATION))
-        self.view!.frame = viewFrame
-        UIView.commitAnimations()
-    }
-    
-    override func globalResignFirstResponderRec(view: UIView) {
-        self.view.window?.endEditing(true);
-        if view.respondsToSelector(#selector(self.resignFirstResponder)) {
-            view.resignFirstResponder()
-        }
-        for subview: UIView in view.subviews {
-            self.globalResignFirstResponderRec(subview)
-        }
+        Util.animateDismissSetFocus(self, distance: &animatedDistance)
     }
 
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.window?.endEditing(true);
-        self.globalResignFirstResponderRec(self.view!)
+        self.e_globalResignFirstResponderRec(self.view!)
     }
     
     func singleTapGestureCaptured(gesture: UITapGestureRecognizer) {
         NSLog("touch")
-        self.globalResignFirstResponderRec(self.view!)
+        self.e_globalResignFirstResponderRec(self.view!)
         //    CGPoint touchPoint=[gesture locationInView:scrollView];
     }
     
@@ -135,9 +101,4 @@ class Login: UIViewController, UITextFieldDelegate {
     @IBAction func beginEdit (sender: AnyObject) {
         popTip.hide();
     }
-    
-    
-    
-
 }
-

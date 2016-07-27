@@ -19,6 +19,52 @@ func delay(delay:Double, closure:()->()) {
 
 class Util : NSObject {
     
+    static func getSmallStringMonth(int: Int)->String{
+        switch int {
+        case 1:
+            return "Jan"
+        case 2:
+            return "Feb"
+        case 3:
+            return "Mar"
+        case 4:
+            return "Apr"
+        case 5:
+            return "May"
+        case 6:
+            return "Jun"
+        case 7:
+            return "Jul"
+        case 8:
+            return "Aug"
+        case 9:
+            return "Sep"
+        case 10:
+            return "Oct"
+        case 11:
+            return "Nov"
+        case 12:
+            return "Des"
+        default:
+            return ""
+        }
+    }
+    
+    static func dateFromString(string: String)->NSDate?{
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "yy-MM-dd HH:mm:ss +0000"
+        return formatter.dateFromString(string)
+    }
+    
+    static func getElementDate(element: NSCalendarUnit, stringDate: String)->Int?{
+        let date = dateFromString(stringDate)
+        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+        if let inDate = date{
+            return calendar!.component(element, fromDate: inDate)
+        }
+        return nil
+    }
+    
     static func showMessageInViewController(viewController: UIViewController?, title: String, message: String, buttonOKTitle: String = "Ok", callback: (()->Void)? = nil) -> () {
         if (viewController == nil) { return; }
         let alertController: UIAlertController = UIAlertController(title:title, message: message, preferredStyle: .Alert)
@@ -54,7 +100,6 @@ class Util : NSObject {
         }
     }
   
-    
     static func showChoiceInViewController(viewController: UIViewController?, title: String, message: String, buttonOKTitle: String = "Ok", buttonCancelTitle: String = "Cancel", callback: ((Int)->Void)? = nil) -> () {
         if (viewController == nil) { return; }
         let alertController: UIAlertController = UIAlertController(title:title, message: message, preferredStyle: .Alert)
@@ -125,16 +170,59 @@ class Util : NSObject {
     }
     
     static func designTextField (textField : OSTextField, leftInset: CGFloat) -> OSTextField {
-        return designTextField(textField, insets: UIEdgeInsets (top: 10, left: leftInset, bottom: 10, right: 10));
+        return designTextField(textField, insets: UIEdgeInsets (top: 10, left: leftInset, bottom: 10, right: 10))
     }
     
     static func designTextField (textField : OSTextField, insets: UIEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)) -> OSTextField {
-        let temp = textField;
-        temp.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10);
-        temp.borderStyle = .Line;
-        temp.layer.borderWidth = 2;
-        temp.layer.borderColor = UIColor(red: 0.93, green: 0.93, blue: 0.93, alpha: 1).CGColor;
-        return temp;
+        let temp = textField
+        temp.edgeInsets = insets
+        temp.borderStyle = .Line
+        temp.layer.borderWidth = 2
+        temp.layer.borderColor = UIColor(red: 0.93, green: 0.93, blue: 0.93, alpha: 1).CGColor
+        return temp
+    }
+    
+    static func animateSetFocus(controller: UIViewController, toView: UIView, inout distance: Double, duration: CGFloat = KEYBOARD_ANIMATION_DURATION, keyboardHeight : CGFloat?){
+        let toViewRect: CGRect = controller.view.window!.convertRect(toView.bounds, fromView: toView)
+        let viewRect: CGRect = controller.view.window!.convertRect(controller.view.bounds, fromView: controller.view!)
+        let midline: CGFloat = toViewRect.origin.y + 0.5 * toViewRect.size.height
+        let numerator: CGFloat = midline - viewRect.origin.y - MINIMUM_SCROLL_FRACTION * viewRect.size.height
+        let denominator: CGFloat = (MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION) * viewRect.size.height
+        var heightFraction: CGFloat = numerator / denominator
+        if heightFraction < 0.0 {
+            heightFraction = 0.0
+        }
+        else if heightFraction > 1.0 {
+            heightFraction = 1.0
+        }
+        if keyboardHeight != nil{
+            distance = floor(Double(keyboardHeight! * heightFraction))
+        }else{
+            let orientation: UIInterfaceOrientation = UIApplication.sharedApplication().statusBarOrientation
+            if orientation == .Portrait || orientation == .PortraitUpsideDown {
+                distance = floor(Double(PORTRAIT_KEYBOARD_HEIGHT * heightFraction))
+            }
+            else {
+                distance = floor(Double(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction))
+            }
+        }
+        var viewFrame: CGRect = controller.view.frame
+        viewFrame.origin.y -= CGFloat(distance)
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationBeginsFromCurrentState(true);
+        UIView.setAnimationDuration(Double(duration))
+        controller.view!.frame = viewFrame
+        UIView.commitAnimations()
+    }
+    
+    static func animateDismissSetFocus(controller: UIViewController, inout distance: Double){
+        var viewFrame: CGRect = controller.view.frame
+        viewFrame.origin.y += CGFloat(distance)
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationBeginsFromCurrentState(true);
+        UIView.setAnimationDuration(Double(KEYBOARD_ANIMATION_DURATION))
+        controller.view!.frame = viewFrame
+        UIView.commitAnimations()
     }
     
     static func labelPerfectHeight (mylabel : UILabel, textToFit : String = "")->CGFloat {

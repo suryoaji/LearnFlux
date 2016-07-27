@@ -8,12 +8,12 @@
 
 import Foundation
 
-class Url : NSObject {
+struct Url{
+    private static let base = "http://lfapp.learnflux.net"
     
-    static let base = "http://lfapp.learnflux.net";
-    
-    static let token = base + "/oauth/v2/token";
-    static let me = base + "/v1/me";
-    static let messages = base + "/v1/messages";
-    static let register = base + "/register";
+    static let token = base + "/oauth/v2/token"
+    static let me = base + "/v1/me"
+    static let messages = base + "/v1/messages"
+    static let register = base + "/register"
+    static let events = base + "/v1/events"
 }
