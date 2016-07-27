@@ -11,18 +11,16 @@ import JSQMessagesViewController
 
 extension JSQMessagesCollectionViewCell {
     override public func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        print (action)
         return (action == #selector(delete(_:)) || action == #selector(copy(_:)));
     }
     
-    @IBAction override public func delete(sender:AnyObject?) {
+    override public func delete(sender:AnyObject?) {
         print ("delete")
     }
     
-    @IBAction override public func copy(sender:AnyObject?) {
+    override public func copy(sender:AnyObject?) {
+        super.copy(sender)
         print ("copy")
     }
-    
-    
 }
 

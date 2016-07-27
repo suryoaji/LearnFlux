@@ -288,6 +288,7 @@ class Engine : NSObject {
                     let newSync = rawJSON!.valueForKey("lastSync") as! Double
                     let newThreads = self.updateThreadsByLastSync(data, fromLastSync: newSync)
                     clientData.saveAllThreads(newThreads, lastSync: String(newSync))
+                    clientData.setThreads(newThreads)
                 }
             }
             if (callback != nil) { callback! (status, rawJSON); }

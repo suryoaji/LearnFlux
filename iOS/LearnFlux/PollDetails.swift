@@ -10,7 +10,7 @@ import Foundation
 
 class PollDetails : UITableViewController {
     
-    var meta : NSMutableDictionary!;
+    var meta : Dictionary<String, AnyObject>!
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -96,7 +96,7 @@ class PollDetails : UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
         if (indexPath.section == 2) {
-            meta.setValue("\(indexPath.row)", forKey: "selection");
+            meta["selection"] = "\(indexPath.row)"
             tableView.reloadData();
         }
     }

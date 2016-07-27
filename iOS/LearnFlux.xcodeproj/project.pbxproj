@@ -10,6 +10,7 @@
 		2D3D549154E78BF23D6DC8C8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9376CFD1C1CCB93E6369171A /* Pods.framework */; };
 		4A4985251D40A4FD00B823CA /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4985241D40A4FD00B823CA /* Event.swift */; };
 		4A4E38641D3DD78B00955E6F /* OSTextfieldR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */; };
+		4AF893F31D4889B80012E263 /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF893F21D4889B80012E263 /* Thread.swift */; };
 		5B01FC411CD2FCB800047C15 /* NSDictionary+ForKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */; };
 		5B01FC491CD34A8600047C15 /* arrow_down_circle-18.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC481CD34A8600047C15 /* arrow_down_circle-18.png */; };
 		5B01FC5B1CD34D6700047C15 /* arrow_down_circle-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B01FC561CD34D6700047C15 /* arrow_down_circle-18@2x.png */; };
@@ -390,6 +391,7 @@
 		488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		4A4985241D40A4FD00B823CA /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSTextfieldR.swift; sourceTree = "<group>"; };
+		4AF893F21D4889B80012E263 /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		5B01FC3F1CD2FC5F00047C15 /* NSDictionary+ForKey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+ForKey.h"; path = "Library/NSDictionary+ForKey.h"; sourceTree = "<group>"; };
 		5B01FC401CD2FCB800047C15 /* NSDictionary+ForKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+ForKey.m"; path = "Library/NSDictionary+ForKey.m"; sourceTree = "<group>"; };
 		5B01FC481CD34A8600047C15 /* arrow_down_circle-18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_down_circle-18.png"; path = "Icons/arrow_down_circle-18.png"; sourceTree = "<group>"; };
@@ -814,6 +816,7 @@
 			isa = PBXGroup;
 			children = (
 				4A4985241D40A4FD00B823CA /* Event.swift */,
+				4AF893F21D4889B80012E263 /* Thread.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1828,6 +1831,7 @@
 				5B0C83571D2231E60069F877 /* NewGroups.swift in Sources */,
 				5B37426B1CC0CBAD00AF2897 /* UIView+Slide.m in Sources */,
 				5B3742671CC0CBAD00AF2897 /* UIImageView+RoundedRect.m in Sources */,
+				4AF893F31D4889B80012E263 /* Thread.swift in Sources */,
 				5B52C01C1D13EF6800900EE2 /* OrgProfile.swift in Sources */,
 				5B3742721CC0CBAD00AF2897 /* UIImageView+ResizeProportionally.m in Sources */,
 				5B37426C1CC0CBAD00AF2897 /* UIViewController+FirstResponder.m in Sources */,
