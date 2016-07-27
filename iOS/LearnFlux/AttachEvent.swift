@@ -100,14 +100,14 @@ class AttachEvent : UITableViewController {
     }
     
     @IBAction func beginDateEdit (sender: AnyObject?) {
-        self.globalResignFirstResponder();
+        self.e_globalResignFirstResponderRec(self.view)
         DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Date) { (date) -> Void in
             self.chosenDate = date;
         }
     }
     
     @IBAction func beginTimeEdit (sender: AnyObject?) {
-        self.globalResignFirstResponder();
+        self.e_globalResignFirstResponderRec(self.view)
         DatePickerDialog().show("Select Time", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Time) { (date) -> Void in
             self.chosenTime = date;
         }

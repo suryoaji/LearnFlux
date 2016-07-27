@@ -32,6 +32,7 @@ class Data : NSObject {
     var newMessageCreated : String! = "";
     
     private var events : [Event]?
+    private var threads: [Thread]?
     
     // saveNewThreadInfo just add the newly created thread header data into the array of Threads.
     func saveNewThreadInfo (threadJSON JSON: AnyObject?)->Bool {
@@ -54,6 +55,20 @@ class Data : NSObject {
         defaults.setObject(arr, forKey: "threads")
         defaults.setObject(lastSync, forKey: "lastSync")
         defaults.synchronize()
+    }
+    
+    func getMyThreads()->[Thread]?{
+        return self.threads
+    }
+    
+    func setThreads(arr: Array<Dictionary<String, AnyObject>>){
+        var conThreads : [Thread] = []
+        for each in arr{
+            if each["id"] != nil && each["participants"] != nil{
+                conThreads.append(Thread(dict: each))
+            }
+        }
+        self.threads = !conThreads.isEmpty ? conThreads : nil
     }
     
     func getMyEvents()->[Event]?{

@@ -217,6 +217,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
             let participants = selectedThread.valueForKey("participants")! as! [AnyObject];
             let threadName = Engine.generateThreadName(selectedThread);
             chatVc.initChat(threadName, chatType: "chat", chatId: chatId, participants: participants, chatMetadata: ["title": threadName])
+            chatVc.rowIndexPath = indexPath.row
         }
     }
     

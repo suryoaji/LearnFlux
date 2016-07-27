@@ -10,7 +10,7 @@ import Foundation
 
 class EventDetails : UITableViewController {
     
-    var meta : NSMutableDictionary!;
+    var meta : Dictionary<String, AnyObject>!;
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -102,11 +102,11 @@ class EventDetails : UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
         if (indexPath.isEqualCode("4-0")) {
-            meta.setValue("yes", forKey: "selection");
+            meta["selection"] = "yes"
             tableView.reloadData();
         }
         else if (indexPath.isEqualCode("4-1")) {
-            meta.setValue("no", forKey: "selection");
+            meta["selection"] = "no"
             tableView.reloadData();
         }
     }
@@ -117,7 +117,7 @@ class EventDetails : UITableViewController {
             vc.senderId = "1"
             vc.senderDisplayName = "Jack Joyce"
             vc.thisChatType = "event";
-            vc.thisChatMetadata = meta;
+            vc.thisChatMetadata = meta
         }
     }
     
