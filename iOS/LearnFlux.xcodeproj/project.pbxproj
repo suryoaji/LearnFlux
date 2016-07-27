@@ -84,6 +84,8 @@
 		5B1356101D096DBC0058BBA5 /* events-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B13560D1D096DBC0058BBA5 /* events-70.png */; };
 		5B1356111D096DBC0058BBA5 /* groups-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B13560E1D096DBC0058BBA5 /* groups-70.png */; };
 		5B137B361D050954004F26F9 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B137B351D050954004F26F9 /* Engine.swift */; };
+		5B1BD8691D3898210076AF06 /* ProfileEureka.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1BD8681D3898210076AF06 /* ProfileEureka.swift */; };
+		5B1BD86B1D38A32D0076AF06 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1BD86A1D38A32D0076AF06 /* Profile.swift */; };
 		5B37425F1CC0CBAD00AF2897 /* NSDate+String.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B37422D1CC0CBAD00AF2897 /* NSDate+String.m */; };
 		5B3742601CC0CBAD00AF2897 /* NSInteger+String.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B37422F1CC0CBAD00AF2897 /* NSInteger+String.m */; };
 		5B3742611CC0CBAD00AF2897 /* PopoverDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3742311CC0CBAD00AF2897 /* PopoverDateViewController.m */; };
@@ -467,6 +469,8 @@
 		5B13560D1D096DBC0058BBA5 /* events-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "events-70.png"; path = "IconsOfficial/events-70.png"; sourceTree = "<group>"; };
 		5B13560E1D096DBC0058BBA5 /* groups-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "groups-70.png"; path = "IconsOfficial/groups-70.png"; sourceTree = "<group>"; };
 		5B137B351D050954004F26F9 /* Engine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Engine.swift; path = Engine/Engine.swift; sourceTree = "<group>"; };
+		5B1BD8681D3898210076AF06 /* ProfileEureka.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileEureka.swift; sourceTree = "<group>"; };
+		5B1BD86A1D38A32D0076AF06 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		5B37422C1CC0CBAD00AF2897 /* NSDate+String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+String.h"; path = "Library/NSDate+String.h"; sourceTree = "<group>"; };
 		5B37422D1CC0CBAD00AF2897 /* NSDate+String.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+String.m"; path = "Library/NSDate+String.m"; sourceTree = "<group>"; };
 		5B37422E1CC0CBAD00AF2897 /* NSInteger+String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSInteger+String.h"; path = "Library/NSInteger+String.h"; sourceTree = "<group>"; };
@@ -894,6 +898,8 @@
 				5B09CEB41CBB4A330042C70B /* Login.swift */,
 				5B04A25C1CBCF1DF00FA5CCA /* Register.swift */,
 				5B09CF681CBB8E130042C70B /* ForgotPassword.swift */,
+				5B1BD8681D3898210076AF06 /* ProfileEureka.swift */,
+				5B1BD86A1D38A32D0076AF06 /* Profile.swift */,
 				5B09CF6A1CBB94C60042C70B /* Home.swift */,
 				5B02264B1CEAD67A00C5E8EE /* NewHome.swift */,
 				5B09CF7D1CBBAAF10042C70B /* Menu.swift */,
@@ -1824,6 +1830,7 @@
 				5B09CF6B1CBB94C60042C70B /* Home.swift in Sources */,
 				5B0C83571D2231E60069F877 /* NewGroups.swift in Sources */,
 				5B37426B1CC0CBAD00AF2897 /* UIView+Slide.m in Sources */,
+				5B1BD8691D3898210076AF06 /* ProfileEureka.swift in Sources */,
 				5B3742671CC0CBAD00AF2897 /* UIImageView+RoundedRect.m in Sources */,
 				5B52C01C1D13EF6800900EE2 /* OrgProfile.swift in Sources */,
 				5B3742721CC0CBAD00AF2897 /* UIImageView+ResizeProportionally.m in Sources */,
@@ -1843,6 +1850,7 @@
 				5B37426E1CC0CBAD00AF2897 /* CommonConstants.m in Sources */,
 				4A4E38641D3DD78B00955E6F /* OSTextfieldR.swift in Sources */,
 				4A4985251D40A4FD00B823CA /* Event.swift in Sources */,
+				5B1BD86B1D38A32D0076AF06 /* Profile.swift in Sources */,
 				5B6DECBA1D01649100E16650 /* Singleton.swift in Sources */,
 				5B0455241D129E880078032B /* OrgDetails.swift in Sources */,
 				5B09CF691CBB8E130042C70B /* ForgotPassword.swift in Sources */,
