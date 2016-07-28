@@ -366,6 +366,23 @@ public class Engine {
 			},null);
 		}
 	}
+	public static void getOrganizations(final Context context,final RequestTemplate.ServiceCallback callback){
+		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ORGANIZATIONS);
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, null);
+		}else{
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					Log.i("Organization_Response", "execute: " + obj.toString());
+					if(callback!=null){
+						callback.execute(obj);
+					}
+
+				}
+			},null);
+		}
+	}
 
 
 
