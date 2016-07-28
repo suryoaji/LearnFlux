@@ -10,8 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.entity.Organizations;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,10 +22,10 @@ import java.util.List;
  * Created by NAIT ADMIN on 12/04/2016.
  */
 public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<OrgTileHolder> {
-	private List<String> itemList;
+	private List<Organizations> itemList;
 	private Context context;
 
-	public OrganizationGridRecyclerViewAdapter(Context context, List<String> itemList) {
+	public OrganizationGridRecyclerViewAdapter(Context context, List<Organizations> itemList) {
 		this.itemList = itemList;
 		this.context = context;
 	}
@@ -37,7 +40,12 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 
 	@Override
 	public void onBindViewHolder(OrgTileHolder holder, int position) {
-		holder.tvName.setText(itemList.get(position));
+		holder.tvName.setText(itemList.get(position).getName());
+		if(itemList.get(position).getThumb().equalsIgnoreCase("")){
+			holder.ivLogo.setImageResource(R.drawable.organization);
+		}else{
+			Picasso.with(context).load(itemList.get(position).getThumb()).into(holder.ivLogo);
+		}
 
 	}
 
@@ -49,7 +57,7 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 
 class OrgTileHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 	public TextView tvName, tvLastSeen, tvCountMessage, tvCountEvent, tvCountActivities;
-	public ImageView ivLogo;
+	public NetworkImageView ivLogo;
 
 	public OrgTileHolder(View itemView) {
 		super(itemView);
@@ -59,7 +67,7 @@ class OrgTileHolder extends RecyclerView.ViewHolder implements View.OnClickListe
 		tvCountMessage = (TextView) itemView.findViewById(R.id.tvCountMessage);
 		tvCountEvent = (TextView) itemView.findViewById(R.id.tvCountEvent);
 		tvCountActivities = (TextView) itemView.findViewById(R.id.tvCountActivities);
-		ivLogo = (ImageView) itemView.findViewById(R.id.ivLogo);
+		ivLogo = (NetworkImageView) itemView.findViewById(R.id.ivLogo);
 	}
 
 	@Override
