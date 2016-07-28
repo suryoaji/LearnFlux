@@ -222,14 +222,10 @@ class Engine : NSObject {
     }
     
     static func me(viewController: UIViewController? = nil, callback: JSONreturn? = nil) {
-//        makeRequest(url: Url.me, param: nil) { status, JSON in
         makeRequestAlamofire(url: Url.me, param: nil) { status, JSON in
             if (JSON != nil) {
-                print ("me: \(JSON!)");
                 if (JSON!.valueForKey("data") != nil) {
-                    let data = JSON!.valueForKey("data")!;
-                    clientData.defaults.setValue(data, forKey: "me");
-                    clientData.defaults.synchronize();
+                    clientData.saveMe(JSON!.valueForKey("data")!)
                 }
             }
             if (callback != nil) { callback! (status, JSON); }
@@ -259,19 +255,14 @@ class Engine : NSObject {
     
     static func createThread (viewController: UIViewController? = nil, title: String = "", userId: [Int], callback: JSONreturn? = nil) {
         let param = ["participants":userId, "title":title] as [String: AnyObject];
-        print (self.getJSON(param));
-        
-//        makeRequest2(viewController, method: .POST, url: Url.messages, param: param) { status, JSON in
         makeRequestAlamofire(viewController, method: .POST, url: Url.messages, param: param) { status, JSON in
-            if (JSON != nil) { print (JSON!); }
-            if (!clientData.saveNewThreadInfo(threadJSON: JSON)) {
-                Util.showMessageInViewController(viewController, title: "Failed to create new thread", message: "Sorry, there's problems on creating new thread for these participants. Please try again later.") {
-                    if (callback != nil) { callback! (status, JSON); }
+            if let rawJSON = JSON{
+                if let rawData = (rawJSON as! Dictionary<String, AnyObject>)["data"]{
+                    let dictData = rawData as! Dictionary<String, AnyObject>
+                    clientData.addNewThread(dictData)
                 }
             }
-            else {
-                if (callback != nil) { callback! (status, JSON); }
-            }
+            if (callback != nil) { callback! (status, JSON); }
         }
     }
     
@@ -307,6 +298,10 @@ class Engine : NSObject {
     
     static func updateContentThreads(inout threads: Array<Dictionary<String, AnyObject>>, newThreads: Array<Dictionary<String, AnyObject>>){
         for i in 0..<newThreads.count{
+            if threads.count < i+1 && newThreads.count - threads.count != 0{
+                threads.append(newThreads[i])
+                continue
+            }
             for eachDict in newThreads[i]{
                 if eachDict.0 == "messages", let message = threads[i]["messages"]{
                     var threadMessages = message as! Array<Dictionary<String, AnyObject>>
@@ -349,20 +344,19 @@ class Engine : NSObject {
         return nil
     }
     
-    static func generateThreadName (thread: NSDictionary) -> String {
-        if (thread.valueForKey("title") != nil) {
-            return thread.valueForKey("title")! as! String;
+    static func generateThreadName(thread: Thread) -> String {
+        if (thread.title != nil) {
+            return thread.title!
         }
-        let participants = thread.valueForKey("participants")! as! Array<NSDictionary>;
+        let participants = thread.participants
         var chatName = "";
         for participant in participants {
-            let me = clientData.defaults.valueForKey("me")! as! NSDictionary;
-            let selfId = me.valueForKey("id")! as! Int;
-            let participantId = participant.valueForKey("id")! as! Int;
-            if (participantId != selfId) {
+            let me = clientData.cacheMe()
+            let selfId = me!["id"] as! Int;
+            if (participant != selfId) {
                 if (chatName != "") { chatName += ", "; }
-                chatName += String(participant["id"] as! Int);
-//                chatName += participant["username"] as! String;
+                chatName += String(participant);
+                //                chatName += participant["username"] as! String;
             }
         }
         return chatName;

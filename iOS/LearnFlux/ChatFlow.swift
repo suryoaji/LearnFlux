@@ -14,7 +14,14 @@ import CZPicker
 
 class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPollReturnDelegate, CZPickerViewDataSource, CZPickerViewDelegate {
     // MARK: Properties
-    var rowIndexPath : Int!
+    enum From{
+        case CreateThread
+        case OpenChat
+        case None
+    }
+    var openedBy : From!
+    var rowIndexPathFromThread : Int!
+    var clickedMessageIndexpath : Int?
     var chatId : String = "";
     var participantsId = [Dictionary<String, Int>]();
     var participants = [AnyObject]();
@@ -27,8 +34,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     var popupIndexRow : Int! = -1; // if -2 then it is "thisChatType" popup
     
-//    var messages = [JSQMessage]()
-//    var messagesMeta = [NSMutableDictionary]()
     var messages : [Thread.ThreadMessage] = []
     var messagesSelection = [String]();
     var outgoingBubbleImageView,
@@ -59,78 +64,11 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     var isKeyboardShown : Bool = false
     var keyboardHeight : CGFloat = 0
     
-//    func createJSQMessage(dicMessage: Dictionary<String, AnyObject>) -> JSQMessage?{
-//        if let tSender = dicMessage["sender"], let tRawDate = dicMessage["created_at"], let tText = dicMessage["body"]{
-//            let senderMessage = tSender as! Dictionary<String, AnyObject>
-//            let senderId = String(senderMessage["id"] as! Int)
-//            let rawDate = tRawDate as! Double
-//            let date = NSDate(timeIntervalSince1970: rawDate)
-//            let text = tText as! String
-//            return JSQMessage(senderId: senderId, senderDisplayName: self.senderDisplayName, date: date, text: text)
-//        }
-//        return nil
-//    }
-    
-//    func getJSQMessages(chatId: String)-> (Array<JSQMessage>){
-//        if let threadChat = Engine.getThreadChat(chatId){
-//            if let messagesChat = Engine.getMessagesFromThread(threadChat){
-//                var messages : [JSQMessage] = []
-//                var messagesMeta : [NSMutableDictionary] = []
-//                for eachMessage in messagesChat{
-//                    if let message = self.createJSQMessage(eachMessage){
-//                        messages.append(message)
-//                        messagesMeta.append(["type":"chat", "data":message.text, "important": (isImportantMessage ? "yes" : "no")] as NSMutableDictionary)
-//                    }
-//                }
-//                self.messagesMeta = messagesMeta
-//                return messages
-//            }
-//            return []
-//        }
-//        print("ChatFlow : *Engine Get Thread For Chat Room is nil")
-//        return []
-//    }
-    
-    func initChat(title: String, chatType: String, chatId: String, participants: [AnyObject], chatMetadata: Dictionary<String, AnyObject>) {
-        self.title = title;
-        self.chatId = chatId;
-        self.participants = participants;
-        self.thisChatType = chatType;
-        self.thisChatMetadata = chatMetadata
-        if let me = Engine.clientData.cacheMe(){
-            self.senderId = String(me["id"] as! Int)
-        }
-        self.senderDisplayName = "";
-//        print("title: \(self.title)\nchatId: \(self.chatId)\nparticipants: \(self.participants)\nthisChatType: \(self.thisChatType)\nthisChatMetadat: \(self.thisChatMetadata)\nme: \(me)\nsenderId: \(self.senderId)\nsenderDisplayName: \(self.senderDisplayName)")
-//        print("messages: \(self.messages)")
-//        Engine.getThreadMessages(self, threadId: chatId) { status, JSON in
-//            if status == .Success{
-//                self.updateChatView(JSON);
-//                self.timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(self.getNewMessages), userInfo: nil, repeats: true);
-//            }else{
-//                
-//            }
-//        }
-        
+    func initChat(rowIndexPath: Int, idThread: String, from: From){
+        self.rowIndexPathFromThread = rowIndexPath
+        self.chatId = idThread
+        self.openedBy = from
     }
-    
-    func initChat(threadJSON JSON: AnyObject?){
-        let data = JSON?.valueForKey("data")! as! NSDictionary;
-        let title = data.valueForKey("title")! as! String;
-        let chatId = data.valueForKey("id")! as! String;
-        let participants = data.valueForKey("participants")! as! [AnyObject];
-        self.initChat(title, chatType: "text", chatId: chatId, participants: participants, chatMetadata: ["title": title])
-    }
-    
-//    func getNewMessages () {
-//        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-//        Engine.getThreadMessages(self, threadId: chatId) { status, JSON in
-//            if status == .Success && JSON != nil{
-//                self.updateChatView(JSON)
-//                UIApplication.sharedApplication().networkActivityIndicatorVisible = false;
-//            }
-//        }
-//    }
     
     func updateChatView(JSON : AnyObject? = nil){
         let oldCount = localChat.count;
@@ -318,9 +256,20 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         attachmentPanel.layer.zPosition = -0.001
     }
     
+    func setChatRoomInfo(){
+        self.title = Engine.generateThreadName(Engine.clientData.getMyThreads()![self.rowIndexPathFromThread])
+        self.participants = Engine.clientData.getMyThreads()![self.rowIndexPathFromThread].participants
+        self.thisChatType = "chat"
+        self.thisChatMetadata = ["title" : title!]
+        if let me = Engine.clientData.cacheMe(){
+            self.senderId = String(me["id"] as! Int)
+        }
+        self.senderDisplayName = "";
+    }
+    
     func loadMessages(){
 //        self.messages = getJSQMessages(self.chatId)
-        if let messages = Engine.clientData.getMyThreads()![rowIndexPath].messages{
+        if let messages = Engine.clientData.getMyThreads()![rowIndexPathFromThread].messages{
             self.messages = messages
         }
         self.updateChatView()
@@ -331,7 +280,10 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         setButtonAttachmentNImportantChatToolbar()
         setAvatarChat()
         setAttachmentNPulldownPanelPosition()
-        loadMessages()
+        setChatRoomInfo()
+        if openedBy == From.OpenChat{
+            loadMessages()
+        }
     }
     
     override func viewDidLoad() {
@@ -347,25 +299,25 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
 //        // No avatars
 //        collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
 //        collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
-        
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated);
-        self.setObserverForKeyboardShownNHide()
+        self.setObserver()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(true)
-        self.removeObserverForKeyboardShownNHide()
+        self.removeAllObserver()
     }
     
-    func setObserverForKeyboardShownNHide(){
+    func setObserver(){
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide), name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.deleteMessage), name: "LFDeleteMessageNotification", object: nil)
     }
     
-    func removeObserverForKeyboardShownNHide(){
+    func removeAllObserver(){
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
@@ -526,8 +478,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         } else {
             cell.textView!.textColor = UIColor.blackColor()
         }
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.bubbleTap))
-        cell.addGestureRecognizer(tap)
+        cell.setIndexpathIdentifier(indexPath.row)
         return cell
     }
     
@@ -566,8 +517,32 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         //        return nil;
     }
     
+    override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
+        self.inputToolbar.contentView.textView.resignFirstResponder()
+        let messageMeta = messages[indexPath.row].meta;
+        let eventType = messageMeta["type"]! as! String;
+        if (eventType == "event") {
+            //            let event = messageMeta["data"]! as! Dictionary<String, AnyObject>
+            popupEvent(indexPath.row)
+        }
+        else if (eventType == "poll") {
+            //            let poll = messageMeta["data"]! as! Dictionary<String, AnyObject>;
+            popupPoll(indexPath.row);
+        }
+    }
+    
+    func deleteMessage(notification: NSNotification){
+        if let userInfo = notification.userInfo{
+            let indexPath = userInfo["indexPath"]! as! Int
+            print("\ndeleteMessageTriggered")
+            print("Delete Cell in row indexPath : \(indexPath)")
+            print(messages[indexPath].message.text)
+            print(messages[indexPath].meta)
+            print("======================\n")
+        }
+    }
+    
     @IBAction func bubbleTap (sender: AnyObject) {
-        print("bubbleTap")
         self.inputToolbar.contentView.textView.resignFirstResponder()
         let tap = sender as! UITapGestureRecognizer;
         let indexPath = self.collectionView.indexPathForCell(tap.view as! JSQMessagesCollectionViewCell)!;
@@ -908,17 +883,17 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         setAttachmentPanelVisible(false, animated: false);
     }
     
-    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        return (action == #selector(self.deleteMessage(_:)) || action == #selector(self.copyMessage(_:)));
-    }
-    
-    func deleteMessage(sender:AnyObject) {
-//        print ("delete")
-    }
-    
-    func copyMessage(sender:AnyObject) {
-//        print ("copy")
-    }
+//    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+//        return (action == #selector(self.deleteMessage(_:)) || action == #selector(self.copyMessage(_:)));
+//    }
+//    
+//    func deleteMessage(sender:AnyObject) {
+////        print ("delete")
+//    }
+//    
+//    func copyMessage(sender:AnyObject) {
+////        print ("copy")
+//    }
     
     @IBAction func pulldownClick (sender: AnyObject) {
 //        attachEventTv = AttachEvent();
@@ -937,77 +912,4 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         }
         
     }
-    
-//    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-//        var cell: JSQMessagesCollectionViewCell = (super.collectionView(collectionView, cellForItemAtIndexPath: indexPath) as! JSQMessagesCollectionViewCell)
-//        var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.bubbleTap))
-//        cell.addGestureRecognizer(tap)
-//        return cell
-//    }
-    
-    // Call the function from tap gesture recognizer added to your view (or button)
-    
-    //    private func observeMessages() {
-    //        // 1
-    //        let messagesQuery = messageRef.queryLimitedToLast(25)
-    //        // 2
-    //        messagesQuery.observeEventType(.ChildAdded) { (snapshot: FDataSnapshot!) in
-    //            // 3
-    //            let id = snapshot.value["senderId"] as! String
-    //            let text = snapshot.value["text"] as! String
-    //
-    //            // 4
-    //            self.addMessage(id, text: text)
-    //
-    //            // 5
-    //            self.finishReceivingMessage()
-    //        }
-    //    }
-    //
-    //
-    //
-    //    var userIsTypingRef: Firebase! // 1
-    //    private var localTyping = false // 2
-    //    var isTyping: Bool {
-    //        get {
-    //            return localTyping
-    //        }
-    //        set {
-    //            // 3
-    //            localTyping = newValue
-    //            userIsTypingRef.setValue(newValue)
-    //        }
-    //    }
-    //    var usersTypingQuery: FQuery!
-    //
-    //    private func observeTyping() {
-    //        //        let typingIndicatorRef = rootRef.childByAppendingPath("typingIndicator")
-    //        //        userIsTypingRef = typingIndicatorRef.childByAppendingPath(senderId)
-    //        //        userIsTypingRef.onDisconnectRemoveValue()
-    //        let typingIndicatorRef = rootRef.childByAppendingPath("typingIndicator")
-    //        userIsTypingRef = typingIndicatorRef.childByAppendingPath(senderId)
-    //        userIsTypingRef.onDisconnectRemoveValue()
-    //
-    //        // 1
-    //        usersTypingQuery = typingIndicatorRef.queryOrderedByValue().queryEqualToValue(true)
-    //
-    //        // 2
-    //        usersTypingQuery.observeEventType(.Value) { (data: FDataSnapshot!) in
-    //
-    //            // 3 You're the only typing, don't show the indicator
-    //            if data.childrenCount == 1 && self.isTyping {
-    //                return
-    //            }
-    //
-    //            // 4 Are there others typing?
-    //            self.showTypingIndicator = data.childrenCount > 0
-    //            self.scrollToBottomAnimated(true)
-    //        }
-    //    }
-    //    
-    //    override func textViewDidChange(textView: UITextView) {
-    //        super.textViewDidChange(textView)
-    //        // If the text is not empty, the user is typing
-    //        isTyping = textView.text != ""
-    //    }
 }

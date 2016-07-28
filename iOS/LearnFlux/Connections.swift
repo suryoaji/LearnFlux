@@ -10,20 +10,19 @@ import Foundation
 
 class Connections : UITableViewController {
     
+    var buttonDone : UIBarButtonItem!
     let connect = [
         ["name":"admin", "id":6],
         ["name":"tester", "id":7],
         ["name":"tester2", "id":8]
     ];
-    
     var actualConnect = Array<AnyObject>();
-    
     var selectedConnect : Array<Bool> = [];
     
     override func viewDidLoad() {
         super.viewDidLoad();
         
-        let item:UIBarButtonItem! = UIBarButtonItem();
+        let item = UIBarButtonItem();
         item.image = UIImage(named: "hamburger-18.png");
         self.navigationItem.leftBarButtonItem = item;
         item.action = #selector(self.revealMenu);
@@ -43,11 +42,12 @@ class Connections : UITableViewController {
     lazy var flowData : NSMutableDictionary! = [:];
     
     func setupDoneButton () {
-        let right:UIBarButtonItem! = UIBarButtonItem();
-        right.title = "Done";
-        right.action = #selector(self.next);
-        right.target = self;
-        self.navigationItem.rightBarButtonItem = right;
+        buttonDone = UIBarButtonItem()
+        buttonDone.title = "Done"
+        buttonDone.action = #selector(self.buttonDoneTapped)
+        buttonDone.target = self
+        buttonDone.enabled = false
+        self.navigationItem.rightBarButtonItem = buttonDone
     }
     
     func inFlow (flowDirection : String, flowData : NSMutableDictionary = [:]) {
@@ -60,7 +60,7 @@ class Connections : UITableViewController {
         }
     }
     
-    func next () {
+    func buttonDoneTapped(sender: UIBarButtonItem) {
         if (self.flowDirection == "NewGroups") {
             let title = flowData.valueForKey("title")! as! String;
             var userId : Array<Int> = [];
@@ -72,14 +72,17 @@ class Connections : UITableViewController {
             }
             Engine.createThread(self, title: title, userId: userId) { status, JSON in
                 Util.mainThread() {
-                    let chatFlow = Util.getViewControllerID("ChatFlow") as! ChatFlow;
-                    chatFlow.initChat(threadJSON: JSON);
-                    self.navigationController?.pushViewController(chatFlow, animated: true);
-                    let count = self.navigationController!.viewControllers.count;
-                    var vcs = self.navigationController?.viewControllers;
-                    vcs?.removeAtIndex(count - 2);
-                    vcs?.removeAtIndex(count - 3);
-                    self.navigationController?.viewControllers = vcs!;
+                    if status == .Success{
+                        let chatFlow = Util.getViewControllerID("ChatFlow") as! ChatFlow;
+                        chatFlow.initChat(Engine.clientData.getMyThreads()!.count - 1, idThread: Engine.clientData.getMyThreads()!.last!.id, from: ChatFlow.From.CreateThread)
+//                        chatFlow.initChat(threadJSON: JSON);
+                        self.navigationController?.pushViewController(chatFlow, animated: true);
+                        let count = self.navigationController!.viewControllers.count;
+                        var vcs = self.navigationController?.viewControllers;
+                        vcs?.removeAtIndex(count - 2);
+                        vcs?.removeAtIndex(count - 3);
+                        self.navigationController?.viewControllers = vcs!;
+                    }
                 }
             }
         }
@@ -128,6 +131,7 @@ class Connections : UITableViewController {
         if (flowDirection == "NewGroups") {
             selectedConnect[indexPath.row] = !selectedConnect[indexPath.row];
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None);
+            buttonDoneShouldEnable()
         }
         else {
             let row = actualConnect[indexPath.row];
@@ -153,6 +157,10 @@ class Connections : UITableViewController {
                 }
             }
         }
+    }
+    
+    func buttonDoneShouldEnable(){
+        buttonDone.enabled = !selectedConnect.isEmpty ? !selectedConnect.filter({ $0==true }).isEmpty ? true : false : false
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

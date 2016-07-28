@@ -1440,7 +1440,7 @@ Coming soon</string>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-0" rowHeight="50" id="cie-wS-3m8">
-                                <rect key="frame" x="0.0" y="28" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="92" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cie-wS-3m8" id="cPA-6U-ivk">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -1461,7 +1461,7 @@ Coming soon</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-1" rowHeight="50" id="XyO-PD-hU4">
-                                <rect key="frame" x="0.0" y="78" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="142" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XyO-PD-hU4" id="EnV-zl-ko1">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -1482,7 +1482,7 @@ Coming soon</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-2" rowHeight="50" id="0MB-2A-OI5">
-                                <rect key="frame" x="0.0" y="128" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="192" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0MB-2A-OI5" id="zDv-cU-psG">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -3125,7 +3125,7 @@ Coming soon</string>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="4Kv-ZS-f2o"/>
-        <segue reference="on3-J5-sau"/>
+        <segue reference="Guw-pm-99z"/>
         <segue reference="slP-p0-8EU"/>
     </inferredMetricsTieBreakers>
 </document>

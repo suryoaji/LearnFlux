@@ -18,6 +18,12 @@ class Data : NSObject {
     
     let defaults = NSUserDefaults.standardUserDefaults();
     
+    private struct cacheName{
+        static let Threads = "threads"
+        static let LastSync = "lastSync"
+        static let Me = "me"
+    }
+    
     private let isProduction = false
     
     private let clientId = "57453e293a603f8c168b4567_5gj7ywf0ocsoosw0sc8sgsgk8gckkc80o8co8gg00o08g88c4o";
@@ -34,26 +40,9 @@ class Data : NSObject {
     private var events : [Event]?
     private var threads: [Thread]?
     
-    // saveNewThreadInfo just add the newly created thread header data into the array of Threads.
-    func saveNewThreadInfo (threadJSON JSON: AnyObject?)->Bool {
-        if (JSON == nil) { return false; }
-        if (JSON?.valueForKey("data") != nil) {
-            return saveNewThreadInfo(threadJSON: JSON!.valueForKey("data"));
-        }
-        
-        var threads = defaults.valueForKey("threads") as? Array<AnyObject?>;
-        if (threads == nil) {
-            threads = Array<AnyObject?>();
-        }
-        threads!.append(JSON);
-        defaults.setValue(threads as? AnyObject, forKey: "Threads")
-        defaults.synchronize();
-        return true;
-    }
-    
     func saveAllThreads(arr: Array<Dictionary<String, AnyObject>>, lastSync: String){
-        defaults.setObject(arr, forKey: "threads")
-        defaults.setObject(lastSync, forKey: "lastSync")
+        defaults.setValue(arr, forKey: cacheName.Threads)
+        defaults.setValue(lastSync, forKey: cacheName.LastSync)
         defaults.synchronize()
     }
     
@@ -69,6 +58,32 @@ class Data : NSObject {
             }
         }
         self.threads = !conThreads.isEmpty ? conThreads : nil
+    }
+    
+    func addNewThread(dict: Dictionary<String, AnyObject>){
+        addThread(dict)
+        addThreadToCache(dict)
+    }
+    
+    func addThreadToCache(dict: Dictionary<String, AnyObject>){
+        if var cacheThreads = self.cacheThreads(){
+            cacheThreads.append(dict)
+            saveThread(cacheThreads)
+        }else{
+            saveThread([dict])
+        }
+    }
+    
+    func saveThread(threads: Array<Dictionary<String, AnyObject>>){
+        defaults.setValue(threads, forKey: cacheName.Threads)
+    }
+    
+    func addThread(dict: Dictionary<String, AnyObject>){
+        if self.threads != nil{
+            threads?.append(Thread(dict: dict))
+        }else{
+            threads = [Thread(dict: dict)]
+        }
     }
     
     func getMyEvents()->[Event]?{
@@ -102,7 +117,7 @@ class Data : NSObject {
     }
     
     func cacheThreads() -> (Array<Dictionary<String, AnyObject>>)?{
-        if let cacheThreads = self.defaults.valueForKey("threads"){
+        if let cacheThreads = self.defaults.valueForKey(cacheName.Threads){
             return cacheThreads as? Array<Dictionary<String, AnyObject>>
         }
         print("Data : *Cache Threads is nil")
@@ -110,7 +125,7 @@ class Data : NSObject {
     }
     
     func cacheLastSyncThreads() -> (Double)?{
-        if let cacheLastSync = self.defaults.valueForKey("lastSync"){
+        if let cacheLastSync = self.defaults.valueForKey(cacheName.LastSync){
             return Double(cacheLastSync as! String)!
         }
         print("Data : *Cache LastSync is nil")
@@ -118,7 +133,7 @@ class Data : NSObject {
     }
     
     func cacheMe() -> Dictionary<String, AnyObject>?{
-        if let cacheMe = self.defaults.valueForKey("me"){
+        if let cacheMe = self.defaults.valueForKey(cacheName.Me){
             return cacheMe as? Dictionary<String, AnyObject>
         }
         print("Data : *Cache Me is nil")
@@ -126,11 +141,15 @@ class Data : NSObject {
     }
     
     func clearCacheThreads(){
-        self.defaults.removeObjectForKey("threads")
+        self.defaults.removeObjectForKey(cacheName.Threads)
     }
     
     func clearCacheLastSync(){
-        self.defaults.removeObjectForKey("lastSync")
+        self.defaults.removeObjectForKey(cacheName.LastSync)
+    }
+    
+    func saveMe(me: AnyObject){
+        defaults.setValue(me, forKey: cacheName.Me)
     }
     
     func setAccessToken(string: String){

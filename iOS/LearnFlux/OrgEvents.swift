@@ -35,6 +35,12 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    func shouldRemoveHoldView(){
+        if Engine.clientData.getMyEvents() != nil && self.holdView.superview != nil{
+            self.holdView.removeFromSuperview()
+        }
+    }
+    
     func viewShown(notification: NSNotification){
         if holdView.superview != nil && self.events != nil{
             if !self.events!.isEmpty{
@@ -63,8 +69,8 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
             //label.text =
             expDescHeight.append(Util.labelPerfectHeight(label));
         }
-        
         self.loadEvents(self)
+        shouldRemoveHoldView()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(viewShown), name: "OrgEventsShownNotification", object: nil)
     }
     

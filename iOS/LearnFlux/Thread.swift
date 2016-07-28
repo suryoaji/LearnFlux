@@ -13,6 +13,7 @@ class Thread: NSObject {
     typealias ThreadMessage = (message: JSQMessage, meta: Dictionary<String, AnyObject>)
     
     var id : String!
+    var title : String?
     var participants : [Int]!
     var messages: [ThreadMessage]?
     
@@ -25,9 +26,16 @@ class Thread: NSObject {
         super.init()
         self.id = dict["id"] as! String
         self.participants = setPropertyParticipants(dict["participants"] as! Array<Dictionary<String, AnyObject>>)
+        if let title = dict["title"]{
+            self.title = title as? String
+        }
         if let rawMessages = dict["messages"]{
             self.setPropertyMessages(rawMessages as! Array<Dictionary<String, AnyObject>>)
         }
+    }
+    
+    func setPropertyTitle(title: String){
+        self.title = title
     }
     
     func setPropertyParticipants(arr: Array<Dictionary<String, AnyObject>>)-> ([Int]){

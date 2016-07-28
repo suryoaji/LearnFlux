@@ -14,7 +14,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     //    @IBOutlet var navigationItem: UINavigationItem!;
     @IBOutlet var tv : UITableView!;
     
-    var localThread : Array<AnyObject> = []
+    var localThread : [Thread]? = Engine.clientData.getMyThreads()
     var menu : AZDropdownMenu!;
     @IBOutlet var viewMenu : UIView!;
     
@@ -51,16 +51,17 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func updateThreadView (JSON : AnyObject? = nil) {
-        if (JSON == nil) {
-            if(Engine.clientData.defaults.valueForKey("threads") != nil) {
-                let threads = Engine.clientData.defaults.valueForKey("threads")!;
-                localThread =  threads as! Array<AnyObject>
-            }
-        }
-        else {
-            //            let data = JSON!.valueForKey("data")!;
-            self.localThread = JSON!["data"]! as! Array<AnyObject>;
-        }
+//        if (JSON == nil) {
+//            if(Engine.clientData.defaults.valueForKey("threads") != nil) {
+//                let threads = Engine.clientData.defaults.valueForKey("threads")!;
+//                localThread =  threads as! Array<AnyObject>
+//            }
+//        }
+//        else {
+//            //            let data = JSON!.valueForKey("data")!;
+//            self.localThread = JSON!["data"]! as! Array<AnyObject>;
+//        }
+        self.localThread = Engine.clientData.getMyThreads()
         self.tv.performSelectorOnMainThread(#selector(UITableView.reloadData), withObject: nil, waitUntilDone: true)
     }
     
@@ -86,8 +87,10 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        print (localThread);
-        return localThread.count;
+        if let myThreads = Engine.clientData.getMyThreads(){
+            return myThreads.count
+        }
+        return 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -97,8 +100,8 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         let threadLastMessage = cell.viewWithTag(2) as! UILabel;
         //        let threadLastUpdated = cell.viewWithTag(3) as! UILabel;
         threadLastMessage.text = "Description";
-        let selectedThread = localThread[indexPath.row] as! NSDictionary;
-        threadName.text = Engine.generateThreadName (selectedThread);
+        let selectedThread = Engine.clientData.getMyThreads()![indexPath.row]
+        threadName.text = Engine.generateThreadName(selectedThread);
         let pp = cell.viewWithTag(10) as! UIImageView;
         pp.makeRounded();
         return cell;
@@ -116,14 +119,13 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
                     Util.showChoiceInViewController(self, title: "Confirmation", message: "Are you sure you want to erase all the chat threads?", buttonTitle: ["Yes", "Cancel"], buttonStyle: [UIAlertActionStyle.Destructive, UIAlertActionStyle.Cancel], callback: { selectedBtn in
                         var selectedThreads = Array<String>();
                         if (selectedBtn == 0) {
-                            for thread in self.localThread {
-                                let t = thread as! NSDictionary;
+                            for thread in self.localThread! {
                                 //                            if (selectedThreads.count < 1) {
-                                selectedThreads.append(t.valueForKey("id") as! String)
+                                selectedThreads.append(thread.id)
                                 //                            }
                             }
                         }
-                        self.localThread = self.localThread.filter() { el in !selectedThreads.contains (el.valueForKey("id")! as! String) }
+//                        self.localThread = self.localThread.filter() { el in !selectedThreads.contains (el.valueForKey("id")! as! String) }
                         Engine.getThreads(self) { status, JSON in self.tv.reloadData(); }
                         Engine.deleteThreads(self, threadIds: selectedThreads) { status, JSON in
                             
@@ -209,15 +211,11 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
             let cell = sender as! UITableViewCell;
             let indexPath = self.tv.indexPathForCell(cell)!;
             
-            let selectedThread = localThread[indexPath.row] as! NSDictionary;
+            let selectedThread = localThread![indexPath.row]
             let chatVc = segue.destinationViewController as! ChatFlow
             
-            //            let title = cell.viewWithTag(1) as! UILabel;
-            let chatId = selectedThread.valueForKey("id")! as! String;
-            let participants = selectedThread.valueForKey("participants")! as! [AnyObject];
-            let threadName = Engine.generateThreadName(selectedThread);
-            chatVc.initChat(threadName, chatType: "chat", chatId: chatId, participants: participants, chatMetadata: ["title": threadName])
-            chatVc.rowIndexPath = indexPath.row
+            let chatId = selectedThread.valueForKey("id")! as! String
+            chatVc.initChat(indexPath.row, idThread: chatId, from: ChatFlow.From.OpenChat)
         }
     }
     

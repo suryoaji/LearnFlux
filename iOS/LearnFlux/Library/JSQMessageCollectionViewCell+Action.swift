@@ -10,17 +10,30 @@ import Foundation
 import JSQMessagesViewController
 
 extension JSQMessagesCollectionViewCell {
+    
     override public func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
         return (action == #selector(delete(_:)) || action == #selector(copy(_:)));
     }
     
     override public func delete(sender:AnyObject?) {
-        print ("delete")
+        // Send Notification To Function DeleteMessageFromNotif in ChatFlow Class
+        if let indexpath = getIndexpathIdentifier(){
+            NSNotificationCenter.defaultCenter().postNotificationName("LFDeleteMessageNotification", object: self, userInfo: ["indexPath" : Int(indexpath)!])
+        }
     }
     
     override public func copy(sender:AnyObject?) {
         super.copy(sender)
         print ("copy")
     }
+    
+    func setIndexpathIdentifier(rowIndexpath: Int){
+        self.accessibilityIdentifier = "\(rowIndexpath)"
+    }
+    
+    func getIndexpathIdentifier()->String?{
+        return self.accessibilityIdentifier
+    }
+    
 }
 
