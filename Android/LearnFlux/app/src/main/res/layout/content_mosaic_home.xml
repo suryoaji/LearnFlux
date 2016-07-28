@@ -79,24 +79,6 @@
                            android:clickable="true"/>
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="80dp">
-            <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
-                          android:layout_height="0dp" android:layout_weight="4">
-                <ImageView android:layout_width="0dp" android:layout_height="match_parent"
-                           android:id="@+id/imageView18" android:layout_weight="10"
-                           android:foreground="#ffffff" android:layout_margin="3dp"
-                           android:scaleType="centerCrop"
-                           android:clickable="true"/>
-                <ImageView android:layout_width="0dp" android:layout_height="match_parent"
-                           android:id="@+id/imageView19" android:layout_weight="10"
-                           android:foreground="?attr/selectableItemBackground" android:layout_margin="3dp"
-                           android:src="@drawable/mosaic_chat" android:scaleType="centerCrop"
-                           android:clickable="true"/>
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

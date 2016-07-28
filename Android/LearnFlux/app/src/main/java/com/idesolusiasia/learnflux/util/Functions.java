@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
+import android.widget.EditText;
 
 import com.idesolusiasia.learnflux.LoginActivity;
 import com.idesolusiasia.learnflux.R;
@@ -84,6 +85,32 @@ public class Functions {
 
 		DataSource ds = new DataSource(c.getApplicationContext());
 		ds.deleteDB();
+	}
+
+	public static String showInputAlertDialog(Context context,String title, String message, String hint){
+		final String returnText="";
+		final EditText editText = new EditText(context);
+
+		editText.setHint(hint);
+
+		new AlertDialog.Builder(context)
+				.setTitle(title)
+				.setMessage(message)
+				.setView(editText)
+				.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String text = editText.getText().toString();
+						returnText.replaceAll(".*",text);
+					}
+				})
+				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
+					}
+				})
+				.show();
+
+		return returnText;
 	}
 
 }

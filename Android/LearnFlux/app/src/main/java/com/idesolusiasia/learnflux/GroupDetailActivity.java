@@ -18,8 +18,8 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 	FragmentAdapter mAdap;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
-	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents;
-	static final int ITEMS = 2;
+	TextView tvNotifActivities, tvNotifEvents;
+	static final int ITEMS = 3;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,7 +52,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		indicatorAct=(View) findViewById(R.id.indicator_act);
 		tvNotifActivities=(TextView) findViewById(R.id.tvNotifActivities);
 		tvNotifEvents=(TextView) findViewById(R.id.tvNotifEvents);
-		tvNotifGroups=(TextView) findViewById(R.id.tvNotifGroups);
 
 		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
@@ -77,19 +76,24 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 	@Override
 	public void onClick(View v) {
 		if (v==tabEvents){
-			mViewPager.setCurrentItem(0);
-		}else if (v==tabActivities){
 			mViewPager.setCurrentItem(1);
+		}else if (v==tabActivities){
+			mViewPager.setCurrentItem(2);
+		}else if (v==tabGroups){
+			mViewPager.setCurrentItem(0);
 		}
 	}
 
 	void selectTab(int pos){
+		indicatorGroups.setVisibility(View.GONE);
 		indicatorAct.setVisibility(View.GONE);
 		indicatorEvents.setVisibility(View.GONE);
-		if(pos==0) {
+		if(pos==1) {
 			indicatorEvents.setVisibility(View.VISIBLE);
-		}else{
+		}else if(pos==2) {
 			indicatorAct.setVisibility(View.VISIBLE);
+		}else if(pos==0) {
+			indicatorGroups.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -102,10 +106,12 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
-				case 0:
+				case 1:
 					return OrgEventFragment.newInstance();
-				default:
+				case 2:
 					return OrgActivityFragment.newInstance();
+				default:
+					return GroupProfileFragment.newInstance();
 			}
 		}
 

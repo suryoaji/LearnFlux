@@ -21,56 +21,16 @@ import java.util.List;
 /**
  * Created by NAIT ADMIN on 21/04/2016.
  */
-public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterable{
+public class ChatBubbleAdapter_old extends ArrayAdapter<Message> implements Filterable{
 
 	public List<Message> chatBubbles=null;
 	int meID = User.getUser().getID();
-	public static final int TYPE_PLAIN_ME = 0;
-	public static final int TYPE_PLAIN_OTHER = 1;
-	public static final int TYPE_EVENT_ME = 2;
-	public static final int TYPE_EVENT_OTHER = 3;
-	public static final int TYPE_POLL_ME = 4;
-	public static final int TYPE_POLL_OTHER = 5;
+	int page;
 
-	public ChatBubbleAdapter(Context context, List<Message> objects) {
+	public ChatBubbleAdapter_old(Context context, List<Message> objects) {
 		super(context, R.layout.row_plainbubble_other, objects);
 		this.chatBubbles=objects;
-	}
-
-	@Override
-	public int getViewTypeCount() {
-		return 6;
-	}
-
-	@Override
-	public int getItemViewType(int position) {
-		String type = chatBubbles.get(position).getType();
-		boolean me = (chatBubbles.get(position).getSender().getId()==meID);
-		/*if (type.equalsIgnoreCase("message")){
-			if (me){
-				return TYPE_PLAIN_ME;
-			}else{
-				return TYPE_PLAIN_OTHER;
-			}
-		}else if (type.equalsIgnoreCase("event")){
-			if (me){
-				return TYPE_EVENT_ME;
-			}else{
-				return TYPE_EVENT_OTHER;
-			}
-		}else{
-			if (me){
-				return TYPE_POLL_ME;
-			}else{
-				return TYPE_POLL_OTHER;
-			}
-		}*/
-
-		if (me){
-			return TYPE_PLAIN_ME;
-		}else{
-			return TYPE_PLAIN_OTHER;
-		}
+		page=2;
 	}
 
 	public Message getItem(int i){

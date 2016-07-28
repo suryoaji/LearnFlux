@@ -32,6 +32,15 @@ public class DatabaseFunction {
 		ds=null;
 	}
 
+	public static void insertSingleThread (Context c,Thread thread){
+		DataSource ds = new DataSource(c.getApplicationContext());
+		ds.open();
+		ds.createThread(thread);
+		//List<Thread> ts= ds.getAllThreadWithAllMessage();
+		ds.close();
+		ds=null;
+	}
+
 	public static List<Thread> getThreadList (Context c){
 		DataSource ds = new DataSource(c.getApplicationContext());
 		ds.open();

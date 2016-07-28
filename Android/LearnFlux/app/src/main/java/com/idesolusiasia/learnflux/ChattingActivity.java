@@ -4,10 +4,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,9 +26,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.idesolusiasia.learnflux.adapter.ChatBubbleAdapter;
+import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
 import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.util.Engine;
@@ -71,6 +75,14 @@ public class ChattingActivity extends BaseActivity {
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+
+		toolbar.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getApplicationContext(), "Toolbar title clicked", Toast.LENGTH_SHORT).show();
+				showParticipant();
+			}
+		});
 
 		ivScrollDown = (ImageView) findViewById(R.id.ivScrollDown);
 		ivScrollDown.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +167,7 @@ public class ChattingActivity extends BaseActivity {
 					Engine.sendMessage(ChattingActivity.this, idThread, etMessage.getText().toString(), new RequestTemplate.ServiceCallback() {
 						@Override
 						public void execute(JSONObject obj) {
-							initChatBubble();
+							refreshDB();
 							etMessage.setText("");
 						}
 					});
@@ -192,7 +204,7 @@ public class ChattingActivity extends BaseActivity {
 			}
 		});
 
-		initChatBubble();
+		refreshDB();
 		etMessage.clearFocus();
 
 
@@ -204,7 +216,7 @@ public class ChattingActivity extends BaseActivity {
 		@Override
 		public void run() {
 			try {
-				initChatBubble();
+				refreshDB();
 			} finally {
 				// 100% guarantee that this always happens, even if
 				// your update method throws an exception
@@ -221,126 +233,63 @@ public class ChattingActivity extends BaseActivity {
 		mHandler.removeCallbacks(r);
 	}
 
-	void initChatBubble(){
-		Log.i(TAG, "initChatBubble: ");
-
+	void refreshDB(){
 		Engine.getThreads(getApplicationContext(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
-				thread = DatabaseFunction.getThreadDetail(getApplicationContext(),idThread);
-				if (adap==null){
-					adap=new ChatBubbleAdapter(ChattingActivity.this,thread.getMessages());
-					listView.setAdapter(adap);
-					listView.setSelection(adap.getCount() - 1);
-					listView.refreshDrawableState();
-				}else{
-					boolean scroll = false;
-					boolean in = false;
-					if (positionLast>=(adap.getCount()-3)){
-						scroll=true;
-					}
-					for (int i=adap.getCount();i<thread.getMessages().size();i++){
-						adap.add(thread.getMessages().get(i));
-						in=true;
-					}
-					adap.notifyDataSetChanged();
-					if (scroll&&in){
-						listView.setSelection(adap.getCount() - 1);
-						listView.refreshDrawableState();
-					}
-
-				}
+				initChatBubble();
 			}
 		});
+	}
 
-
-
-
-
-		/*Engine.getThreadMessages(this, new RequestTemplate.ServiceCallback() {
-			@Override
-			public void execute(JSONObject obj) {
-				Log.i(TAG, obj.toString());
-				try {
-					ArrayList<ChatBubble> arr = new ArrayList<>();
-					JSONArray messages = obj.getJSONObject("data").getJSONArray("messages");
-					for (int i = 0; i <messages.length() ; i++) {
-						arr.add(gson.fromJson(messages.getJSONObject(i).toString(), PlainChatBubble.class));
-					}
-					if (adap==null){
-						adap=new ChatBubbleAdapter(ChattingActivity.this,arr);
-						listView.setAdapter(adap);
-						listView.setSelection(adap.getCount() - 1);
-						listView.refreshDrawableState();
-					}else{
-						boolean scroll = false;
-						boolean in = false;
-						if (positionLast>=(adap.getCount()-3)){
-							scroll=true;
-						}
-						for (int i=adap.getCount();i<arr.size();i++){
-							adap.add(arr.get(i));
-							in=true;
-
-						}
-						adap.notifyDataSetChanged();
-						if (scroll&&in){
-							listView.setSelection(adap.getCount() - 1);
-							listView.refreshDrawableState();
-						}
-
-					}
-
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+	void initChatBubble(){
+		//read from local database, compare with now shown adapter
+		thread = DatabaseFunction.getThreadDetail(getApplicationContext(),idThread);
+		if (adap==null){
+			adap=new ChatBubbleAdapter(ChattingActivity.this,thread.getMessages());
+			listView.setAdapter(adap);
+			listView.setSelection(adap.getCount() - 1);
+			listView.refreshDrawableState();
+		}else{
+			boolean scroll = false;
+			boolean in = false;
+			if (positionLast>=(adap.getCount()-3)){
+				scroll=true;
 			}
-		}, idThread);*/
+			for (int i=adap.getCount();i<thread.getMessages().size();i++){
+				adap.add(thread.getMessages().get(i));
+				in=true;
+			}
+			adap.notifyDataSetChanged();
+			if (scroll&&in){
+				listView.setSelection(adap.getCount() - 1);
+				listView.refreshDrawableState();
+			}
 
-		/*ArrayList<ChatBubble> arr = new ArrayList<>();
-		ChatBubble bubble;
-		Calendar cal = Calendar.getInstance();
-		cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),12,00);
-		bubble = new PlainChatBubble("plain", "me","","Agatha Cynthia",cal,false,"You would not believe it!! \n Guess who I met just now?");
-		arr.add(bubble);
+		}
+	}
 
-		cal = Calendar.getInstance();
-		cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),12,23);
-		bubble = new PlainChatBubble("plain", "other","","Agatha Cynthia",cal,true,"Who? Your killer teacher??");
-		arr.add(bubble);
+	void showParticipant(){
+		AlertDialog.Builder builderSingle = new AlertDialog.Builder(ChattingActivity.this);
+		builderSingle.setIcon(R.drawable.icon_groups);
+		builderSingle.setTitle("Participants");
 
-		cal = Calendar.getInstance();
-		cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),12,45);
-		Calendar eventTime=Calendar.getInstance();
-		eventTime.set(2016,4,2,12,0);
-		bubble = new EventChatBubble("event", "me","","Agatha Cynthia",cal,"Parent Meeting", "Galaxy Hall", "", eventTime, eventTime);
-		arr.add(bubble);
+		final PeopleAdapter arrayAdapter = new PeopleAdapter(
+				ChattingActivity.this,
+				thread.getParticipants());
 
-		cal = Calendar.getInstance();
-		cal.set(2016,4,25,13,32);
-		eventTime=Calendar.getInstance();
-		eventTime.set(2016,5,22,13,0);
-		cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),12,0);
-		bubble = new EventChatBubble("event", "other","","Agatha Cynthia",cal,"Parent Meeting", "Galaxy Hall", "", eventTime, eventTime);
-		arr.add(bubble);
+		builderSingle.setPositiveButton(
+				"OK",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
 
-		cal = Calendar.getInstance();
-		cal.set(2016,4,25,13,32);
-		cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),12,0);
-		ArrayList<String> choices = new ArrayList<>();
-		choices.add("Yes!");
-		choices.add("No :(");
-		choices.add("Maybe :|");
-		bubble = new PollChatBubble("poll", "me","","Agatha Cynthia",cal,"",choices,"Would you like to go to this event next year?");
-		arr.add(bubble);
-
-		bubble = new PollChatBubble("poll", "other","","Agatha Cynthia",cal,"",choices,"Would you like to go to this event next year?");
-		arr.add(bubble);
-
-		adap = new ChatBubbleAdapter(ChattingActivity.this,arr);
-		listView.setAdapter(adap);
-		listView.setSelection(adap.getCount() - 1);*/
-
+		builderSingle.setAdapter(
+				arrayAdapter,null);
+		builderSingle.show();
 	}
 
 	void addEventProcess(){

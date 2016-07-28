@@ -29,6 +29,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_PARTICIPANT_NAME = "name";
 	public static final String COLUMN_PARTICIPANT_IMAGE = "image";
 
+	public static final String TABLE_THREADMEMBER = "threadmember";
+	public static final String COLUMN_THREADMEMBER_THREADID = "threadid";
+	public static final String COLUMN_THREADMEMBER_PARTICIPANTID = "participantid";
+
 	// Database creation sql statement
 	private static final String DATABASE_CREATE_THREAD = "create table "
 			+ TABLE_THREAD + "("
@@ -53,6 +57,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+COLUMN_PARTICIPANT_IMAGE + " text"
 			+");";
 
+	private static final String DATABASE_CREATE_THREADMEMBER = "create table "
+			+ TABLE_THREADMEMBER + "("
+			+COLUMN_THREADMEMBER_THREADID + " text not null, "
+			+COLUMN_THREADMEMBER_PARTICIPANTID + " text not null,"
+			+"PRIMARY KEY("+COLUMN_THREADMEMBER_THREADID + ","+COLUMN_THREADMEMBER_PARTICIPANTID + ")"
+			+");";
+
 	public DatabaseHelper(Context context){
 		super(context,DATABASE_NAME,null,DATABASE_VERSION);
 	}
@@ -60,10 +71,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
-		//Log.i("message", DATABASE_CREATE_MESSAGE);
 		db.execSQL(DATABASE_CREATE_THREAD);
 		db.execSQL(DATABASE_CREATE_MESSAGE);
 		db.execSQL(DATABASE_CREATE_PARTICIPANT);
+		db.execSQL(DATABASE_CREATE_THREADMEMBER);
 	}
 
 	@Override
@@ -74,6 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THREAD);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARTICIPANT);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THREADMEMBER);
 		onCreate(db);
 	}
 
@@ -81,6 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THREAD);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARTICIPANT);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THREADMEMBER);
 		onCreate(db);
 	}
 }

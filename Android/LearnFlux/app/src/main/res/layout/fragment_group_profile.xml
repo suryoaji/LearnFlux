@@ -1,0 +1,60 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".GroupProfileFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" android:padding="10dp" android:layout_margin="10dp"
+    >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Art Consultant, Art Writer/Reviewer, Art Dealer, Art Conservator and Restorer, Art Teacher/Educator, Museum Researcher, Gallery/Museum Managers, Illustrator, Model and Prop Maker, Painter, Printmaker and more."
+            android:id="@+id/textView39"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Course: "
+            android:id="@+id/textView38" android:layout_below="@+id/textView39"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp" android:textColor="@color/colorPrimary"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall" android:text="Duration : 3 years"
+                  android:id="@+id/textView40"
+                  android:layout_alignTop="@+id/textView38"
+                  android:layout_toRightOf="@+id/textView38"
+                  android:layout_toEndOf="@+id/textView38"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall" android:text="Course: "
+                  android:id="@+id/textView41"
+                  android:textColor="@color/colorPrimary" android:layout_below="@+id/textView38"
+                  android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                  android:layout_marginTop="10dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text="Full Time" android:id="@+id/textView42"
+                  android:layout_alignBottom="@+id/textView41"
+                  android:layout_toRightOf="@+id/textView41"
+                  android:layout_toEndOf="@+id/textView41"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text="The study of Fine Arts is a process of continual debate and questioning; of exploring and interrogating set perspectives. This programme situates itself at the crossroads of contemporary Western and Asian cultures, acknowledging the demands of different worldviews. It unites specialised areas, from traditional disciplines to newer art forms, providing wider options of expression relevant to the global evolution of fine arts."
+                  android:id="@+id/textView43" android:layout_below="@+id/textView41"
+                  android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                  android:layout_marginTop="20dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp" android:id="@+id/view2"
+            android:layout_below="@+id/textView41" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_marginTop="10dp"
+            android:background="#a9a9a9"/>
+    </RelativeLayout>
+</ScrollView>

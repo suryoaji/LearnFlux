@@ -1,14 +1,22 @@
 package com.idesolusiasia.learnflux;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AlertDialog;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
@@ -25,13 +33,11 @@ import java.util.ArrayList;
 
 public class ConnectionFragment extends Fragment {
 
-	// TODO: Customize parameters
-	private int mColumnCount = 1;
 
-	RecyclerView recyclerView;
 
-	// TODO: Customize parameter initialization
-	@SuppressWarnings("unused")
+	ListView listView;
+	PeopleAdapter adap;
+
 	public static ConnectionFragment newInstance() {
 		ConnectionFragment fragment = new ConnectionFragment();
 		return fragment;
@@ -51,15 +57,80 @@ public class ConnectionFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_connection, container, false);
 
 		// Set the adapter
-		if (view instanceof RecyclerView) {
+		if (view instanceof ListView) {
 			Context context = view.getContext();
-			recyclerView = (RecyclerView) view;
-			if (mColumnCount <= 1) {
-				recyclerView.setLayoutManager(new LinearLayoutManager(context));
-			} else {
-				recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-			}
+			listView= (ListView) view;
 			getFriend();
+
+			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+					int[] ids = new int[]{adap.getItem(position).getId()};
+					Engine.createThread(getContext(), ids, adap.getItem(position).getFirstName(), new RequestTemplate.ServiceCallback() {
+						@Override
+						public void execute(JSONObject obj) {
+							try {
+								String id = obj.getJSONObject("data").getString("id");
+								Intent i = new Intent(getContext(),ChattingActivity.class);
+								i.putExtra("idThread",id);
+								startActivity(i);
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+			});
+
+			listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
+				@Override
+				public void onItemCheckedStateChanged(ActionMode mode, int position,
+				                                      long id, boolean checked) {
+					// Here you can do something when items are selected/de-selected,
+					// such as update the title in the CAB
+					adap.setSelected(position);
+					adap.notifyDataSetChanged();
+				}
+
+				@Override
+				public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+					// Respond to clicks on the actions in the CAB
+					switch (item.getItemId()) {
+						case R.id.new_group:
+							//deleteSelectedItems();
+							showInputGroupName();
+							mode.finish(); // Action picked, so close the CAB
+							return true;
+						default:
+							return false;
+					}
+				}
+
+				@Override
+				public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+					// Inflate the menu for the CAB
+					MenuInflater inflater = getActivity().getMenuInflater();
+					inflater.inflate(R.menu.connection, menu);
+					return true;
+				}
+
+				@Override
+				public void onDestroyActionMode(ActionMode mode) {
+					// Here you can make any necessary updates to the activity when
+					// the CAB is removed. By default, selected items are deselected/unchecked.
+					adap.clearSelection();
+					adap.notifyDataSetChanged();
+				}
+
+				@Override
+				public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+					// Here you can perform updates to the CAB due to
+					// an invalidate() request
+					return false;
+				}
+			});
 		}
 		return view;
 	}
@@ -76,7 +147,8 @@ public class ConnectionFragment extends Fragment {
 					}
 
 					if (p.size()>=0){
-						recyclerView.setAdapter(new PeopleAdapter(p));
+						adap = new PeopleAdapter(getContext(), p);
+						listView.setAdapter(adap);
 						DatabaseFunction.insertParticipant(getContext(),p);
 					}
 				} catch (JSONException e) {
@@ -85,5 +157,50 @@ public class ConnectionFragment extends Fragment {
 
 			}
 		});
+	}
+
+
+	public void showInputGroupName(){
+		final int[] ids = adap.getSelectedIds();
+
+		final EditText editText = new EditText(getContext());
+
+		editText.setHint("Group A");
+
+		new AlertDialog.Builder(getContext())
+				.setTitle("Group")
+				.setMessage("Please write the group name")
+				.setView(editText)
+				.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String text = editText.getText().toString();
+						if (!text.isEmpty()){
+							Engine.createThread(getContext(), ids, text, new RequestTemplate.ServiceCallback() {
+								@Override
+								public void execute(JSONObject obj) {
+									try {
+										String id = obj.getJSONObject("data").getString("id");
+										Intent i = new Intent(getContext(),ChattingActivity.class);
+										i.putExtra("idThread",id);
+										startActivity(i);
+									} catch (JSONException e) {
+										e.printStackTrace();
+									}
+
+								}
+							});
+						}
+					}
+				})
+				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.dismiss();
+					}
+				})
+				.show();
+	}
+
+	void createGroup(){
+
 	}
 }

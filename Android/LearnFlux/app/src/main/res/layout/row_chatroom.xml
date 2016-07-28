@@ -23,19 +23,6 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Fiore Chen"
                 android:id="@+id/tvChatRoomTitle" android:textStyle="bold"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=" - "
-                android:id="@+id/textView"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="14/06/2016"
-                android:id="@+id/tvDate" android:textSize="12dp"
-                android:layout_marginRight="5dp"/>
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
@@ -44,6 +31,13 @@
             android:text="I really want to watch that movie!"
             android:id="@+id/tvLastMessage" android:layout_marginTop="5dp" android:ellipsize="end"
             android:maxLines="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="14/06/2016"
+            android:id="@+id/tvDate" android:textSize="12dp"
+            android:layout_marginRight="5dp" android:layout_gravity="right"/>
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

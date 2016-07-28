@@ -39,6 +39,10 @@ public class DataSource {
 			DatabaseHelper.COLUMN_PARTICIPANT_NAME,
 			DatabaseHelper.COLUMN_PARTICIPANT_IMAGE};
 
+	private String[] allColumnsTHREADMEMBER = {
+			DatabaseHelper.COLUMN_THREADMEMBER_THREADID,
+			DatabaseHelper.COLUMN_THREADMEMBER_PARTICIPANTID};
+
 	public DataSource(Context context){
 		dbHelper = new DatabaseHelper(context);
 	}
@@ -68,6 +72,13 @@ public class DataSource {
 			if (t.getMessages()!=null){
 				for (Message m:t.getMessages()) {
 					createMessage(m, t.getId());
+				}
+			}
+
+			if (t.getParticipants()!=null){
+				for (Participant p:t.getParticipants()) {
+					createParticipant(p);
+					createThreadMember(t.getId(),p.getId());
 				}
 			}
 
@@ -117,6 +128,7 @@ public class DataSource {
 		cursor.close();
 
 		t.setMessages(getAllMessageByThread(t.getId()));
+		t.setParticipants(getParticipantByThreadID(t.getId()));
 		return t;
 	}
 	private Thread cursorToThread(Cursor cursor) {
@@ -193,14 +205,7 @@ public class DataSource {
 		values.put(DatabaseHelper.COLUMN_PARTICIPANT_ID,p.getId());
 		values.put(DatabaseHelper.COLUMN_PARTICIPANT_NAME,p.getFirstName());
 		values.put(DatabaseHelper.COLUMN_PARTICIPANT_IMAGE,p.getPhoto());
-		try {
-			db.insertOrThrow(DatabaseHelper.TABLE_PARTICIPANT,null,values);
-			//Log.d("participant", "insert");
-		}catch (SQLException e){
-			db.update(DatabaseHelper.TABLE_PARTICIPANT,values,DatabaseHelper.COLUMN_PARTICIPANT_ID+"=?",
-					new String[]{String.valueOf(p.getId())});
-			//Log.d("participant", "update");
-		}
+		db.insertWithOnConflict(DatabaseHelper.TABLE_PARTICIPANT,null,values,SQLiteDatabase.CONFLICT_IGNORE);
 	}
 	public void deleteParticipant(Participant p) {
 		String id = String.valueOf(p.getId());
@@ -229,5 +234,34 @@ public class DataSource {
 		p.setFirstName(cursor.getString(1));
 		p.setPhoto(cursor.getString(2));
 		return p;
+	}
+
+	//Thread Member
+	public void createThreadMember(String threadId, int participantId){
+		ContentValues values= new ContentValues();
+		values.put(DatabaseHelper.COLUMN_THREADMEMBER_THREADID,threadId);
+		values.put(DatabaseHelper.COLUMN_THREADMEMBER_PARTICIPANTID,participantId);
+		db.insertWithOnConflict(DatabaseHelper.TABLE_THREADMEMBER,null,values,SQLiteDatabase.CONFLICT_IGNORE);
+	}
+
+	public List<Participant> getParticipantByThreadID(String threadID){
+		ArrayList<Participant> participants = new ArrayList<>();
+		String query = "SELECT "+DatabaseHelper.COLUMN_PARTICIPANT_ID+","+DatabaseHelper.COLUMN_PARTICIPANT_NAME+","+DatabaseHelper.COLUMN_PARTICIPANT_IMAGE
+				+" FROM "+DatabaseHelper.TABLE_PARTICIPANT+" p, "+DatabaseHelper.TABLE_THREADMEMBER+" tm"
+				+" WHERE p."+DatabaseHelper.COLUMN_PARTICIPANT_ID+"=tm."+DatabaseHelper.COLUMN_THREADMEMBER_PARTICIPANTID
+				+" AND tm."+DatabaseHelper.COLUMN_THREADMEMBER_THREADID+"=?";
+
+		Cursor cursor =db.rawQuery(query, new String[]{String.valueOf(threadID)});
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Participant t = cursorToParticipant(cursor);
+			participants.add(t);
+			cursor.moveToNext();
+		}
+		// make sure to close the cursor
+		cursor.close();
+
+		return participants;
 	}
 }

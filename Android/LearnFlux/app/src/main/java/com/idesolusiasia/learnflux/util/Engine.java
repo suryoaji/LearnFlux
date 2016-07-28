@@ -44,7 +44,7 @@ public class Engine {
 					User.getUser().setAccess_token(obj.getString("access_token"));
 					User.getUser().setUsername(username);
 					User.getUser().setPassword(password);
-					Functions.saveLastSync(context,"0");
+					//Functions.saveLastSync(context,"0");
 					if (callback!=null){
 						callback.execute(obj);
 					}
@@ -160,14 +160,14 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj!=null){
-						Log.i("response_POST_MSG", obj.toString());
-						//Engine.getThreads(context,callback,0);
-						/*try {
-							Log.i("response_POST_MSG", obj.getJSONObject("data").getString("type"));
-							Log.i("response_POST_MSG", obj.getJSONObject("data").getString("id"));
+
+						try {
+							Thread t = Converter.convertThread(obj.getJSONObject("data"));
+							DatabaseFunction.insertSingleThread(context,t);
 						} catch (JSONException e) {
 							e.printStackTrace();
-						}*/if (callback!=null){
+						}
+						if (callback!=null){
 							callback.execute(obj);
 						}
 
@@ -180,7 +180,7 @@ public class Engine {
 
 	public static void getThreads(final Context context, final RequestTemplate.ServiceCallback callback){
 		String lastSync = Functions.getLastSync(context);
-		Log.i("lastSync", lastSync);
+		//Log.i("lastSync", lastSync);
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
 				context.getString(R.string.URL_MESSAGES)+"?lastSync="+lastSync;
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
@@ -195,9 +195,9 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 
-					Log.i("response_GET_Threads", obj.toString());
+					//Log.i("response_GET_Threads", obj.toString());
 					try {
-						Log.i("lastSync", "save "+obj.getString("lastSync"));
+						//Log.i("lastSync", "save "+obj.getString("lastSync"));
 						Functions.saveLastSync(context,obj.getString("lastSync"));
 
 						JSONArray array = obj.getJSONArray("data");
@@ -215,8 +215,6 @@ public class Engine {
 					}
 				}
 			},null);
-
-
 		}
 	}
 
@@ -239,7 +237,7 @@ public class Engine {
 			HashMap<String,String[]> hashMap = new HashMap<>();
 			hashMap.put("ids",ids);
 			JSONObject params = new JSONObject(hashMap);
-			Log.i("params_delete", params.toString());
+			//Log.i("params_delete", params.toString());
 			RequestTemplate.DELETEJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
