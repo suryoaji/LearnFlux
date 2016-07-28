@@ -1,6 +1,7 @@
 package com.idesolusiasia.learnflux.util;
 
 import com.google.gson.Gson;
+import com.idesolusiasia.learnflux.entity.Organizations;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.Thread;
 
@@ -18,5 +19,8 @@ public class Converter {
 
 	public static Participant convertPeople(JSONObject obj)throws JSONException{
 		return gson.fromJson(obj.toString(),Participant.class);
+	}
+	public static Organizations convertOrganizations(JSONObject obj)throws  JSONException{
+		return gson.fromJson(obj.toString(), Organizations.class);
 	}
 }

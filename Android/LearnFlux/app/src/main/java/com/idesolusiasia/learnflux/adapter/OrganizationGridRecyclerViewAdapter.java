@@ -16,17 +16,18 @@ import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Organizations;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by NAIT ADMIN on 12/04/2016.
  */
 public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<OrgTileHolder> {
-	private List<Organizations> itemList;
+	private final ArrayList<Organizations> organizations;
 	private Context context;
 
-	public OrganizationGridRecyclerViewAdapter(Context context, List<Organizations> itemList) {
-		this.itemList = itemList;
+	public OrganizationGridRecyclerViewAdapter(Context context, ArrayList<Organizations> orgs) {
+		this.organizations = orgs;
 		this.context = context;
 	}
 
@@ -40,18 +41,13 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 
 	@Override
 	public void onBindViewHolder(OrgTileHolder holder, int position) {
-		holder.tvName.setText(itemList.get(position).getName());
-		if(itemList.get(position).getThumb().equalsIgnoreCase("")){
-			holder.ivLogo.setImageResource(R.drawable.organization);
-		}else{
-			Picasso.with(context).load(itemList.get(position).getThumb()).into(holder.ivLogo);
-		}
-
+		holder.tvName.setText(organizations.get(position).getName());
+		holder.ivLogo.setDefaultImageResId(R.drawable.organization);
 	}
 
 	@Override
 	public int getItemCount() {
-		return this.itemList.size();
+		return organizations.size();
 	}
 }
 

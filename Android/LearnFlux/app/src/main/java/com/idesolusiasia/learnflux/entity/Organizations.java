@@ -16,14 +16,6 @@ public class Organizations {
     private String name;
     private String thumb;
 
-    public String getThumb() {
-        return thumb;
-    }
-
-    public void setThumb(String thumb) {
-        this.thumb = thumb;
-    }
-
     public String getType() {
         return type;
     }
@@ -46,5 +38,12 @@ public class Organizations {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setThumb(String thumb){
+        this.thumb = thumb;
+    }
+    public String getThumb(){
+        return thumb;
     }
 }

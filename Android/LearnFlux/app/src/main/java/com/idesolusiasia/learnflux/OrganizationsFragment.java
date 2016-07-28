@@ -11,7 +11,14 @@ import android.view.ViewGroup;
 
 import com.idesolusiasia.learnflux.adapter.OrganizationGridRecyclerViewAdapter;
 import com.idesolusiasia.learnflux.entity.Organizations;
+import com.idesolusiasia.learnflux.util.Converter;
+import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +26,8 @@ import java.util.List;
 public class OrganizationsFragment extends Fragment {
 
 	private GridLayoutManager lLayout;
+	OrganizationGridRecyclerViewAdapter rcAdapter;
+	RecyclerView rView;
 
 	public OrganizationsFragment() {
 		// Required empty public constructor
@@ -45,30 +54,38 @@ public class OrganizationsFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_organizations, container, false);
 
-		List<Organizations> rowListItem = new ArrayList<>();
 		lLayout = new GridLayoutManager(getContext(),2);
 
 
-		RecyclerView rView = (RecyclerView)v.findViewById(R.id.recycler_view);
+		rView = (RecyclerView)v.findViewById(R.id.recycler_view);
 		rView.setHasFixedSize(true);
 		rView.setLayoutManager(lLayout);
 		ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.item_offset);
 		rView.addItemDecoration(itemDecoration);
 
-		OrganizationGridRecyclerViewAdapter rcAdapter = new OrganizationGridRecyclerViewAdapter(getContext(), rowListItem);
-		rView.setAdapter(rcAdapter);
+		initOrganizations();
 		return v;
 	}
+	void initOrganizations(){
+		Engine.getOrganizations(getContext(), new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				try{
+					JSONArray array = obj.getJSONArray("data");
+					ArrayList<Organizations> arrOrg = new ArrayList<Organizations>();
+					for(int i=0;i<array.length();i++){
+						Organizations org = Converter.convertOrganizations(array.getJSONObject(i));
+						arrOrg.add(org);
+					}
+					rcAdapter = new OrganizationGridRecyclerViewAdapter(getContext(),arrOrg);
+					rView.setAdapter(rcAdapter);
+				}catch (JSONException e){
+					e.printStackTrace();
+				}
 
-	private List<String> getAllItemList() {
-		List<String> allItems = new ArrayList<String>();
-		allItems.add("Young Men's Christian Association");
-		allItems.add("SGCarer");
-		allItems.add("NAFA Alumni");
-
-		return allItems;
+			}
+		});
 	}
-
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
