@@ -22,18 +22,12 @@ import java.util.List;
 /**
  * Created by NAIT ADMIN on 12/04/2016.
  */
-public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<OrgTileHolder> {
-	private final ArrayList<Organizations> organizations;
+public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<OrganizationGridRecyclerViewAdapter.OrgTileHolder> {
+	public static ArrayList<Organizations> organizations = new ArrayList<>();
 	private Context context;
-
-	public OrganizationGridRecyclerViewAdapter(Context context, ArrayList<Organizations> orgs) {
-		this.organizations = orgs;
-		this.context = context;
-	}
 
 	@Override
 	public OrgTileHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
 		View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_organization, null);
 		OrgTileHolder rcv = new OrgTileHolder(layoutView);
 		return rcv;
@@ -49,32 +43,34 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 	public int getItemCount() {
 		return organizations.size();
 	}
-}
 
-class OrgTileHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class OrgTileHolder extends RecyclerView.ViewHolder {
 	public TextView tvName, tvLastSeen, tvCountMessage, tvCountEvent, tvCountActivities;
 	public NetworkImageView ivLogo;
 
-	public OrgTileHolder(View itemView) {
+	public OrgTileHolder(final View itemView) {
 		super(itemView);
-		itemView.setOnClickListener(this);
+		final int pos = getAdapterPosition();
 		tvName = (TextView) itemView.findViewById(R.id.tvName);
 		tvLastSeen = (TextView) itemView.findViewById(R.id.tvLastSeen);
 		tvCountMessage = (TextView) itemView.findViewById(R.id.tvCountMessage);
 		tvCountEvent = (TextView) itemView.findViewById(R.id.tvCountEvent);
 		tvCountActivities = (TextView) itemView.findViewById(R.id.tvCountActivities);
 		ivLogo = (NetworkImageView) itemView.findViewById(R.id.ivLogo);
-	}
-
-	@Override
-	public void onClick(View view) {
-		Toast.makeText(view.getContext(), tvName.getText() + " clicked", Toast.LENGTH_SHORT).show();
-		Intent i = new Intent(view.getContext(), OrgDetailActivity.class);
-		view.getContext().startActivity(i);
-		//Toast.makeText(view.getContext(), "Clicked Position = " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+		itemView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(view.getContext(), tvName.getText() + " clicked", Toast.LENGTH_SHORT).show();
+				Intent i = new Intent(view.getContext(), OrgDetailActivity.class);
+				i.putExtra("id", organizations.get(pos).getId());
+				view.getContext().startActivity(i);
+				//Toast.makeText(view.getContext(), "Clicked Position = " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
 		/*if (text.getText().toString().equalsIgnoreCase("chat")){
 			Intent i = new Intent(view.getContext(),ChatsActivity.class);
 			view.getContext().startActivity(i);
 		}*/
+			}
+		});
 	}
+}
 }
