@@ -25,5 +25,8 @@ public class OrgProfileActivity extends BaseActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
+		description = (TextView)findViewById(R.id.textView4);
+
+
 	}
 }

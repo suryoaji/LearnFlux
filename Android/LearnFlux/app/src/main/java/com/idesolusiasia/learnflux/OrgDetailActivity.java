@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
+	public String id;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents;
@@ -28,6 +30,8 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		super.onCreateDrawer(savedInstanceState);
 
 		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
+		id = getIntent().getStringExtra("id");
+		Log.i("TEST", "onCreate: " + id);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View childLayout = layoutInflater.inflate(
 				R.layout.activity_org_detail, null);
@@ -60,6 +64,8 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 			@Override
 			public void onClick(View view) {
 				Intent i = new Intent(OrgDetailActivity.this, OrgProfileActivity.class);
+				i.putExtra("id", id);
+				Log.i("Detail Activity", "onClick: " + id);
 				startActivity(i);
 			}
 		});
