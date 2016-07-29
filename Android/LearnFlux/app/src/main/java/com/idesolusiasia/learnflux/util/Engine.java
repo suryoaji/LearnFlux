@@ -386,6 +386,33 @@ public class Engine {
 			},null);
 		}
 	}
+	public static void getOrganizationProfile(final Context context, final RequestTemplate.ServiceCallback callback, final String idGroup){
+		String url= context.getString(R.string.BASE_URL)+ context.getString(R.string.URL_VERSION)+ context.getString(R.string.URL_ORGANIZATIONS_PROFILE, idGroup);
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context,null);
+		}else{
+			RequestTemplate.GETJsonRequest(context,url,null,new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					Log.i("Org_profile", "execute: " + obj.toString());
+					try{
+						JSONArray array = obj.getJSONArray("data");
+						for(int i=0;i<array.length();i++){
+							ArrayList<Organizations>arr = new ArrayList<Organizations>();
+							Organizations org = Converter.convertOrganizations(array.getJSONObject(i));
+							arr.add(org);
+						}
+						if(callback!=null){
+							callback.execute(obj);
+						}
+					}catch (JSONException e){
+						e.printStackTrace();
+					}
+				}
+			},null);
+		}
+	}
+
 
 
 
