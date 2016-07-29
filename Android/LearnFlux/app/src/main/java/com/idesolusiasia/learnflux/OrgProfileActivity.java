@@ -7,9 +7,21 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class OrgProfileActivity extends BaseActivity {
+import com.idesolusiasia.learnflux.entity.Organizations;
+import com.idesolusiasia.learnflux.util.Converter;
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+public class OrgProfileActivity extends BaseActivity {
+	public String id;
 	TextView description;
+	public Organizations organizations =null;
+	public ArrayList<Organizations> org = new ArrayList<>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,8 +37,23 @@ public class OrgProfileActivity extends BaseActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
+		id =  getIntent().getStringExtra("id");
 		description = (TextView)findViewById(R.id.textView4);
-
-
+		getProfile();
+	}
+	void getProfile(){
+		org = new ArrayList<>();
+		Engine.getOrganizationProfile(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				try{
+					JSONObject data = obj.getJSONObject("data");
+					organizations = Converter.convertOrganizations(data);
+					description.setText(organizations.getDescription());
+				}catch (JSONException e){
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
