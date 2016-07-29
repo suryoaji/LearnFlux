@@ -3,6 +3,7 @@ package com.idesolusiasia.learnflux.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,13 @@ import java.util.List;
  * Created by NAIT ADMIN on 12/04/2016.
  */
 public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<OrganizationGridRecyclerViewAdapter.OrgTileHolder> {
-	public static ArrayList<Organizations> organizations = new ArrayList<>();
+	public ArrayList<Organizations> organizations = new ArrayList<>();
 	private Context context;
 
+	public OrganizationGridRecyclerViewAdapter(Context context, ArrayList<Organizations> orgs) {
+		this.organizations = orgs;
+		this.context = context;
+	}
 	@Override
 	public OrgTileHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_organization, null);
@@ -35,7 +40,8 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 
 	@Override
 	public void onBindViewHolder(OrgTileHolder holder, int position) {
-		holder.tvName.setText(organizations.get(position).getName());
+		final Organizations org= organizations.get(position);
+		holder.tvName.setText(org.getName());
 		holder.ivLogo.setDefaultImageResId(R.drawable.organization);
 	}
 
@@ -50,7 +56,6 @@ public class OrgTileHolder extends RecyclerView.ViewHolder {
 
 	public OrgTileHolder(final View itemView) {
 		super(itemView);
-		final int pos = getAdapterPosition();
 		tvName = (TextView) itemView.findViewById(R.id.tvName);
 		tvLastSeen = (TextView) itemView.findViewById(R.id.tvLastSeen);
 		tvCountMessage = (TextView) itemView.findViewById(R.id.tvCountMessage);
@@ -60,6 +65,7 @@ public class OrgTileHolder extends RecyclerView.ViewHolder {
 		itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				final int pos = getAdapterPosition();
 				Toast.makeText(view.getContext(), tvName.getText() + " clicked", Toast.LENGTH_SHORT).show();
 				Intent i = new Intent(view.getContext(), OrgDetailActivity.class);
 				i.putExtra("id", organizations.get(pos).getId());
