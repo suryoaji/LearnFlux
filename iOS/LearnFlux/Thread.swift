@@ -47,7 +47,19 @@ class Thread: NSObject {
     }
     
     func addMessage(message: ThreadMessage){
-        self.messages?.append(message)
+        if self.messages != nil{
+            self.messages!.append(message)
+        }else{
+            self.messages = [message]
+        }
+    }
+    
+    func addMessages(messages: [ThreadMessage]){
+        if self.messages != nil{
+            self.messages! += messages
+        }else{
+            self.messages = messages
+        }
     }
     
     func setPropertyMessages(messages: Array<Dictionary<String, AnyObject>>){
@@ -77,5 +89,22 @@ class Thread: NSObject {
     func setMetaMessage(dicMessage: Dictionary<String, AnyObject>)-> Dictionary<String, AnyObject>{
         let text = dicMessage["body"] as! String
         return ["type":"chat", "data":text, "important": "no"]
+    }
+    
+    static func getMessagesFromArr(arr: Array<Dictionary<String, AnyObject>>)-> [ThreadMessage]?{
+        var arrMessages : [ThreadMessage] = []
+        for message in arr{
+            if let text = message["body"], let timestamp = message["created_at"], let sender = message["sender"]{
+                if let sText = text as? String, let dTimestamp = timestamp as? Double, let dSender = sender as? Dictionary<String, AnyObject>{
+                    let message = JSQMessage(senderId: String(dSender["id"] as! Int), senderDisplayName: "(need to be maintained)", date: NSDate(timeIntervalSince1970: dTimestamp), text: sText)
+                    let messageMeta = ["data" : sText, "important" : "no", "type" : "chat"]
+                    arrMessages.append((message: message, meta: messageMeta))
+                }
+            }
+        }
+        if !arrMessages.isEmpty{
+            return arrMessages
+        }
+        return nil
     }
 }

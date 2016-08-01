@@ -275,6 +275,31 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         self.updateChatView()
     }
     
+    func callGetNewMessages(lastSync: Double? = nil){
+        var userInfo : Dictionary<String, AnyObject> = [:]
+        if lastSync != nil{
+            userInfo["lastSync"] = lastSync
+        }else{
+            if let cacheLastSync = Engine.clientData.cacheLastSyncThreads(){
+                userInfo["lastSync"] = cacheLastSync
+            }else{
+                userInfo["lastSync"] = NSDate().timeIntervalSince1970
+            }
+        }
+        NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
+    }
+    
+    func getNewMessages(timer: NSTimer){
+        Engine.getNewMessages(self, indexpath: rowIndexPathFromThread, lastSync: timer.userInfo!["lastSync"] as! Double){status, newMessage, lastSync in
+            if let conNewMessage = newMessage{
+                self.messages += conNewMessage
+                Engine.clientData.getMyThreads()![self.rowIndexPathFromThread].addMessages(conNewMessage)
+                self.finishSendingMessageAnimated(true)
+            }
+            self.callGetNewMessages(lastSync)
+        }
+    }
+    
     func createLayoutChatRoom(){
         setBubbleColorForChatContainers()
         setButtonAttachmentNImportantChatToolbar()
@@ -284,6 +309,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         if openedBy == From.OpenChat{
             loadMessages()
         }
+        callGetNewMessages()
     }
     
     override func viewDidLoad() {
@@ -757,7 +783,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         importantButtonTouched();
         Engine.addMessage(self.chatId, message: text){status, JSON in
             if status == .Success{
-                print("send success")
+                Engine.clientData.getMyThreads()![self.rowIndexPathFromThread].addMessage((message: message, meta: messageMeta))
             }
         }
     }

@@ -368,6 +368,26 @@ class Engine : NSObject {
         }
     }
     
+    static func getNewMessages(viewController: UIViewController? = nil, indexpath: Int, lastSync: Double, callback: ((status: RequestStatusType, newMessage: [Thread.ThreadMessage]?, lastSync: Double)->Void)? = nil) {
+        let param = ["lastSync" : String(lastSync)]
+        makeRequestAlamofire(viewController, method: .GET, url: Url.messages, param: param) { status, rawJSON in
+            print()
+            if (rawJSON != nil) {
+                if (rawJSON!.valueForKey("data") != nil) {
+                    let threads = rawJSON!.valueForKey("data")! as! Array<Dictionary<String, AnyObject>>
+                    if let rawMessages = threads[indexpath]["messages"]{
+                        let messages = rawMessages as! Array<Dictionary<String, AnyObject>>
+                        if let result = Thread.getMessagesFromArr(messages){
+                            if (callback != nil) { callback! (status: status, newMessage: result, lastSync: rawJSON!["lastSync"]! as! Double) }
+                            return
+                        }
+                    }
+                }
+                if (callback != nil) { callback! (status: status, newMessage: nil, lastSync: rawJSON!["lastSync"]! as! Double) }
+            }
+        }
+    }
+    
 //    static func sendThreadMessage (viewController: UIViewController? = nil, threadId: String, body: String, callback: JSONreturn? = nil) {
 //        let param = ["body":body];
 //        //        makeRequest2(viewController, method: .POST, url: Url.messages + "/" + threadId, param: param) { status, JSON in
