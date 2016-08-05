@@ -21,7 +21,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
     var oriCellHeight : CGFloat! = 0;
     var expDescHeight : Array<CGFloat> = [];
     var holdView = UIView()
-    var events : [Event]?
+    let clientData = Engine.clientData
     
     @IBOutlet var tv : UITableView!;
     
@@ -30,7 +30,18 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
         holdView.backgroundColor = UIColor(white: 0.93, alpha: 1.0)
         target.view.addSubview(holdView)
         Engine.getEvents(target){ status, JSON in
-            self.events = Engine.getMyEvents()
+            if let events = self.clientData.getMyEvents(){
+                var countLoaded = 0
+                for eachEvent in events{
+                    Engine.getEventDetail(self, event: eachEvent){ status, JSON in
+                        countLoaded += 1
+                        if countLoaded >= events.count{
+                            self.tv.reloadData()
+                        }
+                        
+                    }
+                }
+            }
             self.tv.reloadData()
         }
     }
@@ -42,8 +53,8 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func viewShown(notification: NSNotification){
-        if holdView.superview != nil && self.events != nil{
-            if !self.events!.isEmpty{
+        if holdView.superview != nil && Engine.clientData.getMyEvents() != nil{
+            if !self.clientData.getMyEvents()!.isEmpty{
                 self.holdView.removeFromSuperview()
             }
         }
@@ -79,7 +90,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.events != nil ? self.events!.count : 0
+        return clientData.getMyEvents() != nil ? clientData.getMyEvents()!.count : 0
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -119,18 +130,21 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
             btnExpand.hidden = false;
         }
         
-        if events != nil{
+        if clientData.getMyEvents() != nil{
             let lblTitle = cell.viewWithTag(1) as! UILabel
             let lblDay = cell.viewWithTag(22) as! UILabel
             let lblMonth = cell.viewWithTag(21) as! UILabel
             let lblYear = cell.viewWithTag(23) as! UILabel
             let lblHour = cell.viewWithTag(24) as! UILabel
-            lblTitle.text = "\(events![indexPath.row].type)"
+            let lblLocation = cell.viewWithTag(2) as! UILabel
+            lblTitle.text = "\(clientData.getMyEvents()![indexPath.row].title)"
+            lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: clientData.getMyEvents()![indexPath.row].time)!)
+            lblDay.text = "\(Util.getElementDate(.Day, stringDate: clientData.getMyEvents()![indexPath.row].time)!)"
+            lblYear.text = "\(Util.getElementDate(.Year, stringDate: clientData.getMyEvents()![indexPath.row].time)!)"
+            lblHour.text = "\(Util.getElementDate(.Hour, stringDate: clientData.getMyEvents()![indexPath.row].time)!):\(Util.getElementDate(.Minute, stringDate: clientData.getMyEvents()![indexPath.row].time)!)"
+            lblLocation.text = clientData.getMyEvents()![indexPath.row].location
+            lblDesc.text = clientData.getMyEvents()![indexPath.row].details
             
-            lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: events![indexPath.row].time)!)
-            lblDay.text = "\(Util.getElementDate(.Day, stringDate: events![indexPath.row].time)!)"
-            lblYear.text = "\(Util.getElementDate(.Year, stringDate: events![indexPath.row].time)!)"
-            lblHour.text = "\(Util.getElementDate(.Hour, stringDate: events![indexPath.row].time)!):\(Util.getElementDate(.Minute, stringDate: events![indexPath.row].time)!)"
         }
         
         return cell;

@@ -65,30 +65,65 @@ class Thread: NSObject {
     func setPropertyMessages(messages: Array<Dictionary<String, AnyObject>>){
         var conMessages : [ThreadMessage] = []
         for eachDict in messages{
-            if let message = self.setMessage(eachDict){
+            if let message = self.setThreadMessage(eachDict){
                 conMessages.append(message)
             }
         }
         self.messages = conMessages
     }
     
-    func setMessage(dicMessage: Dictionary<String, AnyObject>)-> (ThreadMessage)?{
+    func setThreadMessage(dicMessage: Dictionary<String, AnyObject>)-> (ThreadMessage)?{
         if let tSender = dicMessage["sender"], let tRawDate = dicMessage["created_at"], let tText = dicMessage["body"]{
             let senderMessage = tSender as! Dictionary<String, AnyObject>
             let senderId = String(senderMessage["id"] as! Int)
             let rawDate = tRawDate as! Double
             let date = NSDate(timeIntervalSince1970: rawDate)
             let text = tText as! String
-            let message = JSQMessage(senderId: senderId, senderDisplayName: "(need to be maintained)", date: date, text: text)
-            let meta = self.setMetaMessage(dicMessage)
+            let message = setJSQMessage(senderId, text: text, reference: dicMessage["reference"], date: date)
+            let meta = self.setMetaMessage(dicMessage["reference"], text: text)
             return (message: message, meta: meta)
         }
         return nil
     }
     
-    func setMetaMessage(dicMessage: Dictionary<String, AnyObject>)-> Dictionary<String, AnyObject>{
-        let text = dicMessage["body"] as! String
+    func setJSQMessage(senderId: String,text: String, reference: AnyObject?, date: NSDate) -> (JSQMessage){
+        if let rawReference = reference{
+            return JSQMessage(senderId: senderId, senderDisplayName: "(need to be maintained)", date: date, text: textFromRef(rawReference as! Dictionary<String, AnyObject>))
+        }
+        return JSQMessage(senderId: senderId, senderDisplayName: "(need to be maintained)", date: date, text: text)
+    }
+    
+    func setMetaMessage(reference: AnyObject?, text: String)-> (Dictionary<String, AnyObject>){
+        if let rawReference = reference{
+            return metaFromRef(rawReference as! Dictionary<String, AnyObject>)
+        }
         return ["type":"chat", "data":text, "important": "no"]
+    }
+    
+    func textFromRef(ref: Dictionary<String, AnyObject>) -> (String){
+        let detail = ref["details"] as! String
+        let title = ref["title"] as! String
+        let rawDate = Util.getDateFromTimestamp(ref["timestamp"] as! Double)
+        let date = rawDate.date
+        let time = rawDate.time
+        let location = ref["location"] as! String
+        return "📅 EVENT\n\n\(detail). Tap here to interact.\n\n" +
+               "\(title)\n" +
+               "\(date)\n" +
+               "\(time)\n" +
+               "\(location)"
+    }
+    
+    func metaFromRef(ref: Dictionary<String, AnyObject>) -> (Dictionary<String, AnyObject>){
+        var dict : Dictionary<String, AnyObject> = [:]
+        let type = ref["type"] as! String
+        dict["location"] = ref["location"] as! String
+        dict["title"] = ref["title"] as! String
+        dict["duration"] = "120"
+        let rawDate = Util.getDateFromTimestamp(ref["timestamp"] as! Double)
+        dict["date"] = rawDate.date
+        dict["time"] = rawDate.time
+        return ["type": type, "data":dict, "important": "no"]
     }
     
     static func getMessagesFromArr(arr: Array<Dictionary<String, AnyObject>>)-> [ThreadMessage]?{

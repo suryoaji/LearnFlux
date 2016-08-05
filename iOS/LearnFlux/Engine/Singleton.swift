@@ -30,8 +30,7 @@ class Data : NSObject {
     private let clientSecret = "2hwdia2smbk00sko0wokowcwokswc0k448gsk0okwswcsgcw0g";
     private let scope = "internal";
     
-    private var username = "admin";
-    private var password = "admin";
+    private var refreshToken : String! = ""
     
     private var accessToken : String! = "";
     
@@ -97,23 +96,12 @@ class Data : NSObject {
     func makeEventsArr(rawArr : Array<Dictionary<String, AnyObject>>) -> ([Event]){
         var tempEvents : [Event] = []
         for dicEvent in rawArr{
-            let event = convertToEvent(dicEvent)
+            let event = Event.convertToEvent(dicEvent)
             if let inEvent = event{
                 tempEvents.append(inEvent)
             }
         }
         return tempEvents
-    }
-    
-    func convertToEvent(dict: Dictionary<String, AnyObject>) -> (Event?){
-        if let id = dict["id"], let type = dict["type"], let timestamp = dict["timestamp"], let by = dict["created_by"]{
-            if let sId = id as? String, let sType = type as? String, let dTimestamp = timestamp as? Double, let dBy = by as? Dictionary<String, AnyObject>{
-                let date = NSDate(timeIntervalSince1970: dTimestamp)
-                let eventBy : Event.User = (id: String(dBy["id"]!), type: String(dBy["type"]!), link: String(dBy["link"]!))
-                return Event(type: sType, id: sId, time: String(date), eventBy: eventBy)
-            }
-        }
-        return nil
     }
     
     func cacheThreads() -> (Array<Dictionary<String, AnyObject>>)?{
@@ -159,25 +147,17 @@ class Data : NSObject {
     func getAccessToken()->(String){
         return self.accessToken
     }
-    
-    func setPassword(string: String){
-        self.password = string
-    }
-    
-    func getPassword()->(String){
-        return self.password
-    }
-    
-    func setUsername(string: String){
-        self.username = string
-    }
-    
-    func getUsername()->(String){
-        return self.username
-    }
-    
+
     func getScope()->(String){
         return self.scope
+    }
+    
+    func getRefreshToken() -> String{
+        return self.refreshToken
+    }
+    
+    func setRefreshToken(token: String){
+        self.refreshToken = token
     }
     
     func getClientSecret()->(String){

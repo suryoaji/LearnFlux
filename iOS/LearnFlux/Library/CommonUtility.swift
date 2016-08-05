@@ -50,6 +50,21 @@ class Util : NSObject {
         }
     }
     
+    static func getDateFromTimestamp(timestamp: Double) -> (date: String, time: String){
+        let date = NSDate(timeIntervalSince1970: timestamp)
+        let dateFormatter : NSDateFormatter = {
+            let tmpFormatter = NSDateFormatter()
+            tmpFormatter.dateStyle = .LongStyle
+            return tmpFormatter
+        }()
+        let timeFormatter : NSDateFormatter = {
+            let tmpFormatter = NSDateFormatter()
+            tmpFormatter.timeStyle = .ShortStyle
+            return tmpFormatter
+        }()
+        return (date: dateFormatter.stringFromDate(date), time: timeFormatter.stringFromDate(date))
+    }
+    
     static func dateFromString(string: String)->NSDate?{
         let formatter = NSDateFormatter()
         formatter.dateFormat = "yy-MM-dd HH:mm:ss +0000"

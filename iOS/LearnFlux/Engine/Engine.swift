@@ -60,13 +60,6 @@ class Engine : NSObject {
     }
     
     private static func statusMaker (statusCode : Int?, JSON : AnyObject?)->RequestStatusType {
-        if let json = JSON{
-            if let dicJSON = json as? NSDictionary{
-                if (dicJSON.objectForKey("error") != nil || dicJSON.objectForKey("errors") != nil) {
-                    return .CustomError;
-                }
-            }
-        }
         if (statusCode == nil) {
             return .GeneralError;
         }
@@ -75,9 +68,18 @@ class Engine : NSObject {
             case 200...299: return .Success;
             case 401: return .InvalidAccessToken;
             case 500: return .ServerError;
-            default: return .GeneralError;
+            default: if let json = JSON{
+                if let dicJSON = json as? NSDictionary{
+                    if (dicJSON.objectForKey("error") != nil || dicJSON.objectForKey("errors") != nil) {
+                        return .CustomError;
+                    }
+                }
+            }else{
+                return .GeneralError
+                }
             }
         }
+        return .GeneralError
     }
     
     private static func makeQueryString (param: Dictionary<String,AnyObject>)->String {
@@ -91,23 +93,35 @@ class Engine : NSObject {
         return result;
     }
     
-    static func makeToken (viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
-        var mparam : Dictionary<String,AnyObject> = (param != nil ? param! : [:])
-        mparam["grant_type"] = "password";
-        mparam["client_id"] = clientData.getClientID()
-        mparam["client_secret"] = clientData.getClientSecret()
-        mparam["username"] = clientData.getUsername()
-        mparam["password"] = clientData.getPassword()
-        mparam["scope"] = clientData.getScope()
-        let urlReq = createURLRequest(url, method: method, param: mparam)
-        self.makeRequestAlamofire(viewController, method: method, url: urlReq.URLString, param: method == .GET ? nil : mparam, requestType: .MakeToken, callback: callback)
+    static func updateTokenParam(param: Dictionary<String, AnyObject>?) -> (Dictionary<String, AnyObject>?){
+        if let param = param{
+            var mparam = param
+            mparam["client_id"] = clientData.getClientID()
+            mparam["client_secret"] = clientData.getClientSecret()
+            mparam["scope"] = clientData.getScope()
+            mparam["grant_type"] = mparam["password"] != nil ? "password" : "refresh_token"
+            return mparam
+        }else{
+            return nil
+        }
     }
     
-    static func refreshToken (viewController: UIViewController? = nil, callback: JSONreturn? = nil) {
-        self.makeToken(viewController, method: .GET, url: Url.token, param: nil) { status, JSON in
+    static func makeToken (viewController: UIViewController? = nil, method : Alamofire.Method = .GET, url: String = Url.token, param: Dictionary<String,AnyObject>?, callback: JSONreturn? = nil) {
+        let newParam = updateTokenParam(param)
+        let urlReq = createURLRequest(url, method: method, param: newParam)
+        self.makeRequestAlamofire(viewController, method: method, url: urlReq.URLString, param: method == .GET ? nil : newParam, requestType: .MakeToken, callback: { status, JSON in
+            if status == .Success{
+                clientData.setRefreshToken(JSON!["refresh_token"] as! String)
+                clientData.setAccessToken(JSON!["access_token"] as! String)
+            }
+            if callback != nil { callback!(status, JSON) }
+        })
+    }
+    
+    static func refreshToken (viewController: UIViewController? = nil, callback: JSONreturn? = nil){
+        self.makeToken(viewController, method: .GET, url: Url.token, param: ["refresh_token" : clientData.getRefreshToken()]) { status, JSON in
             if (status == .Success) {
-                clientData.setAccessToken(JSON!["access_token"]! as! String)
-                dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (status, JSON); } } );
+                dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (status, JSON); } } )
             }
         }
     }
@@ -205,10 +219,8 @@ class Engine : NSObject {
         return headers
     }
     
-    static func login (viewController: UIViewController? = nil, username : String, password : String, callback: JSONreturn? = nil) {
-        clientData.setUsername(username)
-        clientData.setPassword(password)
-        refreshToken(viewController) { status, JSON in
+    static func login(viewController: UIViewController? = nil, username : String, password : String, callback: JSONreturn? = nil) {
+        makeToken(viewController, param: ["username" : username, "password": password]) { status, JSON in
             if (JSON == nil) {
                 if (status == .GeneralError) {
                     Util.showMessageInViewController(viewController, title: "Cannot login", message: "Please check your username or password.") {
@@ -232,24 +244,27 @@ class Engine : NSObject {
         }
     }
     
-    private static func setMyEvents(events: Array<Dictionary<String, AnyObject>>){
-        clientData.setMyEvents(events)
-    }
-    
-    static func getMyEvents() -> [Event]?{
-        return clientData.getMyEvents()
-    }
-    
     static func getEvents(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
         makeRequestAlamofire(viewController, url: Url.events, param: nil){ status, dataJSON in
             if let rawJSON = dataJSON{
                 let json = JSON(rawJSON).dictionaryObject
                 if let data = json?["data"]{
                     let arrData = data as! Array<Dictionary<String, AnyObject>>
-                    self.setMyEvents(arrData)
+                    clientData.setMyEvents(arrData)
                 }
             }
             if callback != nil{ callback!(status, dataJSON) }
+        }
+    }
+    
+    static func getEventDetail(viewController: UIViewController? = nil, event: Event, callback: JSONreturn? = nil){
+        makeRequestAlamofire(viewController, url: Url.events + "/\(event.id)", param: nil){ status, JSON in
+            if status == .Success{
+                if let dictJSON = JSON!["data"] as? Dictionary<String, AnyObject>{
+                    event.updateMe(dictJSON)
+                }
+            }
+            if callback != nil { callback!(status, JSON) }
         }
     }
     

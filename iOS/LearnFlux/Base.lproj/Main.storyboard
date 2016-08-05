@@ -1342,10 +1342,10 @@ Coming soon</string>
             </objects>
             <point key="canvasLocation" x="3764" y="939"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Chat Tab Bar Controller-->
         <scene sceneID="qGg-5R-WqV">
             <objects>
-                <tabBarController id="Rh2-Qn-7zs" sceneMemberID="viewController">
+                <tabBarController id="Rh2-Qn-7zs" customClass="chatTabBarController" customModule="LearnFlux" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="T0C-AJ-tmu"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="8Ia-Kd-aMI">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -2257,7 +2257,7 @@ Need to be sizefit</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.94999999999999996" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="5qU-4x-f0r">
-                            <rect key="frame" x="0.0" y="243" width="320" height="0.0"/>
+                            <rect key="frame" x="0.0" y="179" width="320" height="0.0"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
@@ -2628,7 +2628,7 @@ Polling Title</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.96538342927631582" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="lIu-2Y-Gu4">
-                            <rect key="frame" x="0.0" y="325" width="320" height="0.0"/>
+                            <rect key="frame" x="0.0" y="261" width="320" height="0.0"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
@@ -3125,7 +3125,7 @@ Coming soon</string>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="4Kv-ZS-f2o"/>
-        <segue reference="Guw-pm-99z"/>
         <segue reference="slP-p0-8EU"/>
+        <segue reference="on3-J5-sau"/>
     </inferredMetricsTieBreakers>
 </document>

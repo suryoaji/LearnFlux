@@ -12,7 +12,7 @@ import CZPicker
 
 //import JSMessageBubbleImage
 
-class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPollReturnDelegate, CZPickerViewDataSource, CZPickerViewDelegate {
+class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPollReturnDelegate {
     // MARK: Properties
     enum From{
         case CreateThread
@@ -36,18 +36,9 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     var messages : [Thread.ThreadMessage] = []
     var messagesSelection = [String]();
-    var outgoingBubbleImageView,
-    outgoingBubbleImageViewEvent,
-    outgoingBubbleImageViewPoll,
-    outgoingBubbleImageViewImportant,
-    incomingBubbleImageView,
-    incomingBubbleImageViewEvent,
-    incomingBubbleImageViewPoll,
-    incomingBubbleImageViewImportant : JSQMessagesBubbleImage!
     var attachmentPanelOld : UIView!;
     @IBOutlet var attachmentPanel : UIView!;
     @IBOutlet var pulldownPanel : UIView!;
-    var avatars : NSMutableDictionary!;
     let scrHeight = UIScreen.mainScreen().bounds.height;
     let scrWidth = UIScreen.mainScreen().bounds.width;
     
@@ -176,27 +167,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
 //        print ("should finish sending message? \(shouldFinishSendingMessage)");
     }
     
-    private func setBubbleColorForChatContainers() {
-        let factory = JSQMessagesBubbleImageFactory()
-        outgoingBubbleImageView = factory.outgoingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleGreenColor())
-        incomingBubbleImageView = factory.incomingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleLightGrayColor())
-        outgoingBubbleImageViewEvent = factory.outgoingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleBlueColor())
-        outgoingBubbleImageViewPoll = factory.outgoingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleBlueColor())
-        outgoingBubbleImageViewImportant = factory.outgoingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleRedColor())
-        incomingBubbleImageViewEvent = factory.incomingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleBlueColor())
-        incomingBubbleImageViewPoll = factory.incomingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleBlueColor())
-        incomingBubbleImageViewImportant = factory.incomingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleRedColor())
-        
-    }
-    
     func setButtonAttachmentNImportantChatToolbar(){
         let height = self.inputToolbar.contentView.leftBarButtonContainerView.frame.size.height
         var image = UIImage(named: "clip-18.png");
@@ -219,17 +189,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         //        self.inputToolbar.contentView.rightBarButtonItem.setTitle("", forState: .Normal)
         self.inputToolbar.contentView.leftBarButtonItem.hidden = true
         //        self.inputToolbar.contentView.rightBarButtonItem.hidden = false;
-    }
-    
-    func setAvatarChat(){
-        let img = UIImage(named: "male07.png");
-        let aimg = JSQMessagesAvatarImageFactory.circularAvatarImage(img, withDiameter:48);
-        let img2 = UIImage(named: "male01.png");
-        let aimg2 = JSQMessagesAvatarImageFactory.circularAvatarImage(img2, withDiameter:48);
-        let placeholder = UIImage(named: "user_male-24");
-        avatars = NSMutableDictionary();
-        avatars.setValue(JSQMessagesAvatarImage(avatarImage:aimg, highlightedImage: aimg, placeholderImage: placeholder), forKey: aDelegate.userId);
-        avatars.setValue(JSQMessagesAvatarImage(avatarImage:aimg2, highlightedImage: aimg2, placeholderImage: placeholder), forKey: "2");
     }
     
     func initAttachmentPanel() {
@@ -286,7 +245,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
                 userInfo["lastSync"] = NSDate().timeIntervalSince1970
             }
         }
-        NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
+        timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
     }
     
     func getNewMessages(timer: NSTimer){
@@ -301,9 +260,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     }
     
     func createLayoutChatRoom(){
-        setBubbleColorForChatContainers()
         setButtonAttachmentNImportantChatToolbar()
-        setAvatarChat()
         setAttachmentNPulldownPanelPosition()
         setChatRoomInfo()
         if openedBy == From.OpenChat{
@@ -334,6 +291,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(true)
+        timer.invalidate()
         self.removeAllObserver()
     }
     
@@ -482,182 +440,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
 //        self.view.window?.endEditing(true);
     }
     
-    override func collectionView(collectionView: UICollectionView,
-                                 numberOfItemsInSection section: Int) -> Int {
-        return messages.count
-    }
-    
-    override func collectionView(collectionView: JSQMessagesCollectionView!,
-                                 messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
-        return messages[indexPath.item].message
-    }
-    
-    override func collectionView(collectionView: UICollectionView,
-                                 cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath)
-            as! JSQMessagesCollectionViewCell
-        
-        let message = messages[indexPath.item]
-        
-        if message.message.senderId == senderId {
-            cell.textView!.textColor = UIColor.whiteColor()
-        } else {
-            cell.textView!.textColor = UIColor.blackColor()
-        }
-        cell.setIndexpathIdentifier(indexPath.row)
-        return cell
-    }
-    
-    override func collectionView(collectionView: JSQMessagesCollectionView!,
-                                 messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
-        let message = messages[indexPath.item].message // 1
-        let messageMeta = messages[indexPath.item].meta;
-        //        print ("\(indexPath.row) = " + messageMeta.stringForKey("important"));
-        if message.senderId == senderId { // 2
-            if ((messageMeta["type"]! as! String) == "event") {
-                return outgoingBubbleImageViewEvent;
-            }
-            else if ((messageMeta["type"]! as! String) == "poll") {
-                return outgoingBubbleImageViewPoll;
-            }
-            else if ((messageMeta["type"]! as! String) == "chat") {
-                if (messageMeta["important"]! as! String == "yes") {
-                    return outgoingBubbleImageViewImportant;
-                }
-                else {
-                    return outgoingBubbleImageView;
-                }
-            }
-            else {
-                return outgoingBubbleImageView
-            }
-        } else { // 3
-            return incomingBubbleImageView
-        }
-    }
-    
-    override func collectionView(collectionView: JSQMessagesCollectionView!,
-                                 avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
-        return avatars.valueForKey("2") as! JSQMessagesAvatarImage;
-        //        return avatars.valueForKey(messages[indexPath.row].senderId) as! JSQMessagesAvatarImage;
-        //        return nil;
-    }
-    
-    override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
-        self.inputToolbar.contentView.textView.resignFirstResponder()
-        let messageMeta = messages[indexPath.row].meta;
-        let eventType = messageMeta["type"]! as! String;
-        if (eventType == "event") {
-            //            let event = messageMeta["data"]! as! Dictionary<String, AnyObject>
-            popupEvent(indexPath.row)
-        }
-        else if (eventType == "poll") {
-            //            let poll = messageMeta["data"]! as! Dictionary<String, AnyObject>;
-            popupPoll(indexPath.row);
-        }
-    }
-    
-    func deleteMessage(notification: NSNotification){
-        if let userInfo = notification.userInfo{
-            let indexPath = userInfo["indexPath"]! as! Int
-            print("\ndeleteMessageTriggered")
-            print("Delete Cell in row indexPath : \(indexPath)")
-            print(messages[indexPath].message.text)
-            print(messages[indexPath].meta)
-            print("======================\n")
-        }
-    }
-    
-    @IBAction func bubbleTap (sender: AnyObject) {
-        self.inputToolbar.contentView.textView.resignFirstResponder()
-        let tap = sender as! UITapGestureRecognizer;
-        let indexPath = self.collectionView.indexPathForCell(tap.view as! JSQMessagesCollectionViewCell)!;
-        let messageMeta = messages[indexPath.row].meta;
-        let eventType = messageMeta["type"]! as! String;
-        if (eventType == "event") {
-            let event = messageMeta["data"]! as! Dictionary<String, AnyObject>
-//            if (messages[indexPath.row].message.senderId == aDelegate.userId) {
-//                Util.showMessageInViewController(self, title: "You've sent this event to this group. Anyone who tap on this bubble can give response.", message: event.title, completion: nil);
-                
-                //event.stringForKey("title"), subTitle: event.stringForKey("time") + "for \(event.stringForKey("duration")) minutes\n" + event.stringForKey("location")
-//                print (event);
-
-                popupEvent(indexPath.row)
-                
-//                SweetAlert().showAlert(event.stringForKey("title"), subTitle: event.stringForKey("date") + " at " + event.stringForKey("time") + "\n\n" + event.stringForKey("location"), style: AlertStyle.None, buttonTitle:"Attend", buttonColor:UIColor.init(red: 57/255, green: 123/255, blue: 233/255, alpha: 1) , secondButtonTitle:  "I can't", secondButtonColor: UIColor.init(red: 221/255, green: 107/255, blue: 85/255, alpha: 1), thirdButtonTitle:"Join talk", thirdButtonColor:UIColor.init(red: 29/255, green: 211/255, blue: 63/255, alpha: 1)) { (selectedButton) -> Void in
-//                    switch (selectedButton) {
-//                    case 0: SweetAlert().showAlert("Thank you!", subTitle: "We wait for your presence.", style: AlertStyle.Success); break;
-//                    case 1: SweetAlert().showAlert("Response sent", subTitle: "Thank you for your response", style: AlertStyle.Success); break;
-//                    case 2:
-//                        delay(1) {
-//                            let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow;
-//                            vc.thisChatType = "event";
-//                            vc.thisChatMetadata = event;
-//                            vc.senderId = "1"
-//                            vc.senderDisplayName = "Jack Joyce"
-//                            self.navigationController?.pushViewController(vc, animated: true);
-//                        }
-//                        break;
-//                    default: break;
-//                    }
-//                };
-
-//                let alert: UIAlertController = UIAlertController(title: event.stringForKey("title"), message: "Your response to this event invitation:", preferredStyle: .ActionSheet)
-//                
-//                let act1: UIAlertAction = UIAlertAction(title:"I will attend this event", style: .Default, handler: {(action: UIAlertAction) -> Void in
-//                    
-//                })
-//                alert.addAction(act1)
-//                let act2: UIAlertAction = UIAlertAction(title:"I will not attend this event", style: .Default, handler: {(action: UIAlertAction) -> Void in
-//
-//                })
-//                alert.addAction(act2)
-//                let act3: UIAlertAction = UIAlertAction(title:"View event details and chat", style: .Cancel, handler: {(action: UIAlertAction) -> Void in
-//
-//                })
-//                alert.addAction(act3)
-//                let cancel: UIAlertAction = UIAlertAction(title:"Cancel", style: .Destructive, handler: {(action: UIAlertAction) -> Void in
-//                    
-//                })
-//                alert.addAction(cancel)
-//                self.presentViewController(alert, animated: true, completion: nil)
-//            }
-        }
-        else if (eventType == "poll") {
-            let poll = messageMeta["data"]! as! Dictionary<String, AnyObject>;
-            
-//            if (messages[indexPath.row].message.senderId == aDelegate.userId) {
-            
-//                print (poll);
-                
-                popupPoll(indexPath.row);
-                
-
-                
-//                let alert: UIAlertController = UIAlertController(title: poll.stringForKey("question")!, message: "", preferredStyle: .ActionSheet)
-//                let answers: [String] = poll.valueForKey("answers") as! [String];
-//                
-//                for answer in answers {
-//                    let ans: UIAlertAction = UIAlertAction(title:answer, style: .Default, handler: {(action: UIAlertAction) -> Void in
-//                        
-//                    })
-//                    alert.addAction(ans)
-//                }
-//                
-//                let act1: UIAlertAction = UIAlertAction(title:"View poll details and chat", style: .Cancel, handler: {(action: UIAlertAction) -> Void in
-//                    
-//                })
-//                alert.addAction(act1)
-//
-//                let cancel: UIAlertAction = UIAlertAction(title:"Cancel", style: .Destructive, handler: {(action: UIAlertAction) -> Void in
-//                    
-//                })
-//                alert.addAction(cancel)
-//                self.presentViewController(alert, animated: true, completion: nil)
-//            }
-        }
-    }
-    
     func getMetadataWithIndex (indexRow : Int) -> Dictionary<String, AnyObject> {
         var meta : Dictionary<String, AnyObject>!
         if (indexRow == -2) {
@@ -698,73 +480,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         picker.allowMultipleSelection = false;
         popupIndexRow = indexRow;
         picker.show();
-    }
-    
-    
-    func numberOfRowsInPickerView(pickerView: CZPickerView!) -> Int {
-        let meta = getMetadataWithIndex(popupIndexRow);
-        
-        if (meta["type"]! as! String == "event") {
-            return 2;
-        }
-        else if (meta["type"]! as! String == "poll") {
-            let data = meta["data"] as! NSDictionary;
-            let answers = data["answers"] as! [String];
-            return answers.count;
-        }
-        return 0;
-    }
-    
-    func czpickerView(pickerView: CZPickerView!, titleForRow row: Int) -> String! {
-        let meta = getMetadataWithIndex(popupIndexRow);
-        
-        if (meta["type"]! as! String == "event") {
-            var selection = meta["selection"]
-            if (selection == nil) {
-                selection = "";
-            }
-            switch (row) {
-            case 0: return (selection as! String == "yes" ? "✔️  " : "") + "Yes, I will attend";
-            case 1: return (selection as! String == "no" ? "✔️  " : "") + "No, I will not attend";
-            default: return "";
-            }
-        }
-        else if (meta["type"]! as! String == "poll") {
-            var selection = meta["selection"]
-            if (selection == nil) {
-                selection = "";
-            }
-            let data = meta["data"] as! NSDictionary;
-            let answers = data["answers"] as! [String];
-            return (selection as! String == "\(row)" ? "✔️  " : "") + answers[row];
-        }
-        return "";
-    }
-    
-    func czpickerView(pickerView: CZPickerView!, didConfirmWithItemAtRow row: Int) {
-        var meta = getMetadataWithIndex(popupIndexRow);
-        
-        if (meta["type"] as! String == "event") {
-            switch (row) {
-            case 0: meta.updateValue("yes", forKey: "selection")
-            case 1: meta.updateValue("no", forKey: "selection")
-            default: break;
-            }
-        }
-        else if (meta["type"]! as! String == "poll") {
-            meta.updateValue("\(row)", forKey: "selection");
-        }
-    }
-    
-    func czpickerViewDidClickCancelButton(pickerView: CZPickerView!) {
-        let meta = getMetadataWithIndex(popupIndexRow);
-        
-        if (meta["type"]! as! String == "event") {
-            self.performSegueWithIdentifier("EventDetails", sender: meta);
-        }
-        else if (meta["type"]! as! String == "poll") {
-            self.performSegueWithIdentifier("PollDetails", sender: meta);
-        }
     }
     
     func addMessage(id: String, text: String, date: NSDate = NSDate(), event: NSDictionary? = nil, poll: NSDictionary? = nil) {
@@ -909,18 +624,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         setAttachmentPanelVisible(false, animated: false);
     }
     
-//    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-//        return (action == #selector(self.deleteMessage(_:)) || action == #selector(self.copyMessage(_:)));
-//    }
-//    
-//    func deleteMessage(sender:AnyObject) {
-////        print ("delete")
-//    }
-//    
-//    func copyMessage(sender:AnyObject) {
-////        print ("copy")
-//    }
-    
     @IBAction func pulldownClick (sender: AnyObject) {
 //        attachEventTv = AttachEvent();
 //        attachEventTv = Util.getViewControllerID("AttachEvent") as! AttachEvent;
@@ -937,5 +640,228 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
             popupPoll(-2);
         }
         
+    }
+}
+
+//MARK Collection View
+extension ChatFlow{
+    override func collectionView(collectionView: UICollectionView,
+                                 numberOfItemsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!,
+                                 messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
+        return messages[indexPath.item].message
+    }
+    
+    override func collectionView(collectionView: UICollectionView,
+                                 cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath)
+            as! JSQMessagesCollectionViewCell
+        
+        let message = messages[indexPath.item]
+        
+        if message.message.senderId == senderId {
+            cell.textView!.textColor = UIColor.whiteColor()
+        } else {
+            cell.textView!.textColor = UIColor.blackColor()
+        }
+        cell.setIndexpathIdentifier(indexPath.row)
+        return cell
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!,
+                                 messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
+        return JSQMessagesBubbleImage.fromMessage(messages[indexPath.row])
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!,
+                                 avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
+        return JSQMessagesAvatarImage.initWithSenderId(messages[indexPath.row].message.senderId)
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
+        self.inputToolbar.contentView.textView.resignFirstResponder()
+        let messageMeta = messages[indexPath.row].meta;
+        let eventType = messageMeta["type"]! as! String;
+        if (eventType == "event") {
+            //            let event = messageMeta["data"]! as! Dictionary<String, AnyObject>
+            popupEvent(indexPath.row)
+        }
+        else if (eventType == "poll") {
+            //            let poll = messageMeta["data"]! as! Dictionary<String, AnyObject>;
+            popupPoll(indexPath.row);
+        }
+    }
+    
+    func deleteMessage(notification: NSNotification){
+        if let userInfo = notification.userInfo{
+            let indexPath = userInfo["indexPath"]! as! Int
+            print("\ndeleteMessageTriggered")
+            print("Delete Cell in row indexPath : \(indexPath)")
+            print(messages[indexPath].message.text)
+            print(messages[indexPath].meta)
+            print("======================\n")
+        }
+    }
+    
+    @IBAction func bubbleTap (sender: AnyObject) {
+        self.inputToolbar.contentView.textView.resignFirstResponder()
+        let tap = sender as! UITapGestureRecognizer;
+        let indexPath = self.collectionView.indexPathForCell(tap.view as! JSQMessagesCollectionViewCell)!;
+        let messageMeta = messages[indexPath.row].meta;
+        let eventType = messageMeta["type"]! as! String;
+        if (eventType == "event") {
+            let event = messageMeta["data"]! as! Dictionary<String, AnyObject>
+            //            if (messages[indexPath.row].message.senderId == aDelegate.userId) {
+            //                Util.showMessageInViewController(self, title: "You've sent this event to this group. Anyone who tap on this bubble can give response.", message: event.title, completion: nil);
+            
+            //event.stringForKey("title"), subTitle: event.stringForKey("time") + "for \(event.stringForKey("duration")) minutes\n" + event.stringForKey("location")
+            //                print (event);
+            
+            popupEvent(indexPath.row)
+            
+            //                SweetAlert().showAlert(event.stringForKey("title"), subTitle: event.stringForKey("date") + " at " + event.stringForKey("time") + "\n\n" + event.stringForKey("location"), style: AlertStyle.None, buttonTitle:"Attend", buttonColor:UIColor.init(red: 57/255, green: 123/255, blue: 233/255, alpha: 1) , secondButtonTitle:  "I can't", secondButtonColor: UIColor.init(red: 221/255, green: 107/255, blue: 85/255, alpha: 1), thirdButtonTitle:"Join talk", thirdButtonColor:UIColor.init(red: 29/255, green: 211/255, blue: 63/255, alpha: 1)) { (selectedButton) -> Void in
+            //                    switch (selectedButton) {
+            //                    case 0: SweetAlert().showAlert("Thank you!", subTitle: "We wait for your presence.", style: AlertStyle.Success); break;
+            //                    case 1: SweetAlert().showAlert("Response sent", subTitle: "Thank you for your response", style: AlertStyle.Success); break;
+            //                    case 2:
+            //                        delay(1) {
+            //                            let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow;
+            //                            vc.thisChatType = "event";
+            //                            vc.thisChatMetadata = event;
+            //                            vc.senderId = "1"
+            //                            vc.senderDisplayName = "Jack Joyce"
+            //                            self.navigationController?.pushViewController(vc, animated: true);
+            //                        }
+            //                        break;
+            //                    default: break;
+            //                    }
+            //                };
+            
+            //                let alert: UIAlertController = UIAlertController(title: event.stringForKey("title"), message: "Your response to this event invitation:", preferredStyle: .ActionSheet)
+            //
+            //                let act1: UIAlertAction = UIAlertAction(title:"I will attend this event", style: .Default, handler: {(action: UIAlertAction) -> Void in
+            //
+            //                })
+            //                alert.addAction(act1)
+            //                let act2: UIAlertAction = UIAlertAction(title:"I will not attend this event", style: .Default, handler: {(action: UIAlertAction) -> Void in
+            //
+            //                })
+            //                alert.addAction(act2)
+            //                let act3: UIAlertAction = UIAlertAction(title:"View event details and chat", style: .Cancel, handler: {(action: UIAlertAction) -> Void in
+            //
+            //                })
+            //                alert.addAction(act3)
+            //                let cancel: UIAlertAction = UIAlertAction(title:"Cancel", style: .Destructive, handler: {(action: UIAlertAction) -> Void in
+            //
+            //                })
+            //                alert.addAction(cancel)
+            //                self.presentViewController(alert, animated: true, completion: nil)
+            //            }
+        }
+        else if (eventType == "poll") {
+            let poll = messageMeta["data"]! as! Dictionary<String, AnyObject>;
+            
+            //            if (messages[indexPath.row].message.senderId == aDelegate.userId) {
+            
+            //                print (poll);
+            
+            popupPoll(indexPath.row);
+            
+            
+            
+            //                let alert: UIAlertController = UIAlertController(title: poll.stringForKey("question")!, message: "", preferredStyle: .ActionSheet)
+            //                let answers: [String] = poll.valueForKey("answers") as! [String];
+            //
+            //                for answer in answers {
+            //                    let ans: UIAlertAction = UIAlertAction(title:answer, style: .Default, handler: {(action: UIAlertAction) -> Void in
+            //
+            //                    })
+            //                    alert.addAction(ans)
+            //                }
+            //                
+            //                let act1: UIAlertAction = UIAlertAction(title:"View poll details and chat", style: .Cancel, handler: {(action: UIAlertAction) -> Void in
+            //                    
+            //                })
+            //                alert.addAction(act1)
+            //
+            //                let cancel: UIAlertAction = UIAlertAction(title:"Cancel", style: .Destructive, handler: {(action: UIAlertAction) -> Void in
+            //                    
+            //                })
+            //                alert.addAction(cancel)
+            //                self.presentViewController(alert, animated: true, completion: nil)
+            //            }
+        }
+    }
+}
+
+//MARK CZPicker
+extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
+    func numberOfRowsInPickerView(pickerView: CZPickerView!) -> Int {
+        let meta = getMetadataWithIndex(popupIndexRow);
+        
+        if (meta["type"]! as! String == "event") {
+            return 2;
+        }
+        else if (meta["type"]! as! String == "poll") {
+            let data = meta["data"] as! NSDictionary;
+            let answers = data["answers"] as! [String];
+            return answers.count;
+        }
+        return 0;
+    }
+    
+    func czpickerView(pickerView: CZPickerView!, titleForRow row: Int) -> String! {
+        let meta = getMetadataWithIndex(popupIndexRow);
+        
+        if (meta["type"]! as! String == "event") {
+            var selection = meta["selection"]
+            if (selection == nil) {
+                selection = "";
+            }
+            switch (row) {
+            case 0: return (selection as! String == "yes" ? "✔️  " : "") + "Yes, I will attend";
+            case 1: return (selection as! String == "no" ? "✔️  " : "") + "No, I will not attend";
+            default: return "";
+            }
+        }
+        else if (meta["type"]! as! String == "poll") {
+            var selection = meta["selection"]
+            if (selection == nil) {
+                selection = "";
+            }
+            let data = meta["data"] as! NSDictionary;
+            let answers = data["answers"] as! [String];
+            return (selection as! String == "\(row)" ? "✔️  " : "") + answers[row];
+        }
+        return "";
+    }
+    
+    func czpickerView(pickerView: CZPickerView!, didConfirmWithItemAtRow row: Int) {
+        var meta = getMetadataWithIndex(popupIndexRow);
+        
+        if (meta["type"] as! String == "event") {
+            switch (row) {
+            case 0: meta.updateValue("yes", forKey: "selection")
+            case 1: meta.updateValue("no", forKey: "selection")
+            default: break;
+            }
+        }
+        else if (meta["type"]! as! String == "poll") {
+            meta.updateValue("\(row)", forKey: "selection");
+        }
+    }
+    
+    func czpickerViewDidClickCancelButton(pickerView: CZPickerView!) {
+        let meta = getMetadataWithIndex(popupIndexRow);
+        
+        if (meta["type"]! as! String == "event") {
+            self.performSegueWithIdentifier("EventDetails", sender: meta);
+        }
+        else if (meta["type"]! as! String == "poll") {
+            self.performSegueWithIdentifier("PollDetails", sender: meta);
+        }
     }
 }

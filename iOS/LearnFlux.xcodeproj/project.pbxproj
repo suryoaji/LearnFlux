@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2D3D549154E78BF23D6DC8C8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9376CFD1C1CCB93E6369171A /* Pods.framework */; };
+		4A39C4821D51CACF00146489 /* chatTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A39C4811D51CACF00146489 /* chatTabBarController.swift */; };
+		4A39C73D1D501F4400F89A66 /* ExJSQMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A39C73C1D501F4400F89A66 /* ExJSQMessagesViewController.swift */; };
 		4A4985251D40A4FD00B823CA /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4985241D40A4FD00B823CA /* Event.swift */; };
 		4A4E38641D3DD78B00955E6F /* OSTextfieldR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */; };
 		4AF893F31D4889B80012E263 /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF893F21D4889B80012E263 /* Thread.swift */; };
@@ -389,6 +391,8 @@
 
 /* Begin PBXFileReference section */
 		488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		4A39C4811D51CACF00146489 /* chatTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = chatTabBarController.swift; sourceTree = "<group>"; };
+		4A39C73C1D501F4400F89A66 /* ExJSQMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExJSQMessagesViewController.swift; sourceTree = "<group>"; };
 		4A4985241D40A4FD00B823CA /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSTextfieldR.swift; sourceTree = "<group>"; };
 		4AF893F21D4889B80012E263 /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
@@ -812,6 +816,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A39C73E1D50288B00F89A66 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4A39C73F1D50289400F89A66 /* MessagesView */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		4A39C73F1D50289400F89A66 /* MessagesView */ = {
+			isa = PBXGroup;
+			children = (
+				4A39C73C1D501F4400F89A66 /* ExJSQMessagesViewController.swift */,
+			);
+			name = MessagesView;
+			sourceTree = "<group>";
+		};
 		4A4985261D40A8DD00B823CA /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -884,6 +904,7 @@
 				5B09CF181CBB52510042C70B /* Images */,
 				5B6DECB81D015FB100E16650 /* Core */,
 				4A4985261D40A8DD00B823CA /* Model */,
+				4A39C73E1D50288B00F89A66 /* View */,
 				5B09CEC81CBB4C170042C70B /* View Controllers */,
 				5B09CEC91CBB4C200042C70B /* StoryBoard */,
 				5B09CF171CBB4D820042C70B /* Others */,
@@ -938,6 +959,7 @@
 				5B09CEC11CBB4A330042C70B /* Info.plist */,
 				5B09CEBE1CBB4A330042C70B /* LaunchScreen.storyboard */,
 				5B09CEBC1CBB4A330042C70B /* Assets.xcassets */,
+				4A39C4811D51CACF00146489 /* chatTabBarController.swift */,
 			);
 			name = Others;
 			sourceTree = "<group>";
@@ -1832,6 +1854,8 @@
 				5B37426B1CC0CBAD00AF2897 /* UIView+Slide.m in Sources */,
 				5B3742671CC0CBAD00AF2897 /* UIImageView+RoundedRect.m in Sources */,
 				4AF893F31D4889B80012E263 /* Thread.swift in Sources */,
+				4A39C73D1D501F4400F89A66 /* ExJSQMessagesViewController.swift in Sources */,
+				4A39C4821D51CACF00146489 /* chatTabBarController.swift in Sources */,
 				5B52C01C1D13EF6800900EE2 /* OrgProfile.swift in Sources */,
 				5B3742721CC0CBAD00AF2897 /* UIImageView+ResizeProportionally.m in Sources */,
 				5B37426C1CC0CBAD00AF2897 /* UIViewController+FirstResponder.m in Sources */,

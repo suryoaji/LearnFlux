@@ -85,7 +85,6 @@ class Login: UIViewController, UITextFieldDelegate {
             self.tfPassword.becomeFirstResponder();
             return;
         }
-        
         Engine.login(self, username: tfUsername.text!, password: tfPassword.text!) { status, JSON in
             if (JSON == nil) {
                 self.tfUsername.becomeFirstResponder();
