@@ -20,6 +20,7 @@ extension JSQMessagesBubbleImage{
     enum State{
         case NormalSend
         case NormalReceived
+        case Normal
         case Event
         case Poll
         case Important
@@ -49,27 +50,23 @@ extension JSQMessagesBubbleImage{
     static func fromMessage(threadMessage: Thread.ThreadMessage) -> JSQMessagesBubbleImage{
         let message = threadMessage.message
         let messageMeta = threadMessage.meta
-        if message.senderId ==  String(Engine.clientData.cacheMe()!["id"] as! Int){ // 2
-            if ((messageMeta["type"]! as! String) == "event") {
-                return JSQMessagesBubbleImage.outgoingByState(.Event)
-            }
-            else if ((messageMeta["type"]! as! String) == "poll") {
-                return JSQMessagesBubbleImage.outgoingByState(.Poll)
-            }
-            else if ((messageMeta["type"]! as! String) == "chat") {
-                if (messageMeta["important"]! as! String == "yes") {
-                    return JSQMessagesBubbleImage.outgoingByState(.Important)
-                }
-                else {
-                    return JSQMessagesBubbleImage.outgoingByState()
-                }
-            }
-            else {
-                return JSQMessagesBubbleImage.outgoingByState()
-            }
-        } else { // 3
-            return JSQMessagesBubbleImage.incomingByState()
+        let selfId = String(Engine.clientData.cacheMe()!["id"] as! Int)
+        let typeMessage : State!
+        switch (messageMeta["type"]! as! String) {
+        case "event":
+            typeMessage = .Event
+            break
+        case "poll":
+            typeMessage = .Poll
+            break
+        case "chat":
+            typeMessage = messageMeta["important"]! as! String == "yes" ? .Important : .Normal
+            break
+        default:
+            typeMessage = .Normal
+            break
         }
+        return message.senderId == selfId ? JSQMessagesBubbleImage.outgoingByState(typeMessage == .Normal ? .NormalSend : typeMessage) : JSQMessagesBubbleImage.incomingByState(typeMessage == .Normal ? .NormalReceived : typeMessage)
     }
 }
 

@@ -268,6 +268,17 @@ class Engine : NSObject {
         }
     }
     
+    static func getGroups(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
+        makeRequestAlamofire(viewController, method: .GET, url: Url.groups, param: nil) { status, rawJSON in
+            if let rawJSON = rawJSON! as? Dictionary<String, AnyObject>{
+                if let rawData = rawJSON["data"]{
+                    clientData.setGroups(rawData as! Array<Dictionary<String, AnyObject>>)
+                }
+            }
+            if (callback != nil) { callback! (status, rawJSON); }
+        }
+    }
+    
     static func createThread (viewController: UIViewController? = nil, title: String = "", userId: [Int], callback: JSONreturn? = nil) {
         let param = ["participants":userId, "title":title] as [String: AnyObject];
         makeRequestAlamofire(viewController, method: .POST, url: Url.messages, param: param) { status, JSON in

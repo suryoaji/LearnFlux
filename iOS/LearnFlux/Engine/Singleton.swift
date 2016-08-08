@@ -38,6 +38,39 @@ class Data : NSObject {
     
     private var events : [Event]?
     private var threads: [Thread]?
+    private var groups: [Group]?
+    
+    func idGroupByIdThread(idThread: String)->(String?){
+        if let groups = groups{
+            for each in groups{
+                if each.tmpIdThread != nil{
+                    if each.tmpIdThread! == idThread{
+                        return each.id
+                    }
+                }
+            }
+        }
+        return nil
+    }
+    
+    func setGroups(arr: Array<Dictionary<String, AnyObject>>){
+        var conGroups: [Group] = []
+        for each in arr{
+            if let type = each["type"], let id = each["id"], let name = each["name"]{
+                if let rawMessage = each["message"]{
+                    let message = rawMessage as! Dictionary<String, AnyObject>
+                    conGroups.append(Group(type: type as! String, id: id as! String, name: name as! String, idThread: message["id"] as? String))
+                    continue
+                }
+                conGroups.append(Group(type: type as! String, id: id as! String, name: name as! String))
+            }
+        }
+        self.groups = conGroups.isEmpty ? nil : conGroups
+    }
+    
+    func getGroups()->([Group]?){
+        return self.groups
+    }
     
     func saveAllThreads(arr: Array<Dictionary<String, AnyObject>>, lastSync: String){
         defaults.setValue(arr, forKey: cacheName.Threads)

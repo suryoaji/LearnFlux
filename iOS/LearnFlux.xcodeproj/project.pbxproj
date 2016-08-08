@@ -10,6 +10,7 @@
 		2D3D549154E78BF23D6DC8C8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9376CFD1C1CCB93E6369171A /* Pods.framework */; };
 		4A39C4821D51CACF00146489 /* chatTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A39C4811D51CACF00146489 /* chatTabBarController.swift */; };
 		4A39C73D1D501F4400F89A66 /* ExJSQMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A39C73C1D501F4400F89A66 /* ExJSQMessagesViewController.swift */; };
+		4A48C1001D548FED00E85BA3 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A48C0FF1D548FED00E85BA3 /* Group.swift */; };
 		4A4985251D40A4FD00B823CA /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4985241D40A4FD00B823CA /* Event.swift */; };
 		4A4E38641D3DD78B00955E6F /* OSTextfieldR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */; };
 		4AF893F31D4889B80012E263 /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF893F21D4889B80012E263 /* Thread.swift */; };
@@ -393,6 +394,7 @@
 		488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		4A39C4811D51CACF00146489 /* chatTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = chatTabBarController.swift; sourceTree = "<group>"; };
 		4A39C73C1D501F4400F89A66 /* ExJSQMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExJSQMessagesViewController.swift; sourceTree = "<group>"; };
+		4A48C0FF1D548FED00E85BA3 /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		4A4985241D40A4FD00B823CA /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSTextfieldR.swift; sourceTree = "<group>"; };
 		4AF893F21D4889B80012E263 /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
@@ -837,6 +839,7 @@
 			children = (
 				4A4985241D40A4FD00B823CA /* Event.swift */,
 				4AF893F21D4889B80012E263 /* Thread.swift */,
+				4A48C0FF1D548FED00E85BA3 /* Group.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1822,6 +1825,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A48C1001D548FED00E85BA3 /* Group.swift in Sources */,
 				5B09CEB51CBB4A330042C70B /* Login.swift in Sources */,
 				5BE7BBB11CD1DE2500BDFCE1 /* AttachPoll.swift in Sources */,
 				5B98B59B1CC8DB190070AE97 /* ChatFlow.swift in Sources */,

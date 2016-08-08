@@ -19,6 +19,10 @@ class Connections : UITableViewController {
     var actualConnect = Array<AnyObject>();
     var selectedConnect : Array<Bool> = [];
     
+    func loadGroup(){
+        Engine.getGroups()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad();
         
@@ -36,6 +40,8 @@ class Connections : UITableViewController {
         }
         
         self.tabBarController?.title = "Connections";
+        
+        self.loadGroup()
     }
     
     lazy var flowDirection : String! = "";

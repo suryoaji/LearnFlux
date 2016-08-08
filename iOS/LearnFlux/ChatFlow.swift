@@ -54,6 +54,8 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     var isKeyboardShown : Bool = false
     var keyboardHeight : CGFloat = 0
+    var idGroup: String?
+    let clientData = Engine.clientData
     
     func initChat(rowIndexPath: Int, idThread: String, from: From){
         self.rowIndexPathFromThread = rowIndexPath
@@ -269,6 +271,10 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         callGetNewMessages()
     }
     
+    func getIdGroupOfThisThread(){
+        self.idGroup = clientData.idGroupByIdThread(self.chatId)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 //        title = "ChatChat"
@@ -276,6 +282,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
 //        print ("Chat ID = \(chatId)");
 //        print ("Chat Participants ID: \(participantsId)");
         self.createLayoutChatRoom()
+        self.getIdGroupOfThisThread()
 //        let attachment = UIButton(type: .System);
 //        attachment.setImage(UIImage(named: "clip-18"), forState: UIControlState.Normal);
 //        self.inputToolbar.contentView.leftBarButtonItem = attachment;

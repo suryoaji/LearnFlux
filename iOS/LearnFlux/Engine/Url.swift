@@ -16,4 +16,5 @@ struct Url{
     static let messages = base + "/v1/messages"
     static let register = base + "/register"
     static let events = base + "/v1/events"
+    static let groups = base + "/v1/groups"
 }
