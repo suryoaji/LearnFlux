@@ -93,6 +93,7 @@
     <string name="URL_THREAD_MESSAGES">messages/%s</string>
     <string name="URL_REGISTER">register</string>
     <string name="URL_ORGANIZATIONS">groups</string>
+    <string name="URL_EVENTS">events</string>
 
     //alert
     <string name="success_registration">You have successfully registered.

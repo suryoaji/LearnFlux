@@ -60,11 +60,11 @@ public class ThreadAdapter extends ArrayAdapter<Thread> {
 			CheckBox checkBox = (CheckBox) row.findViewById(R.id.checkBox);
 
 			if (e.isSelected()){
-				bubbleLayout.setBackgroundColor(Color.parseColor("#FFFBFDCE"));
+				bubbleLayout.setBackgroundColor(Color.parseColor("#FFCDCDCD"));
 				/*checkBox.setVisibility(View.VISIBLE);
 				checkBox.setChecked(true);*/
 			}else {
-				bubbleLayout.setBackgroundColor(Color.parseColor("#ffffff"));
+				bubbleLayout.setBackgroundColor(Color.parseColor("#00ffffff"));
 				/*checkBox.setVisibility(View.GONE);
 				checkBox.setChecked(false);*/
 			}

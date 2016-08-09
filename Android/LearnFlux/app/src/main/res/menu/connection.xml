@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".ChatsActivity">
     <item android:id="@+id/new_group"
           android:orderInCategory="100"
-          android:title="Create New Group"
-          android:icon="@drawable/ic_add_black_24dp"
-          app:showAsAction="withText"/>
+          android:title="New Thread"
+          app:showAsAction="always|withText"/>
 </menu>

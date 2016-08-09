@@ -7,8 +7,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.Message;
+import com.idesolusiasia.learnflux.entity.MessageEvent;
 import com.idesolusiasia.learnflux.entity.Participant;
+import com.idesolusiasia.learnflux.entity.Poll;
 import com.idesolusiasia.learnflux.entity.Thread;
 
 import java.util.ArrayList;
@@ -32,7 +35,9 @@ public class DataSource {
 			DatabaseHelper.COLUMN_MESSAGE_SENDER,
 			DatabaseHelper.COLUMN_MESSAGE_BODY,
 			DatabaseHelper.COLUMN_MESSAGE_CREATEDAT,
-			DatabaseHelper.COLUMN_MESSAGE_THREADID};
+			DatabaseHelper.COLUMN_MESSAGE_THREADID,
+			DatabaseHelper.COLUMN_MESSAGE_REFID,
+			DatabaseHelper.COLUMN_MESSAGE_REFTYPE};
 
 	private String[] allColumnsPARTICIPANTS = {
 			DatabaseHelper.COLUMN_PARTICIPANT_ID,
@@ -42,6 +47,17 @@ public class DataSource {
 	private String[] allColumnsTHREADMEMBER = {
 			DatabaseHelper.COLUMN_THREADMEMBER_THREADID,
 			DatabaseHelper.COLUMN_THREADMEMBER_PARTICIPANTID};
+
+	private String[] allColumnsEVENT = {
+			DatabaseHelper.COLUMN_EVENT_ID,
+			DatabaseHelper.COLUMN_EVENT_TITLE,
+			DatabaseHelper.COLUMN_EVENT_DETAILS,
+			DatabaseHelper.COLUMN_EVENT_LOCATION,
+			DatabaseHelper.COLUMN_EVENT_TIMESTAMP};
+
+	private String[] allColumnsPOLL = {
+			DatabaseHelper.COLUMN_POLL_ID,
+			DatabaseHelper.COLUMN_POLL_TITLE};
 
 	public DataSource(Context context){
 		dbHelper = new DatabaseHelper(context);
@@ -147,6 +163,12 @@ public class DataSource {
 		values.put(DatabaseHelper.COLUMN_MESSAGE_BODY,m.getBody());
 		values.put(DatabaseHelper.COLUMN_MESSAGE_CREATEDAT,m.getCreatedAt());
 		values.put(DatabaseHelper.COLUMN_MESSAGE_THREADID,threadID);
+
+		if(m instanceof MessageEvent){
+			values.put(DatabaseHelper.COLUMN_MESSAGE_REFID,((MessageEvent)m).getEvent().getId());
+			values.put(DatabaseHelper.COLUMN_MESSAGE_REFTYPE,((MessageEvent)m).getEvent().getType());
+			createEvent(((MessageEvent)m).getEvent());
+		}
 		db.insert(DatabaseHelper.TABLE_MESSAGE,null,values);
 
 		createParticipant(m.getSender());
@@ -191,7 +213,14 @@ public class DataSource {
 		return message;
 	}
 	private Message cursorToMessage(Cursor cursor) {
-		Message m = new Message();
+		Message m=new Message();
+		if (cursor.getString(6)!=null){
+			if (cursor.getString(6).equalsIgnoreCase("event")){
+				m=new MessageEvent();
+				((MessageEvent)m).setEvent(getEventByID(cursor.getString(5)));
+			}
+		}
+
 		m.setId(cursor.getString(0));
 		m.setSender(getParticipantByID(cursor.getString(1)));
 		m.setBody(cursor.getString(2));
@@ -217,7 +246,7 @@ public class DataSource {
 
 		Cursor cursor = db.query(DatabaseHelper.TABLE_PARTICIPANT,
 				allColumnsPARTICIPANTS,DatabaseHelper.COLUMN_PARTICIPANT_ID+"=?",new String[] {participantID},null,null,
-				DatabaseHelper.COLUMN_MESSAGE_ID+" desc","1");
+				DatabaseHelper.COLUMN_PARTICIPANT_ID+" desc","1");
 
 		if (cursor != null)
 			cursor.moveToFirst();
@@ -263,5 +292,73 @@ public class DataSource {
 		cursor.close();
 
 		return participants;
+	}
+
+	//POLL
+	public void createPoll(Poll p){
+		ContentValues values= new ContentValues();
+		values.put(DatabaseHelper.COLUMN_POLL_ID,p.getId());
+		values.put(DatabaseHelper.COLUMN_POLL_TITLE,p.getTitle());
+		db.insert(DatabaseHelper.TABLE_POLL,null,values);
+	}
+
+	public Poll getPollByID(String pollID){
+
+		Cursor cursor = db.query(DatabaseHelper.TABLE_POLL,
+				allColumnsPARTICIPANTS,DatabaseHelper.COLUMN_EVENT_ID+"=?",new String[] {pollID},null,null,
+				DatabaseHelper.COLUMN_POLL_ID+" desc","1");
+
+		if (cursor != null)
+			cursor.moveToFirst();
+
+		Poll p = cursorToPoll(cursor);
+
+		// make sure to close the cursor
+		cursor.close();
+		return p;
+	}
+
+	private Poll cursorToPoll(Cursor cursor) {
+		Poll p = new Poll();
+		p.setId(cursor.getString(0));
+		p.setTitle(cursor.getString(1));
+		return p;
+	}
+
+	//Event
+	public void createEvent(Event e){
+		ContentValues values= new ContentValues();
+		values.put(DatabaseHelper.COLUMN_EVENT_ID,e.getId());
+		values.put(DatabaseHelper.COLUMN_EVENT_TITLE,e.getTitle());
+		values.put(DatabaseHelper.COLUMN_EVENT_DETAILS,e.getDetails());
+		values.put(DatabaseHelper.COLUMN_EVENT_LOCATION,e.getLocation());
+		values.put(DatabaseHelper.COLUMN_EVENT_TIMESTAMP,e.getTimestamp());
+		db.insert(DatabaseHelper.TABLE_EVENT,null,values);
+	}
+
+	public Event getEventByID(String eventID){
+
+		Cursor cursor = db.query(DatabaseHelper.TABLE_EVENT,
+				allColumnsEVENT,DatabaseHelper.COLUMN_EVENT_ID+"=?",new String[] {eventID},null,null,
+				DatabaseHelper.COLUMN_EVENT_ID+" desc","1");
+
+		if (cursor != null)
+			cursor.moveToFirst();
+
+		Event p = cursorToEvent(cursor);
+
+		// make sure to close the cursor
+		cursor.close();
+		return p;
+	}
+
+	private Event cursorToEvent(Cursor cursor) {
+		Event e = new Event();
+		e.setId(cursor.getString(0));
+		e.setTitle(cursor.getString(1));
+		e.setDetails(cursor.getString(2));
+		e.setLocation(cursor.getString(3));
+		e.setTimestamp(Long.parseLong(cursor.getString(4)));
+		return e;
 	}
 }

@@ -275,4 +275,58 @@ public class RequestTemplate {
 
 		VolleySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
 	}
+
+	public static void PUTJsonRequest(final Context context, final String url, final JSONObject params,
+	                                  final ServiceCallback callback, final ErrorCallback errorCallback){
+
+		final JsonObjectRequestWithNull jsonObjectRequest = new JsonObjectRequestWithNull(Request.Method.PUT, url, params, new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				callback.execute(response);
+			}
+		},new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				if(error instanceof TimeoutError || error instanceof NoConnectionError){
+					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
+				}else {
+					Log.i(TAG, error.getMessage());
+					if(error.getMessage().contains("token")){
+						Engine.reLogin(context, new ServiceCallback() {
+							@Override
+							public void execute(JSONObject obj) {
+								GETJsonRequest(context, url, params, callback, errorCallback);
+							}
+						});
+					}else{
+						if (error.networkResponse!=null){
+							Log.i(TAG, String.valueOf(error.networkResponse.statusCode));
+						}
+						if (errorCallback!=null){
+							try {
+								errorCallback.execute(new JSONObject(error.getMessage()));
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+
+			}
+		}){
+			@Override
+			public Map<String,String> getHeaders() throws AuthFailureError {
+				Map<String,String> params = new HashMap<String,String>();
+				params.put("Content-Type","application/json");
+				params.put("Authorization", "Bearer " + User.getUser().getAccess_token());
+				return params;
+			}
+			@Override
+			public String getBodyContentType() {
+				return "application/json; charset=utf-8";
+			}
+		};
+
+		VolleySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+	}
 }

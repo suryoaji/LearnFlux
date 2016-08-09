@@ -6,6 +6,11 @@
               android:layout_height="match_parent" android:minWidth="250dp"
 >
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivAddToCalendar" android:layout_gravity="right"
+        android:src="@drawable/calendar_add"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,11 +44,16 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I will attend"
-            android:id="@+id/rbAttend" android:checked="false"/>
+            android:text="Going"
+            android:id="@+id/rbGoing" android:checked="false"/>
         <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                     android:text="I will not attend" android:id="@+id/rbNotAttend"
+                     android:text="Not Going" android:id="@+id/rbNotGoing"
                      android:checked="false"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I&apos;m interested"
+            android:id="@+id/rbInterested" android:checked="false" android:visibility="gone"/>
     </RadioGroup>
     <LinearLayout
         android:orientation="horizontal"
@@ -53,7 +63,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event Detail"
+            android:text="Event&apos;s Thread"
             android:id="@+id/btnChatRoom" android:layout_weight="1"/>
         <Button
             style="?android:attr/buttonStyleSmall"

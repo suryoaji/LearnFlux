@@ -4,7 +4,8 @@
                 android:paddingLeft="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:paddingTop="5dp"
-                android:paddingBottom="5dp">
+                android:paddingBottom="5dp"
+                android:id="@+id/relativeLayout">
 
     <ImageView
         android:layout_width="40dp"

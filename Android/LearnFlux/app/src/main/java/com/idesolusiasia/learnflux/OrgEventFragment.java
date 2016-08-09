@@ -100,15 +100,15 @@ public class OrgEventFragment extends Fragment {
 		tvLocation.setText("at " + e.getLocation());
 
 		if (e.getAcceptanceStatus().equalsIgnoreCase("attend")){
-			((RadioButton)dialog.findViewById(R.id.rbAttend)).setChecked(true);
+			((RadioButton)dialog.findViewById(R.id.rbGoing)).setChecked(true);
 		}else if (e.getAcceptanceStatus().equalsIgnoreCase("notAttend")){
-			((RadioButton)dialog.findViewById(R.id.rbNotAttend)).setChecked(true);
+			((RadioButton)dialog.findViewById(R.id.rbNotGoing)).setChecked(true);
 		}
 
 		rgEvent.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				if (checkedId==R.id.rbAttend){
+				if (checkedId==R.id.rbGoing){
 					e.setAcceptanceStatus("attend");
 				}else{
 					e.setAcceptanceStatus("notAttend");

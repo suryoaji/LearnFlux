@@ -74,6 +74,9 @@
             android:name=".GroupDetailActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity android:name=".DummyActivity">
+
+        </activity>
     </application>
 
 </manifest>

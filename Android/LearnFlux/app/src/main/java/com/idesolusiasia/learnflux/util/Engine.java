@@ -361,11 +361,61 @@ public class Engine {
 					if (obj!=null){
 						Log.i("send_message", obj.toString());
 					}
-					callback.execute(obj);
+					if (callback!=null){
+						callback.execute(obj);
+					}
 				}
 			},null);
 		}
 	}
+
+	public static void createEvent(final Context context, final boolean useGroup, final String title, final String details, final String location,
+	                               final long timestamp, final int[] participantIds, final String groupID, final String groupType,
+	                               final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_EVENTS);
+
+		JSONObject params = new JSONObject();
+		try {
+			params.put("title",title);
+			params.put("details",details);
+			params.put("location",location);
+			params.put("timestamp",timestamp);
+			if (useGroup){
+				JSONObject ref = new JSONObject();
+				ref.put("id",groupID);
+				ref.put("type",groupType);
+				params.put("reference",ref);
+			}else {
+				params.put("participants",participantIds);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					createEvent(context, useGroup, title, details, location, timestamp, participantIds, groupID, groupType, callback);
+				}
+			});
+		}else {
+			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if (obj!=null){
+						Log.i("create_event", obj.toString());
+					}
+					if (callback!=null){
+						callback.execute(obj);
+					}
+
+				}
+			},null);
+		}
+	}
+
 	public static void getOrganizations(final Context context,final RequestTemplate.ServiceCallback callback){
 		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ORGANIZATIONS);
 		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
@@ -376,6 +426,70 @@ public class Engine {
 				public void execute(JSONObject obj) {
 					Log.i("Organization_Response", "execute: " + obj.toString());
 					if(callback!=null){
+						callback.execute(obj);
+					}
+
+				}
+			},null);
+		}
+	}
+
+	public static void getEventById(final Context context, final String eventID,
+	                                final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_EVENTS)+"/"+eventID;
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					getEventById(context, eventID, callback);
+				}
+			});
+		}else {
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if (obj!=null){
+						Log.i("get_event", obj.toString());
+					}
+					if (callback!=null){
+						callback.execute(obj);
+					}
+
+				}
+			},null);
+		}
+	}
+
+	public static void changeRSVPStatus(final Context context, final String eventID, final int RSVPStatus,
+	                                final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_EVENTS)+"/"+eventID;
+
+		JSONObject params = new JSONObject();
+		try {
+			params.put("rsvp",RSVPStatus);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		Log.i("changeRSVPStatus", params.toString());
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					changeRSVPStatus(context, eventID, RSVPStatus, callback);
+				}
+			});
+		}else {
+			RequestTemplate.PUTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if (obj!=null){
+						Log.i("change_rsvp", obj.toString());
+					}
+					if (callback!=null){
 						callback.execute(obj);
 					}
 

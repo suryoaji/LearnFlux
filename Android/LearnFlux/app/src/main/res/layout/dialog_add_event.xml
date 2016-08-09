@@ -10,6 +10,31 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ImageView android:layout_width="25dp" android:layout_height="25dp"
+                   android:id="@+id/imageView7" android:src="@drawable/ic_assignment_black_24dp"
+                   android:layout_gravity="center_vertical"/>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp">
+
+            <EditText
+                android:id="@+id/add_event_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Title"
+                android:imeOptions="actionUnspecified"
+                android:maxLines="1"
+                android:inputType="textImeMultiLine"
+                android:singleLine="false"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25dp"
@@ -61,12 +86,13 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="-"
-            android:id="@+id/textView6" android:layout_gravity="center_vertical"/>
+            android:id="@+id/textView6" android:layout_gravity="center_vertical"
+            android:visibility="gone"/>
         <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content" android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="10dp" android:visibility="gone">
 
             <EditText
                 android:id="@+id/add_event_end"
@@ -85,23 +111,20 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView android:layout_width="25dp" android:layout_height="25dp"
-                   android:id="@+id/imageView7" android:src="@drawable/ic_assignment_black_24dp"
-                   android:layout_gravity="center_vertical"/>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp">
 
             <EditText
-                android:id="@+id/add_event_title"
+                android:id="@+id/add_event_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
+                android:hint="Event's Description"
                 android:imeOptions="actionUnspecified"
-                android:maxLines="1"
-                android:inputType="textImeMultiLine"
-                android:singleLine="false"
+                android:inputType="textCapSentences|textMultiLine|textImeMultiLine"
+                android:singleLine="false" android:focusable="false"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         </android.support.design.widget.TextInputLayout>

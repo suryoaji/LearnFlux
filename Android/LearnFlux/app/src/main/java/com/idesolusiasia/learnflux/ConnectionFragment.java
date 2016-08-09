@@ -1,11 +1,10 @@
 package com.idesolusiasia.learnflux;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -163,44 +163,44 @@ public class ConnectionFragment extends Fragment {
 	public void showInputGroupName(){
 		final int[] ids = adap.getSelectedIds();
 
-		final EditText editText = new EditText(getContext());
+		final Dialog dialog = new Dialog(getContext());
+		dialog.setTitle("Create Group");
+		dialog.setContentView(R.layout.dialog_add_group);
 
-		editText.setHint("Group A");
+		final EditText editText = (EditText) dialog.findViewById(R.id.add_group_name);
+		Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+		Button btnSave = (Button) dialog.findViewById(R.id.btnSubmitGroup);
 
-		new AlertDialog.Builder(getContext())
-				.setTitle("Group")
-				.setMessage("Please write the group name")
-				.setView(editText)
-				.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String text = editText.getText().toString();
-						if (!text.isEmpty()){
-							Engine.createThread(getContext(), ids, text, new RequestTemplate.ServiceCallback() {
-								@Override
-								public void execute(JSONObject obj) {
-									try {
-										String id = obj.getJSONObject("data").getString("id");
-										Intent i = new Intent(getContext(),ChattingActivity.class);
-										i.putExtra("idThread",id);
-										startActivity(i);
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}
+		btnCancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+			}
+		});
 
-								}
-							});
+		btnSave.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				String text = editText.getText().toString();
+				if (!text.isEmpty()){
+					Engine.createThread(getContext(), ids, text, new RequestTemplate.ServiceCallback() {
+						@Override
+						public void execute(JSONObject obj) {
+							try {
+								String id = obj.getJSONObject("data").getString("id");
+								Intent i = new Intent(getContext(),ChattingActivity.class);
+								i.putExtra("idThread",id);
+								startActivity(i);
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+
 						}
-					}
-				})
-				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						dialog.dismiss();
-					}
-				})
-				.show();
+					});
+				}
+			}
+		});
+		dialog.show();
 	}
 
-	void createGroup(){
-
-	}
 }

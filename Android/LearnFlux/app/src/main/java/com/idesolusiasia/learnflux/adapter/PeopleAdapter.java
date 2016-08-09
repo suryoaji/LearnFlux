@@ -1,12 +1,14 @@
 package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.R;
@@ -73,6 +75,7 @@ public class PeopleAdapter extends ArrayAdapter<Participant> {
 		holder.tvName.setText(participants.get(position).getFirstName());
 
 		holder.ivCheck.setVisibility((selectedParticipant.contains(participants.get(position))) ? View.VISIBLE : View.GONE);
+		holder.relativeLayout.setBackgroundColor((selectedParticipant.contains(participants.get(position))) ? Color.parseColor("#FFCDCDCD") : Color.parseColor("#00ffffff"));
 
 		return conView;
 	}
@@ -88,6 +91,7 @@ public class PeopleAdapter extends ArrayAdapter<Participant> {
         public final TextView tvName;
 		public final ImageView ivCheck;
         public Participant mItem;
+		public RelativeLayout relativeLayout;
 
         public PeopleViewHolder(View view) {
             super(view);
@@ -95,6 +99,7 @@ public class PeopleAdapter extends ArrayAdapter<Participant> {
 	        ivPhoto = (ImageView) view.findViewById(R.id.ivPhoto);
 	        tvName = (TextView) view.findViewById(R.id.tvName);
 	        ivCheck = (ImageView) view.findViewById(R.id.ivCheck);
+	        relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);
         }
 
         @Override

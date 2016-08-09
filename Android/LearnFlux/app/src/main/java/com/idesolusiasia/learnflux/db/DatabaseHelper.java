@@ -23,6 +23,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_MESSAGE_BODY = "body";
 	public static final String COLUMN_MESSAGE_CREATEDAT = "createdat";
 	public static final String COLUMN_MESSAGE_THREADID = "threadid";
+	public static final String COLUMN_MESSAGE_REFID = "refid";
+	public static final String COLUMN_MESSAGE_REFTYPE = "reftype";
 
 	public static final String TABLE_PARTICIPANT = "participant";
 	public static final String COLUMN_PARTICIPANT_ID = "id";
@@ -32,6 +34,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String TABLE_THREADMEMBER = "threadmember";
 	public static final String COLUMN_THREADMEMBER_THREADID = "threadid";
 	public static final String COLUMN_THREADMEMBER_PARTICIPANTID = "participantid";
+
+	public static final String TABLE_EVENT = "event";
+	public static final String COLUMN_EVENT_ID = "id";
+	public static final String COLUMN_EVENT_TITLE = "title";
+	public static final String COLUMN_EVENT_DETAILS = "detail";
+	public static final String COLUMN_EVENT_LOCATION = "location";
+	public static final String COLUMN_EVENT_TIMESTAMP = "timestamp";
+
+	public static final String TABLE_POLL = "poll";
+	public static final String COLUMN_POLL_ID = "id";
+	public static final String COLUMN_POLL_TITLE = "title";
+
+
 
 	// Database creation sql statement
 	private static final String DATABASE_CREATE_THREAD = "create table "
@@ -47,7 +62,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+COLUMN_MESSAGE_SENDER + " text,"
 			+COLUMN_MESSAGE_BODY + " text,"
 			+COLUMN_MESSAGE_CREATEDAT + " text,"
-			+COLUMN_MESSAGE_THREADID + " text"
+			+COLUMN_MESSAGE_THREADID + " text,"
+			+COLUMN_MESSAGE_REFID + " text,"
+			+COLUMN_MESSAGE_REFTYPE + " text"
 			+");";
 
 	private static final String DATABASE_CREATE_PARTICIPANT = "create table "
@@ -64,6 +81,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+"PRIMARY KEY("+COLUMN_THREADMEMBER_THREADID + ","+COLUMN_THREADMEMBER_PARTICIPANTID + ")"
 			+");";
 
+	private static final String DATABASE_CREATE_EVENT = "create table "
+			+ TABLE_EVENT + "("
+			+COLUMN_EVENT_ID + " text primary key not null, "
+			+COLUMN_EVENT_TITLE + " text,"
+			+COLUMN_EVENT_DETAILS + " text,"
+			+COLUMN_EVENT_LOCATION + " text,"
+			+COLUMN_EVENT_TIMESTAMP + " text"
+			+");";
+
+	private static final String DATABASE_CREATE_POLL = "create table "
+			+ TABLE_POLL + "("
+			+COLUMN_POLL_ID + " text primary key not null, "
+			+COLUMN_POLL_TITLE + " text"
+			+");";
+
 	public DatabaseHelper(Context context){
 		super(context,DATABASE_NAME,null,DATABASE_VERSION);
 	}
@@ -75,6 +107,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(DATABASE_CREATE_MESSAGE);
 		db.execSQL(DATABASE_CREATE_PARTICIPANT);
 		db.execSQL(DATABASE_CREATE_THREADMEMBER);
+		db.execSQL(DATABASE_CREATE_EVENT);
+		db.execSQL(DATABASE_CREATE_POLL);
 	}
 
 	@Override
@@ -86,6 +120,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARTICIPANT);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THREADMEMBER);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENT);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_POLL);
 		onCreate(db);
 	}
 
@@ -94,6 +130,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGE);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARTICIPANT);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_THREADMEMBER);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENT);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_POLL);
 		onCreate(db);
 	}
 }

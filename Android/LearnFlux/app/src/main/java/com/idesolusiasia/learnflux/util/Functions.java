@@ -57,6 +57,13 @@ public class Functions {
 		return a;
 	}
 
+	public static String convertSecondToAnyFormat(long second, String format){
+		SimpleDateFormat simpleDateFormat=new SimpleDateFormat(format, Locale.US);
+		second=second*1000;
+		String a = simpleDateFormat.format(second);
+		return a;
+	}
+
 	public static void saveLastSync(Context c, String lastSync){
 		SharedPreferences sharedPref = c.getApplicationContext().getSharedPreferences("com.idesolusiasia.learnflux",Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();

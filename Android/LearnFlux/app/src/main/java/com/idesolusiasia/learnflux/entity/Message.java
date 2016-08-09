@@ -8,21 +8,9 @@ import com.idesolusiasia.learnflux.util.Functions;
  */
 public class Message {
 
-	/**
-	 * type : Message
-	 * id : 57737eaa3a603fc02b3d4d7a
-	 * sender : {"id":6,"type":"User","link":"http://lfapp.learnflux.net/user/6"}
-	 * body : Yoohoooo!🤗
-	 * created_at : 1467186858
-	 */
 
 	private String type;
 	private String id;
-	/**
-	 * id : 6
-	 * type : User
-	 * link : http://lfapp.learnflux.net/user/6
-	 */
 
 	private Participant sender;
 	private String body;
@@ -31,6 +19,8 @@ public class Message {
 
 	boolean readStatus=false;
 
+	public Message() {
+	}
 
 	public boolean isReadStatus() {
 		return readStatus;
@@ -83,4 +73,5 @@ public class Message {
 	public void setCreatedAt(long createdAt) {
 		this.createdAt = createdAt;
 	}
+
 }

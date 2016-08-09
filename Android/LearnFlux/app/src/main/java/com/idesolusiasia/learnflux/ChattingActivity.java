@@ -29,6 +29,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.idesolusiasia.learnflux.adapter.AddPollAnswerAdapter;
 import com.idesolusiasia.learnflux.adapter.ChatBubbleAdapter;
 import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
@@ -39,6 +40,7 @@ import com.idesolusiasia.learnflux.util.RequestTemplate;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -200,7 +202,7 @@ public class ChattingActivity extends BaseActivity {
 		addPoll.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//addPollProcess();
+				addPollProcess();
 			}
 		});
 
@@ -300,11 +302,12 @@ public class ChattingActivity extends BaseActivity {
 		dialog.setContentView(R.layout.dialog_add_event);
 		final EditText etDate = (EditText) dialog.findViewById(R.id.add_event_date);
 		final EditText etStart = (EditText) dialog.findViewById(R.id.add_event_time);
-		final EditText etEnd = (EditText) dialog.findViewById(R.id.add_event_end);
+		/*final EditText etEnd = (EditText) dialog.findViewById(R.id.add_event_end);*/
 		final EditText etTitle = (EditText) dialog.findViewById(R.id.add_event_title);
+		final EditText etDesc = (EditText) dialog.findViewById(R.id.add_event_description);
 		final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEEE, dd MMM yyyy", Locale.US);
 		final Calendar calStart = Calendar.getInstance();
-		final Calendar calEnd = Calendar.getInstance();
+		/*final Calendar calEnd = Calendar.getInstance();*/
 		etDate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -312,7 +315,6 @@ public class ChattingActivity extends BaseActivity {
 
 					public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 						calStart.set(year,monthOfYear,dayOfMonth);
-						calEnd.set(year,monthOfYear,dayOfMonth);
 						etDate.setText(dateFormatter.format(calStart.getTime()));
 					}
 
@@ -339,7 +341,7 @@ public class ChattingActivity extends BaseActivity {
 			}
 		});
 
-		etEnd.setOnClickListener(new View.OnClickListener() {
+		/*etEnd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				//String birthdate = me.getBirthdate();
@@ -354,7 +356,7 @@ public class ChattingActivity extends BaseActivity {
 				}, calStart.get(Calendar.HOUR_OF_DAY)+1, calStart.get(Calendar.MINUTE), true);
 				timePickerDialog.show();
 			}
-		});
+		});*/
 
 		Button btnAdd = (Button) dialog.findViewById(R.id.btnSubmitEvent);
 		// if button is clicked, close the custom dialog
@@ -363,9 +365,12 @@ public class ChattingActivity extends BaseActivity {
 			public void onClick(View v) {
 
 				/*Calendar calendar = Calendar.getInstance();
-				calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));
-				EventChatBubble bubble = new EventChatBubble("event", "me","","Agatha Cynthia",calendar,
-						etTitle.getText().toString(), "Galaxy Hall", "", calStart, calEnd);
+				calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));*/
+
+
+
+
+				/*Event bubble = new Event(etDesc.getText(),);
 				adap.add(bubble);
 				adap.notifyDataSetChanged();
 				listView.setSelection(adap.getCount() - 1);*/
@@ -375,7 +380,7 @@ public class ChattingActivity extends BaseActivity {
 		dialog.show();
 	}
 
-	/*void addPollProcess(){
+	void addPollProcess(){
 		final Dialog dialog = new Dialog(ChattingActivity.this);
 		dialog.setTitle("Create Poll");
 		dialog.setContentView(R.layout.dialog_add_poll);
@@ -401,7 +406,7 @@ public class ChattingActivity extends BaseActivity {
 		btnSave.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Calendar calendar = Calendar.getInstance();
+				/*Calendar calendar = Calendar.getInstance();
 				calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));
 
 				PollChatBubble pollChatBubble = new PollChatBubble("poll","me","","Agatha Cynthia",
@@ -409,13 +414,13 @@ public class ChattingActivity extends BaseActivity {
 
 				adap.add(pollChatBubble);
 				adap.notifyDataSetChanged();
-				listView.setSelection(adap.getCount() - 1);
+				listView.setSelection(adap.getCount() - 1);*/
 				dialog.dismiss();
 
 			}
 		});
 		dialog.show();
-	}*/
+	}
 
 	@Override
 	protected void onPause() {
