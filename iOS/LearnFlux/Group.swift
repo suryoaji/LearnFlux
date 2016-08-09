@@ -24,8 +24,15 @@ struct Group{
         }
     }
     
+    init(type: String, id: String, name: String, thread: Thread) {
+        self.type = type
+        self.id = id
+        self.name = name;
+        self.thread = thread;
+        self.tmpIdThread = self.thread?.id;
+    }
+    
     func getIdThread() -> String?{
         return self.tmpIdThread
     }
-    
 }

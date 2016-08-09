@@ -268,16 +268,38 @@ class Engine : NSObject {
         }
     }
     
+//    static func getGroups(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
+//        makeRequestAlamofire(viewController, method: .GET, url: Url.groups, param: nil) { status, rawJSON in
+//            if let rawJSON = rawJSON! as? Dictionary<String, AnyObject>{
+//                if let rawData = rawJSON["data"]{
+//                    clientData.setGroups(rawData as! Array<Dictionary<String, AnyObject>>)
+//                }
+//            }
+//            if (callback != nil) { callback! (status, rawJSON); }
+//        }
+//    }
+    
+    private static func setMyGroups(groups: Array<Dictionary<String, AnyObject>>){
+        clientData.setMyGroups(groups)
+    }
+    
+    static func getMyGroups() -> [Group]?{
+        return clientData.getMyGroups()
+    }
+    
     static func getGroups(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
-        makeRequestAlamofire(viewController, method: .GET, url: Url.groups, param: nil) { status, rawJSON in
-            if let rawJSON = rawJSON! as? Dictionary<String, AnyObject>{
-                if let rawData = rawJSON["data"]{
-                    clientData.setGroups(rawData as! Array<Dictionary<String, AnyObject>>)
+        makeRequestAlamofire(viewController, url: Url.events, param: nil){ status, dataJSON in
+            if let rawJSON = dataJSON{
+                let json = JSON(rawJSON).dictionaryObject
+                if let data = json?["data"]{
+                    let arrData = data as! Array<Dictionary<String, AnyObject>>
+                    self.setMyGroups(arrData)
                 }
             }
-            if (callback != nil) { callback! (status, rawJSON); }
+            if callback != nil{ callback!(status, dataJSON) }
         }
     }
+    
     
     static func createThread (viewController: UIViewController? = nil, title: String = "", userId: [Int], callback: JSONreturn? = nil) {
         let param = ["participants":userId, "title":title] as [String: AnyObject];

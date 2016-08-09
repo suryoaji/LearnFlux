@@ -125,7 +125,7 @@ class Data : NSObject {
     func setMyEvents(arr: Array<Dictionary<String, AnyObject>>){
         self.events = makeEventsArr(arr)
     }
-    
+
     func makeEventsArr(rawArr : Array<Dictionary<String, AnyObject>>) -> ([Event]){
         var tempEvents : [Event] = []
         for dicEvent in rawArr{
@@ -135,6 +135,36 @@ class Data : NSObject {
             }
         }
         return tempEvents
+    }
+
+    
+    func getMyGroups()->[Group]?{
+        return groups
+    }
+    
+    func setMyGroups(arr: Array<Dictionary<String, AnyObject>>){
+        self.groups = makeGroupsArr(arr)
+    }
+    
+    func makeGroupsArr(rawArr : Array<Dictionary<String, AnyObject>>) -> ([Group]){
+        var tempGroups : [Group] = []
+        for dicGroup in rawArr{
+            let group = convertToGroup(dicGroup)
+            if let inGroup = group{
+                tempGroups.append(inGroup)
+            }
+        }
+        return tempGroups
+    }
+    
+    func convertToGroup(dict: Dictionary<String, AnyObject>) -> (Group?){
+        if let id = dict["id"], let type = dict["type"], let name = dict["name"], let thread = dict["message"]{
+            if let sId = id as? String, let sType = type as? String, let sName = name as? String, let dThread = thread as? Dictionary<String, AnyObject>{
+                let threadRef = Thread(dict: dThread);
+                return Group(type: sType, id: sId, name: sName, thread: threadRef)
+            }
+        }
+        return nil
     }
     
     func cacheThreads() -> (Array<Dictionary<String, AnyObject>>)?{
