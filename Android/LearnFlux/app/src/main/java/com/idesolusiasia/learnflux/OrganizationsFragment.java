@@ -27,6 +27,7 @@ public class OrganizationsFragment extends Fragment {
 
 	private GridLayoutManager lLayout;
 	OrganizationGridRecyclerViewAdapter rcAdapter;
+	ArrayList<Organizations> arrOrg = new ArrayList<Organizations>();
 	RecyclerView rView;
 
 	public OrganizationsFragment() {
@@ -67,12 +68,13 @@ public class OrganizationsFragment extends Fragment {
 		return v;
 	}
 	void initOrganizations(){
+		arrOrg = new ArrayList<>();
 		Engine.getOrganizations(getContext(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try{
 					JSONArray array = obj.getJSONArray("data");
-					ArrayList<Organizations> arrOrg = new ArrayList<Organizations>();
+
 					for(int i=0;i<array.length();i++){
 						Organizations org = Converter.convertOrganizations(array.getJSONObject(i));
 						arrOrg.add(org);

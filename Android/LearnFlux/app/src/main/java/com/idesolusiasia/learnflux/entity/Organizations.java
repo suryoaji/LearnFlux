@@ -15,6 +15,7 @@ public class Organizations {
     private String id;
     private String name;
     private String thumb;
+    private String description;
 
     public String getType() {
         return type;
@@ -45,5 +46,11 @@ public class Organizations {
     }
     public String getThumb(){
         return thumb;
+    }
+    public String getDescription(){
+        return description;
+    }
+    public void setDescription(String description){
+        this.description = description;
     }
 }
