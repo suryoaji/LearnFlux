@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.idesolusiasia.learnflux.adapter.GroupsGridRecyclerViewAdapter;
-import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
 
 import java.util.ArrayList;

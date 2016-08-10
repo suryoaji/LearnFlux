@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.idesolusiasia.learnflux.entity.Organizations;
+import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
@@ -20,8 +20,8 @@ import java.util.ArrayList;
 public class OrgProfileActivity extends BaseActivity {
 	public String id;
 	TextView description;
-	public Organizations organizations =null;
-	public ArrayList<Organizations> org = new ArrayList<>();
+	public Group group =null;
+	public ArrayList<Group> org = new ArrayList<>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,8 +48,8 @@ public class OrgProfileActivity extends BaseActivity {
 			public void execute(JSONObject obj) {
 				try{
 					JSONObject data = obj.getJSONObject("data");
-					organizations = Converter.convertOrganizations(data);
-					description.setText(organizations.getDescription());
+					group = Converter.convertOrganizations(data);
+					description.setText(group.getDescription());
 				}catch (JSONException e){
 					e.printStackTrace();
 				}

@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.R;
-import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Functions;
 
 import java.util.List;

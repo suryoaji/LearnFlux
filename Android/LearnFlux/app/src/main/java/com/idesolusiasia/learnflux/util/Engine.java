@@ -417,7 +417,7 @@ public class Engine {
 	}
 
 	public static void getOrganizations(final Context context,final RequestTemplate.ServiceCallback callback){
-		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ORGANIZATIONS);
+		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_GROUP);
 		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
 			reLogin(context, null);
 		}else{
@@ -434,7 +434,7 @@ public class Engine {
 		}
 	}
 	public static void getOrganizationProfile(final Context context, final String idGroup, final RequestTemplate.ServiceCallback callback){
-		String url= context.getString(R.string.BASE_URL)+ context.getString(R.string.URL_VERSION)+ context.getString(R.string.URL_ORGANIZATIONS_PROFILE, idGroup);
+		String url= context.getString(R.string.BASE_URL)+ context.getString(R.string.URL_VERSION)+ context.getString(R.string.URL_GROUP_PROFILE, idGroup);
 		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
 			reLogin(context,null);
 		}else{
