@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.idesolusiasia.learnflux.adapter.OrganizationGridRecyclerViewAdapter;
-import com.idesolusiasia.learnflux.entity.Organizations;
+import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
@@ -21,13 +21,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class OrganizationsFragment extends Fragment {
 
 	private GridLayoutManager lLayout;
 	OrganizationGridRecyclerViewAdapter rcAdapter;
-	ArrayList<Organizations> arrOrg = new ArrayList<Organizations>();
+	ArrayList<Group> arrOrg = new ArrayList<Group>();
 	RecyclerView rView;
 
 	public OrganizationsFragment() {
@@ -76,7 +75,7 @@ public class OrganizationsFragment extends Fragment {
 					JSONArray array = obj.getJSONArray("data");
 
 					for(int i=0;i<array.length();i++){
-						Organizations org = Converter.convertOrganizations(array.getJSONObject(i));
+						Group org = Converter.convertOrganizations(array.getJSONObject(i));
 						arrOrg.add(org);
 					}
 					rcAdapter = new OrganizationGridRecyclerViewAdapter(getContext(),arrOrg);

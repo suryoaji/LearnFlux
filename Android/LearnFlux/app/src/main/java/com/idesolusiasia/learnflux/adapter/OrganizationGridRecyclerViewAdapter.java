@@ -3,7 +3,6 @@ package com.idesolusiasia.learnflux.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
-import com.idesolusiasia.learnflux.entity.Organizations;
+import com.idesolusiasia.learnflux.entity.Group;
 
 import java.util.ArrayList;
 
@@ -21,10 +20,10 @@ import java.util.ArrayList;
  * Created by NAIT ADMIN on 12/04/2016.
  */
 public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<OrganizationGridRecyclerViewAdapter.OrgTileHolder> {
-	public ArrayList<Organizations> organizations = new ArrayList<>();
+	public ArrayList<Group> organizations = new ArrayList<>();
 	private Context context;
 
-	public OrganizationGridRecyclerViewAdapter(Context context, ArrayList<Organizations> orgs) {
+	public OrganizationGridRecyclerViewAdapter(Context context, ArrayList<Group> orgs) {
 		this.organizations = orgs;
 		this.context = context;
 	}
@@ -37,7 +36,7 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 
 	@Override
 	public void onBindViewHolder(OrgTileHolder holder, int position) {
-		final Organizations org= organizations.get(position);
+		final Group org= organizations.get(position);
 		holder.tvName.setText(org.getName());
 		holder.ivLogo.setDefaultImageResId(R.drawable.organization);
 	}
