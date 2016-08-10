@@ -23,8 +23,7 @@ public class Member {
 	public void setRole(Role role) {
 		this.role = role;
 	}
-
-
+	
 	public static class Role {
 		private String type;
 		private String name;
