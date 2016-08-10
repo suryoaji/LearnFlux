@@ -7,14 +7,14 @@ import java.util.List;
  */
 public class Member {
 
-    private List<Participant> user;
+    private Participant user;
     private Role role;
 
-    public List<Participant> getUser() {
+    public Participant getUser() {
         return user;
     }
 
-    public void setUser(List<Participant> user) {
+    public void setUser(Participant user) {
         this.user = user;
     }
 

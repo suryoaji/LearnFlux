@@ -23,7 +23,7 @@ public class Group {
     @SerializedName("message")
     private Thread thread;
     @SerializedName("participants")
-    private Member memberGroup;
+    private List<Member> memberGroup;
     private List<Group> child;
     private Group parent;
 
@@ -89,11 +89,11 @@ public class Group {
     }
 
 
-    public Member getMemberGroup() {
+    public List<Member> getMemberGroup() {
         return memberGroup;
     }
 
-    public void setMemberGroup(Member memberGroup) {
+    public void setMemberGroup(List<Member> memberGroup) {
         this.memberGroup = memberGroup;
     }
 
