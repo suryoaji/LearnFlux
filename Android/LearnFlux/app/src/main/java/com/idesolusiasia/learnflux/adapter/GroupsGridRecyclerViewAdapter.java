@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Functions;
 
 import java.util.List;
@@ -41,11 +42,9 @@ public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsTi
 	@Override
 	public void onBindViewHolder(GroupsTileHolder holder, int position) {
 		holder.tvGroupName.setText(groups.get(position).getName().toUpperCase());
-		holder.tvGroupDetail.setText(groups.get(position).getDetail().toUpperCase());
 
 		Typeface type=Typeface.createFromAsset(context.getAssets(), context.getString(R.string.font_groups_grid));
 		holder.tvGroupName.setTypeface(type);
-		holder.tvGroupDetail.setTypeface(type);
 
 
 		holder.layout.setBackgroundColor(Functions.generateRandomPastelColor());
@@ -65,7 +64,6 @@ class GroupsTileHolder extends RecyclerView.ViewHolder implements View.OnClickLi
 		super(itemView);
 		itemView.setOnClickListener(this);
 		tvGroupName = (TextView) itemView.findViewById(R.id.tvGroupName);
-		tvGroupDetail = (TextView) itemView.findViewById(R.id.tvGroupDetail);
 		layout = (LinearLayout) itemView.findViewById(R.id.layoutGroupsGrid);
 
 	}

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.idesolusiasia.learnflux.LoginActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
+import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
 
@@ -431,11 +432,11 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					Log.i("Organization_Response", "execute: " + obj.toString());
-					if(callback!=null){
+					if (callback != null) {
 						callback.execute(obj);
 					}
+						}
 
-				}
 			},null);
 		}
 	}

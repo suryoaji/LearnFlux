@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.idesolusiasia.learnflux.adapter.GroupsGridRecyclerViewAdapter;
+import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
 
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ public class OrgGroupFragment extends Fragment {
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v= inflater.inflate(R.layout.fragment_org_group, container, false);
-		List<Group> rowListItem = getAllItemList();
 		lLayout = new GridLayoutManager(getContext(),2);
 
 
@@ -45,19 +45,10 @@ public class OrgGroupFragment extends Fragment {
 		ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.item_offset);
 		rView.addItemDecoration(itemDecoration);
 
-		GroupsGridRecyclerViewAdapter rcAdapter = new GroupsGridRecyclerViewAdapter(getContext(), rowListItem);
-		rView.setAdapter(rcAdapter);
+	/*	GroupsGridRecyclerViewAdapter rcAdapter = new GroupsGridRecyclerViewAdapter(getContext(), rowListItem);
+		rView.setAdapter(rcAdapter);*/
 
 		return v;
 	}
 
-	private List<Group> getAllItemList() {
-		List<Group> allItems = new ArrayList<>();
-		allItems.add(new Group("1","Ma Fine Arts",""));
-		allItems.add(new Group("2","Summer Classes","May-July 2016"));
-		allItems.add(new Group("3","Faculty of Design",""));
-		allItems.add(new Group("4","Faculty Research",""));
-
-		return allItems;
-	}
 }

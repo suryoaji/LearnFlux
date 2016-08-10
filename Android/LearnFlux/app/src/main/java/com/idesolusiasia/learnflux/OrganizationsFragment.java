@@ -73,10 +73,11 @@ public class OrganizationsFragment extends Fragment {
 			public void execute(JSONObject obj) {
 				try{
 					JSONArray array = obj.getJSONArray("data");
-
 					for(int i=0;i<array.length();i++){
 						Group org = Converter.convertOrganizations(array.getJSONObject(i));
-						arrOrg.add(org);
+						if(array.getJSONObject(i).getString("type").equals("organization")) {
+							arrOrg.add(org);
+						}
 					}
 					rcAdapter = new OrganizationGridRecyclerViewAdapter(getContext(),arrOrg);
 					rView.setAdapter(rcAdapter);
