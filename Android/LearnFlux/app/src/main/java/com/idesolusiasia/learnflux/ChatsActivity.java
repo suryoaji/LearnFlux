@@ -110,7 +110,7 @@ public class ChatsActivity extends BaseActivity {
 				case 0:
 					return "Connections";
 				case 1:
-					return "Group";
+					return "Organizations";
 				case 2:
 					return "Chats";
 			}
