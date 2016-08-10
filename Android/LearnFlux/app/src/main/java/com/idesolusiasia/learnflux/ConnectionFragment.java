@@ -197,6 +197,7 @@ public class ConnectionFragment extends Fragment {
 
 						}
 					});
+					dialog.dismiss();
 				}
 			}
 		});

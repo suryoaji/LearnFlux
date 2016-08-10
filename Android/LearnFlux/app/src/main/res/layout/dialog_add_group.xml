@@ -33,8 +33,9 @@
                 android:hint="Group&apos;s Name"
                 android:imeOptions="actionUnspecified"
                 android:maxLines="1"
-                android:singleLine="true" android:focusable="false"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:singleLine="true" android:focusable="true"
+                android:textAppearance="?android:attr/textAppearanceSmall" android:enabled="true"
+                android:editable="true"/>
 
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>

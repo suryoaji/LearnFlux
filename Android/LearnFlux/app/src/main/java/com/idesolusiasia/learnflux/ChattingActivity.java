@@ -37,11 +37,14 @@ import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class ChattingActivity extends BaseActivity {
@@ -166,7 +169,9 @@ public class ChattingActivity extends BaseActivity {
 			public void onClick(View v) {
 
 				if (!TextUtils.isEmpty(etMessage.getText())){
-					Engine.sendMessage(ChattingActivity.this, idThread, etMessage.getText().toString(), new RequestTemplate.ServiceCallback() {
+					Engine.sendMessage(ChattingActivity.this, idThread, etMessage.getText().toString(),
+							null, null,
+							new RequestTemplate.ServiceCallback() {
 						@Override
 						public void execute(JSONObject obj) {
 							refreshDB();
@@ -384,7 +389,7 @@ public class ChattingActivity extends BaseActivity {
 		final Dialog dialog = new Dialog(ChattingActivity.this);
 		dialog.setTitle("Create Poll");
 		dialog.setContentView(R.layout.dialog_add_poll);
-
+		final EditText etTitle = (EditText) dialog.findViewById(R.id.add_poll_title);
 		final EditText etQuestion = (EditText) dialog.findViewById(R.id.add_poll_question);
 		final ListView listView = (ListView) dialog.findViewById(R.id.listViewPoll);
 		Button btnAddAnswer = (Button) dialog.findViewById(R.id.btnAddAnswer);
@@ -406,16 +411,28 @@ public class ChattingActivity extends BaseActivity {
 		btnSave.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				/*Calendar calendar = Calendar.getInstance();
-				calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));
+				List<String> options = pollAnswerAdapter.getList();
+				try {
+					JSONArray opt = new JSONArray();
+					for (int i=0;i<options.size();i++){
+						JSONObject obj = new JSONObject();
+						obj.put("name",options.get(i));
+						obj.put("value",String.valueOf(i));
+						opt.put(obj);
+					}
 
-				PollChatBubble pollChatBubble = new PollChatBubble("poll","me","","Agatha Cynthia",
-						calendar, "", pollAnswerAdapter.getList(),etQuestion.getText().toString());
+					Engine.createPoll(ChattingActivity.this, etTitle.getText().toString(),
+							etQuestion.getText().toString(), opt, idThread, new RequestTemplate.ServiceCallback() {
+								@Override
+								public void execute(JSONObject obj) {
+									refreshDB();
+									dialog.dismiss();
+								}
+							});
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 
-				adap.add(pollChatBubble);
-				adap.notifyDataSetChanged();
-				listView.setSelection(adap.getCount() - 1);*/
-				dialog.dismiss();
 
 			}
 		});

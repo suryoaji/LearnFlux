@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="I&apos;m interested"
-            android:id="@+id/rbInterested" android:checked="false" android:visibility="gone"/>
+            android:id="@+id/rbInterested" android:checked="false" android:visibility="visible"/>
     </RadioGroup>
     <LinearLayout
         android:orientation="horizontal"

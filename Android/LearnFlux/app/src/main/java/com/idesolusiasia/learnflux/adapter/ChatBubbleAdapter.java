@@ -292,7 +292,7 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 		final RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.rgEvent);
 		final RadioButton rbGoing = (RadioButton) dialog.findViewById(R.id.rbGoing);
 		final RadioButton rbNotGoing = (RadioButton) dialog.findViewById(R.id.rbNotGoing);
-		/*RadioButton rbInterested = (RadioButton) dialog.findViewById(R.id.rbInterested);*/
+		final RadioButton rbInterested = (RadioButton) dialog.findViewById(R.id.rbInterested);
 		Button btnChatRoom = (Button) dialog.findViewById(R.id.btnChatRoom);
 		Button btnOK = (Button) dialog.findViewById(R.id.btnOK);
 		ImageView ivAddToCalendar = (ImageView) dialog.findViewById(R.id.ivAddToCalendar);
@@ -309,10 +309,12 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 		});
 		int rsvp = e.getRSVPByParticipantID(User.getUser().getID());
 
-		if (rsvp==1){
+		if (rsvp==2){
 			rbGoing.setChecked(true);
-		}else if (rsvp==2){
+		}else if (rsvp==-1){
 			rbNotGoing.setChecked(true);
+		}else if (rsvp==1){
+			rbInterested.setChecked(true);
 		}
 		btnChatRoom.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -334,9 +336,11 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 				};
 
 				if (radioGroup.getCheckedRadioButtonId()==rbGoing.getId()){
-					Engine.changeRSVPStatus(c, e.getId(), 1, dismissDialog);
-				}else if (radioGroup.getCheckedRadioButtonId()==rbNotGoing.getId()){
 					Engine.changeRSVPStatus(c, e.getId(), 2, dismissDialog);
+				}else if (radioGroup.getCheckedRadioButtonId()==rbNotGoing.getId()){
+					Engine.changeRSVPStatus(c, e.getId(), -1, dismissDialog);
+				}else if (radioGroup.getCheckedRadioButtonId()==rbInterested.getId()){
+					Engine.changeRSVPStatus(c, e.getId(), 1, dismissDialog);
 				}else {
 					Engine.changeRSVPStatus(c, e.getId(), 0, dismissDialog);
 				}

@@ -335,13 +335,19 @@ public class Engine {
 		}
 	}
 
-	public static void sendMessage(final Context context, final String idThread, final String message, final RequestTemplate.ServiceCallback callback){
+	public static void sendMessage(final Context context, final String idThread, final String message, final String refID, final String refType, final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
 				context.getString(R.string.URL_THREAD_MESSAGES,idThread);
 
 		JSONObject params = new JSONObject();
 		try {
 			params.put("body", message);
+			if (refID!=null){
+				JSONObject ref = new JSONObject();
+				ref.put("id", refID);
+				ref.put("type", refType);
+				params.put("reference", ref);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -350,7 +356,7 @@ public class Engine {
 			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					sendMessage(context, idThread, message, callback);
+					sendMessage(context, idThread, message, refID, refType, callback);
 				}
 			});
 		}else {
@@ -516,10 +522,10 @@ public class Engine {
 		}
 	}
 
-	public static void createPoll(final Context context, String title, String question, JSONArray options, final String groupType,
-	                               final RequestTemplate.ServiceCallback callback){
+	public static void createPoll(final Context context, final String title, final String question, final JSONArray options, final String idThread,
+	                              final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
-				context.getString(R.string.URL_EVENTS);
+				context.getString(R.string.URL_POLL);
 
 		JSONObject params = new JSONObject();
 		try {
@@ -534,7 +540,51 @@ public class Engine {
 			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					createEvent(context, useGroup, title, details, location, timestamp, participantIds, groupID, groupType, callback);
+					createPoll(context, title, question, options, idThread, callback);	}
+			});
+		}else {
+			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if (obj!=null){
+
+						try {
+							Log.i("create_poll", obj.toString());
+							sendMessage(context,idThread,User.getUser().getName()+" create a poll", obj.getJSONObject("data").getString("id"),"poll",callback);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+
+					}
+					if (callback!=null){
+						callback.execute(obj);
+					}
+
+				}
+			},null);
+		}
+	}
+	public static void createGroup(final Context context, final int[] ids, final String name,
+	                               final String description, final String parentID, final String type,
+	                               final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_GROUP);
+		HashMap<String,int[]> par = new HashMap<>();
+		par.put("participants",ids);
+		JSONObject params = new JSONObject(par);
+		try {
+			params.put("name", name);
+			params.put("description", description);
+			params.put("parent", parentID);
+			params.put("type", type);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					createGroup(context, ids, name, description, parentID, type, callback);
 				}
 			});
 		}else {
@@ -542,10 +592,17 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj!=null){
-						Log.i("create_event", obj.toString());
-					}
-					if (callback!=null){
-						callback.execute(obj);
+
+						try {
+							Thread t = Converter.convertThread(obj.getJSONObject("data"));
+							DatabaseFunction.insertSingleThread(context,t);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						if (callback!=null){
+							callback.execute(obj);
+						}
+
 					}
 
 				}

@@ -7,8 +7,26 @@
               android:layout_height="match_parent">
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp" android:id="@+id/view">
+        android:layout_height="wrap_content"
+        android:id="@+id/view2">
+
+        <EditText
+            android:id="@+id/add_poll_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:imeOptions="actionUnspecified"
+            android:maxLines="1"
+            android:singleLine="true" android:focusable="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:enabled="true" android:editable="true"/>
+
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/view" android:layout_below="@+id/view2"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true">
 
         <EditText
             android:id="@+id/add_poll_question"
