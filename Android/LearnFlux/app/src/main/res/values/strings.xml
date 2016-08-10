@@ -94,7 +94,7 @@
     <string name="URL_REGISTER">register</string>
     <string name="URL_ORGANIZATIONS">groups</string>
     <string name="URL_EVENTS">events</string>
-    <string name="URL_ORGANIZATIONS_PROFILE">groups/%s</string>
+    <string name="URL_GROUP_PROFILE">groups/%s</string>
     <string name="URL_GROUP">groups</string>
     <string name="URL_POLL">poll</string>
 
