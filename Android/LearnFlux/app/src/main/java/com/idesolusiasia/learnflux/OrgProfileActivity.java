@@ -1,10 +1,12 @@
 package com.idesolusiasia.learnflux;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.entity.Group;
@@ -19,7 +21,8 @@ import java.util.ArrayList;
 
 public class OrgProfileActivity extends BaseActivity {
 	public String id;
-	TextView description;
+	TextView description, title;
+	ImageView message;
 	public Group group =null;
 	public ArrayList<Group> org = new ArrayList<>();
 	@Override
@@ -39,7 +42,17 @@ public class OrgProfileActivity extends BaseActivity {
 
 		id =  getIntent().getStringExtra("id");
 		description = (TextView)findViewById(R.id.textView4);
+		title = (TextView)findViewById(R.id.textView3);
 		getProfile();
+		message = (ImageView)findViewById(R.id.imageView10);
+		message.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent toChat = new Intent(OrgProfileActivity.this, ChattingActivity.class);
+				toChat.putExtra("idThread", group.getThread().getId());
+				startActivity(toChat);
+			}
+		});
 	}
 	void getProfile(){
 		org = new ArrayList<>();
@@ -50,6 +63,7 @@ public class OrgProfileActivity extends BaseActivity {
 					JSONObject data = obj.getJSONObject("data");
 					group = Converter.convertOrganizations(data);
 					description.setText(group.getDescription());
+					title.setText(group.getName());
 				}catch (JSONException e){
 					e.printStackTrace();
 				}

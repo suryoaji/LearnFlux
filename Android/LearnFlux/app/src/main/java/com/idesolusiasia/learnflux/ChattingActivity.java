@@ -71,6 +71,7 @@ public class ChattingActivity extends BaseActivity {
 		super.onCreateDrawer(savedInstanceState);
 
 		idThread = getIntent().getStringExtra("idThread");
+		Log.i(TAG, "onCreate: "+ getIntent().getStringExtra("idThread") );
 
 		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -371,9 +372,6 @@ public class ChattingActivity extends BaseActivity {
 
 				/*Calendar calendar = Calendar.getInstance();
 				calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));*/
-
-
-
 
 				/*Event bubble = new Event(etDesc.getText(),);
 				adap.add(bubble);
