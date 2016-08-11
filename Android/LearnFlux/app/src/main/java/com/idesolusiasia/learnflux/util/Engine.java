@@ -633,7 +633,7 @@ public class Engine {
 				}
 			});
 		}else {
-			RequestTemplate.PUTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj!=null){

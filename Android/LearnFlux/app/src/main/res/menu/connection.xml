@@ -5,6 +5,6 @@
       tools:context=".ChatsActivity">
     <item android:id="@+id/new_group"
           android:orderInCategory="100"
-          android:title="New Thread"
+          android:title="New Group"
           app:showAsAction="always|withText"/>
 </menu>

@@ -60,8 +60,12 @@ public class ChattingActivity extends BaseActivity {
 	boolean pause=false;
 	Thread thread;
 
+
+
 	private int mInterval = 5000; // 5 seconds by default, can be changed later
 	private Handler mHandler;
+	LinearLayout attachmentLayout;
+	ImageView ivAttachment;
 
 	private static final String TAG  = "Chatting";
 	@Override
@@ -71,6 +75,7 @@ public class ChattingActivity extends BaseActivity {
 		super.onCreateDrawer(savedInstanceState);
 
 		idThread = getIntent().getStringExtra("idThread");
+
 		Log.i(TAG, "onCreate: "+ getIntent().getStringExtra("idThread") );
 
 		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
@@ -127,8 +132,8 @@ public class ChattingActivity extends BaseActivity {
 		ImageView ivSend = (ImageView) findViewById(R.id.ivSend);
 
 
-		final LinearLayout attachmentLayout = (LinearLayout) findViewById(R.id.attachmentLayout);
-		ImageView ivAttachment = (ImageView) findViewById(R.id.ivAttachment);
+		attachmentLayout = (LinearLayout) findViewById(R.id.attachmentLayout);
+		ivAttachment = (ImageView) findViewById(R.id.ivAttachment);
 		ivAttachment.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -212,6 +217,7 @@ public class ChattingActivity extends BaseActivity {
 			}
 		});
 
+		initChatBubble();
 		refreshDB();
 		etMessage.clearFocus();
 
@@ -253,6 +259,10 @@ public class ChattingActivity extends BaseActivity {
 	void initChatBubble(){
 		//read from local database, compare with now shown adapter
 		thread = DatabaseFunction.getThreadDetail(getApplicationContext(),idThread);
+		if (thread.getParticipants().size()==2){
+			attachmentLayout.setVisibility(View.GONE);
+			ivAttachment.setVisibility(View.GONE);
+		}
 		if (adap==null){
 			adap=new ChatBubbleAdapter(ChattingActivity.this,thread.getMessages());
 			listView.setAdapter(adap);
