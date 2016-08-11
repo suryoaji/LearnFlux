@@ -10,7 +10,13 @@ import android.view.ViewGroup;
 
 import com.idesolusiasia.learnflux.adapter.GroupsGridRecyclerViewAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.util.Converter;
+import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +24,9 @@ import java.util.List;
 
 public class OrgGroupFragment extends Fragment {
 	private GridLayoutManager lLayout;
+	public Group group =null;
+	public String id;
+	RecyclerView rView;
 
 	public static OrgGroupFragment newInstance() {
 		OrgGroupFragment fragment = new OrgGroupFragment();
@@ -37,18 +46,31 @@ public class OrgGroupFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View v= inflater.inflate(R.layout.fragment_org_group, container, false);
 		lLayout = new GridLayoutManager(getContext(),2);
+		id= getActivity().getIntent().getStringExtra("id");
+		getProfile();
 
 
-		RecyclerView rView = (RecyclerView)v.findViewById(R.id.recycler_view);
+		rView = (RecyclerView)v.findViewById(R.id.recycler_view);
 		rView.setHasFixedSize(true);
 		rView.setLayoutManager(lLayout);
 		ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.item_offset);
 		rView.addItemDecoration(itemDecoration);
-
-	/*	GroupsGridRecyclerViewAdapter rcAdapter = new GroupsGridRecyclerViewAdapter(getContext(), rowListItem);
-		rView.setAdapter(rcAdapter);*/
-
 		return v;
+	}
+	private void getProfile(){
+		Engine.getOrganizationProfile(getContext(), id, new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				try{
+					JSONObject data = obj.getJSONObject("data");
+					group = Converter.convertOrganizations(data);
+					GroupsGridRecyclerViewAdapter rcAdapter = new GroupsGridRecyclerViewAdapter(getContext(), group.getChild());
+					rView.setAdapter(rcAdapter);
+				}catch (JSONException e){
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 }

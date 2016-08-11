@@ -57,7 +57,7 @@ public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsTi
 	}
 }
 class GroupsTileHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-	public TextView tvGroupName, tvGroupDetail;
+	public TextView tvGroupName;
 	public LinearLayout layout;
 
 	public GroupsTileHolder(View itemView) {
