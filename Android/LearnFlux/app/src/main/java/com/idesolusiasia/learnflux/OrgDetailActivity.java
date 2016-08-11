@@ -16,21 +16,29 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
-	public String id;
+	public String id, title, details, type;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents;
@@ -43,6 +51,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 
 		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		id = getIntent().getStringExtra("id");
+		type = getIntent().getStringExtra("type");
 		Log.i("TEST", "onCreate: " + id);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View childLayout = layoutInflater.inflate(
@@ -178,12 +187,10 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		dialog.setContentView(R.layout.dialog_add_event);
 		final EditText etDate = (EditText) dialog.findViewById(R.id.add_event_date);
 		final EditText etStart = (EditText) dialog.findViewById(R.id.add_event_time);
-		/*final EditText etEnd = (EditText) dialog.findViewById(R.id.add_event_end);*/
 		final EditText etTitle = (EditText) dialog.findViewById(R.id.add_event_title);
 		final EditText etDesc = (EditText) dialog.findViewById(R.id.add_event_description);
 		final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEEE, dd MMM yyyy", Locale.US);
 		final Calendar calStart = Calendar.getInstance();
-		/*final Calendar calEnd = Calendar.getInstance();*/
 		etDate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -203,7 +210,6 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		etStart.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//String birthdate = me.getBirthdate();
 				TimePickerDialog timePickerDialog = new TimePickerDialog(OrgDetailActivity.this, new TimePickerDialog.OnTimeSetListener() {
 
 					@Override
@@ -216,22 +222,23 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 				timePickerDialog.show();
 			}
 		});
-		dialog.show();
-		/*etEnd.setOnClickListener(new View.OnClickListener() {
+		Button btnAdd = (Button)dialog.findViewById(R.id.btnSubmitEvent);
+		btnAdd.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				//String birthdate = me.getBirthdate();
-				TimePickerDialog timePickerDialog = new TimePickerDialog(ChattingActivity.this, new TimePickerDialog.OnTimeSetListener() {
-
+			public void onClick(View view) {
+				details = etDesc.getText().toString().trim();
+				title = etTitle.getText().toString().trim();
+				Date date = calStart.getTime();
+				Long miliseconds= date.getTime();
+				Engine.createEvent(getApplicationContext(), true, title, details, "location/still not done", miliseconds, null, id, type, new RequestTemplate.ServiceCallback() {
 					@Override
-					public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-						calEnd.set(Calendar.HOUR_OF_DAY, hourOfDay);
-						calEnd.set(Calendar.MINUTE, minute);
-						etEnd.setText(timeFormatter.format(calEnd.getTime()));
+					public void execute(JSONObject obj) {
+						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
+						dialog.dismiss();
 					}
-				}, calStart.get(Calendar.HOUR_OF_DAY)+1, calStart.get(Calendar.MINUTE), true);
-				timePickerDialog.show();
+				});
 			}
-		});*/
+		});
+		dialog.show();
 	}
 }

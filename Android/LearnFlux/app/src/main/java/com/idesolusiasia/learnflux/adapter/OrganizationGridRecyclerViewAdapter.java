@@ -65,6 +65,7 @@ public class OrgTileHolder extends RecyclerView.ViewHolder {
 				Toast.makeText(view.getContext(), tvName.getText() + " clicked", Toast.LENGTH_SHORT).show();
 				Intent i = new Intent(view.getContext(), OrgDetailActivity.class);
 				i.putExtra("id", organizations.get(pos).getId());
+				i.putExtra("type", organizations.get(pos).getType());
 				view.getContext().startActivity(i);
 				//Toast.makeText(view.getContext(), "Clicked Position = " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
 		/*if (text.getText().toString().equalsIgnoreCase("chat")){
