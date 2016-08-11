@@ -23,6 +23,8 @@ import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.Message;
 import com.idesolusiasia.learnflux.entity.MessageEvent;
+import com.idesolusiasia.learnflux.entity.MessagePoll;
+import com.idesolusiasia.learnflux.entity.Poll;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
@@ -33,6 +35,7 @@ import com.idesolusiasia.learnflux.util.VolleySingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,6 +71,12 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 				return TYPE_EVENT_ME;
 			}else{
 				return TYPE_EVENT_OTHER;
+			}
+		}else if (chatBubbles.get(position) instanceof MessagePoll){
+			if (me){
+				return TYPE_POLL_ME;
+			}else{
+				return TYPE_POLL_OTHER;
 			}
 		}else{
 			if (me){
@@ -254,7 +263,78 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 							});
 						}
 					});
+					break;
+				case TYPE_POLL_ME:
+					ViewHolderPollMe viewHolderPollMe;
+					if (row==null){
+						row = inflater.inflate(R.layout.row_chatpoll_me, null);
+						viewHolderPollMe = new ViewHolderPollMe();
+						viewHolderPollMe.pollTitle = (TextView) row.findViewById(R.id.tvPollTitle);
+						viewHolderPollMe.timestamp = (TextView) row.findViewById(R.id.tvTime);
+						viewHolderPollMe.bubbleLayout = (LinearLayout) row.findViewById(R.id.bubbleLayout);
+						row.setTag(viewHolderPollMe);
+					}else{
+						viewHolderPollMe=(ViewHolderPollMe) row.getTag();
+					}
+					final Poll pollMe=((MessagePoll)e).getPoll();
+					viewHolderPollMe.pollTitle.setText(((MessagePoll)e).getPoll().getTitle());
+					viewHolderPollMe.timestamp.setText(e.getCreatedAtDate());
+					viewHolderPollMe.bubbleLayout.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(final View view) {
+							Engine.getPollById(view.getContext(), pollMe.getId(), new RequestTemplate.ServiceCallback() {
+								@Override
+								public void execute(JSONObject obj) {
+									try {
+										Poll p = Converter.convertPoll(obj.getJSONObject("data"));
+										showPollDetails(p,view.getContext());
+									} catch (JSONException e1) {
+										e1.printStackTrace();
+									}
+								}
+							});
+						}
+					});
+					break;
+				case TYPE_POLL_OTHER:
+					ViewHolderPollOther viewHolderPollOther;
 
+					if (row==null){
+						row = inflater.inflate(R.layout.row_chatpoll_other, null);
+						viewHolderPollOther=new ViewHolderPollOther();
+						viewHolderPollOther.pollTitle = (TextView) row.findViewById(R.id.tvPollTitle);
+						viewHolderPollOther.timestamp = (TextView) row.findViewById(R.id.tvTime);
+						viewHolderPollOther.ivUser = (NetworkImageView) row.findViewById(R.id.ivPhoto);
+						viewHolderPollOther.name = (TextView) row.findViewById(R.id.tvName);
+						viewHolderPollOther.bubbleLayout = (LinearLayout) row.findViewById(R.id.bubbleLayout);
+						row.setTag(viewHolderPollOther);
+					}else{
+						viewHolderPollOther=(ViewHolderPollOther) row.getTag();
+					}
+					final Poll pollOther=((MessagePoll)e).getPoll();
+
+					viewHolderPollOther.pollTitle.setText(((MessagePoll)e).getPoll().getTitle());
+					viewHolderPollOther.timestamp.setText(e.getCreatedAtDate());
+					viewHolderPollOther.ivUser.setImageUrl(e.getSender().getPhoto(),
+							VolleySingleton.getInstance(getContext().getApplicationContext()).getImageLoader());
+					viewHolderPollOther.ivUser.setDefaultImageResId(R.drawable.me);
+					viewHolderPollOther.name.setText(e.getSender().getFirstName());
+					viewHolderPollOther.bubbleLayout.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(final View view) {
+							Engine.getPollById(view.getContext(), pollOther.getId(), new RequestTemplate.ServiceCallback() {
+								@Override
+								public void execute(JSONObject obj) {
+									try {
+										Poll p = Converter.convertPoll(obj.getJSONObject("data"));
+										showPollDetails(p,view.getContext());
+									} catch (JSONException e1) {
+										e1.printStackTrace();
+									}
+								}
+							});
+						}
+					});
 					break;
 				default:
 					//any other type
@@ -307,7 +387,12 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 				addEventToCalendar(e,c);
 			}
 		});
-		int rsvp = e.getRSVPByParticipantID(User.getUser().getID());
+
+		if (meID==e.getCreated_by().getId()){
+			radioGroup.setVisibility(View.GONE);
+		}
+
+		final int rsvp = e.getRSVPByParticipantID(User.getUser().getID());
 
 		if (rsvp==2){
 			rbGoing.setChecked(true);
@@ -335,15 +420,83 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 					}
 				};
 
+				int newRSVP=0;
+
 				if (radioGroup.getCheckedRadioButtonId()==rbGoing.getId()){
-					Engine.changeRSVPStatus(c, e.getId(), 2, dismissDialog);
+					newRSVP=2;
 				}else if (radioGroup.getCheckedRadioButtonId()==rbNotGoing.getId()){
-					Engine.changeRSVPStatus(c, e.getId(), -1, dismissDialog);
+					newRSVP=-1;
 				}else if (radioGroup.getCheckedRadioButtonId()==rbInterested.getId()){
-					Engine.changeRSVPStatus(c, e.getId(), 1, dismissDialog);
+					newRSVP=1;
 				}else {
-					Engine.changeRSVPStatus(c, e.getId(), 0, dismissDialog);
+					newRSVP=0;
 				}
+				if (meID==e.getCreated_by().getId()){
+					if (newRSVP!=rsvp){
+						Functions.showAlert(c,"Event", "You created this Event, by default you are listed as going and it can't be changed");
+					}
+					dismissDialog.execute(null);
+				}else {
+					Engine.changeRSVPStatus(c, e.getId(), newRSVP, dismissDialog);
+				}
+
+			}
+		});
+		dialog.show();
+
+	}
+
+	void showPollDetails(final Poll p, final Context c){
+
+		final Dialog dialog = new Dialog(c);
+		//dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setTitle("Poll Detail");
+
+		dialog.setContentView(R.layout.dialog_poll_detail);
+		TextView tvTitle = (TextView) dialog.findViewById(R.id.tvTitle);
+		TextView tvQuestion = (TextView) dialog.findViewById(R.id.tvQuestion);
+		final RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.rgPoll);
+		Button btnOK = (Button) dialog.findViewById(R.id.btnOK);
+
+		tvTitle.setText(p.getTitle());
+		tvQuestion.setText(p.getQuestion());
+
+		final List<RadioButton> radioButtons = new ArrayList<>();
+		String myAnswer = p.alreadyAnswer(meID);
+		for (Poll.PollOption opt:p.getOptions()) {
+			RadioButton rb = new RadioButton(c);
+			rb.setText(opt.getName());
+			rb.setTag(opt);
+			if (myAnswer!=null){
+				rb.setEnabled(false);
+				if (myAnswer.equalsIgnoreCase(opt.getValue())){
+					rb.setChecked(true);
+				}
+			}
+			radioButtons.add(rb);
+			radioGroup.addView(rb);
+		}
+		
+
+		btnOK.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				RequestTemplate.ServiceCallback dismissDialog = new RequestTemplate.ServiceCallback() {
+					@Override
+					public void execute(JSONObject obj) {
+						dialog.dismiss();
+					}
+				};
+				Poll.PollOption selectedOpt = null;
+				for (int i = 0; i <radioButtons.size() ; i++) {
+					if (radioGroup.getCheckedRadioButtonId()==radioButtons.get(i).getId()){
+						selectedOpt = (Poll.PollOption)radioButtons.get(i).getTag();
+					}
+				}
+				if (selectedOpt!=null){
+					Engine.postPollAnswer(c, p.getId(),selectedOpt.getValue(),dismissDialog);
+				}
+
 			}
 		});
 		dialog.show();
@@ -374,6 +527,16 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 	private class ViewHolderEventMe{
 		TextView eventTitle, eventDate, eventLocation, timestamp;
 		ImageView ivAddToCalendar;
+		LinearLayout bubbleLayout;
+	}
+
+	private class ViewHolderPollOther{
+		NetworkImageView ivUser;
+		TextView name, pollTitle, timestamp;
+		LinearLayout bubbleLayout;
+	}
+	private class ViewHolderPollMe{
+		TextView pollTitle, timestamp;
 		LinearLayout bubbleLayout;
 	}
 }

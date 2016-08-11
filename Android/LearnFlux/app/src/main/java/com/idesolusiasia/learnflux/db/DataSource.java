@@ -10,6 +10,7 @@ import android.util.Log;
 import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.Message;
 import com.idesolusiasia.learnflux.entity.MessageEvent;
+import com.idesolusiasia.learnflux.entity.MessagePoll;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.Poll;
 import com.idesolusiasia.learnflux.entity.Thread;
@@ -168,6 +169,10 @@ public class DataSource {
 			values.put(DatabaseHelper.COLUMN_MESSAGE_REFID,((MessageEvent)m).getEvent().getId());
 			values.put(DatabaseHelper.COLUMN_MESSAGE_REFTYPE,((MessageEvent)m).getEvent().getType());
 			createEvent(((MessageEvent)m).getEvent());
+		}else if (m instanceof MessagePoll){
+			values.put(DatabaseHelper.COLUMN_MESSAGE_REFID,((MessagePoll)m).getPoll().getId());
+			values.put(DatabaseHelper.COLUMN_MESSAGE_REFTYPE,((MessagePoll)m).getPoll().getType());
+			createPoll(((MessagePoll)m).getPoll());
 		}
 		db.insert(DatabaseHelper.TABLE_MESSAGE,null,values);
 
@@ -218,6 +223,9 @@ public class DataSource {
 			if (cursor.getString(6).equalsIgnoreCase("event")){
 				m=new MessageEvent();
 				((MessageEvent)m).setEvent(getEventByID(cursor.getString(5)));
+			}else if (cursor.getString(6).equalsIgnoreCase("poll")){
+				m=new MessagePoll();
+				((MessagePoll)m).setPoll(getPollByID(cursor.getString(5)));
 			}
 		}
 
@@ -305,7 +313,7 @@ public class DataSource {
 	public Poll getPollByID(String pollID){
 
 		Cursor cursor = db.query(DatabaseHelper.TABLE_POLL,
-				allColumnsPARTICIPANTS,DatabaseHelper.COLUMN_EVENT_ID+"=?",new String[] {pollID},null,null,
+				allColumnsPOLL,DatabaseHelper.COLUMN_POLL_ID+"=?",new String[] {pollID},null,null,
 				DatabaseHelper.COLUMN_POLL_ID+" desc","1");
 
 		if (cursor != null)

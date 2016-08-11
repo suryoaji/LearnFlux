@@ -6,17 +6,24 @@
               android:layout_height="match_parent" android:minWidth="250dp"
 >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ivAddToCalendar" android:layout_gravity="right"
-        android:src="@drawable/calendar_add"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Parent Meeting"
-        android:id="@+id/tvTitle" android:layout_gravity="center_horizontal"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Parent Meeting"
+            android:id="@+id/tvTitle" android:layout_gravity="center_horizontal"
+            android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivAddToCalendar" android:layout_gravity="right"
+            android:src="@drawable/calendar_add"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

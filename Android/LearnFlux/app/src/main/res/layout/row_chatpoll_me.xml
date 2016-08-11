@@ -30,19 +30,19 @@
         </LinearLayout>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:textAppearance="?android:attr/textAppearanceSmall"
-                  android:text="You have created a poll question" android:id="@+id/textView12"
+                  android:text="You have created a poll" android:id="@+id/textView12"
                   android:textColor="@color/textColorPrimary" android:clickable="false"
                   android:focusable="false"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:textAppearance="?android:attr/textAppearanceSmall"
-                  android:text="Do you enjoy this Parent Meeting event?" android:id="@+id/tvPollQuestion"
+                  android:text="Parent Meeting poll" android:id="@+id/tvPollTitle"
                   android:layout_marginTop="10dp" android:textStyle="bold"
                   android:textColor="@color/textColorPrimary" android:clickable="false"
                   android:focusable="false"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:textAppearance="?android:attr/textAppearanceSmall"
                   android:text="click to respond " android:id="@+id/textView20"
-                  android:layout_marginTop="10dp" android:textStyle="italic"
+                  android:layout_marginTop="5dp" android:textStyle="italic"
                   android:textColor="@color/textColorPrimary" android:clickable="false"
                   android:focusable="false"/>
         <TextView

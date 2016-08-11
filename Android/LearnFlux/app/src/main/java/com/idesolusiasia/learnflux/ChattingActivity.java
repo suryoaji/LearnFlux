@@ -390,7 +390,7 @@ public class ChattingActivity extends BaseActivity {
 		final EditText etTitle = (EditText) dialog.findViewById(R.id.add_poll_title);
 		final EditText etQuestion = (EditText) dialog.findViewById(R.id.add_poll_question);
 		final ListView listView = (ListView) dialog.findViewById(R.id.listViewPoll);
-		Button btnAddAnswer = (Button) dialog.findViewById(R.id.btnAddAnswer);
+		ImageView btnAddAnswer = (ImageView) dialog.findViewById(R.id.btnAddAnswer);
 		Button btnSave = (Button) dialog.findViewById(R.id.btnSavePoll);
 		ArrayList<String> arr = new ArrayList<>();
 		arr.add(" ");

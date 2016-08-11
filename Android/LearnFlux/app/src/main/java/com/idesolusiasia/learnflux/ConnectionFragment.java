@@ -20,7 +20,9 @@ import android.widget.ListView;
 
 import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
+import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Participant;
+import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
@@ -143,7 +145,10 @@ public class ConnectionFragment extends Fragment {
 					JSONArray datas = obj.getJSONArray("data");
 					ArrayList<Participant> p = new ArrayList<Participant>();
 					for (int i=0;i<datas.length();i++){
-						p.add(Converter.convertPeople(datas.getJSONObject(i)));
+						Participant participant = Converter.convertPeople(datas.getJSONObject(i));
+						if (participant.getId()!= User.getUser().getID()){
+							p.add(participant);
+						}
 					}
 
 					if (p.size()>=0){
@@ -167,7 +172,8 @@ public class ConnectionFragment extends Fragment {
 		dialog.setTitle("Create Group");
 		dialog.setContentView(R.layout.dialog_add_group);
 
-		final EditText editText = (EditText) dialog.findViewById(R.id.add_group_name);
+		final EditText etName = (EditText) dialog.findViewById(R.id.add_group_name);
+		final EditText etDesc = (EditText) dialog.findViewById(R.id.add_group_description);
 		Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
 		Button btnSave = (Button) dialog.findViewById(R.id.btnSubmitGroup);
 
@@ -181,13 +187,15 @@ public class ConnectionFragment extends Fragment {
 		btnSave.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				String text = editText.getText().toString();
-				if (!text.isEmpty()){
-					Engine.createThread(getContext(), ids, text, new RequestTemplate.ServiceCallback() {
+				String textName = etName.getText().toString();
+				String textDesc = etDesc.getText().toString();
+				if (!textName.isEmpty()){
+					Engine.createGroup(getContext(),ids,textName,textDesc,null,"group",new RequestTemplate.ServiceCallback() {
 						@Override
 						public void execute(JSONObject obj) {
 							try {
-								String id = obj.getJSONObject("data").getString("id");
+								Group g = Converter.convertGroup(obj.getJSONObject("data"));
+								String id = g.getThread().getId();
 								Intent i = new Intent(getContext(),ChattingActivity.class);
 								i.putExtra("idThread",id);
 								startActivity(i);

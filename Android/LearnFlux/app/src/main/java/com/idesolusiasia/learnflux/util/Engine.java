@@ -575,7 +575,9 @@ public class Engine {
 		try {
 			params.put("name", name);
 			params.put("description", description);
-			params.put("parent", parentID);
+			if (parentID!=null){
+				params.put("parent", parentID);
+			}
 			params.put("type", type);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -595,8 +597,8 @@ public class Engine {
 					if (obj!=null){
 
 						try {
-							Thread t = Converter.convertThread(obj.getJSONObject("data"));
-							DatabaseFunction.insertSingleThread(context,t);
+							Group g = Converter.convertGroup(obj.getJSONObject("data"));
+							DatabaseFunction.insertSingleThread(context,g.getThread());
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -610,7 +612,69 @@ public class Engine {
 			},null);
 		}
 	}
+	public static void postPollAnswer(final Context context, final String pollID, final String answerValue,
+	                                    final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_POLL)+"/"+pollID;
 
+		JSONObject params = new JSONObject();
+		try {
+			params.put("option",answerValue);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		Log.i("postPollAnswer", params.toString());
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					postPollAnswer(context, pollID, answerValue, callback);
+				}
+			});
+		}else {
+			RequestTemplate.PUTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if (obj!=null){
+						Log.i("post_poll_answer", obj.toString());
+					}
+					if (callback!=null){
+						callback.execute(obj);
+					}
+
+				}
+			},null);
+		}
+	}
+
+	public static void getPollById(final Context context, final String pollID,
+	                                final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_POLL)+"/"+pollID;
+
+		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					getPollById(context, pollID, callback);
+				}
+			});
+		}else {
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if (obj!=null){
+						Log.i("get_poll", obj.toString());
+					}
+					if (callback!=null){
+						callback.execute(obj);
+					}
+
+				}
+			},null);
+		}
+	}
 
 
 }
