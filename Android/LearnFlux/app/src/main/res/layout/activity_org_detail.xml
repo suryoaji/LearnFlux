@@ -55,17 +55,6 @@
                     android:src="@drawable/icon_groups" android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
                     android:layout_gravity="center_horizontal"/>
-                <TextView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="3"
-                    android:id="@+id/tvNotifGroups"
-                    android:background="@drawable/round_background_green" android:gravity="center_vertical|center_horizontal"
-                    android:textColor="#ffffff" android:textSize="10dp"
-                    android:layout_alignParentTop="true" android:layout_alignRight="@+id/imageView11"
-                    android:layout_alignEnd="@+id/imageView11"
-                    android:layout_gravity="right|bottom"/>
             </FrameLayout>
             <TextView
                 android:layout_width="wrap_content"
@@ -93,16 +82,7 @@
                            android:layout_alignParentLeft="true"
                            android:layout_alignParentStart="true"
                            android:layout_gravity="center_horizontal"/>
-                <TextView android:layout_width="15dp" android:layout_height="15dp"
-                          android:textAppearance="?android:attr/textAppearanceSmall"
-                          android:text="3" android:id="@+id/tvNotifEvents"
-                          android:background="@drawable/round_background_green"
-                          android:gravity="center_vertical|center_horizontal"
-                          android:textColor="#ffffff" android:textSize="10dp"
-                          android:layout_alignParentTop="true"
-                          android:layout_alignRight="@+id/imageView14"
-                          android:layout_alignEnd="@+id/imageView14"
-                          android:layout_gravity="right|bottom"/>
+
             </FrameLayout>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceSmall"
@@ -126,16 +106,7 @@
                            android:layout_alignParentLeft="true"
                            android:layout_alignParentStart="true"
                            android:layout_gravity="center_horizontal"/>
-                <TextView android:layout_width="15dp" android:layout_height="15dp"
-                          android:textAppearance="?android:attr/textAppearanceSmall"
-                          android:text="3" android:id="@+id/tvNotifActivities"
-                          android:background="@drawable/round_background_green"
-                          android:gravity="center_vertical|center_horizontal"
-                          android:textColor="#ffffff" android:textSize="10dp"
-                          android:layout_alignParentTop="true"
-                          android:layout_alignRight="@+id/imageView12"
-                          android:layout_alignEnd="@+id/imageView12"
-                          android:layout_gravity="right|bottom"/>
+
             </FrameLayout>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceSmall"
