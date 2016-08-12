@@ -10,23 +10,37 @@ import Foundation
 
 class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    var groups : Array<Dictionary<String, AnyObject>> = [];
-    var pushDelegate : PushDelegate!
+    @IBOutlet var cv : UICollectionView!;
     
-    func setupDummyData () {
-        groups.append(["title":"Ma Fine Arts", "description":"", "color":UIColor.init(red: 0/255, green: 190/255, blue: 143/255, alpha: 1)]);
-        groups.append(["title":"Summer Classes", "description":"May - July 2016", "color":UIColor.init(red: 236/255, green: 105/255, blue: 140/255, alpha: 1)]);
-        groups.append(["title":"Faculty of Design", "description":"", "color":UIColor.init(red: 160/255, green: 213/255, blue: 80/255, alpha: 1)]);
-        groups.append(["title":"Faculty Research", "description":"", "color":UIColor.init(red: 189/255, green: 63/255, blue: 232/255, alpha: 1)]);
+    var pushDelegate : PushDelegate!;
+    var refreshDelegate : RefreshDelegate!;
+    var orgId : String! = "";
+    var groups : [Group]?;
+    
+    func randomizePastelColor () -> UIColor {
+        let r = (CGFloat(arc4random_uniform(128)) + 128.0) / 255.0;
+        let g = (CGFloat(arc4random_uniform(128)) + 128.0) / 255.0;
+        let b = (CGFloat(arc4random_uniform(128)) + 128.0) / 255.0;
+        return UIColor(red: r, green: g, blue: b, alpha: 1)
+    }
+    
+    func initGroup (orgId : String) {
+        self.orgId = orgId;
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupDummyData();
+        print (orgId);
+        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(OrgGroups.update), userInfo: nil, repeats: true)
+    }
+    
+    func update () {
+        print (groups);
+        cv.reloadData();
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return groups.count;
+        if (groups == nil) { return 0; } else { return groups!.count; }
     }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -35,17 +49,27 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         let lblTitle = cell.viewWithTag(1)! as! UILabel;
         let lblDesc = cell.viewWithTag(2)! as! UILabel;
         
-        let group = groups[indexPath.row];
-        lblTitle.text = (group["title"]! as? String)?.uppercaseString;
-        lblDesc.text = (group["description"]! as? String)?.uppercaseString;
-        cell.backgroundColor = group["color"] as? UIColor;
+        if let data = groups {
+            var group = data[indexPath.row];
+            lblTitle.text = group.name.uppercaseString;
+    //        lblDesc.text = (group["description"]! as? String)?.uppercaseString;
+            lblDesc.text = "";
+            if group.color == nil {
+                let color = randomizePastelColor();
+                group.color = color;
+                groups![indexPath.row].color = color;
+            }
+            cell.backgroundColor = group.color;
+        }
         
         return cell;
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        cv.deselectItemAtIndexPath(indexPath, animated: false);
+        guard let data = groups else { return; }
         let vc = Util.getViewControllerID("GroupDetails") as! GroupDetails;
-        vc.initFromCall(groups[indexPath.row]);
+        vc.initFromCall(data[indexPath.row]);
         pushDelegate.pushViewController(vc, animated: true);
     }
     

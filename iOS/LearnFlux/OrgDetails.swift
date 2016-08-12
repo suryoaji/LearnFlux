@@ -12,29 +12,74 @@ protocol PushDelegate {
     func pushViewController (viewController: UIViewController, animated: Bool);
 }
 
-class OrgDetails: UIViewController, PushDelegate{
+protocol RefreshDelegate {
+    func refreshData (callback : (()->Void)?);
+}
+
+class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     @IBOutlet var viewSelection : UIView!;
     @IBOutlet var viewTabs : UIView!;
     @IBOutlet var logo : UIView!;
     @IBOutlet weak var scrollView: UIScrollView!
+    
+    @IBOutlet var lblTitle : UILabel!;
+    
+    var orgId : String = "";
+    var orgTitle : String = "";
+    
+    var orgData : Group?;
+    
+    func refreshData(callback: (() -> Void)?) {
+        Engine.getGroupInfo(self, groupId: orgId) { status, group in
+            print (group);
+            self.orgData = group;
+            self.propagateData();
+            Util.mainThread() { self.updateView (); }
+            if (callback != nil) { callback!(); }
+        }
+    }
+    
+    func propagateData () {
+        if tabs.count > 0 {
+            if let tab0 = tabs[0] as? OrgGroups {
+                tab0.initGroup (orgId);
+                tab0.pushDelegate = self;
+                tab0.refreshDelegate = self;
+                if let data = orgData?.child { tab0.groups = data; }
+                tab0.cv.reloadData();
+            }
+        }
+        
+    }
+    
+    func initView (orgId : String, orgTitle : String) {
+        self.orgId = orgId;
+        self.orgTitle = orgTitle;
+    }
+    
     var tabs : Array<UIViewController> = []
-    var indicatiorViewShown : Int = 0{
+    var indicatorViewShown : Int = 0{
         didSet{
-            if indicatiorViewShown == 1{
+            if indicatorViewShown == 1{
                 NSNotificationCenter.defaultCenter().postNotificationName("OrgEventsShownNotification", object: self, userInfo: nil)
             }
         }
+    }
+    
+    func updateView() {
+        lblTitle.text = "";
+        guard let data = orgData else { return; }
+        lblTitle.text = data.name;
     }
     
     func setTabsWithController(){
         tabs.append(Util.getViewControllerID("OrgGroups"))
         tabs.append(Util.getViewControllerID("OrgEvents"))
         tabs.append(Util.getViewControllerID("OrgActivities"))
-//        tabs.append(Util.getViewControllerID("OrgProfile"))
         
-        (tabs[0] as! OrgGroups).pushDelegate = self;
         changeView(0);
     }
+    
     
     func addTabsToScrollView(){
         self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.width * CGFloat(self.tabs.count), self.scrollView.bounds.height)
@@ -57,7 +102,10 @@ class OrgDetails: UIViewController, PushDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.createScrollView()
+        refreshData() {
+            self.createScrollView()
+            self.propagateData();
+        }
         self.title = "Details"
         
     }
@@ -66,7 +114,7 @@ class OrgDetails: UIViewController, PushDelegate{
         UIView.animateWithDuration(0.14, delay: 0.0, options: .CurveEaseInOut, animations: {
             self.scrollView.setContentOffset(CGPointMake(CGFloat(index) * self.scrollView.bounds.width, 0), animated: false)
             }, completion: { bool in
-                self.indicatiorViewShown = Int(self.scrollView.contentOffset.x) / Int(self.scrollView.width)
+                self.indicatorViewShown = Int(self.scrollView.contentOffset.x) / Int(self.scrollView.width)
         })
     }
     
@@ -86,6 +134,6 @@ extension OrgDetails: UIScrollViewDelegate{
         self.viewSelection.x = self.viewTabs.x + scrollView.contentOffset.x / scrollView.width * viewTabs.width / 3
     }
     func scrollViewDidEndDecelerating(scrollView: UIScrollView){
-        self.indicatiorViewShown = Int(scrollView.contentOffset.x) / Int(scrollView.width)
+        self.indicatorViewShown = Int(scrollView.contentOffset.x) / Int(scrollView.width)
     }
 }

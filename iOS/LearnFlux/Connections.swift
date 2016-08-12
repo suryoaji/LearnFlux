@@ -20,7 +20,7 @@ class Connections : UITableViewController {
     var selectedConnect : Array<Bool> = [];
     
     func loadGroup(){
-        Engine.getGroups()
+        
     }
     
     override func viewDidLoad() {

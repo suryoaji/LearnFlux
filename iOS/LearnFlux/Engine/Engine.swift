@@ -37,6 +37,8 @@ enum RequestType{
     case None
 }
 
+typealias dictType = Dictionary<String, AnyObject>;
+typealias arrType = Array<dictType>;
 typealias JSONreturn = ((RequestStatusType, AnyObject?)->Void);
 
 class Engine : NSObject {
@@ -278,28 +280,53 @@ class Engine : NSObject {
 //            if (callback != nil) { callback! (status, rawJSON); }
 //        }
 //    }
-    
-    private static func setMyGroups(groups: Array<Dictionary<String, AnyObject>>){
-        clientData.setMyGroups(groups)
+
+    static func getArrData (dataJSON : AnyObject?) -> arrType? {
+        guard let rawJSON = dataJSON else { return nil; }
+        guard let json = JSON(rawJSON).dictionaryObject else { return nil; }
+        guard let data = json["data"] else { return nil; }
+        return data as? arrType;
+    }
+
+    static func getDictData (dataJSON : AnyObject?) -> dictType? {
+        guard let rawJSON = dataJSON else { return nil; }
+        guard let json = JSON(rawJSON).dictionaryObject else { return nil; }
+        guard let data = json["data"] else { return nil; }
+        return data as? dictType;
+    }
+
+    static func getGroups(viewController: UIViewController? = nil, filter: GroupType = .All, callback: ((RequestStatusType, [Group]?)->Void)? = nil) -> [Group]? {
+        makeRequestAlamofire(viewController, url: Url.groups, param: nil){ status, dataJSON in
+            
+            if let groups = self.getArrData(dataJSON) { self.clientData.setGroups(groups); }
+            if callback != nil { callback!(status, clientData.getGroups(filter)) }
+        }
+        return clientData.getGroups(filter);
     }
     
-    static func getMyGroups() -> [Group]?{
-        return clientData.getMyGroups()
-    }
-    
-    static func getGroups(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
-        makeRequestAlamofire(viewController, url: Url.events, param: nil){ status, dataJSON in
-            if let rawJSON = dataJSON{
-                let json = JSON(rawJSON).dictionaryObject
-                if let data = json?["data"]{
-                    let arrData = data as! Array<Dictionary<String, AnyObject>>
-                    self.setMyGroups(arrData)
-                }
-            }
-            if callback != nil{ callback!(status, dataJSON) }
+    static func getGroupInfo(viewController: UIViewController? = nil, groupId: String, callback: ((RequestStatusType, Group?)->Void)? = nil) {
+        let url = Url.groups + "/" + groupId;
+        print (url);
+        makeRequestAlamofire(viewController, url: url, param: nil){ status, dataJSON in
+            print (dataJSON);
+            let data = self.getDictData(dataJSON);
+            if callback != nil { callback!(status, Group (dict: data)) }
         }
     }
     
+//    static func getGroupDetails(viewController: UIViewController? = nil, parentId: String, callback: JSONreturn? = nil){
+//        makeRequestAlamofire(viewController, url: Url.groups + "/" + parentId, param: nil){ status, dataJSON in
+//            if let rawJSON = dataJSON{
+//                let json = JSON(rawJSON).dictionaryObject
+//                if let data = json?["data"]{
+//                    let arrData = data as! Array<Dictionary<String, AnyObject>>
+////                    self.setGroupDetails(arrData)
+//                }
+//            }
+//            if callback != nil{ callback!(status, clientData.getGroups()) }
+//        }
+//    }
+
     
     static func createThread (viewController: UIViewController? = nil, title: String = "", userId: [Int], callback: JSONreturn? = nil) {
         let param = ["participants":userId, "title":title] as [String: AnyObject];

@@ -732,7 +732,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="verticalCell" reuseIdentifier="verticalCell" id="Tvd-lE-2jG">
-                                        <rect key="frame" x="10" y="10" width="148" height="278"/>
+                                        <rect key="frame" x="10" y="74" width="148" height="278"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="148" height="278"/>
@@ -847,6 +847,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Org" image="globe-24.png" id="32c-bI-3Sf"/>
+                    <connections>
+                        <outlet property="cv" destination="vA6-ie-IQS" id="Ra8-At-mq1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Idx-Db-fvh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -961,6 +964,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="rjE-g1-WuC"/>
                     <connections>
+                        <outlet property="lblTitle" destination="0WI-ex-gzr" id="xb4-1x-W3m"/>
                         <outlet property="logo" destination="OSe-zm-Fgx" id="buI-RL-xg3"/>
                         <outlet property="scrollView" destination="zPL-R2-VUy" id="4RT-jw-Zog"/>
                         <outlet property="viewSelection" destination="uoe-MO-TTr" id="gJX-ol-TNx"/>
@@ -1036,6 +1040,9 @@ MAY</string>
                             </collectionView>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="cv" destination="dFA-y2-6O8" id="vb1-9t-EDO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ILl-AC-5jV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2964,6 +2971,7 @@ Coming soon</string>
                         <outlet property="lblTitle" destination="akU-t7-Pmq" id="QoT-zF-JhA"/>
                         <outlet property="viewSelection" destination="inb-bN-n8q" id="HNT-RE-DAy"/>
                         <outlet property="viewTabs" destination="naI-3z-QQd" id="X2d-VP-A9s"/>
+                        <outlet property="viewTitle" destination="Hzs-lv-2fk" id="jTy-Z9-WfU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Iql-lK-8T3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3125,8 +3133,6 @@ Coming soon</string>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="4Kv-ZS-f2o"/>
-        <segue reference="slP-p0-8EU"/>
-        <segue reference="on3-J5-sau"/>
         <segue reference="gRa-FO-bZD"/>
         <segue reference="rbP-Nn-6Mk"/>
     </inferredMetricsTieBreakers>

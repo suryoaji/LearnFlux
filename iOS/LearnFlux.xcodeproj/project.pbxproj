@@ -31,6 +31,9 @@
 		5B02265A1CEAFB7200C5E8EE /* mosaic_interestgroup.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0226521CEAFB7200C5E8EE /* mosaic_interestgroup.png */; };
 		5B02265B1CEAFB7200C5E8EE /* mosaic_polls.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0226531CEAFB7200C5E8EE /* mosaic_polls.png */; };
 		5B02265C1CEAFB7200C5E8EE /* mosaic_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0226541CEAFB7200C5E8EE /* mosaic_settings.png */; };
+		5B0255691D5B2440001CBF15 /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0255681D5B2440001CBF15 /* Participant.swift */; };
+		5B02556B1D5B247C001CBF15 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B02556A1D5B247C001CBF15 /* User.swift */; };
+		5B02556D1D5B2819001CBF15 /* Role.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B02556C1D5B2819001CBF15 /* Role.swift */; };
 		5B0455241D129E880078032B /* OrgDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0455231D129E880078032B /* OrgDetails.swift */; };
 		5B0455261D129F380078032B /* OrgGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0455251D129F380078032B /* OrgGroups.swift */; };
 		5B0455281D129F530078032B /* OrgEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0455271D129F530078032B /* OrgEvents.swift */; };
@@ -416,6 +419,9 @@
 		5B0226521CEAFB7200C5E8EE /* mosaic_interestgroup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mosaic_interestgroup.png; path = Images/mosaic_interestgroup.png; sourceTree = "<group>"; };
 		5B0226531CEAFB7200C5E8EE /* mosaic_polls.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mosaic_polls.png; path = Images/mosaic_polls.png; sourceTree = "<group>"; };
 		5B0226541CEAFB7200C5E8EE /* mosaic_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mosaic_settings.png; path = Images/mosaic_settings.png; sourceTree = "<group>"; };
+		5B0255681D5B2440001CBF15 /* Participant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Participant.swift; sourceTree = "<group>"; };
+		5B02556A1D5B247C001CBF15 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		5B02556C1D5B2819001CBF15 /* Role.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Role.swift; sourceTree = "<group>"; };
 		5B0455231D129E880078032B /* OrgDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgDetails.swift; sourceTree = "<group>"; };
 		5B0455251D129F380078032B /* OrgGroups.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgGroups.swift; sourceTree = "<group>"; };
 		5B0455271D129F530078032B /* OrgEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgEvents.swift; sourceTree = "<group>"; };
@@ -840,6 +846,9 @@
 				4A4985241D40A4FD00B823CA /* Event.swift */,
 				4AF893F21D4889B80012E263 /* Thread.swift */,
 				4A48C0FF1D548FED00E85BA3 /* Group.swift */,
+				5B0255681D5B2440001CBF15 /* Participant.swift */,
+				5B02556A1D5B247C001CBF15 /* User.swift */,
+				5B02556C1D5B2819001CBF15 /* Role.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1838,6 +1847,7 @@
 				5B0B534D1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift in Sources */,
 				5B4F53891D235EA800309BCB /* Chats.swift in Sources */,
 				5B09CEBB1CBB4A330042C70B /* LearnFlux.xcdatamodeld in Sources */,
+				5B02556B1D5B247C001CBF15 /* User.swift in Sources */,
 				5B3742641CC0CBAD00AF2897 /* UIView+RoundedRect.m in Sources */,
 				5B3742741CC0CBAD00AF2897 /* UITextField+HeightToFit.m in Sources */,
 				5B04A2361CBCDEE000FA5CCA /* Connections.swift in Sources */,
@@ -1847,6 +1857,7 @@
 				5B37425F1CC0CBAD00AF2897 /* NSDate+String.m in Sources */,
 				5B37426F1CC0CBAD00AF2897 /* CommonUtility.m in Sources */,
 				5BFFFDB71CD8958B0099AB3F /* SweetAlert.swift in Sources */,
+				5B02556D1D5B2819001CBF15 /* Role.swift in Sources */,
 				5B4D10D01D37754F00AB9449 /* GroupProfile.swift in Sources */,
 				5B04552A1D129F690078032B /* OrgActivities.swift in Sources */,
 				5B3742771CC0CBAD00AF2897 /* UIView+Border.m in Sources */,
@@ -1868,6 +1879,7 @@
 				5BFFFDB91CD8AB740099AB3F /* CommonUtility.swift in Sources */,
 				5BE7C3111CCE00DF0067334D /* AttachEvent.swift in Sources */,
 				5B3742611CC0CBAD00AF2897 /* PopoverDateViewController.m in Sources */,
+				5B0255691D5B2440001CBF15 /* Participant.swift in Sources */,
 				5B3742601CC0CBAD00AF2897 /* NSInteger+String.m in Sources */,
 				5B02264C1CEAD67A00C5E8EE /* NewHome.swift in Sources */,
 				5B3742661CC0CBAD00AF2897 /* NSIndexPath+MockupShortcut.m in Sources */,
