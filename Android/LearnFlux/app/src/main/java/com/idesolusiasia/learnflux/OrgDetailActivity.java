@@ -38,7 +38,7 @@ import java.util.Locale;
 public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
-	public String id, title, details, type;
+	public String id, title, details, type, location;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents;
@@ -189,6 +189,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		final EditText etStart = (EditText) dialog.findViewById(R.id.add_event_time);
 		final EditText etTitle = (EditText) dialog.findViewById(R.id.add_event_title);
 		final EditText etDesc = (EditText) dialog.findViewById(R.id.add_event_description);
+		final EditText etLocation = (EditText) dialog.findViewById(R.id.add_event_location);
 		final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEEE, dd MMM yyyy", Locale.US);
 		final Calendar calStart = Calendar.getInstance();
 		etDate.setOnClickListener(new View.OnClickListener() {
@@ -228,11 +229,13 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 			public void onClick(View view) {
 				details = etDesc.getText().toString().trim();
 				title = etTitle.getText().toString().trim();
+				location = etLocation.getText().toString().trim();
 				Date date = calStart.getTime();
 				Long miliseconds= date.getTime();
-				Engine.createEvent(getApplicationContext(), true, title, details, "location/still not done", miliseconds, null, id, type, new RequestTemplate.ServiceCallback() {
+				Engine.createEvent(getApplicationContext(), true, title, details, location, miliseconds, null, id, type, new RequestTemplate.ServiceCallback() {
 					@Override
 					public void execute(JSONObject obj) {
+						Log.i("Data Event", "execute: "+ title+location+id+type);
 						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
 						dialog.dismiss();
 					}
