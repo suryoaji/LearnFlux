@@ -321,6 +321,7 @@ public class ChattingActivity extends BaseActivity {
 		/*final EditText etEnd = (EditText) dialog.findViewById(R.id.add_event_end);*/
 		final EditText etTitle = (EditText) dialog.findViewById(R.id.add_event_title);
 		final EditText etDesc = (EditText) dialog.findViewById(R.id.add_event_description);
+		final EditText etLocation = (EditText) dialog.findViewById(R.id.add_event_location);
 		final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEEE, dd MMM yyyy", Locale.US);
 		final Calendar calStart = Calendar.getInstance();
 		/*final Calendar calEnd = Calendar.getInstance();*/

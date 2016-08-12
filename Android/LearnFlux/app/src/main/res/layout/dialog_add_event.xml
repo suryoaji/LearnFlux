@@ -56,6 +56,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         </android.support.design.widget.TextInputLayout>
+
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -106,6 +107,33 @@
             />
 
         </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/imageView5" android:src="@drawable/ic_place_black_24dp"
+            android:layout_gravity="center_vertical"/>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp">
+
+            <EditText
+                android:id="@+id/add_event_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event's Location"
+                android:imeOptions="actionUnspecified"
+                android:maxLines="1"
+                android:singleLine="true" android:focusable="false"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        </android.support.design.widget.TextInputLayout>
+
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
