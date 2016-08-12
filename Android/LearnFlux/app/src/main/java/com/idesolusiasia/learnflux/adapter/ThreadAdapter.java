@@ -14,6 +14,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.RoundedImageView;
 import com.idesolusiasia.learnflux.entity.Thread;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import java.util.List;
@@ -79,7 +80,7 @@ public class ThreadAdapter extends ArrayAdapter<Thread> {
 			}
 			if (e.getLastMessage()!=null){
 				String message = e.getLastMessage().getBody();
-				String date = e.getLastMessage().getCreatedAtDate();
+				String date = Functions.getTimeAgo(e.getLastMessage().getCreatedAt());
 				tvDate.setText(date);
 				tvLastMessage.setText(message);
 			}

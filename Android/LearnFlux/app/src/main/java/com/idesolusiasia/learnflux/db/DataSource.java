@@ -166,10 +166,12 @@ public class DataSource {
 		values.put(DatabaseHelper.COLUMN_MESSAGE_THREADID,threadID);
 
 		if(m instanceof MessageEvent){
+			values.put(DatabaseHelper.COLUMN_MESSAGE_BODY,m.getSender().getFirstName()+" create an event");
 			values.put(DatabaseHelper.COLUMN_MESSAGE_REFID,((MessageEvent)m).getEvent().getId());
 			values.put(DatabaseHelper.COLUMN_MESSAGE_REFTYPE,((MessageEvent)m).getEvent().getType());
 			createEvent(((MessageEvent)m).getEvent());
 		}else if (m instanceof MessagePoll){
+			values.put(DatabaseHelper.COLUMN_MESSAGE_BODY,m.getSender().getFirstName()+" create a poll");
 			values.put(DatabaseHelper.COLUMN_MESSAGE_REFID,((MessagePoll)m).getPoll().getId());
 			values.put(DatabaseHelper.COLUMN_MESSAGE_REFTYPE,((MessagePoll)m).getPoll().getType());
 			createPoll(((MessagePoll)m).getPoll());

@@ -21,6 +21,7 @@ import com.idesolusiasia.learnflux.db.DatabaseFunction;
 import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
+import com.idesolusiasia.learnflux.util.ThreadQuickSort;
 
 import org.json.JSONObject;
 
@@ -122,8 +123,11 @@ public class ChatroomFragment extends Fragment {
 		Engine.getThreads(getContext(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
-				adap = new ThreadAdapter(getContext(),DatabaseFunction.getThreadList(getContext()));
+				ThreadQuickSort quickSort = new ThreadQuickSort();
+				quickSort.sort(DatabaseFunction.getThreadList(getContext()));
+				adap = new ThreadAdapter(getContext(),quickSort.getArray());
 				listView.setAdapter(adap);
+				quickSort=null;
 			}
 		});
 	}
