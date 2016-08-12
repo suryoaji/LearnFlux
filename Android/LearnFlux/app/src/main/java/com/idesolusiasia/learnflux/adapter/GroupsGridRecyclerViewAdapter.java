@@ -24,11 +24,11 @@ import java.util.List;
  */
 
 public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsGridRecyclerViewAdapter.GroupsTileHolder> {
-	ArrayList<Group> groups = new ArrayList<>();
+	List<Group> groups;
 	private Context context;
 
 
-	public GroupsGridRecyclerViewAdapter(Context context, ArrayList<Group> itemList) {
+	public GroupsGridRecyclerViewAdapter(Context context, List<Group> itemList) {
 		this.groups = itemList;
 		this.context = context;
 	}

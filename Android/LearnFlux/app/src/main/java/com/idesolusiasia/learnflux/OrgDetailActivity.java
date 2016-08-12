@@ -76,9 +76,9 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		indicatorGroups=(View) findViewById(R.id.indicator_groups);
 		indicatorEvents=(View) findViewById(R.id.indicator_events);
 		indicatorAct=(View) findViewById(R.id.indicator_act);
-		tvNotifActivities=(TextView) findViewById(R.id.tvNotifActivities);
+		/*tvNotifActivities=(TextView) findViewById(R.id.tvNotifActivities);
 		tvNotifEvents=(TextView) findViewById(R.id.tvNotifEvents);
-		tvNotifGroups=(TextView) findViewById(R.id.tvNotifGroups);
+		tvNotifGroups=(TextView) findViewById(R.id.tvNotifGroups);*/
 
 		LinearLayout titleLayout = (LinearLayout) findViewById(R.id.titleLayout);
 		titleLayout.setOnClickListener(new View.OnClickListener() {

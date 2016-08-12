@@ -16,6 +16,8 @@ import android.widget.TextView;
 public class GroupDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
+	public String name;
+	TextView title;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	TextView tvNotifActivities, tvNotifEvents;
@@ -35,9 +37,10 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		setSupportActionBar(toolbar);
 		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 		fab.hide();
-
+		name = getIntent().getStringExtra("title");
 		///////////////////////////finish Base Init///
-
+		title = (TextView)findViewById(R.id.tvGroupTitle);
+		title.setText(name);
 		mAdap = new FragmentAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mAdap);
@@ -50,8 +53,8 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		indicatorGroups=(View) findViewById(R.id.indicator_groups);
 		indicatorEvents=(View) findViewById(R.id.indicator_events);
 		indicatorAct=(View) findViewById(R.id.indicator_act);
-		tvNotifActivities=(TextView) findViewById(R.id.tvNotifActivities);
-		tvNotifEvents=(TextView) findViewById(R.id.tvNotifEvents);
+	/*	tvNotifActivities=(TextView) findViewById(R.id.tvNotifActivities);
+		tvNotifEvents=(TextView) findViewById(R.id.tvNotifEvents);*/
 
 		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
