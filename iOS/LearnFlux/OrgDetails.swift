@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AZDropdownMenu
 
 protocol PushDelegate {
     func pushViewController (viewController: UIViewController, animated: Bool);
@@ -19,6 +20,7 @@ protocol RefreshDelegate {
 class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     @IBOutlet var viewSelection : UIView!;
     @IBOutlet var viewTabs : UIView!;
+    @IBOutlet var viewMenu : UIView!;
     @IBOutlet var logo : UIView!;
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -29,9 +31,22 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     
     var orgData : Group?;
     
+    var menu : AZDropdownMenu!;
+    
+    var tabs : Array<UIViewController> = []
+    var indicatorViewShown : Int = 0{
+        didSet{
+            if indicatorViewShown == 1{
+                NSNotificationCenter.defaultCenter().postNotificationName("OrgEventsShownNotification", object: self, userInfo: nil)
+            }
+        }
+    }
+    
+
+    
     func refreshData(callback: (() -> Void)?) {
         Engine.getGroupInfo(self, groupId: orgId) { status, group in
-            print (group);
+//            print (group);
             self.orgData = group;
             self.propagateData();
             Util.mainThread() { self.updateView (); }
@@ -57,15 +72,6 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         self.orgTitle = orgTitle;
     }
     
-    var tabs : Array<UIViewController> = []
-    var indicatorViewShown : Int = 0{
-        didSet{
-            if indicatorViewShown == 1{
-                NSNotificationCenter.defaultCenter().postNotificationName("OrgEventsShownNotification", object: self, userInfo: nil)
-            }
-        }
-    }
-    
     func updateView() {
         lblTitle.text = "";
         guard let data = orgData else { return; }
@@ -79,7 +85,6 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         
         changeView(0);
     }
-    
     
     func addTabsToScrollView(){
         self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.width * CGFloat(self.tabs.count), self.scrollView.bounds.height)
@@ -108,6 +113,18 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         }
         self.title = "Details"
         
+        let menuTitle = ["Edit Organisation...", "Create Official Group...", "Manage Official Group..."];
+        menu = AZDropdownMenu(titles: menuTitle)
+        
+        let navItem = self.navigationItem;
+
+        let right:UIBarButtonItem! = UIBarButtonItem();
+        right.title = "Menu";
+        navItem.rightBarButtonItem = right;
+        right.action = #selector(self.showMenu);
+        right.target = self;
+        
+//        viewMenu.y = 66;
     }
     
     func changeView (index : Int) {
@@ -127,6 +144,37 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     func pushViewController(viewController: UIViewController, animated: Bool) {
         self.navigationController?.pushViewController(viewController, animated: animated)
     }
+    
+    @IBAction func showMenu(sender: AnyObject) {
+        let privEditOrg = true;
+        let privCreateGroup = true;
+        let privDeleteGroup = true;
+        let privCreateEvent = true;
+        let privDeleteEvent = true;
+        let privCreateActivity = true;
+        let privDeleteActivity = true;
+        
+        var choices = [String]();
+        
+        if privEditOrg { choices.append("Edit this organisation"); }
+        if privCreateGroup && indicatorViewShown == 0 { choices.append("Create new group"); }
+        if privDeleteGroup && indicatorViewShown == 0 { choices.append("Delete multiple groups"); }
+        if privCreateEvent && indicatorViewShown == 1 { choices.append("Create new event"); }
+        if privDeleteEvent && indicatorViewShown == 1 { choices.append("Delete multiple events"); }
+        if privCreateActivity && indicatorViewShown == 2 { choices.append("Create new activity"); }
+        if privDeleteActivity && indicatorViewShown == 2 { choices.append("Delete multiple activities"); }
+
+        
+        Util.showAlertMenu(self, title: "Menu", choices: choices,
+           styles: [.Default,.Destructive,.Destructive], addCancel: true) { (selected) in
+            switch (selected) {
+            default: break;
+            }
+        }
+    }
+
+    
+    
 }
 
 extension OrgDetails: UIScrollViewDelegate{
