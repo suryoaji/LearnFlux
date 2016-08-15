@@ -77,6 +77,10 @@
         <activity android:name=".DummyActivity">
 
         </activity>
+        <activity android:name=".InterestGroup"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

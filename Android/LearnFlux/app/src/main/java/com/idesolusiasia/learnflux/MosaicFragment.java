@@ -36,6 +36,14 @@ public class MosaicFragment extends Fragment {
 		View v = inflater.inflate(R.layout.activity_home, container, false);
 
 		ImageView ivChat= (ImageView) v.findViewById(R.id.ivChat);
+		ImageView ivInterest  = (ImageView)v.findViewById(R.id.ivInterest);
+		ivInterest.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent a = new Intent(getActivity(), InterestGroup.class);
+				startActivity(a);
+			}
+		});
 		ivChat.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

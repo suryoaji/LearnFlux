@@ -17,6 +17,14 @@ public class HomeActivity extends BaseActivity {
 		setContentView(R.layout.activity_home);
 		super.onCreateDrawer(savedInstanceState);
 
+		ImageView ivInterest  = (ImageView)findViewById(R.id.ivInterest);
+		ivInterest.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent a = new Intent(HomeActivity.this, InterestGroup.class);
+				startActivity(a);
+			}
+		});
 		ImageView ivChat= (ImageView) findViewById(R.id.ivChat);
 		ivChat.setOnClickListener(new View.OnClickListener() {
 			@Override
