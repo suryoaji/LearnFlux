@@ -17,6 +17,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
 	public String name;
+	public int color;
 	TextView title;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
@@ -38,9 +39,11 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 		fab.hide();
 		name = getIntent().getStringExtra("title");
+		color = getIntent().getIntExtra("color",1);
 		///////////////////////////finish Base Init///
 		title = (TextView)findViewById(R.id.tvGroupTitle);
 		title.setText(name);
+		title.setBackgroundColor(color);
 		mAdap = new FragmentAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mAdap);

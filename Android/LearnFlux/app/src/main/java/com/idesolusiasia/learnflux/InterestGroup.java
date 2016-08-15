@@ -5,11 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 
+import com.idesolusiasia.learnflux.adapter.InterestGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.OrganizationGridRecyclerViewAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 
 import org.json.JSONArray;
@@ -25,7 +28,7 @@ public class InterestGroup extends AppCompatActivity {
 
     ArrayList<Group> arrOrg = new ArrayList<Group>();
     private GridLayoutManager lLayout;
-    OrganizationGridRecyclerViewAdapter rcAdapter;
+    InterestGroupAdapter rcAdapter;
     RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,8 @@ public class InterestGroup extends AppCompatActivity {
         lLayout = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(lLayout);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getApplicationContext(), R.dimen.item_offset);
+        recyclerView.addItemDecoration(itemDecoration);
         initGroup();
     }
     private void initGroup(){
@@ -51,7 +56,7 @@ public class InterestGroup extends AppCompatActivity {
                             arrOrg.add(org);
                         }
                     }
-                    rcAdapter = new OrganizationGridRecyclerViewAdapter(getApplicationContext(),arrOrg);
+                    rcAdapter = new InterestGroupAdapter(InterestGroup.this,arrOrg);
                     recyclerView.setAdapter(rcAdapter);
                 }catch (JSONException e){
                     e.printStackTrace();

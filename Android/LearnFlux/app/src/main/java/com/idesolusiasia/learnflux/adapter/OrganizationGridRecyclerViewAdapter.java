@@ -39,6 +39,7 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 		final Group org= organizations.get(position);
 		holder.tvName.setText(org.getName());
 		holder.ivLogo.setDefaultImageResId(R.drawable.organization);
+
 	}
 
 	@Override

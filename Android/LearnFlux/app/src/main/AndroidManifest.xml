@@ -78,7 +78,7 @@
 
         </activity>
         <activity android:name=".InterestGroup"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
 
         </activity>
     </application>

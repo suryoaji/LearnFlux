@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.idesolusiasia.learnflux.util.Engine;
 
 public class GroupProfileFragment extends Fragment {
 
@@ -28,7 +31,10 @@ public class GroupProfileFragment extends Fragment {
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v= inflater.inflate(R.layout.fragment_group_profile, container, false);
-
+		String desc = getActivity().getIntent().getStringExtra("description");
+		TextView description = (TextView)v.findViewById(R.id.textView39);
+		description.setText(desc);
 		return v;
 	}
+
 }

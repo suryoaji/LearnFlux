@@ -63,7 +63,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/large_text"
                 android:id="@+id/textView4"
             />
             <TextView

@@ -26,6 +26,7 @@ import java.util.List;
 public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsGridRecyclerViewAdapter.GroupsTileHolder> {
 	List<Group> groups;
 	private Context context;
+	int color;
 
 
 	public GroupsGridRecyclerViewAdapter(Context context, List<Group> itemList) {
@@ -42,12 +43,10 @@ public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsGr
 	@Override
 	public void onBindViewHolder(GroupsTileHolder holder, int position) {
 		holder.tvGroupName.setText(groups.get(position).getName().toUpperCase());
-
 		Typeface type=Typeface.createFromAsset(context.getAssets(), context.getString(R.string.font_groups_grid));
 		holder.tvGroupName.setTypeface(type);
-
-
-		holder.layout.setBackgroundColor(Functions.generateRandomPastelColor());
+		color =Functions.generateRandomPastelColor();
+		holder.layout.setBackgroundColor(color);
 
 	}
 
@@ -71,6 +70,8 @@ public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsGr
 					Toast.makeText(view.getContext(), tvGroupName.getText() + " clicked", Toast.LENGTH_SHORT).show();
 					Intent i = new Intent(view.getContext(), GroupDetailActivity.class);
 					i.putExtra("title", groups.get(pos).getName());
+					i.putExtra("description", groups.get(pos).getDescription());
+					//i.putExtra("color",);
 					view.getContext().startActivity(i);
 				}
 			});
