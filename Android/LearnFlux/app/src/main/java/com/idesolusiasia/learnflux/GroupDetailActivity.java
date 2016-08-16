@@ -43,7 +43,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		///////////////////////////finish Base Init///
 		title = (TextView)findViewById(R.id.tvGroupTitle);
 		title.setText(name);
-		title.setBackgroundColor(color);
+		title.setBackgroundColor(Integer.valueOf(color));
 		mAdap = new FragmentAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mAdap);

@@ -2,8 +2,10 @@ package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import java.util.List;
 public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsGridRecyclerViewAdapter.GroupsTileHolder> {
 	List<Group> groups;
 	private Context context;
+	ArrayList<Integer>Colors= new ArrayList<>();
 	int color;
 
 
@@ -45,9 +48,9 @@ public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsGr
 		holder.tvGroupName.setText(groups.get(position).getName().toUpperCase());
 		Typeface type=Typeface.createFromAsset(context.getAssets(), context.getString(R.string.font_groups_grid));
 		holder.tvGroupName.setTypeface(type);
-		color =Functions.generateRandomPastelColor();
+		color = Functions.generateRandomPastelColor();
 		holder.layout.setBackgroundColor(color);
-
+		Colors.add(color);
 	}
 
 	@Override
@@ -69,9 +72,10 @@ public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsGr
 					final int pos = getAdapterPosition();
 					Toast.makeText(view.getContext(), tvGroupName.getText() + " clicked", Toast.LENGTH_SHORT).show();
 					Intent i = new Intent(view.getContext(), GroupDetailActivity.class);
+					i.putExtra("id", groups.get(pos).getId());
 					i.putExtra("title", groups.get(pos).getName());
 					i.putExtra("description", groups.get(pos).getDescription());
-					//i.putExtra("color",);
+					i.putExtra("color",Colors.get(pos));
 					view.getContext().startActivity(i);
 				}
 			});

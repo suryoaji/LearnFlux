@@ -10,18 +10,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.idesolusiasia.learnflux.OrgDetailActivity;
-import com.idesolusiasia.learnflux.OrgProfileActivity;
+import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Ide Solusi Asia on 8/15/2016.
  */
 public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdapter.OrgTileHolder> {
-    public ArrayList<Group> organizations = new ArrayList<>();
+    List<Group> organizations;
     private Context context;
 
 
@@ -64,9 +64,9 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
                 public void onClick(View view) {
                     final int pos = getAdapterPosition();
                     Toast.makeText(view.getContext(), tvName.getText() + " clicked", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(view.getContext(), OrgProfileActivity.class);
+                    Intent i = new Intent(view.getContext(), GroupDetailActivity.class);
                     i.putExtra("id", organizations.get(pos).getId());
-                    i.putExtra("type", organizations.get(pos).getType());
+                    i.putExtra("title",organizations.get(pos).getName());
                     view.getContext().startActivity(i);
                 }
             });

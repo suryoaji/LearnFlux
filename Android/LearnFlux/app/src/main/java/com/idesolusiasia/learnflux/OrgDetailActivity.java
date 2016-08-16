@@ -176,6 +176,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 				addEventProcess();
 				return true;
 			case R.id.new_group:
+				addNewGroup();
 				return true;
 		}
 
@@ -240,6 +241,26 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 						dialog.dismiss();
 					}
 				});
+			}
+		});
+		dialog.show();
+	}
+	public void addNewGroup(){
+		final Dialog dialog = new Dialog(OrgDetailActivity.this);
+		dialog.setTitle("add group");
+		dialog.setContentView(R.layout.dialog_add_group);
+		Button btnSubmit = (Button)dialog.findViewById(R.id.btnSubmitGroup);
+		Button cancel = (Button)dialog.findViewById(R.id.btnCancel);
+		btnSubmit.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				//Engine.createGroup(getApplicationContext(),);
+			}
+		});
+		cancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
 			}
 		});
 		dialog.show();

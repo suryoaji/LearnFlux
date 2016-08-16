@@ -120,6 +120,9 @@ public class Functions {
 		return returnText;
 	}
 
+	public static void createGroup(String id){
+
+	}
 	/*
  * Copyright 2012 Google Inc.
  *
