@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -26,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.idesolusiasia.learnflux.adapter.AddPollAnswerAdapter;
@@ -87,13 +87,6 @@ public class ChattingActivity extends BaseActivity {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		toolbar.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "Toolbar title clicked", Toast.LENGTH_SHORT).show();
-				showParticipant();
-			}
-		});
 
 		ivScrollDown = (ImageView) findViewById(R.id.ivScrollDown);
 		ivScrollDown.setOnClickListener(new View.OnClickListener() {
@@ -220,6 +213,30 @@ public class ChattingActivity extends BaseActivity {
 		initChatBubble();
 		refreshDB();
 		etMessage.clearFocus();
+
+		toolbar.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//Toast.makeText(getApplicationContext(), "Toolbar title clicked", Toast.LENGTH_SHORT).show();
+				if (thread.getGroup()!=null){
+					if (thread.getGroup().getType().equalsIgnoreCase("group")){
+						Intent i = new Intent(v.getContext(),GroupDetailActivity.class);
+						i.putExtra("id",thread.getGroup().getId());
+						v.getContext().startActivity(i);
+
+					}else if (thread.getGroup().getType().equalsIgnoreCase("organization")){
+						Intent i = new Intent(v.getContext(),OrgDetailActivity.class);
+						i.putExtra("id",thread.getGroup().getId());
+						v.getContext().startActivity(i);
+
+					}
+				}else {
+					showParticipant();
+				}
+
+			}
+		});
+
 
 
 		mHandler = new Handler();
