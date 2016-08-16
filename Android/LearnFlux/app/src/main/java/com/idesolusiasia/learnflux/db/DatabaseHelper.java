@@ -16,6 +16,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_THREAD_ID = "id";
 	public static final String COLUMN_THREAD_TITLE = "title";
 	public static final String COLUMN_THREAD_IMAGE = "image";
+	public static final String COLUMN_THREAD_REFID = "refid";
+	public static final String COLUMN_THREAD_REFTYPE = "reftype";
 
 	public static final String TABLE_MESSAGE = "message";
 	public static final String COLUMN_MESSAGE_ID = "id";
@@ -53,7 +55,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ TABLE_THREAD + "("
 			+COLUMN_THREAD_ID + " text primary key not null, "
 			+COLUMN_THREAD_TITLE + " text,"
-			+COLUMN_THREAD_IMAGE + " text"
+			+COLUMN_THREAD_IMAGE + " text,"
+			+COLUMN_THREAD_REFID + " text,"
+			+COLUMN_THREAD_REFTYPE + " text"
 			+");";
 
 	private static final String DATABASE_CREATE_MESSAGE = "create table "

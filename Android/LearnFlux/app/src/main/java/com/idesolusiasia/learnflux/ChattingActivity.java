@@ -263,6 +263,12 @@ public class ChattingActivity extends BaseActivity {
 			attachmentLayout.setVisibility(View.GONE);
 			ivAttachment.setVisibility(View.GONE);
 		}
+
+		if (thread.getGroup()==null){
+			attachmentLayout.setVisibility(View.GONE);
+			ivAttachment.setVisibility(View.GONE);
+		}
+
 		if (adap==null){
 			adap=new ChatBubbleAdapter(ChattingActivity.this,thread.getMessages());
 			listView.setAdapter(adap);
@@ -388,7 +394,15 @@ public class ChattingActivity extends BaseActivity {
 				adap.add(bubble);
 				adap.notifyDataSetChanged();
 				listView.setSelection(adap.getCount() - 1);*/
-				dialog.dismiss();
+				Engine.createEvent(v.getContext(), true, etTitle.getText().toString(),
+						etDesc.getText().toString(), etLocation.getText().toString(), calStart.getTimeInMillis() / 1000, null,
+						thread.getGroup().getId(), thread.getGroup().getType(), new RequestTemplate.ServiceCallback() {
+							@Override
+							public void execute(JSONObject obj) {
+								refreshDB();
+								dialog.dismiss();
+							}
+						});
 			}
 		});
 		dialog.show();

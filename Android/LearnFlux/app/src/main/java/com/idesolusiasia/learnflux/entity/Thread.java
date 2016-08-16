@@ -1,5 +1,7 @@
 package com.idesolusiasia.learnflux.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -12,6 +14,8 @@ public class Thread {
 	private String title="No Title";
 	private String image;
 	private String type;
+	@SerializedName("reference")
+	private Group group;
 	private boolean isSelected=false;
 
 	private List<Participant> participants;
@@ -87,5 +91,13 @@ public class Thread {
 
 	public void setLastMessage(Message lastMessage) {
 		this.lastMessage = lastMessage;
+	}
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
 	}
 }

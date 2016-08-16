@@ -113,10 +113,14 @@ public class ChatroomFragment extends Fragment {
 				Log.i("Chatroom", adap.getItem(position).getTitle());
 			}
 		});
-		initThreads();
-
 
 		return v;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		initThreads();
 	}
 
 	void initThreads(){

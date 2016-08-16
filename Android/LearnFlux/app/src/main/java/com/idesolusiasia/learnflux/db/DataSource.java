@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.idesolusiasia.learnflux.entity.Event;
+import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Message;
 import com.idesolusiasia.learnflux.entity.MessageEvent;
 import com.idesolusiasia.learnflux.entity.MessagePoll;
@@ -29,7 +30,9 @@ public class DataSource {
 	private String[] allColumnsThread = {
 			DatabaseHelper.COLUMN_THREAD_ID,
 			DatabaseHelper.COLUMN_THREAD_TITLE,
-			DatabaseHelper.COLUMN_THREAD_IMAGE};
+			DatabaseHelper.COLUMN_THREAD_IMAGE,
+			DatabaseHelper.COLUMN_THREAD_REFID,
+			DatabaseHelper.COLUMN_THREAD_REFTYPE};
 
 	private String[] allColumnsMESSAGE = {
 			DatabaseHelper.COLUMN_MESSAGE_ID,
@@ -82,6 +85,11 @@ public class DataSource {
 		values.put(DatabaseHelper.COLUMN_THREAD_ID,t.getId());
 		values.put(DatabaseHelper.COLUMN_THREAD_TITLE,t.getTitle());
 		values.put(DatabaseHelper.COLUMN_THREAD_IMAGE,t.getImage());
+
+		if (t.getGroup()!=null){
+			values.put(DatabaseHelper.COLUMN_THREAD_REFID, t.getGroup().getId());
+			values.put(DatabaseHelper.COLUMN_THREAD_REFTYPE, t.getGroup().getType());
+		}
 
 		db.beginTransaction();
 		try {
@@ -153,6 +161,12 @@ public class DataSource {
 		t.setId(cursor.getString(0));
 		t.setTitle(cursor.getString(1));
 		t.setImage(cursor.getString(2));
+		if (cursor.getString(3)!=null){
+			Group g = new Group();
+			g.setId(cursor.getString(3));
+			g.setType(cursor.getString(4));
+			t.setGroup(g);
+		}
 		return t;
 	}
 
