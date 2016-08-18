@@ -16,14 +16,18 @@ class GroupDetails : UIViewController {
     let tabs = NSMutableArray();
     
     @IBOutlet var lblTitle : UILabel!;
-    @IBOutlet var viewTitle : UILabel!;
+    @IBOutlet var viewTitle : UIView!;
     
     var strTitle = "";
     var colorTitle = UIColor.clearColor();
     
-    func initFromCall(groupInfo : Dictionary<String, AnyObject>) {
-        self.strTitle = groupInfo["title"] as! String;
-        self.colorTitle = groupInfo["color"] as! UIColor;
+    var group : Group?;
+    
+    
+    func initFromCall(groupInfo : Group) {
+        group = groupInfo;
+        self.strTitle = groupInfo.name!;
+        self.colorTitle = groupInfo.color;
     }
     
     override func viewDidLoad() {
@@ -34,10 +38,13 @@ class GroupDetails : UIViewController {
         tabs.addObject(Util.getViewControllerID("GroupProfile"))
         tabs.addObject(Util.getViewControllerID("OrgEvents"))
         tabs.addObject(Util.getViewControllerID("OrgActivities"))
+        
         changeView(0);
+        (tabs[0] as! GroupProfile).initFromCall(group!);
         
         self.title = "Details";
         self.lblTitle.text = self.strTitle.uppercaseString;
+        self.viewTitle.backgroundColor = colorTitle;
     }
     
     func changeView (index : Int) {

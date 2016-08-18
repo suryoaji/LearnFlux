@@ -257,12 +257,12 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         var conArr : Array<Int>= []
         loopCheck : for i in arrIdParticipants{
             for x in conArr{
-                if x == i{ continue loopCheck }
+                if x == i.user?.userId{ continue loopCheck }
             }
-            if i == clientData.cacheMe()!["id"] as! Int{
+            if i.user?.userId == clientData.cacheMe()!["id"] as? Int{
                 continue loopCheck
             }
-            conArr.append(i)
+            conArr.append((i.user?.userId)!)
         }
         for i in 0..<conArr.count{
             if i != conArr.count - 1{
@@ -431,6 +431,11 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
 //        self.view.bringSubviewToFront(self.view.inputView!);
         setTabBarVisible(false, animated: true)
         
+        let flow = Flow.sharedInstance;
+        if (flow.activeFlow() == "NewThreads") {
+            flow.removeFlowVc(self.navigationController!, exceptVc: [self]);
+            flow.clear();
+        }
     }
     
 //    override func viewDidDisappear(animated: Bool) {

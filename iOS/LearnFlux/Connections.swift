@@ -14,7 +14,8 @@ class Connections : UITableViewController {
     let connect = [
         ["name":"admin", "id":6],
         ["name":"tester", "id":7],
-        ["name":"tester2", "id":8]
+        ["name":"tester2", "id":8],
+        ["name":"tiatiatia", "id":60]
     ];
     var actualConnect = Array<AnyObject>();
     var selectedConnect : Array<Bool> = [];
@@ -31,7 +32,7 @@ class Connections : UITableViewController {
     }
     
     func loadGroup(){
-        Engine.getGroups()
+        
     }
     
     override func viewDidLoad() {
@@ -51,7 +52,19 @@ class Connections : UITableViewController {
         }
         
         self.tabBarController?.title = "Connections";
+        let flow = Flow.sharedInstance;
         
+        if let activeFlow = flow.activeFlow() {
+            if activeFlow == "NewGroup" {
+                self.title = "Invite Participants"
+                setupDoneButton();
+            }
+            else if flow.activeFlow() == "NewThread" {
+                self.title = "Select Participants";
+                setupDoneButton()
+            }
+        }
+
         self.loadGroup()
         self.loadEvents()
     }
@@ -68,46 +81,48 @@ class Connections : UITableViewController {
         self.navigationItem.rightBarButtonItem = buttonDone
     }
     
-    func inFlow (flowDirection : String, flowData : NSMutableDictionary = [:]) {
-        self.flowDirection = flowDirection;
-        self.flowData = flowData;
-        
-        if (flowDirection == "NewGroups") {
-            self.title = "Select Participants"
-            setupDoneButton();
-        }
-    }
-    
     func buttonDoneTapped(sender: UIBarButtonItem) {
-        if (self.flowDirection == "NewGroups") {
-            sender.enabled = false
-            let title = flowData.valueForKey("title")! as! String;
-            var userId : Array<Int> = [];
-            for i in 0..<selectedConnect.count {
-                if (selectedConnect[i]) {
-                    let el = connect[i] as NSDictionary;
-                    userId.append(el.valueForKey("id")! as! Int);
-                }
-            }
-            Engine.createGroupChat(self, name: title, userId: userId) { status, JSON in
-                Util.mainThread() {
-                    sender.enabled = true
-                    if status == .Success && JSON != nil{
-                        let dataJSON = JSON!["data"] as! Dictionary<String, AnyObject>
-                        let threadJSON = dataJSON["message"] as! Dictionary<String, AnyObject>
-                        let chatFlow = Util.getViewControllerID("ChatFlow") as! ChatFlow;
-                        chatFlow.initChat(0, idThread: threadJSON["id"] as! String, from: ChatFlow.From.CreateThread)
-//                        chatFlow.initChat(threadJSON: JSON);
-                        self.navigationController?.pushViewController(chatFlow, animated: true);
-                        let count = self.navigationController!.viewControllers.count;
-                        var vcs = self.navigationController?.viewControllers;
-                        vcs?.removeAtIndex(count - 2);
-                        vcs?.removeAtIndex(count - 3);
-                        self.navigationController?.viewControllers = vcs!;
-                    }
-                }
+//<<<<<<< HEAD
+//        if (self.flowDirection == "NewGroups") {
+//            sender.enabled = false
+//            let title = flowData.valueForKey("title")! as! String;
+//            var userId : Array<Int> = [];
+//            for i in 0..<selectedConnect.count {
+//                if (selectedConnect[i]) {
+//                    let el = connect[i] as NSDictionary;
+//                    userId.append(el.valueForKey("id")! as! Int);
+//                }
+//            }
+//            Engine.createGroupChat(self, name: title, userId: userId) { status, JSON in
+//                Util.mainThread() {
+//                    sender.enabled = true
+//                    if status == .Success && JSON != nil{
+//                        let dataJSON = JSON!["data"] as! Dictionary<String, AnyObject>
+//                        let threadJSON = dataJSON["message"] as! Dictionary<String, AnyObject>
+//                        let chatFlow = Util.getViewControllerID("ChatFlow") as! ChatFlow;
+//                        chatFlow.initChat(0, idThread: threadJSON["id"] as! String, from: ChatFlow.From.CreateThread)
+////                        chatFlow.initChat(threadJSON: JSON);
+//                        self.navigationController?.pushViewController(chatFlow, animated: true);
+//                        let count = self.navigationController!.viewControllers.count;
+//                        var vcs = self.navigationController?.viewControllers;
+//                        vcs?.removeAtIndex(count - 2);
+//                        vcs?.removeAtIndex(count - 3);
+//                        self.navigationController?.viewControllers = vcs!;
+//                    }
+//                }
+//=======
+        let flow = Flow.sharedInstance;
+        
+        var userId : Array<Int> = [];
+        for i in 0..<selectedConnect.count {
+            if (selectedConnect[i]) {
+                let el = connect[i] as NSDictionary;
+                userId.append(el.valueForKey("id")! as! Int);
             }
         }
+        flow.add(dict: ["userIds":userId]);
+        
+        if let activeFlow = flow.activeFlow() { if (activeFlow == "NewGroup" || activeFlow == "NewThread" || activeFlow == "NewInterestGroup") { flow.end(); } }
     }
     
     @IBAction func revealMenu (sender: AnyObject) {
@@ -149,8 +164,9 @@ class Connections : UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
+        let flow = Flow.sharedInstance;
         
-        if (flowDirection == "NewGroups") {
+        if (flow.activeFlow() == "NewGroup" || flow.activeFlow() == "NewThread") {
             selectedConnect[indexPath.row] = !selectedConnect[indexPath.row];
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None);
             buttonDoneShouldEnable()
@@ -171,6 +187,7 @@ class Connections : UITableViewController {
                         let me = Engine.clientData.defaults.valueForKey("me")!;
                         vc.senderId = String(me.valueForKey("id")!);
                         vc.senderDisplayName = "";
+//                        vc.participants = Participant.convertFromArr(data["participants"])!;
                         vc.thisChatType = "chat";
                         vc.thisChatMetadata = ["title":"User ID = " + String(arrUserId[0])];
                         self.navigationController?.pushViewController(vc, animated: true);

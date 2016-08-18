@@ -20,6 +20,8 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
     let dummyMode = "Full Time";
     let dummyDesc2 = "The study of Fine Arts is a process of continual debate and questioning; of exploring and interrogating set perspectives. This programme situates itself at the crossroads of contemporary Western and Asian cultures, acknowledging the demands of different worldviews. It unites specialised areas, from traditional disciplines to newer art forms, providing wider options of expression relevant to the global evolution of fine arts."
     
+    var group : Group?;
+    
     override func viewDidLoad() {
         super.viewDidLoad();
         lblOriHeight = (tv.dequeueReusableCellWithIdentifier("basic")!.viewWithTag(1)! as! UILabel).height;
@@ -37,18 +39,25 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
         tv.reloadData();
     }
     
+    func initFromCall (group : Group) {
+        self.group = group;
+        tv.reloadData();
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if group == nil { return 0; }
         return 7;
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        guard let data = group else { return 0; }
         switch (indexPath.row) {
         case 0, 3:
-            let cell = tv.dequeueReusableCellWithIdentifier("basic")!;
-            let lbl = cell.viewWithTag(1)! as! UILabel;
-            lbl.text = indexPath.row == 0 ? dummyDesc : dummyDesc2;
+            guard let cell = tv.dequeueReusableCellWithIdentifier("basic") else { return 0; }
+            guard let lbl = cell.viewWithTag(1) as? UILabel else { return 0; }
+            lbl.text = indexPath.row == 0 ? data.description : "";
             lbl.heightToFit();
-            return lbl.height;
+            return lbl.height + 10;
         case 1...2:
             return cellOriHeight;
         default:
@@ -57,11 +66,12 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        guard let data = group else { return tv.dequeueReusableCellWithIdentifier("basic")!; }
         switch (indexPath.row) {
         case 0:
             let cell = tv.dequeueReusableCellWithIdentifier("basic")!;
             let lbl = cell.viewWithTag(1)! as! UILabel;
-            lbl.text = dummyDesc;
+            lbl.text = data.description;
             lbl.heightToFit();
             return cell;
         case 1:
@@ -79,7 +89,7 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
         case 3:
             let cell = tv.dequeueReusableCellWithIdentifier("basic")!;
             let lbl = cell.viewWithTag(1)! as! UILabel;
-            lbl.text = dummyDesc2;
+            lbl.text = "";
             lbl.heightToFit();
             return cell;
         default:

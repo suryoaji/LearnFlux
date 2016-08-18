@@ -13,8 +13,12 @@ class NewGroups : UIViewController {
     
     @IBOutlet var imgGroup : UIImageView!;
     @IBOutlet var viewImage : UIView!;
+    @IBOutlet var viewTitle : UIView!;
     @IBOutlet var tfTitle : UITextField!;
     @IBOutlet var lblCount : UILabel!;
+    
+    @IBOutlet var viewDesc : UIView!;
+    @IBOutlet var tvDesc : UITextView!;
     
     var popTip = AMPopTip();
     
@@ -29,6 +33,18 @@ class NewGroups : UIViewController {
         
         viewImage.makeViewRounded();
         
+        tvDesc.text = "";
+        
+        viewDesc.layer.borderWidth = 1;
+        viewDesc.layer.borderColor = UIColor.lightGrayColor().CGColor;
+        viewDesc.makeViewRoundedRectWithCornerRadius(5);
+        viewDesc.backgroundColor = UIColor.clearColor();
+        
+        viewTitle.layer.borderWidth = 1;
+        viewTitle.layer.borderColor = UIColor.lightGrayColor().CGColor;
+        viewTitle.makeViewRoundedRectWithCornerRadius(5);
+        viewTitle.backgroundColor = UIColor.clearColor();
+
     }
     
     @IBAction func titleChanged (sender: AnyObject) {
@@ -48,9 +64,10 @@ class NewGroups : UIViewController {
             self.popTip.showText("The Group's subject is too long.", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view, fromFrame: self.tfTitle.frame);
         }
         else {
-//            self.performSegueWithIdentifier("SelectParticipants", sender: self);
+            let flow = Flow.sharedInstance;
+            flow.add(dict: ["title":tfTitle.text!, "desc":tvDesc.text]);
+            
             let connections = Util.getViewControllerID("Connections") as! Connections;
-            connections.inFlow("NewGroups", flowData: ["title":tfTitle.text!]);
             self.navigationController?.pushViewController(connections, animated: true);
         }
     }

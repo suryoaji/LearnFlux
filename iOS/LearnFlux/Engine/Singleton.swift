@@ -8,6 +8,15 @@
 
 import Foundation
 
+enum GroupType {
+    case Organisation
+    case Group
+    case InterestGroup
+    case All
+}
+
+
+
 class Data : NSObject {
     class var sharedInstance : Data{
         struct Singleton{
@@ -73,8 +82,8 @@ class Data : NSObject {
     func idGroupByIdThread(idThread: String)->(String?){
         if let groups = groups{
             for each in groups{
-                if each.tmpIdThread != nil{
-                    if each.tmpIdThread! == idThread{
+                if each.threadId != nil{
+                    if each.threadId! == idThread{
                         return each.id
                     }
                 }
@@ -82,18 +91,7 @@ class Data : NSObject {
         }
         return nil
     }
-    
-    func setGroups(arr: Array<Dictionary<String, AnyObject>>){
-        var conGroups: [Group] = []
-        for each in arr{
-           guard let group = Group.convertFromDict(each) else{
-                continue
-            }
-            conGroups.append(group)
-        }
-        self.groups = conGroups.isEmpty ? nil : conGroups
-    }
-    
+
     func getGroups()->([Group]?){
         return self.groups
     }
@@ -165,7 +163,7 @@ class Data : NSObject {
     func setMyEvents(arr: Array<Dictionary<String, AnyObject>>){
         self.events = makeEventsArr(arr)
     }
-    
+
     func makeEventsArr(rawArr : Array<Dictionary<String, AnyObject>>) -> ([Event]){
         var tempEvents : [Event] = []
         for dicEvent in rawArr{
@@ -175,6 +173,40 @@ class Data : NSObject {
             }
         }
         return tempEvents
+    }
+
+    func setGroups(arr: arrType){
+        self.groups = Group.convertFromArr(arr);
+    }
+    
+    func getGroups(filter: GroupType = .All) -> [Group]?{
+        var filtered : [Group]? = [Group]();
+        if (filter == .All) {
+            if let data = groups { filtered = data; }
+        }
+        else {
+            guard let data = groups else { return nil; }
+            for el in data {
+                if (filter == .Organisation && el.type == "organization") { filtered!.append (el); }
+                if (filter == .InterestGroup && el.type == "group") { filtered!.append (el); }
+            }
+        }
+        return filtered;
+    }
+    
+    func setCurrentOrg(arr: arrType) {
+        
+    }
+    
+    
+    func convertToGroup(dict: Dictionary<String, AnyObject>) -> (Group?){
+        if let id = dict["id"], let type = dict["type"], let name = dict["name"], let thread = dict["message"]{
+            if let sId = id as? String, let sType = type as? String, let sName = name as? String, let dThread = thread as? Dictionary<String, AnyObject>{
+                let threadRef = Thread(dict: dThread);
+                return Group(type: sType, id: sId, name: sName, thread: threadRef)
+            }
+        }
+        return nil
     }
     
     func cacheThreads() -> (Array<Dictionary<String, AnyObject>>)?{

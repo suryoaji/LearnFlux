@@ -356,6 +356,48 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
             let chatId = selectedThread.valueForKey("id")! as! String
             chatVc.initChat(indexPath.row, idThread: chatId, from: ChatFlow.From.OpenChat)
         }
+        else if (segue.identifier == "NewGroups") {
+            let flow = Flow.sharedInstance;
+            flow.begin("NewThreads");
+            flow.setCallback() { result in
+                
+//                Engine.createThread(self, title: title, userId: userId) { status, JSON in
+//                    Util.mainThread() {
+//                        if status == .Success{
+//                            let chatFlow = Util.getViewControllerID("ChatFlow") as! ChatFlow;
+//                            chatFlow.initChat(Engine.clientData.getMyThreads()!.count - 1, idThread: Engine.clientData.getMyThreads()!.last!.id, from: ChatFlow.From.CreateThread)
+//                            
+//                            self.navigationController?.pushViewController(chatFlow, animated: true);
+//                            let count = self.navigationController!.viewControllers.count;
+//                            var vcs = self.navigationController?.viewControllers;
+//                            vcs?.removeAtIndex(count - 2);
+//                            vcs?.removeAtIndex(count - 3);
+//                            self.navigationController?.viewControllers = vcs!;
+//                        }
+//                    }
+//                }
+
+                guard let title = result!["title"] as? String else { print ("FLOW: title not found"); return; }
+                guard let desc = result!["desc"] as? String else { print ("FLOW: desc not found"); return; }
+                guard let userIds = result!["userIds"] as? [Int] else { print ("FLOW: userIds not found"); return; }
+                // create interest group: group without parent
+                Engine.createGroup (self, type: "group", title: title, desc: desc, userId: userIds) { status, JSON in
+                    let group = Group(dict: JSON);
+                    if let threadId = group.thread?.id {
+                        let inst = Data.sharedInstance;
+                        
+                        let data = JSON!["data"]!;
+                        let threadJSON = data!["message"]! as! dictType;
+                        inst.addNewThread(threadJSON);
+                        
+                        let chatVc = segue.destinationViewController as! ChatFlow;
+                        chatVc.initChat((inst.cacheThreads()?.count)! - 1, idThread: threadId, from: ChatFlow.From.CreateThread);
+                        self.navigationController?.pushViewController(chatVc, animated: true);
+                    }
+                }
+            }
+            
+        }
     }
     
     func setTabBarVisible(visible:Bool, animated:Bool) {
