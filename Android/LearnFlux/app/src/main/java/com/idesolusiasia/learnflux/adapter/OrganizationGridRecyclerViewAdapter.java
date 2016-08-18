@@ -15,12 +15,13 @@ import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by NAIT ADMIN on 12/04/2016.
  */
 public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<OrganizationGridRecyclerViewAdapter.OrgTileHolder> {
-	public ArrayList<Group> organizations = new ArrayList<>();
+	List<Group> organizations;
 	private Context context;
 
 	public OrganizationGridRecyclerViewAdapter(Context context, ArrayList<Group> orgs) {

@@ -38,7 +38,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		setSupportActionBar(toolbar);
 		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 		fab.hide();
-		id= getIntent().getStringExtra("id");
 		name = getIntent().getStringExtra("title");
 		color = getIntent().getIntExtra("color",1);
 		///////////////////////////finish Base Init///

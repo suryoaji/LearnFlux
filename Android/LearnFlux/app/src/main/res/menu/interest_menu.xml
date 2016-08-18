@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/interest_new_event"
         android:orderInCategory="101"
-        android:title="add new event"
+        android:title="Add new event"
         app:showAsAction="never"/>
     <item android:id="@+id/interest_new_group"
         android:orderInCategory="102"
-        android:title="add new group"
+        android:title="Add new group"
         app:showAsAction="never"/>
     <item android:id="@+id/interest_invite_people"
         android:orderInCategory="100"
-        android:title="invite people"
+        android:title="Invite people"
         app:showAsAction="never"/>
 </menu>

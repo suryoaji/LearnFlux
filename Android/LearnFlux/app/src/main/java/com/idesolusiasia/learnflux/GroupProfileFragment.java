@@ -46,7 +46,7 @@ public class GroupProfileFragment extends Fragment {
 		description = (TextView)v.findViewById(R.id.textView39);
 		return v;
 	}
-	private void getProfile()
+	public void getProfile()
 	{
 		Engine.getOrganizationProfile(getActivity(), id, new RequestTemplate.ServiceCallback() {
 			@Override
@@ -54,10 +54,11 @@ public class GroupProfileFragment extends Fragment {
 				try{
 					JSONObject data = obj.getJSONObject("data");
 					group = Converter.convertOrganizations(data);
+					description.setText(group.getDescription());
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
-				description.setText(group.getDescription());
+
 			}
 		});
 	}

@@ -25,13 +25,13 @@ public class Group {
     @SerializedName("participants")
     private List<Member> memberGroup;
     private List<Group> child;
-    private Group parent;
+    private BasicItem parent;
 
-    public Group getParent() {
+    public BasicItem getParent() {
         return parent;
     }
 
-    public void setParent(Group parent) {
+    public void setParent(BasicItem parent) {
         this.parent = parent;
     }
 
