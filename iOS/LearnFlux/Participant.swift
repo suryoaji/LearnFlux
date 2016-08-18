@@ -38,7 +38,15 @@ struct Participant {
     
     static func convertFromDict (dict : AnyObject?) -> Participant? {
         guard let data = dict as? dictType else { return nil; }
-        return Participant (user: User(dict: data["user"]), role: Role(dict: data["role"]));
+        if let user = data["user"] as? dictType, let role = data["role"] as? dictType {
+            return Participant (user: User(dict: user), role: Role(dict: role));
+        }
+        else if let user = User.convertFromDict(data) {
+            return Participant (user: user, role: nil);
+        }
+        else {
+            return nil;
+        }
     }
     
     mutating func set (dict : AnyObject?) -> Bool {

@@ -95,7 +95,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell")!;
-        if expanded[indexPath.row] {
+        if indexPath.row < expanded.count && expanded[indexPath.row] {
             let expandedHeight = cell.height + expDescHeight[indexPath.row] - (oriDescHeight + oriBtnHeight);
             return max(expandedHeight, oriCellHeight);
         }

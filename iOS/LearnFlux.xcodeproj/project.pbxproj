@@ -83,6 +83,7 @@
 		5B09CF7B1CBB9FAE0042C70B /* hamburger-18@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B09CF791CBB9FAE0042C70B /* hamburger-18@2x.png */; };
 		5B09CF7C1CBB9FAE0042C70B /* hamburger-18@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B09CF7A1CBB9FAE0042C70B /* hamburger-18@3x.png */; };
 		5B09CF7E1CBBAAF10042C70B /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B09CF7D1CBBAAF10042C70B /* Menu.swift */; };
+		5B09D72D1D62D2740075D811 /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B09D72C1D62D2740075D811 /* Flow.swift */; };
 		5B0AC9A01D110A4D00594E4C /* Org.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0AC99F1D110A4D00594E4C /* Org.swift */; };
 		5B0AC9A21D110BEF00594E4C /* messages-70.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0AC9A11D110BEF00594E4C /* messages-70.png */; };
 		5B0B534D1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0B534C1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift */; };
@@ -474,6 +475,7 @@
 		5B09CF791CBB9FAE0042C70B /* hamburger-18@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hamburger-18@2x.png"; path = "Icons/hamburger-18@2x.png"; sourceTree = "<group>"; };
 		5B09CF7A1CBB9FAE0042C70B /* hamburger-18@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hamburger-18@3x.png"; path = "Icons/hamburger-18@3x.png"; sourceTree = "<group>"; };
 		5B09CF7D1CBBAAF10042C70B /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		5B09D72C1D62D2740075D811 /* Flow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Flow.swift; sourceTree = "<group>"; };
 		5B0AC99F1D110A4D00594E4C /* Org.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Org.swift; sourceTree = "<group>"; };
 		5B0AC9A11D110BEF00594E4C /* messages-70.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "messages-70.png"; path = "IconsOfficial/messages-70.png"; sourceTree = "<group>"; };
 		5B0B534C1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "JSQMessageCollectionViewCell+Action.swift"; path = "Library/JSQMessageCollectionViewCell+Action.swift"; sourceTree = "<group>"; };
@@ -1375,6 +1377,7 @@
 				5B6DECB91D01649100E16650 /* Singleton.swift */,
 				5B6DECBB1D016BA000E16650 /* Url.swift */,
 				5B137B351D050954004F26F9 /* Engine.swift */,
+				5B09D72C1D62D2740075D811 /* Flow.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -1875,6 +1878,7 @@
 				5B3742721CC0CBAD00AF2897 /* UIImageView+ResizeProportionally.m in Sources */,
 				5B37426C1CC0CBAD00AF2897 /* UIViewController+FirstResponder.m in Sources */,
 				5B09CEB31CBB4A330042C70B /* AppDelegate.swift in Sources */,
+				5B09D72D1D62D2740075D811 /* Flow.swift in Sources */,
 				5BFF797F1CCF0BC400B50896 /* DatePickerDialog.swift in Sources */,
 				5BFFFDB91CD8AB740099AB3F /* CommonUtility.swift in Sources */,
 				5BE7C3111CCE00DF0067334D /* AttachEvent.swift in Sources */,

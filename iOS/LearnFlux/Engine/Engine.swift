@@ -285,6 +285,7 @@ class Engine : NSObject {
         guard let rawJSON = dataJSON else { return nil; }
         guard let json = JSON(rawJSON).dictionaryObject else { return nil; }
         guard let data = json["data"] else { return nil; }
+        print (data);
         return data as? arrType;
     }
 
@@ -428,7 +429,7 @@ class Engine : NSObject {
         for participant in participants {
             let me = clientData.cacheMe()
             let selfId = me!["id"] as! Int;
-            if (participant != selfId) {
+            if (participant.user?.userId != selfId) {
                 if (chatName != "") { chatName += ", "; }
                 chatName += String(participant);
                 //                chatName += participant["username"] as! String;
@@ -462,6 +463,60 @@ class Engine : NSObject {
             }
         }
     }
+    
+    
+    static func deleteThreads (viewController: UIViewController? = nil, threadIds: [String], callback: JSONreturn? = nil) {
+        let param = ["ids":threadIds];
+        //        makeRequest2(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
+        makeRequestAlamofire(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
+            if (JSON != nil) { print (JSON!); }
+            if (callback != nil) { callback! (status, JSON); }
+        }
+    }
+    
+    
+    static func register (viewController: UIViewController? = nil, username: String, firstName: String, lastName: String, email: String, password: String, passwordConfirm: String, callback: JSONreturn? = nil) {
+        let param = ["username":username,
+                     "firstName":firstName,
+                     "lastName":lastName,
+                     "email":email,
+                     "password":password,
+                     "passwordConfirm":passwordConfirm];
+        makeRequestAlamofire(viewController, method: .POST, url: Url.register, param: param) { status, JSON in
+            if (JSON != nil) {
+                print (JSON);
+            }
+            if (status == .Success) {
+                Util.showMessageInViewController(viewController, title: "Success", message: "You have successfully registered. Please allow some time for the system to process your registration. You will get notification on your email when your account has been activated. Thank you.", buttonOKTitle: "Ok") {
+                    if (callback != nil) { callback! (status, JSON); }
+                }
+            }
+            else {
+                if (callback != nil) { callback! (status, JSON); }
+            }
+        }
+    }
+    
+    static func createGroup (viewController: UIViewController? = nil, type: String, title: String, desc: String, userId: [Int], parentId: String? = nil, callback: JSONreturn? = nil) {
+        var param = Dictionary<String, AnyObject>();
+        param = ["type":type, "participants":userId, "name":title, "description":desc];
+        if (parentId != nil && parentId != "") { param["parent"] = parentId!; }
+        print (param);
+        makeRequestAlamofire(viewController, method: .POST, url: Url.groups, param: param) { status, JSON in
+            if (JSON == nil) {
+                Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there was an error when creating the group");
+                if (callback != nil) { callback! (status, JSON); }
+            }
+            else {
+                let dict = getDictData(JSON);
+                print (dict);
+                //            clientData.addNewThread(dictData);
+                if (callback != nil) { callback! (status, dict); }
+            }
+        }
+    }
+
+    
     
 //    static func sendThreadMessage (viewController: UIViewController? = nil, threadId: String, body: String, callback: JSONreturn? = nil) {
 //        let param = ["body":body];
@@ -511,37 +566,6 @@ class Engine : NSObject {
 //        }
 //    }
   
-    static func deleteThreads (viewController: UIViewController? = nil, threadIds: [String], callback: JSONreturn? = nil) {
-        let param = ["ids":threadIds];
-//        makeRequest2(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
-        makeRequestAlamofire(viewController, method: .DELETE, url: Url.messages, param: param) { status, JSON in
-            if (JSON != nil) { print (JSON!); }
-            if (callback != nil) { callback! (status, JSON); }
-        }
-    }
-
-    
-    static func register (viewController: UIViewController? = nil, username: String, firstName: String, lastName: String, email: String, password: String, passwordConfirm: String, callback: JSONreturn? = nil) {
-        let param = ["username":username,
-                     "firstName":firstName,
-                     "lastName":lastName,
-                     "email":email,
-                     "password":password,
-                     "passwordConfirm":passwordConfirm];
-        makeRequestAlamofire(viewController, method: .POST, url: Url.register, param: param) { status, JSON in
-            if (JSON != nil) {
-                print (JSON);
-            }
-            if (status == .Success) {
-                Util.showMessageInViewController(viewController, title: "Success", message: "You have successfully registered. Please allow some time for the system to process your registration. You will get notification on your email when your account has been activated. Thank you.", buttonOKTitle: "Ok") {
-                    if (callback != nil) { callback! (status, JSON); }
-                }
-            }
-            else {
-                if (callback != nil) { callback! (status, JSON); }
-            }
-        }
-    }
 
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

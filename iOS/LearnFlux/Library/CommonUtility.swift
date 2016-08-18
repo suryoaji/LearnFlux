@@ -255,8 +255,13 @@ class Util : NSObject {
 
         var useStyle = UIAlertActionStyle.Default;
         for i in 0..<choices.count {
-            if (i < styles.count) { if (styles[i] != nil) { useStyle = styles[i]!; } }
-            let act: UIAlertAction = UIAlertAction(title:choices[i], style: useStyle, handler: {(action: UIAlertAction) -> Void in
+            var contextStyle = useStyle;
+            if (i < styles.count) {
+                if (styles[i] != nil) { useStyle = styles[i]!; }
+                if isSubStrExists(choices[i], findFor: "delete") || isSubStrExists(choices[i], findFor: "erase") { contextStyle = .Destructive; }
+                if isSubStrExists(choices[i], findFor: "cancel") { contextStyle = .Cancel; }
+            }
+            let act: UIAlertAction = UIAlertAction(title:choices[i], style: contextStyle, handler: {(action: UIAlertAction) -> Void in
                 if (callback != nil) { callback! (i); }
             });
             alert.addAction(act)
@@ -276,5 +281,11 @@ class Util : NSObject {
         dispatch_async(dispatch_get_main_queue()) {
             callback();
         }
-    }    
+    }
+    
+    static func isSubStrExists (mainStr: String, findFor: String) -> Bool {
+        let str = mainStr.lowercaseString;
+        let substr = findFor.lowercaseString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        if str.rangeOfString(substr) != nil { return true; } else { return false; }
+    }
 }

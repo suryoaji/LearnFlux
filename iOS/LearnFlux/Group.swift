@@ -13,6 +13,7 @@ struct Group{
     var id: String!
     var name: String!
     var thread: Thread?
+    var parent: Any?
     var parentId: String!
     var threadId: String?
     var color: UIColor!;
@@ -30,25 +31,30 @@ struct Group{
         }
     }
     
-    init(type: String, id: String, name: String, thread: Thread, parentId: String! = "") {
+    init(type: String, id: String, name: String, thread: Thread, parent: AnyObject? = nil) {
         self.type = type
         self.id = id
         self.name = name;
-        self.parentId = parentId;
+        self.parent = parent;
+        if let p = parent as? Group {
+            self.parentId = p.id;
+        }
         self.thread = thread;
         self.threadId = self.thread?.id;
     }
     
     init(dict: AnyObject?) {
         guard let data = dict as? dictType else { return; }
-        print (data["child"]);
+        print (data);
         if let s = data["type"] as? String { type = s; }
         if let s = data["id"] as? String { id = s; }
         if let s = data["name"] as? String { name = s; }
-        if let s = data["parent"] as? String { parentId = s; }
+        if let s = data["parent"] as? dictType { let p = Group(dict: s); parent = p as Any; parentId = p.id; }
         if let s = data["description"] as? String { description = s; }
         
-        if let s = data["participans"] as? String { participants = Participant.convertFromArr(s); }
+        if let s = data["message"] as? dictType { thread = Thread(dict: s); participants = thread?.participants; }
+        
+        if let s = data["participants"] as? String { participants = Participant.convertFromArr(s); }
         if let s = data["child"] { child = Group.convertFromArr(s); }
     }
     

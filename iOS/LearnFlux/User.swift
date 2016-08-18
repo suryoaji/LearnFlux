@@ -23,10 +23,11 @@ struct User {
     }
     
     init (dict : AnyObject?)  {
-        guard let data = User.convertFromDict(dict) else { return; }
-        self.userId = data.userId
-        self.type = data.type;
-        self.link = data.link;
+//        guard let data = User.convertFromDict(dict) else { return; }
+        guard let data = dict else { return; }
+        if let s = data["id"] as? Int { self.userId = s; }
+        if let s = data["type"] as? String { self.type = s; }
+        if let s = data["link"] as? String { self.link = s; }
     }
     
     static func convertFromArr (arr : AnyObject?) -> [User]? {

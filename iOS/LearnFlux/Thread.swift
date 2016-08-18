@@ -14,10 +14,10 @@ class Thread: NSObject {
     
     var id : String!
     var title : String?
-    var participants : [Int]!
+    var participants : [Participant]!
     var messages: [ThreadMessage]?
     
-    init(id: String, participants: [Int]) {
+    init(id: String, participants: [Participant]) {
         self.id = id
         self.participants = participants
     }
@@ -25,7 +25,7 @@ class Thread: NSObject {
     init(dict: Dictionary<String, AnyObject>) {
         super.init()
         self.id = dict["id"] as! String
-        self.participants = setPropertyParticipants(dict["participants"] as! Array<Dictionary<String, AnyObject>>)
+        self.participants = Participant.convertFromArr(dict["participants"]); //setPropertyParticipants(dict["participants"] as! Array<Dictionary<String, AnyObject>>)
         if let title = dict["title"]{
             self.title = title as? String
         }
@@ -38,13 +38,13 @@ class Thread: NSObject {
         self.title = title
     }
     
-    func setPropertyParticipants(arr: Array<Dictionary<String, AnyObject>>)-> ([Int]){
-        var conId : [Int] = []
-        for i in arr{
-            conId.append(i["id"] as! Int)
-        }
-        return conId
-    }
+//    func setPropertyParticipants(arr: Array<Dictionary<String, AnyObject>>)-> ([Int]){
+//        var conId : [Int] = []
+//        for i in arr{
+//            conId.append(i["id"] as! Int)
+//        }
+//        return conId
+//    }
     
     func addMessage(message: ThreadMessage){
         if self.messages != nil{

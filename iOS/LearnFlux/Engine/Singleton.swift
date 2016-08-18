@@ -51,6 +51,9 @@ class Data : NSObject {
     
     private var currentOrg : Group!;
     
+    // temporary var to use for organising flow data that use multi-used screen.
+
+    
     func idGroupByIdThread(idThread: String)->(String?){
         if let groups = groups{
             for each in groups{

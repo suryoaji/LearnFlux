@@ -155,19 +155,46 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         let privDeleteActivity = true;
         
         var choices = [String]();
+        var styles = [UIAlertActionStyle?]();
         
-        if privEditOrg { choices.append("Edit this organisation"); }
-        if privCreateGroup && indicatorViewShown == 0 { choices.append("Create new group"); }
-        if privDeleteGroup && indicatorViewShown == 0 { choices.append("Delete multiple groups"); }
-        if privCreateEvent && indicatorViewShown == 1 { choices.append("Create new event"); }
-        if privDeleteEvent && indicatorViewShown == 1 { choices.append("Delete multiple events"); }
-        if privCreateActivity && indicatorViewShown == 2 { choices.append("Create new activity"); }
-        if privDeleteActivity && indicatorViewShown == 2 { choices.append("Delete multiple activities"); }
+        if privEditOrg { choices.append("Edit this organisation"); styles.append (.Default); }
+        if privCreateGroup && indicatorViewShown == 0 { choices.append("Create new group"); styles.append (.Default); }
+        if privDeleteGroup && indicatorViewShown == 0 { choices.append("Delete multiple groups"); styles.append (.Destructive); }
+        if privCreateEvent && indicatorViewShown == 1 { choices.append("Create new event"); styles.append (.Default); }
+        if privDeleteEvent && indicatorViewShown == 1 { choices.append("Delete multiple events"); styles.append (.Destructive); }
+        if privCreateActivity && indicatorViewShown == 2 { choices.append("Create new activity"); styles.append (.Default); }
+        if privDeleteActivity && indicatorViewShown == 2 { choices.append("Delete multiple activities"); styles.append (.Default); }
 
         
-        Util.showAlertMenu(self, title: "Menu", choices: choices,
-           styles: [.Default,.Destructive,.Destructive], addCancel: true) { (selected) in
+        Util.showAlertMenu(self, title: "Menu", choices: choices, styles: styles, addCancel: true) { (selected) in
             switch (selected) {
+            case 0: break;
+            case 1:
+                let flow = Flow.sharedInstance;
+                flow.begin("NewGroup");
+                flow.add(dict: ["parentId": (self.orgData?.id)!]);
+                flow.setCallback() { result in
+                    guard let title = result!["title"] as? String else { print ("FLOW: title not found"); return; }
+                    guard let desc = result!["desc"] as? String else { print ("FLOW: desc not found"); return; }
+                    guard let userIds = result!["userIds"] as? [Int] else { print ("FLOW: userId not found"); return; }
+                    let parentId = result!["parentId"] as? String;
+                    Engine.createGroup(self, type:"group", title: title, desc: desc, userId: userIds, parentId:parentId) { status, JSON in
+                        Util.mainThread() {
+                            if status == .Success{
+//                                let group = Group.convertFromDict(JSON);
+                                Util.mainThread() {
+                                    self.navigationController?.popToViewController(self, animated: true);
+                                    Engine.getGroupInfo(groupId: (self.orgData?.id)!) { status, group in
+                                        self.orgData = group;
+                                        self.propagateData();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                self.navigationController?.pushViewController(Util.getViewControllerID("NewGroups"), animated: true);
+                break;
             default: break;
             }
         }

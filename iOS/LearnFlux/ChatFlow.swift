@@ -24,7 +24,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     var clickedMessageIndexpath : Int?
     var chatId : String = "";
     var participantsId = [Dictionary<String, Int>]();
-    var participants = [AnyObject]();
+    var participants = [Participant]();
     var localChat : Array<AnyObject>! = [];
     
     let aDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
@@ -353,6 +353,11 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
 //        self.view.bringSubviewToFront(self.view.inputView!);
         setTabBarVisible(false, animated: true)
         
+        let flow = Flow.sharedInstance;
+        if (flow.activeFlow() == "NewThreads") {
+            flow.removeFlowVc(self.navigationController!, exceptVc: [self]);
+            flow.clear();
+        }
     }
     
 //    override func viewDidDisappear(animated: Bool) {
