@@ -63,8 +63,8 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Create Group"
-            android:id="@+id/btnSubmitGroup" android:layout_marginTop="20dp"
+            android:text="Next"
+            android:id="@+id/btnNext" android:layout_marginTop="20dp"
             android:layout_weight="1"/>
     </LinearLayout>
 

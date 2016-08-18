@@ -175,7 +175,7 @@ public class ConnectionFragment extends Fragment {
 		final EditText etName = (EditText) dialog.findViewById(R.id.add_group_name);
 		final EditText etDesc = (EditText) dialog.findViewById(R.id.add_group_description);
 		Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-		Button btnSave = (Button) dialog.findViewById(R.id.btnSubmitGroup);
+		Button btnSave = (Button) dialog.findViewById(R.id.btnNext);
 
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override

@@ -73,6 +73,7 @@ public class PeopleAdapter extends ArrayAdapter<Participant> {
 		}
 		holder.mItem = participants.get(position);
 		holder.tvName.setText(participants.get(position).getFirstName());
+		holder.tvName.setTextColor(Color.parseColor("#000000"));
 
 		holder.ivCheck.setVisibility((selectedParticipant.contains(participants.get(position))) ? View.VISIBLE : View.GONE);
 		holder.relativeLayout.setBackgroundColor((selectedParticipant.contains(participants.get(position))) ? Color.parseColor("#FFCDCDCD") : Color.parseColor("#00ffffff"));

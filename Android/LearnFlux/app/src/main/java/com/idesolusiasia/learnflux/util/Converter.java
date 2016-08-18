@@ -1,5 +1,7 @@
 package com.idesolusiasia.learnflux.util;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.Group;
@@ -19,6 +21,7 @@ import org.json.JSONObject;
 public class Converter {
 	static Gson gson=new Gson();
 	public static Thread convertThread(JSONObject obj)throws JSONException{
+		Log.i("cnvertThread", obj.toString());
 		Thread t = gson.fromJson(obj.toString(), Thread.class);
 		if (obj.has("messages")){
 			JSONArray messageArray = obj.getJSONArray("messages");

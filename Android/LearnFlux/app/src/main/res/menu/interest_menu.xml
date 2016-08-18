@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/new_event"
+    <item android:id="@+id/interest_new_event"
         android:orderInCategory="101"
         android:title="add new event"
         app:showAsAction="never"/>
-    <item android:id="@+id/new_group"
+    <item android:id="@+id/interest_new_group"
         android:orderInCategory="102"
         android:title="add new group"
         app:showAsAction="never"/>
-    <item android:id="@+id/invite_people"
+    <item android:id="@+id/interest_invite_people"
         android:orderInCategory="100"
         android:title="invite people"
         app:showAsAction="never"/>

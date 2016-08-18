@@ -249,7 +249,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		final Dialog dialog = new Dialog(OrgDetailActivity.this);
 		dialog.setTitle("add group");
 		dialog.setContentView(R.layout.dialog_add_group);
-		Button btnSubmit = (Button)dialog.findViewById(R.id.btnSubmitGroup);
+		Button btnSubmit = (Button)dialog.findViewById(R.id.btnNext);
 		Button cancel = (Button)dialog.findViewById(R.id.btnCancel);
 		btnSubmit.setOnClickListener(new View.OnClickListener() {
 			@Override
