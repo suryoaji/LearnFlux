@@ -14,7 +14,7 @@ extension JSQMessagesBubbleImage{
     //Normal Outgoing Color = Green
     //Event, Poll Outgoing Color  = Blue
     //Normal Incoming Color = Gray
-    //Event, Poll Outgoing Color = Blue
+    //Event, Poll Incoming Color = Blue
     //Important Outgoing and Incoming Color = Red
     
     enum State{

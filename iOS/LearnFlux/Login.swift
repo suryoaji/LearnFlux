@@ -21,18 +21,23 @@ class Login: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        self.navigationController?.navigationBar.hidden = true
+        self.navigationController?.navigationBar.barTintColor = LFColor.green
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor(), NSFontAttributeName : UIFont(name: "PingFangHK-Medium", size: 18)!]
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated);
         self.revealController.setMinimumWidth(0, maximumWidth: 0, forViewController: self.revealController.leftViewController)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
+        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.Default
 //        self.revealController.setMinimumWidth(220.0, maximumWidth: 244.0, forViewController: self.revealController.leftViewController)
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(true)
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
@@ -91,6 +96,7 @@ class Login: UIViewController, UITextFieldDelegate {
             }
             else {
                 Engine.me() { status, JSON in
+                    self.navigationController?.navigationBar.hidden = false
                     self.performSegueWithIdentifier("Home", sender: self);
                 }
             }

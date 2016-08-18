@@ -10,27 +10,54 @@ import UIKit
 import JSQMessagesViewController
 
 class Thread: NSObject {
-    typealias ThreadMessage = (message: JSQMessage, meta: Dictionary<String, AnyObject>)
+    typealias secret = (type: Bool, idType: String?, id: String)
+    typealias ThreadMessage = (message: JSQMessage, meta: Dictionary<String, AnyObject>, secret: secret?)
     
     var id : String!
     var title : String?
     var participants : [Int]!
-    var messages: [ThreadMessage]?
-    
-    init(id: String, participants: [Int]) {
-        self.id = id
-        self.participants = participants
+    var messages: [ThreadMessage]?{
+        didSet{
+            if messages != nil{
+                self.lastUpdated = messages![messages!.count-1].message.date.timeIntervalSince1970
+                NSNotificationCenter.defaultCenter().postNotificationName("sortThreads", object: nil)
+            }
+        }
     }
+    var lastUpdated: Double!
+    var normalIndex: Int!
     
-    init(dict: Dictionary<String, AnyObject>) {
+    init(dict: Dictionary<String, AnyObject>, isNew: Bool = false, index: Int? = nil) {
         super.init()
         self.id = dict["id"] as! String
         self.participants = setPropertyParticipants(dict["participants"] as! Array<Dictionary<String, AnyObject>>)
         if let title = dict["title"]{
             self.title = title as? String
         }
+        if isNew{
+            self.setPropertyLastUpdated(NSDate().timeIntervalSince1970)
+        }else{
+            self.setPropertyLastUpdated(0)
+        }
         if let rawMessages = dict["messages"]{
             self.setPropertyMessages(rawMessages as! Array<Dictionary<String, AnyObject>>)
+        }
+        if let index = index{
+            self.normalIndex = index
+        }else{
+            self.normalIndex = Engine.clientData.getMyThreads()!.count
+        }
+    }
+    
+    func setPropertyLastUpdated(timestamp: Double){
+        self.lastUpdated = timestamp
+    }
+    
+    func setPropertyLastUpdated(arrMessage: [ThreadMessage]){
+        if !arrMessage.isEmpty{
+            self.setPropertyLastUpdated(arrMessage[arrMessage.count-1].message.date.timeIntervalSince1970)
+        }else{
+            self.setPropertyLastUpdated(0)
         }
     }
     
@@ -73,73 +100,141 @@ class Thread: NSObject {
     }
     
     func setThreadMessage(dicMessage: Dictionary<String, AnyObject>)-> (ThreadMessage)?{
-        if let tSender = dicMessage["sender"], let tRawDate = dicMessage["created_at"], let tText = dicMessage["body"]{
-            let senderMessage = tSender as! Dictionary<String, AnyObject>
-            let senderId = String(senderMessage["id"] as! Int)
-            let rawDate = tRawDate as! Double
-            let date = NSDate(timeIntervalSince1970: rawDate)
-            let text = tText as! String
-            let message = setJSQMessage(senderId, text: text, reference: dicMessage["reference"], date: date)
-            let meta = self.setMetaMessage(dicMessage["reference"], text: text)
-            return (message: message, meta: meta)
-        }
-        return nil
+        return Thread.convertDictToMessage(dicMessage)
     }
     
-    func setJSQMessage(senderId: String,text: String, reference: AnyObject?, date: NSDate) -> (JSQMessage){
+    static func getMessagesFromArr(arr: Array<Dictionary<String, AnyObject>>)-> [ThreadMessage]?{
+        var arrMessages : [ThreadMessage] = []
+        for dicMessage in arr{
+            guard let message = convertDictToMessage(dicMessage) else{
+                print("\nThread: getMessageFromArr, failure when converting dict to message. Dict: ")
+                print(dicMessage)
+                continue
+            }
+            arrMessages.append(message)
+        }
+        return !arrMessages.isEmpty ? arrMessages : nil
+    }
+    
+    private static func convertDictToMessage(dict: Dictionary<String, AnyObject>) -> (ThreadMessage)?{
+        guard let tSender  = dict["sender"] where (tSender as? Dictionary<String, AnyObject>) != nil,
+            let tRawDate   = dict["created_at"] where (tRawDate as? Double) != nil,
+            let tText      = dict["body"] where (tText as? String) != nil,
+            let tId        = dict["id"] where (tId as? String) != nil else{
+                return nil
+        }
+        let senderMessage = tSender as! Dictionary<String, AnyObject>
+        let rawDate = tRawDate as! Double
+        let message = setJSQMessage(String(senderMessage["id"] as! Int),
+                                           text     : tText as! String,
+                                           reference: dict["reference"],
+                                           date     : NSDate(timeIntervalSince1970: rawDate))
+        let meta = setMetaMessage(dict["reference"], text: tText as! String)
+        let secret = setSecretMessage(tId as! String, reference: dict["reference"])
+        return (message: message, meta: meta, secret: secret)
+    }
+    
+    static func setSecretMessage(idMessage: String, reference: AnyObject?) -> secret{
+        guard let reference = reference else{
+            return (type: false, idType: nil, id: idMessage)
+        }
+        return (type: false, idType: reference["id"] as? String, id: idMessage)
+    }
+    
+    static func setJSQMessage(senderId: String,text: String, reference: AnyObject?, date: NSDate) -> (JSQMessage){
         if let rawReference = reference{
             return JSQMessage(senderId: senderId, senderDisplayName: "(need to be maintained)", date: date, text: textFromRef(rawReference as! Dictionary<String, AnyObject>))
         }
         return JSQMessage(senderId: senderId, senderDisplayName: "(need to be maintained)", date: date, text: text)
     }
     
-    func setMetaMessage(reference: AnyObject?, text: String)-> (Dictionary<String, AnyObject>){
+    static func setMetaMessage(reference: AnyObject?, text: String)-> (Dictionary<String, AnyObject>){
         if let rawReference = reference{
             return metaFromRef(rawReference as! Dictionary<String, AnyObject>)
         }
         return ["type":"chat", "data":text, "important": "no"]
     }
     
-    func textFromRef(ref: Dictionary<String, AnyObject>) -> (String){
-        let detail = ref["details"] as! String
-        let title = ref["title"] as! String
-        let rawDate = Util.getDateFromTimestamp(ref["timestamp"] as! Double)
-        let date = rawDate.date
-        let time = rawDate.time
-        let location = ref["location"] as! String
-        return "📅 EVENT\n\n\(detail). Tap here to interact.\n\n" +
-               "\(title)\n" +
-               "\(date)\n" +
-               "\(time)\n" +
-               "\(location)"
+    static func textFromRef(ref: Dictionary<String, AnyObject>) -> (String){
+        if (ref["type"] as! String).lowercaseString == "event"{
+            let title = ref["title"] as! String
+            let rawDate = Util.getDateFromTimestamp(ref["timestamp"] as! Double)
+            let date = rawDate.date
+            return "📅 \(date.uppercaseString) EVENT\n\nJack Joyce send \(title) invitation. Tap here to interact.\n"
+        }else{
+            let title = ref["title"] as! String
+            return "📊 POLL\n\nJack Joyce send \(title) poll. Tap here to interact.\n"
+        }
     }
     
-    func metaFromRef(ref: Dictionary<String, AnyObject>) -> (Dictionary<String, AnyObject>){
+    static func metaFromRef(ref: Dictionary<String, AnyObject>) -> (Dictionary<String, AnyObject>){
         var dict : Dictionary<String, AnyObject> = [:]
         let type = ref["type"] as! String
-        dict["location"] = ref["location"] as! String
-        dict["title"] = ref["title"] as! String
-        dict["duration"] = "120"
-        let rawDate = Util.getDateFromTimestamp(ref["timestamp"] as! Double)
-        dict["date"] = rawDate.date
-        dict["time"] = rawDate.time
+        if type.lowercaseString == "event"{
+            setMetaForEvent(&dict, ref: ref)
+        }else{
+            setMetaForPoll(&dict, ref: ref)
+        }
         return ["type": type, "data":dict, "important": "no"]
     }
     
-    static func getMessagesFromArr(arr: Array<Dictionary<String, AnyObject>>)-> [ThreadMessage]?{
-        var arrMessages : [ThreadMessage] = []
-        for message in arr{
-            if let text = message["body"], let timestamp = message["created_at"], let sender = message["sender"]{
-                if let sText = text as? String, let dTimestamp = timestamp as? Double, let dSender = sender as? Dictionary<String, AnyObject>{
-                    let message = JSQMessage(senderId: String(dSender["id"] as! Int), senderDisplayName: "(need to be maintained)", date: NSDate(timeIntervalSince1970: dTimestamp), text: sText)
-                    let messageMeta = ["data" : sText, "important" : "no", "type" : "chat"]
-                    arrMessages.append((message: message, meta: messageMeta))
+    static func setMetaForEvent(inout meta: Dictionary<String, AnyObject>, ref: Dictionary<String, AnyObject>){
+        meta["title"] = ref["title"] as! String
+        meta["details"] = ref["details"] as! String
+        meta["location"] = ref["location"] as! String
+        meta["duration"] = "120"
+        let rawDate = Util.getDateFromTimestamp(ref["timestamp"] as! Double)
+        meta["date"] = rawDate.date
+        meta["time"] = rawDate.time
+    }
+    
+    static func setMetaForPoll(inout meta: Dictionary<String, AnyObject>, ref: Dictionary<String, AnyObject>){
+        meta["title"] = ref["title"] as! String
+        meta["question"] = ref["question"] as! String
+        let answers = pollsAnswerFromArr(ref["options"] as! Array<Dictionary<String, AnyObject>>)
+        meta["answers"] = answers
+        meta["answerers"] = pollsAnswererFromArr(ref["metadata"] as! Array<Dictionary<String, AnyObject>>, answers: answers)
+        meta["id"] = ref["id"] as! String
+    }
+    
+    static func pollsAnswererFromArr(arr: Array<Dictionary<String, AnyObject>>, answers: Array<String>) -> (Dictionary<String, Int>){
+        var conAnswerer : Dictionary<String, Int>= [:]
+        if !arr.isEmpty{
+            arrLoop : for each in arr{
+                let userId = String((each["user"] as! Dictionary<String, AnyObject>)["id"] as! Int)
+                for i in conAnswerer{
+                    if i.0 == userId { continue arrLoop }
+                }
+                if let position = positionAnswer(each["name"] as! String, answers: answers){
+                    conAnswerer[userId] = position
                 }
             }
         }
-        if !arrMessages.isEmpty{
-            return arrMessages
+        return conAnswerer
+    }
+    
+    static func positionAnswer(answer: String, answers: Array<String>) -> Int?{
+        for i in 0..<answers.count{
+            if answers[i] == answer{
+                return i
+            }
         }
         return nil
+    }
+    
+    static func pollsAnswerFromArr(arr: Array<Dictionary<String, AnyObject>>) -> (Array<String>){
+        var conAnswer : Array<String> = []
+        for each in arr{
+            conAnswer.append(each["name"] as! String)
+        }
+        return conAnswer
+    }
+    
+    static func textPollsFromArr(arr: Array<String>)->(String){
+        var text = ""
+        for each in 1...arr.count{
+            text += "\(each). \(arr[each - 1])\n"
+        }
+        return text
     }
 }

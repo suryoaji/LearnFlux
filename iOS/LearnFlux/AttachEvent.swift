@@ -9,7 +9,7 @@
 import Foundation
 
 protocol AttachEventReturnDelegate {
-    func sendSelectedEventData (event: NSDictionary);
+    func sendSelectedEventData (event: Dictionary<String, AnyObject>);
 }
 
 class AttachEvent : UITableViewController {
@@ -21,7 +21,7 @@ class AttachEvent : UITableViewController {
     var chosenTitle : String = "";
     var chosenDuration : Int = 60;
     
-    var events = [NSDictionary]();
+    var events : Array<Dictionary<String, AnyObject>> = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,15 +58,26 @@ class AttachEvent : UITableViewController {
         cell.setSeparatorType(CellSeparatorFull);
         
         if (indexPath.section == 2) {
-            let title = cell.viewWithTag(1) as! UILabel;
-            let date = cell.viewWithTag(2) as! UILabel;
-            let location = cell.viewWithTag(3) as! UILabel;
+            let labelTitle = cell.viewWithTag(1) as! UILabel;
+            let labelDate = cell.viewWithTag(2) as! UILabel;
+            let labelLocation = cell.viewWithTag(3) as! UILabel;
             let event = events[indexPath.row];
-            title.text = event.stringForKey("title");
-            date.text = event.stringForKey("date") + ", " + event.stringForKey("time") + "(\(event.intForKey("duration")))";
-            location.text = event.stringForKey("location");
+            if let date     = event["date"],
+               let title    = event["title"],
+               let time     = event["time"],
+               let duration = event["duration"],
+               let location = event["location"]{
+                    if let sDate = date as? String,
+                       let sTitle = title as? String,
+                       let sTime = time as? String,
+                       let iDuration = duration as? Int,
+                       let sLocation = location as? String{
+                        labelTitle.text = sTitle
+                        labelDate.text = sDate + ", " + sTime + "(\(iDuration))";
+                        labelLocation.text = sLocation
+                }
+            }
         }
-        
         return cell;
     }
 

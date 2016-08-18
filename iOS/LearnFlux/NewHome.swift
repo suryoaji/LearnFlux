@@ -12,10 +12,10 @@ class NewHome : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad();
-        
         let item:UIBarButtonItem! = UIBarButtonItem();
-        item.image = UIImage(named: "hamburger-18.png");
-        self.navigationItem.leftBarButtonItem = item;
+        item.image = UIImage(named: "menu-1.png");
+        self.navigationItem.leftBarButtonItem = item
+        
         item.action = #selector(self.revealMenu);
         item.target = self;
         

@@ -9,7 +9,7 @@
 import Foundation
 
 protocol AttachPollReturnDelegate {
-    func sendSelectedPollData (poll: NSDictionary);
+    func sendSelectedPollData (poll: Dictionary<String, AnyObject>);
 }
 
 class AttachPoll : UITableViewController {
@@ -18,7 +18,7 @@ class AttachPoll : UITableViewController {
     var question : String = "";
     var answers = [String]();
     
-    var preset = [NSDictionary]();
+    var preset = [Dictionary<String, AnyObject>]();
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,8 +100,8 @@ class AttachPoll : UITableViewController {
             let tfQuestion = cell.viewWithTag(1) as! UILabel;
             let tfAnswers = cell.viewWithTag(2) as! UILabel;
             let curPreset = preset[indexPath.row];
-            tfQuestion.text = curPreset.valueForKey("question") as! String!;
-            let answers: [String] = curPreset.valueForKey("answers") as! [String];
+            tfQuestion.text = curPreset["question"] as! String!;
+            let answers: [String] = curPreset["answers"] as! [String];
             var combinedAnswers = "";
             for answer in answers {
                 if (combinedAnswers != "") {
@@ -132,7 +132,7 @@ class AttachPoll : UITableViewController {
     
     @IBAction func saveAndSend (sender: AnyObject) {
         self.view.window?.endEditing(true);
-        let newData = ["question":question, "answers":answers];
+        let newData : Dictionary<String, AnyObject> = ["question":question, "answers":answers]
         delegate.sendSelectedPollData(newData);
         self.navigationController?.popViewControllerAnimated(true);
     }

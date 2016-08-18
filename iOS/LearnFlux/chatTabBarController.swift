@@ -14,6 +14,11 @@ class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
+        self.tabBar.layer.shadowOpacity = 0.3
+        self.tabBar.layer.shadowOffset = CGSizeMake(0, 2)
+        self.tabBar.barTintColor = LFColor.green
+        self.tabBar.tintColor = UIColor.whiteColor()
+        
         // Do any additional setup after loading the view.
     }
 

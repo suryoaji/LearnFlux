@@ -18,6 +18,17 @@ class Connections : UITableViewController {
     ];
     var actualConnect = Array<AnyObject>();
     var selectedConnect : Array<Bool> = [];
+    let clientData = Engine.clientData
+    
+    func loadEvents(){
+        Engine.getEvents(){ status, JSON in
+            if let events = self.clientData.getMyEvents(){
+                for eachEvent in events{
+                    Engine.getEventDetail(event: eachEvent)
+                }
+            }
+        }
+    }
     
     func loadGroup(){
         Engine.getGroups()
@@ -27,7 +38,7 @@ class Connections : UITableViewController {
         super.viewDidLoad();
         
         let item = UIBarButtonItem();
-        item.image = UIImage(named: "hamburger-18.png");
+        item.image = UIImage(named: "menu-1.png");
         self.navigationItem.leftBarButtonItem = item;
         item.action = #selector(self.revealMenu);
         item.target = self;
@@ -42,6 +53,7 @@ class Connections : UITableViewController {
         self.tabBarController?.title = "Connections";
         
         self.loadGroup()
+        self.loadEvents()
     }
     
     lazy var flowDirection : String! = "";
@@ -68,6 +80,7 @@ class Connections : UITableViewController {
     
     func buttonDoneTapped(sender: UIBarButtonItem) {
         if (self.flowDirection == "NewGroups") {
+            sender.enabled = false
             let title = flowData.valueForKey("title")! as! String;
             var userId : Array<Int> = [];
             for i in 0..<selectedConnect.count {
@@ -76,11 +89,14 @@ class Connections : UITableViewController {
                     userId.append(el.valueForKey("id")! as! Int);
                 }
             }
-            Engine.createThread(self, title: title, userId: userId) { status, JSON in
+            Engine.createGroupChat(self, name: title, userId: userId) { status, JSON in
                 Util.mainThread() {
-                    if status == .Success{
+                    sender.enabled = true
+                    if status == .Success && JSON != nil{
+                        let dataJSON = JSON!["data"] as! Dictionary<String, AnyObject>
+                        let threadJSON = dataJSON["message"] as! Dictionary<String, AnyObject>
                         let chatFlow = Util.getViewControllerID("ChatFlow") as! ChatFlow;
-                        chatFlow.initChat(Engine.clientData.getMyThreads()!.count - 1, idThread: Engine.clientData.getMyThreads()!.last!.id, from: ChatFlow.From.CreateThread)
+                        chatFlow.initChat(0, idThread: threadJSON["id"] as! String, from: ChatFlow.From.CreateThread)
 //                        chatFlow.initChat(threadJSON: JSON);
                         self.navigationController?.pushViewController(chatFlow, animated: true);
                         let count = self.navigationController!.viewControllers.count;
@@ -143,7 +159,7 @@ class Connections : UITableViewController {
             let row = actualConnect[indexPath.row];
             var arrUserId = Array<Int>();
             arrUserId.append((row.valueForKey("id") as? Int)!)
-            Engine.createThread(self, userId: arrUserId) { status, JSON in
+            Engine.createGroupChat(self, userId: arrUserId) { status, JSON in
                 if (JSON != nil) {
                     dispatch_async(dispatch_get_main_queue()) {
         //                self.performSegueWithIdentifier("InitiateChat", sender: JSON);
@@ -155,7 +171,6 @@ class Connections : UITableViewController {
                         let me = Engine.clientData.defaults.valueForKey("me")!;
                         vc.senderId = String(me.valueForKey("id")!);
                         vc.senderDisplayName = "";
-                        vc.participants = data["participants"] as! [Dictionary<String,AnyObject>];
                         vc.thisChatType = "chat";
                         vc.thisChatMetadata = ["title":"User ID = " + String(arrUserId[0])];
                         self.navigationController?.pushViewController(vc, animated: true);
@@ -176,7 +191,6 @@ class Connections : UITableViewController {
             print (JSON);
             let data = JSON["data"]!;
             vc.chatId = data["id"] as! String;
-            vc.participantsId = data["participants"] as! [Dictionary<String,Int>];
         }
     }
 }

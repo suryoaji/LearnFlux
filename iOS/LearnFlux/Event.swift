@@ -13,6 +13,12 @@ class Event: NSObject {
     typealias User = (id: String, type: String, link: String)
     typealias EventThread = (id: String, title: String)
     typealias Participant = (user: User, rsvp: Int)
+    struct statusEvent{
+        static let going = 2
+        static let notGoing = -1
+        static let interested = 1
+        static let none = 0
+    }
     
     var title : String!
     var id : String!
@@ -22,6 +28,7 @@ class Event: NSObject {
     var details : String!
     var participants : [Participant]!
     var thread: EventThread!
+    var status: Int! = 0
     
     init(id: String, time: String, details: String, location: String) {
         self.title = ""
@@ -65,15 +72,27 @@ class Event: NSObject {
         self.thread = thread
     }
     
+    func setPropertyStatus(status: Int){
+        self.status = status
+    }
+    
     func updateMe(newInfo: Dictionary<String, AnyObject>){
-        if let rawTitle = newInfo["title"], let rawParticipants = newInfo["participants"], let rawBy = newInfo["created_by"], let rawThread = newInfo["thread"]{
-            if let sTitle = rawTitle as? String, let arrParticipants = rawParticipants as? Array<AnyObject>, dictBy = rawBy as? Dictionary<String, AnyObject>, let dictThread = rawThread as? Dictionary<String, AnyObject>{
-                self.setPropertyParticipants(getParticipantsFromArr(arrParticipants))
-                self.setPropertyThread(getThreadFromDict(dictThread))
-                self.setPropertyBy(getByFromDict(dictBy))
-                self.title = sTitle
-            }
+        guard let rawTitle        = newInfo["title"],
+              let rawParticipants = newInfo["participants"],
+              let rawBy           = newInfo["created_by"],
+              let rawThread       = newInfo["thread"] else{
+                return
         }
+        guard let sTitle          = rawTitle as? String,
+              let arrParticipants = rawParticipants as? Array<AnyObject>,
+              let dictBy          = rawBy as? Dictionary<String, AnyObject>,
+              let dictThread      = rawThread as? Dictionary<String, AnyObject> else{
+                return
+        }
+        self.setPropertyParticipants(getParticipantsFromArr(arrParticipants))
+        self.setPropertyThread(getThreadFromDict(dictThread))
+        self.setPropertyBy(getByFromDict(dictBy))
+        self.title = sTitle
     }
     
     func getByFromDict(dict: Dictionary<String, AnyObject>)->(User){
@@ -94,7 +113,12 @@ class Event: NSObject {
     }
     
     func getParticipant(dict: Dictionary<String, AnyObject>)->(Participant){
-        return (user: getUser(dict["user"] as! Dictionary<String, AnyObject>), rsvp: dict["rsvp"] as! Int)
+        let user = getUser(dict["user"] as! Dictionary<String, AnyObject>)
+        let rsvp = dict["rsvp"] as! Int
+        if user.id == String(Engine.clientData.cacheMe()!["id"] as! Int){
+            self.setPropertyStatus(rsvp)
+        }
+        return (user: user, rsvp: rsvp)
     }
     
     func getUser(dict: Dictionary<String, AnyObject>) -> (User){

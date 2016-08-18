@@ -30,6 +30,8 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
         holdView.backgroundColor = UIColor(white: 0.93, alpha: 1.0)
         target.view.addSubview(holdView)
         Engine.getEvents(target){ status, JSON in
+            
+            self.tv.reloadData()
             if let events = self.clientData.getMyEvents(){
                 var countLoaded = 0
                 for eachEvent in events{
@@ -42,7 +44,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             }
-            self.tv.reloadData()
+            
         }
     }
     

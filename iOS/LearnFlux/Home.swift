@@ -15,9 +15,8 @@ class Home: UICollectionViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         let item:UIBarButtonItem! = UIBarButtonItem();
-        item.image = UIImage(named: "hamburger-18.png");
+        item.image = UIImage(named: "menu-1.png");
         self.navigationItem.leftBarButtonItem = item;
         item.action = #selector(self.revealMenu);
         item.target = self;

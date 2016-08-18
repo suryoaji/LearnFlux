@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKRevealing {
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         // Step 1: Create your controllers.
         let frontViewController = Util.getViewControllerID("NavCon");

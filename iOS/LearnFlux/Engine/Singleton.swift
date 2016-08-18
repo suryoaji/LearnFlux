@@ -37,8 +37,38 @@ class Data : NSObject {
     var newMessageCreated : String! = "";
     
     private var events : [Event]?
-    private var threads: [Thread]?
+    private var threads: [Thread]?{
+        didSet{
+            if threads != nil{
+                let sortedThreads = threads!.sort({ $0.lastUpdated > $1.lastUpdated })
+                threads = sortedThreads
+            }
+        }
+    }
     private var groups: [Group]?
+    
+    override init(){
+        super.init()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.sortThreads), name: "sortThreads", object: nil)
+    }
+    
+    func sortThreads(notification: NSNotification){
+        if let con = threads{
+            self.threads = nil
+            self.threads = con
+        }
+    }
+    
+    func addNewGroup(dict: Dictionary<String, AnyObject>){
+        if Group.convertFromDict(dict) != nil{
+            if self.groups != nil{
+                groups!.append(Group.convertFromDict(dict)!)
+            }else{
+                groups = [Group.convertFromDict(dict)!]
+            }
+        }
+    }
     
     func idGroupByIdThread(idThread: String)->(String?){
         if let groups = groups{
@@ -56,14 +86,10 @@ class Data : NSObject {
     func setGroups(arr: Array<Dictionary<String, AnyObject>>){
         var conGroups: [Group] = []
         for each in arr{
-            if let type = each["type"], let id = each["id"], let name = each["name"]{
-                if let rawMessage = each["message"]{
-                    let message = rawMessage as! Dictionary<String, AnyObject>
-                    conGroups.append(Group(type: type as! String, id: id as! String, name: name as! String, idThread: message["id"] as? String))
-                    continue
-                }
-                conGroups.append(Group(type: type as! String, id: id as! String, name: name as! String))
+           guard let group = Group.convertFromDict(each) else{
+                continue
             }
+            conGroups.append(group)
         }
         self.groups = conGroups.isEmpty ? nil : conGroups
     }
@@ -84,9 +110,9 @@ class Data : NSObject {
     
     func setThreads(arr: Array<Dictionary<String, AnyObject>>){
         var conThreads : [Thread] = []
-        for each in arr{
-            if each["id"] != nil && each["participants"] != nil{
-                conThreads.append(Thread(dict: each))
+        for i in 0..<arr.count{
+            if arr[i]["id"] != nil && arr[i]["participants"] != nil{
+                conThreads.append(Thread(dict: arr[i], index: i))
             }
         }
         self.threads = !conThreads.isEmpty ? conThreads : nil
@@ -106,15 +132,29 @@ class Data : NSObject {
         }
     }
     
+    func deleteThreads(idThreads: Array<String>){
+        guard let cache = self.cacheThreads() else{
+            return
+        }
+        var conCache = cache
+        for id in idThreads{
+            if let index = conCache.indexOf( { $0["id"] as! String == id } ){
+                conCache.removeAtIndex(index)
+            }
+        }
+        self.saveThread(conCache)
+        self.setThreads(conCache)
+    }
+    
     func saveThread(threads: Array<Dictionary<String, AnyObject>>){
         defaults.setValue(threads, forKey: cacheName.Threads)
     }
     
     func addThread(dict: Dictionary<String, AnyObject>){
         if self.threads != nil{
-            threads?.append(Thread(dict: dict))
+            threads?.append(Thread(dict: dict, isNew: true))
         }else{
-            threads = [Thread(dict: dict)]
+            threads = [Thread(dict: dict, isNew: true)]
         }
     }
     

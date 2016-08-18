@@ -28,4 +28,19 @@ struct Group{
         return self.tmpIdThread
     }
     
+    static func convertFromDict(dict: Dictionary<String, AnyObject>) -> Group?{
+        guard let type         = dict["type"] where (type as? String) != nil,
+              let id           = dict["id"] where (id as? String) != nil,
+              let name         = dict["name"] where (name as? String) != nil else{
+                print("=========Error===========")
+                print("Group: convertFromDict func cannot make Object Group from Dict :")
+                print(dict)
+                return nil
+        }
+        guard let rawMessage = dict["message"] where(rawMessage as? Dictionary<String, AnyObject>) != nil else{
+            return Group(type: type as! String, id: id as! String, name: name as! String)
+        }
+        return Group(type: type as! String, id: id as! String, name: name as! String, idThread: (rawMessage as! Dictionary<String, AnyObject>)["id"] as? String)
+    }
+    
 }
