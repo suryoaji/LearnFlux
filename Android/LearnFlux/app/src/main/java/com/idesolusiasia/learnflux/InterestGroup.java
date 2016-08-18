@@ -8,10 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -137,6 +139,36 @@ public class InterestGroup extends AppCompatActivity {
         dial.setTitle("Add participant");
         dial.setContentView(R.layout.layout_dialog);
         listcontent = (ListView) dial.findViewById(R.id.alert_list);
+        listcontent.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listcontent.setSelector(android.R.color.darker_gray);
+        listcontent.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position,
+                                                  long id, boolean checked) {
+                adap.setSelected(position);
+                adap.notifyDataSetChanged();
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode actionMode) {
+
+            }
+        });
         Engine.getMyFriend(getApplicationContext(), new RequestTemplate.ServiceCallback() {
             @Override
             public void execute(JSONObject obj) {

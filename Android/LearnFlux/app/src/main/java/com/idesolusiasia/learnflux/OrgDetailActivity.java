@@ -236,8 +236,11 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 				Engine.createEvent(getApplicationContext(), true, title, details, location, miliseconds, null, id, type, new RequestTemplate.ServiceCallback() {
 					@Override
 					public void execute(JSONObject obj) {
-						Log.i("Data Event", "execute: "+ title+location+id+type);
+						Log.i("Data Event", "execute: "+ title+", "+location+", "+id+", "+type);
 						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
+						Intent event = new Intent(OrgDetailActivity.this, OrgEventFragment.class);
+						event.putExtra("id",id);
+						startActivity(event);
 						dialog.dismiss();
 					}
 				});

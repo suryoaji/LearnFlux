@@ -16,7 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.OrganizationEventAdapter;
+import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.EventChatBubble;
+import com.idesolusiasia.learnflux.util.Converter;
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +34,9 @@ import java.util.Locale;
 public class OrgEventFragment extends Fragment {
 	ListView listView;
 	OrganizationEventAdapter adap;
+	ArrayList<Event> events= new ArrayList<>();
 	String[] value;
+	public String id;
 	public static OrgEventFragment newInstance() {
 		OrgEventFragment fragment = new OrgEventFragment();
 		return fragment;
@@ -47,7 +57,9 @@ public class OrgEventFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View v= inflater.inflate(R.layout.fragment_org_event, container, false);
 		listView=(ListView) v.findViewById(R.id.listView);
-		initEvent();
+		id = getActivity().getIntent().getStringExtra("id");
+		//initEvent();
+		getEventByGroupID();
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -56,7 +68,23 @@ public class OrgEventFragment extends Fragment {
 		});
 		return v;
 	}
-
+	void getEventByGroupID(){
+		events = new ArrayList<>();
+		Engine.getGroupEventByGroupId(getContext(), id, new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				try{
+					JSONArray data = obj.getJSONArray("data");
+					for(int i=0;i<data.length();i++){
+						//events = Converter.convertEvent(data.getJSONObject(i));
+					}
+				}catch (JSONException e){
+					e.printStackTrace();
+				}
+			//	adap = new OrganizationEventAdapter(getContext(),events);
+			}
+		});
+	}
 	void initEvent(){
 		Calendar cal = Calendar.getInstance();
 		cal.set(2016,3,15,9,0);

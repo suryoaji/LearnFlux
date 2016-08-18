@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Art Consultant, Art Writer/Reviewer, Art Dealer, Art Conservator and Restorer, Art Teacher/Educator, Museum Researcher, Gallery/Museum Managers, Illustrator, Model and Prop Maker, Painter, Printmaker and more."
+            android:text=""
             android:id="@+id/textView39"/>
         <TextView
             android:layout_width="wrap_content"

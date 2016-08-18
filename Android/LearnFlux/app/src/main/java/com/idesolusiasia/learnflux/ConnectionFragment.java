@@ -136,7 +136,6 @@ public class ConnectionFragment extends Fragment {
 		}
 		return view;
 	}
-
 	void getFriend(){
 		Engine.getMyFriend(getContext(), new RequestTemplate.ServiceCallback() {
 			@Override
