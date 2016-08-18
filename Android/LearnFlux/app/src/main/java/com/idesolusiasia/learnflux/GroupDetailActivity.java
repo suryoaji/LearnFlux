@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class GroupDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
-	public String name;
+	public String name,id;
 	public int color;
 	TextView title;
 	LinearLayout tabGroups, tabEvents, tabActivities;
@@ -38,6 +38,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		setSupportActionBar(toolbar);
 		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 		fab.hide();
+		id= getIntent().getStringExtra("id");
 		name = getIntent().getStringExtra("title");
 		color = getIntent().getIntExtra("color",1);
 		///////////////////////////finish Base Init///
