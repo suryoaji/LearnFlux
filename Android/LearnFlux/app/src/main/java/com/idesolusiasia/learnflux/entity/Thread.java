@@ -15,7 +15,7 @@ public class Thread {
 	private String image;
 	private String type;
 	@SerializedName("reference")
-	private Group group;
+	private BasicItem group;
 	private boolean isSelected=false;
 
 	private List<Participant> participants;
@@ -93,11 +93,11 @@ public class Thread {
 		this.lastMessage = lastMessage;
 	}
 
-	public Group getGroup() {
+	public BasicItem getGroup() {
 		return group;
 	}
 
-	public void setGroup(Group group) {
+	public void setGroup(BasicItem group) {
 		this.group = group;
 	}
 }

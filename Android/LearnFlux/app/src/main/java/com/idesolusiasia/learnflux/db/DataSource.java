@@ -7,8 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.idesolusiasia.learnflux.entity.BasicItem;
 import com.idesolusiasia.learnflux.entity.Event;
-import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Message;
 import com.idesolusiasia.learnflux.entity.MessageEvent;
 import com.idesolusiasia.learnflux.entity.MessagePoll;
@@ -162,7 +162,7 @@ public class DataSource {
 		t.setTitle(cursor.getString(1));
 		t.setImage(cursor.getString(2));
 		if (cursor.getString(3)!=null){
-			Group g = new Group();
+			BasicItem g = new BasicItem();
 			g.setId(cursor.getString(3));
 			g.setType(cursor.getString(4));
 			t.setGroup(g);
