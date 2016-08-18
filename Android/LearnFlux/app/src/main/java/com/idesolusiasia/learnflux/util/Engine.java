@@ -487,6 +487,32 @@ public class Engine {
 		}
 	}
 
+	public static void getGroupEventByGroupId(final Context context, final String groupId, final RequestTemplate.ServiceCallback callback)
+	{
+		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_ORGANIZATIONS)+"/"+groupId+ context.getString(R.string.URL_EVENTS);
+
+		if(User.getUser().getAccess_token().isEmpty()||User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					getGroupEventByGroupId(context, groupId,callback);
+				}
+			});
+		}else{
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if(obj!=null){
+						Log.i("getGroupEvent",obj.toString());
+					}if(callback!=null){
+						callback.execute(obj);
+					}
+				}
+			},null);
+		}
+
+	}
 	public static void changeRSVPStatus(final Context context, final String eventID, final int RSVPStatus,
 	                                final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
