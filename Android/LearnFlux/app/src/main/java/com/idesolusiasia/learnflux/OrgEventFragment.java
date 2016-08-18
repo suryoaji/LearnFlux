@@ -3,6 +3,8 @@ package com.idesolusiasia.learnflux;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.EventChatBubble;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 
 import org.json.JSONArray;
@@ -32,8 +35,9 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class OrgEventFragment extends Fragment {
-	ListView listView;
+	RecyclerView recyclerView;
 	OrganizationEventAdapter adap;
+	private GridLayoutManager lLayout;
 	ArrayList<Event> events= new ArrayList<>();
 	String[] value;
 	public String id;
@@ -56,16 +60,21 @@ public class OrgEventFragment extends Fragment {
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v= inflater.inflate(R.layout.fragment_org_event, container, false);
-		listView=(ListView) v.findViewById(R.id.listView);
+		recyclerView=(RecyclerView) v.findViewById(R.id.recyclerView);
+		recyclerView.setHasFixedSize(true);
+		lLayout = new GridLayoutManager(getContext(),1);
+		recyclerView.setLayoutManager(lLayout);
+		ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.item_offset);
+		recyclerView.addItemDecoration(itemDecoration);
 		id = getActivity().getIntent().getStringExtra("id");
 		//initEvent();
 		getEventByGroupID();
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		/*recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(getContext(), adap.getItem(position).getTitle(), Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getContext(), adap.getItem(position).getTitle(), Toast.LENGTH_SHORT).show();
 			}
-		});
+		});*/
 		return v;
 	}
 	void getEventByGroupID(){
@@ -76,16 +85,18 @@ public class OrgEventFragment extends Fragment {
 				try{
 					JSONArray data = obj.getJSONArray("data");
 					for(int i=0;i<data.length();i++){
-						//events = Converter.convertEvent(data.getJSONObject(i));
+						Event event = Converter.convertEvent(data.getJSONObject(i));
+						events.add(event);
 					}
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
-			//	adap = new OrganizationEventAdapter(getContext(),events);
+				adap = new OrganizationEventAdapter(getContext(),events);
+				recyclerView.setAdapter(adap);
 			}
 		});
 	}
-	void initEvent(){
+	/*void initEvent(){
 		Calendar cal = Calendar.getInstance();
 		cal.set(2016,3,15,9,0);
 
@@ -157,11 +168,11 @@ public class OrgEventFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(getContext(), "openChatroom", Toast.LENGTH_SHORT).show();
-					/*Intent i = new Intent(getContext(), EventChat.class);
-					getContext().startActivity(i);*/
+					*//*Intent i = new Intent(getContext(), EventChat.class);
+					getContext().startActivity(i);*//*
 			}
 		});
 
 		dialog.show();
-	}
+	}*/
 }

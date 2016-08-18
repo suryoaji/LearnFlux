@@ -490,7 +490,7 @@ public class Engine {
 	public static void getGroupEventByGroupId(final Context context, final String groupId, final RequestTemplate.ServiceCallback callback)
 	{
 		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
-				context.getString(R.string.URL_ORGANIZATIONS)+"/"+groupId+ context.getString(R.string.URL_EVENTS);
+				context.getString(R.string.URL_ORGANIZATIONS)+"/"+groupId+ "/"+ context.getString(R.string.URL_EVENTS);
 
 		if(User.getUser().getAccess_token().isEmpty()||User.getUser().getAccess_token().equals("")){
 			reLogin(context, new RequestTemplate.ServiceCallback() {

@@ -1,6 +1,7 @@
 package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,80 +10,56 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.EventChatBubble;
+import com.idesolusiasia.learnflux.entity.Group;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by NAIT ADMIN on 17/06/2016.
  */
-public class OrganizationEventAdapter extends ArrayAdapter<EventChatBubble> {
-	public List<EventChatBubble> threadList =null;
-	int page;
+public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationEventAdapter.OrgTileHolder>{
+	public List<Event>	event;
+	private Context context;
 
-	public OrganizationEventAdapter(Context context, List<EventChatBubble> objects) {
-		super(context, R.layout.row_chatroom, objects);
-		this.threadList =objects;
-		page=2;
+
+	public OrganizationEventAdapter(Context context, ArrayList<Event> orgs) {
+		this.event = orgs;
+		this.context = context;
+	}
+	@Override
+	public OrgTileHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_events,null);
+		OrgTileHolder rcv = new OrgTileHolder(layoutView);
+		return rcv;
 	}
 
-	public EventChatBubble getItem(int i){
-		if (threadList !=null && threadList.size()>0 && i>=0){
-			return threadList.get(i);
-		}else return null;
+	@Override
+	public void onBindViewHolder(OrgTileHolder holder, int position) {
+
+		final Event ev = event.get(position);
+		holder.tvTitle.setText(ev.getTitle());
+		holder.tvLocation.setText(ev.getLocation());
+		holder.tvDescription.setText(ev.getDetails());
+
 	}
 
-	public View getView(int position, View conView, ViewGroup parent){
-		//Log.i("Response","masuk getView");
-		View row=conView;
-		LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		if (row==null){
-			row=inflater.inflate(R.layout.row_events,null);
+	@Override
+	public int getItemCount() {
+		return event.size();
+	}
+
+	public class OrgTileHolder extends RecyclerView.ViewHolder {
+		public TextView tvTitle, tvDate, tvTime, tvLocation, tvDescription;
+		public OrgTileHolder(View itemView) {
+			super(itemView);
+			tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+			tvDate = (TextView) itemView.findViewById(R.id.tvDate);
+			tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+			tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);
+			tvDescription = (TextView)itemView.findViewById(R.id.tvDescription);
 		}
-		final EventChatBubble e = threadList.get(position);
-		if(e != null){
-			ImageView ivInvite = (ImageView) row.findViewById(R.id.ivInvite);
-			ImageView ivAddCalendar = (ImageView) row.findViewById(R.id.ivAddToCalendar);
-
-			TextView tvTitle = (TextView) row.findViewById(R.id.tvTitle);
-			TextView tvDay = (TextView) row.findViewById(R.id.tvDay);
-			TextView tvMonth = (TextView) row.findViewById(R.id.tvMonth);
-			TextView tvYear = (TextView) row.findViewById(R.id.tvYear);
-			TextView tvTime = (TextView) row.findViewById(R.id.tvTime);
-			final TextView tvDescription = (TextView) row.findViewById(R.id.tvDescription);
-			final TextView tvSeeMore = (TextView) row.findViewById(R.id.tvSeeMore);
-
-			if (e.getTitle()!=null){
-				tvTitle.setText(e.getTitle());
-			}
-			if (e.getDescription()!=null){
-				tvDescription.setText(e.getDescription());
-				tvDescription.post(new Runnable() {
-					@Override
-					public void run() {
-						int a = tvDescription.getLineCount();
-						if (a>2){
-							tvSeeMore.setVisibility(View.VISIBLE);
-							tvDescription.setMaxLines(2);
-						}
-					}
-				});
-			}
-
-			tvSeeMore.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					tvDescription.setMaxLines(Integer.MAX_VALUE);
-					tvSeeMore.setVisibility(View.GONE);
-				}
-			});
-
-			if (e.getTitle()!=null){
-				tvTitle.setText(e.getTitle());
-			}
-
-
-		}
-		return row;
 	}
 }
