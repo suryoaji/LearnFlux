@@ -96,6 +96,8 @@ class Login: UIViewController, UITextFieldDelegate {
             }
             else {
                 Engine.me() { status, JSON in
+                    Engine.getGroups()
+                    Engine.getThreads()
                     self.navigationController?.navigationBar.hidden = false
                     self.performSegueWithIdentifier("Home", sender: self);
                 }

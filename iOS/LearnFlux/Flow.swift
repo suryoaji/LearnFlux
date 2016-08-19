@@ -8,64 +8,59 @@
 
 import Foundation
 
+enum FlowName{
+    case NewGroup
+    case NewThread
+    case NewInterestGroup
+    case None
+}
+
 class Flow {
     static var sharedInstance = Flow();
     
     private var data = Dictionary<String, AnyObject>();
-    private var name : String = "";
+    private var name : FlowName!
     private var callback : ((Dictionary<String, AnyObject>?)->Void)?;
     private var active : Bool = false;
-    private var vcStacks = [UIViewController]();
+    private var vcStacks = [UIViewController]()
     
     func clear () {
         data.removeAll();
         callback = nil;
         active = false;
-        name = "";
+        name = .None;
         vcStacks = [];
     }
     
-    func begin (flowName: String) {
+    func begin (flowName: FlowName) {
         clear();
-        self.name = flowName;
+        self.name = flowName
         active = true;
     }
     
-    func activeFlow () -> String? {
+    func activeFlow () -> FlowName? {
         if active { return name; }
         else { return nil; }
     }
     
+    func isActive() -> (Bool){
+        return self.active
+    }
+    
     func pushVc (viewController: UIViewController) { vcStacks.append(viewController); }
     func popVc (viewController: UIViewController) {
-        var i = vcStacks.count;
-        while (i >= 0) {
-            i -= 1;
-            let vc = vcStacks[i];
-            if vc == viewController {
-                vcStacks.removeAtIndex(i);
-                break;
-            }
+        if let index = vcStacks.indexOf(viewController){
+            vcStacks.removeAtIndex(index)
         }
     }
     
     func removeFlowVc (navController : UINavigationController, exceptVc: [UIViewController]? = nil) {
-        for vc in vcStacks {
-            var vcNav = navController.viewControllers;
-            var i = vcNav.count;
-            while (i >= 0) {
-                i -= 1;
-                let vc2 = vcNav[i];
-                if vc == vc2 {
-                    var isRemove = true;
-                    if let eVc = exceptVc {
-                        for vc3 in eVc {
-                            if vc == vc3 { isRemove = false; }
-                        }
-                    }
-                    if (isRemove) { vcNav.removeAtIndex(i); }
-                    break;
+        for vc in vcStacks{
+            if let index = navController.viewControllers.indexOf(vc){
+                if let exceptVc = exceptVc where exceptVc.contains(vc){
+                    continue
                 }
+                navController.viewControllers.removeAtIndex(index)
             }
         }
     }
@@ -79,11 +74,18 @@ class Flow {
     func get (key key : String) -> AnyObject? { return data[key]; }
     func set (key key : String, value: AnyObject?) { data[key] = value; }
     func setCallback (callback: ((Dictionary<String, AnyObject>?)->Void)) { self.callback = callback; }
-    func end (andClear andClear : Bool = false) {
-        if (callback != nil) {
-            callback! (data);
-            if (andClear) { self.clear(); }
+    func end (target: UIViewController? = nil, andClear : Bool = false) {
+        if let callback = callback{
+            callback(data)
         }
+        if let target = target where target.navigationController != nil{
+            self.removeFlowVc(target.navigationController!)
+        }
+        if andClear { self.clear() }
+    }
+    
+    func getViewControllers() -> ([UIViewController]){
+        return self.vcStacks
     }
     
 }

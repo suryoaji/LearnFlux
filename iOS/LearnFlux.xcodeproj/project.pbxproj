@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2D3D549154E78BF23D6DC8C8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9376CFD1C1CCB93E6369171A /* Pods.framework */; };
+		4A368BD61D66A0D500E38942 /* navController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A368BD51D66A0D500E38942 /* navController.swift */; };
 		4A39C4821D51CACF00146489 /* chatTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A39C4811D51CACF00146489 /* chatTabBarController.swift */; };
 		4A39C73D1D501F4400F89A66 /* ExJSQMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A39C73C1D501F4400F89A66 /* ExJSQMessagesViewController.swift */; };
 		4A48C1001D548FED00E85BA3 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A48C0FF1D548FED00E85BA3 /* Group.swift */; };
@@ -396,6 +397,7 @@
 
 /* Begin PBXFileReference section */
 		488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		4A368BD51D66A0D500E38942 /* navController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = navController.swift; sourceTree = "<group>"; };
 		4A39C4811D51CACF00146489 /* chatTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = chatTabBarController.swift; sourceTree = "<group>"; };
 		4A39C73C1D501F4400F89A66 /* ExJSQMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExJSQMessagesViewController.swift; sourceTree = "<group>"; };
 		4A48C0FF1D548FED00E85BA3 /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
@@ -974,6 +976,7 @@
 				5B09CEBE1CBB4A330042C70B /* LaunchScreen.storyboard */,
 				5B09CEBC1CBB4A330042C70B /* Assets.xcassets */,
 				4A39C4811D51CACF00146489 /* chatTabBarController.swift */,
+				4A368BD51D66A0D500E38942 /* navController.swift */,
 			);
 			name = Others;
 			sourceTree = "<group>";
@@ -1852,6 +1855,7 @@
 				5B09CEBB1CBB4A330042C70B /* LearnFlux.xcdatamodeld in Sources */,
 				5B02556B1D5B247C001CBF15 /* User.swift in Sources */,
 				5B3742641CC0CBAD00AF2897 /* UIView+RoundedRect.m in Sources */,
+				4A368BD61D66A0D500E38942 /* navController.swift in Sources */,
 				5B3742741CC0CBAD00AF2897 /* UITextField+HeightToFit.m in Sources */,
 				5B04A2361CBCDEE000FA5CCA /* Connections.swift in Sources */,
 				5B3742691CC0CBAD00AF2897 /* NSString+Trim.m in Sources */,

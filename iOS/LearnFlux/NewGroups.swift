@@ -44,7 +44,6 @@ class NewGroups : UIViewController {
         viewTitle.layer.borderColor = UIColor.lightGrayColor().CGColor;
         viewTitle.makeViewRoundedRectWithCornerRadius(5);
         viewTitle.backgroundColor = UIColor.clearColor();
-
     }
     
     @IBAction func titleChanged (sender: AnyObject) {

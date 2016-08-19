@@ -171,7 +171,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
             case 0: break;
             case 1:
                 let flow = Flow.sharedInstance;
-                flow.begin("NewGroup");
+                flow.begin(.NewGroup);
                 flow.add(dict: ["parentId": (self.orgData?.id)!]);
                 flow.setCallback() { result in
                     guard let title = result!["title"] as? String else { print ("FLOW: title not found"); return; }

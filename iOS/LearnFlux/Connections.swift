@@ -20,6 +20,7 @@ class Connections : UITableViewController {
     var actualConnect = Array<AnyObject>();
     var selectedConnect : Array<Bool> = [];
     let clientData = Engine.clientData
+    let flow = Flow.sharedInstance
     
     func loadEvents(){
         Engine.getEvents(){ status, JSON in
@@ -31,13 +32,8 @@ class Connections : UITableViewController {
         }
     }
     
-    func loadGroup(){
-        
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad();
-        
         let item = UIBarButtonItem();
         item.image = UIImage(named: "menu-1.png");
         self.navigationItem.leftBarButtonItem = item;
@@ -55,18 +51,17 @@ class Connections : UITableViewController {
         let flow = Flow.sharedInstance;
         
         if let activeFlow = flow.activeFlow() {
-            if activeFlow == "NewGroup" {
+            if activeFlow == .NewGroup {
                 self.title = "Invite Participants"
                 setupDoneButton();
             }
-            else if flow.activeFlow() == "NewThread" {
+            else if flow.activeFlow() == .NewThread {
                 self.title = "Select Participants";
                 setupDoneButton()
             }
+        }else{
+            self.loadEvents()
         }
-
-        self.loadGroup()
-        self.loadEvents()
     }
     
     lazy var flowDirection : String! = "";
@@ -82,37 +77,6 @@ class Connections : UITableViewController {
     }
     
     func buttonDoneTapped(sender: UIBarButtonItem) {
-//<<<<<<< HEAD
-//        if (self.flowDirection == "NewGroups") {
-//            sender.enabled = false
-//            let title = flowData.valueForKey("title")! as! String;
-//            var userId : Array<Int> = [];
-//            for i in 0..<selectedConnect.count {
-//                if (selectedConnect[i]) {
-//                    let el = connect[i] as NSDictionary;
-//                    userId.append(el.valueForKey("id")! as! Int);
-//                }
-//            }
-//            Engine.createGroupChat(self, name: title, userId: userId) { status, JSON in
-//                Util.mainThread() {
-//                    sender.enabled = true
-//                    if status == .Success && JSON != nil{
-//                        let dataJSON = JSON!["data"] as! Dictionary<String, AnyObject>
-//                        let threadJSON = dataJSON["message"] as! Dictionary<String, AnyObject>
-//                        let chatFlow = Util.getViewControllerID("ChatFlow") as! ChatFlow;
-//                        chatFlow.initChat(0, idThread: threadJSON["id"] as! String, from: ChatFlow.From.CreateThread)
-////                        chatFlow.initChat(threadJSON: JSON);
-//                        self.navigationController?.pushViewController(chatFlow, animated: true);
-//                        let count = self.navigationController!.viewControllers.count;
-//                        var vcs = self.navigationController?.viewControllers;
-//                        vcs?.removeAtIndex(count - 2);
-//                        vcs?.removeAtIndex(count - 3);
-//                        self.navigationController?.viewControllers = vcs!;
-//                    }
-//                }
-//=======
-        let flow = Flow.sharedInstance;
-        
         var userId : Array<Int> = [];
         for i in 0..<selectedConnect.count {
             if (selectedConnect[i]) {
@@ -121,8 +85,11 @@ class Connections : UITableViewController {
             }
         }
         flow.add(dict: ["userIds":userId]);
-        
-        if let activeFlow = flow.activeFlow() { if (activeFlow == "NewGroup" || activeFlow == "NewThread" || activeFlow == "NewInterestGroup") { flow.end(); } }
+        if let activeFlow = flow.activeFlow() where activeFlow == .NewGroup ||
+                                                    activeFlow == .NewThread ||
+                                                    activeFlow == .NewInterestGroup{
+            flow.end(self, andClear: true)
+        }
     }
     
     @IBAction func revealMenu (sender: AnyObject) {
@@ -166,7 +133,7 @@ class Connections : UITableViewController {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
         let flow = Flow.sharedInstance;
         
-        if (flow.activeFlow() == "NewGroup" || flow.activeFlow() == "NewThread") {
+        if (flow.activeFlow() == .NewGroup || flow.activeFlow() == .NewThread) {
             selectedConnect[indexPath.row] = !selectedConnect[indexPath.row];
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None);
             buttonDoneShouldEnable()

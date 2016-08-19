@@ -45,14 +45,13 @@ struct Group{
     
     init(dict: AnyObject?) {
         guard let data = dict as? dictType else { return; }
-        print (data);
         if let s = data["type"] as? String { type = s; }
         if let s = data["id"] as? String { id = s; }
         if let s = data["name"] as? String { name = s; }
         if let s = data["parent"] as? dictType { let p = Group(dict: s); parent = p as Any; parentId = p.id; }
         if let s = data["description"] as? String { description = s; }
         
-        if let s = data["message"] as? dictType { thread = Thread(dict: s); participants = thread?.participants; }
+        if let s = data["message"] as? dictType { thread = Thread(dict: s); participants = thread?.participants; threadId = thread?.id }
         
         if let s = data["participants"] as? String { participants = Participant.convertFromArr(s); }
         if let s = data["child"] { child = Group.convertFromArr(s); }
@@ -75,18 +74,6 @@ struct Group{
     static func convertFromDict(dict: AnyObject?) -> Group?{
         guard let data = dict as? dictType else { return nil; }
         return Group(dict: data);
-//        guard let type       = data["type"] where (type as? String) != nil,
-//            let id           = data["id"] where (id as? String) != nil,
-//            let name         = data["name"] where (name as? String) != nil else{
-//                print("=========Error===========")
-//                print("Group: convertFromDict func cannot make Object Group from Dict :")
-//                print(data)
-//                return nil
-//        }
-//        guard let rawMessage = data["message"] where(rawMessage as? Dictionary<String, AnyObject>) != nil else{
-//            return Group(type: type as! String, id: id as! String, name: name as! String)
-//        }
-//        return Group(type: type as! String, id: id as! String, name: name as! String, threadId: (rawMessage as! Dictionary<String, AnyObject>)["id"] as? String)
     }
     
     mutating func set (dict: AnyObject?) {

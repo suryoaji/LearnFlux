@@ -31,7 +31,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         print (orgId);
-        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(OrgGroups.update), userInfo: nil, repeats: true)
+        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
     }
     
     func update () {

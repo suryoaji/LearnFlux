@@ -432,7 +432,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         setTabBarVisible(false, animated: true)
         
         let flow = Flow.sharedInstance;
-        if (flow.activeFlow() == "NewThreads") {
+        if (flow.activeFlow() == .NewThread) {
             flow.removeFlowVc(self.navigationController!, exceptVc: [self]);
             flow.clear();
         }

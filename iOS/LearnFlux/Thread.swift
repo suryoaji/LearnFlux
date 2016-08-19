@@ -41,16 +41,13 @@ class Thread: NSObject {
         }
         if isNew{
             self.setPropertyLastUpdated(NSDate().timeIntervalSince1970)
+            self.normalIndex = Engine.clientData.getMyThreads()!.count
         }else{
             self.setPropertyLastUpdated(0)
+            if index != nil{ self.normalIndex = index! }
         }
         if let rawMessages = dict["messages"]{
             self.setPropertyMessages(rawMessages as! Array<Dictionary<String, AnyObject>>)
-        }
-        if let index = index{
-            self.normalIndex = index
-        }else{
-            self.normalIndex = Engine.clientData.getMyThreads()!.count
         }
     }
     
