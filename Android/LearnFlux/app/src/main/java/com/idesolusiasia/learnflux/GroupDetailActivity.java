@@ -266,64 +266,10 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		});
 		dialog.show();
 	}
-	/*void OpenDialog2(){
-		final Dialog dial = new Dialog(GroupDetailActivity.this);
-		dial.setTitle("Add participant");
-		dial.setContentView(R.layout.layout_dialog);
-		listcontent = (ListView) dial.findViewById(R.id.alert_list);
-		listcontent.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		listcontent.setSelector(android.R.color.darker_gray);
-		listcontent.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-			@Override
-			public void onItemCheckedStateChanged(ActionMode mode, int position,
-												  long id, boolean checked) {
-				adap.setSelected(position);
-				adap.notifyDataSetChanged();
-			}
 
-			@Override
-			public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-				return false;
-			}
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
 
-			@Override
-			public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-				return false;
-			}
-
-			@Override
-			public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-				return false;
-			}
-
-			@Override
-			public void onDestroyActionMode(ActionMode actionMode) {
-
-			}
-		});
-		Engine.getMyFriend(getApplicationContext(), new RequestTemplate.ServiceCallback() {
-			@Override
-			public void execute(JSONObject obj) {
-				try {
-					JSONArray datas = obj.getJSONArray("data");
-					ArrayList<Participant> p = new ArrayList<Participant>();
-					for (int i=0;i<datas.length();i++){
-						Participant participant = Converter.convertPeople(datas.getJSONObject(i));
-						if (participant.getId()!= User.getUser().getID()){
-							p.add(participant);
-						}
-					}
-
-					if (p.size()>=0){
-						adap = new PeopleAdapter(getApplicationContext(), p);
-						listcontent.setAdapter(adap);
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
-		dial.show();
-	}*/
 }

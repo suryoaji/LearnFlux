@@ -97,23 +97,6 @@ public class OrgEventFragment extends Fragment {
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/*void initEvent(){
 		Calendar cal = Calendar.getInstance();
 		cal.set(2016,3,15,9,0);

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.InterestGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.OrganizationGridRecyclerViewAdapter;
 import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
@@ -49,7 +51,7 @@ public class InterestGroup extends AppCompatActivity {
     private GridLayoutManager lLayout;
     InterestGroupAdapter rcAdapter;
     RecyclerView recyclerView;
-    PeopleAdapter adap;
+    AddGroupAdapter adap;
     ListView listcontent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,4 +88,106 @@ public class InterestGroup extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.interest_menu_creategroup, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch(item.getItemId()){
+            case R.id.new_group:
+                OpenDialog2();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    void OpenDialog2(){
+		final Dialog dial = new Dialog(InterestGroup.this);
+		dial.setTitle("Add participant");
+		dial.setContentView(R.layout.layout_dialog);
+		listcontent = (ListView) dial.findViewById(R.id.alert_list);
+		listcontent.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		listcontent.setSelector(android.R.color.darker_gray);
+		listcontent.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode, int position,
+												  long id, boolean checked) {
+                final int checkedCount = listcontent.getCheckedItemCount();
+                // Set the CAB title according to total checked items
+                mode.setTitle(checkedCount + " Selected");
+                // Calls toggleSelection method from ListViewAdapter Class
+                adap.toggleSelection(position);
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                actionMode.getMenuInflater().inflate(R.menu.activity_main, menu);
+				return true;
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+				return false;
+			}
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete:
+                        // Calls getSelectedIds method from ListViewAdapter Class
+                        SparseBooleanArray selected = adap
+                                .getSelectedIds();
+                        // Captures all selected ids with a loop
+                        for (int i = (selected.size() - 1); i >= 0; i--) {
+                            if (selected.valueAt(i)) {
+                                Participant selecteditem = adap
+                                        .getItem(selected.keyAt(i));
+                                // Remove selected items following the ids
+                                adap.remove(selecteditem);
+                            }
+                        }
+                        // Close CAB
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+			@Override
+			public void onDestroyActionMode(ActionMode actionMode) {
+                adap.removeSelection();
+			}
+		});
+		Engine.getMyFriend(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				try {
+					JSONArray datas = obj.getJSONArray("data");
+					ArrayList<Participant> p = new ArrayList<Participant>();
+					for (int i=0;i<datas.length();i++){
+						Participant participant = Converter.convertPeople(datas.getJSONObject(i));
+						if (participant.getId()!= User.getUser().getID()){
+							p.add(participant);
+						}
+					}
+
+					if (p.size()>=0){
+						adap = new AddGroupAdapter(getApplicationContext(),R.layout.row_people, p);
+						listcontent.setAdapter(adap);
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+			}
+		});
+		dial.show();
+	}
 }
