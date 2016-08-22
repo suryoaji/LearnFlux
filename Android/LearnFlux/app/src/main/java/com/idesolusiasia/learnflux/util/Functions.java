@@ -76,6 +76,10 @@ public class Functions {
 		return sharedPref.getString("lastSync","0");
 	}
 
+	public static void addEventProcess(){
+
+	}
+
 	public static void logout(Context c){
 		SharedPreferences sharedPref = c.getApplicationContext().getSharedPreferences("com.idesolusiasia.learnflux",Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sharedPref.edit();

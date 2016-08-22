@@ -1,7 +1,10 @@
 package com.idesolusiasia.learnflux;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -37,6 +41,7 @@ import java.util.Locale;
 public class OrgEventFragment extends Fragment {
 	RecyclerView recyclerView;
 	OrganizationEventAdapter adap;
+	public Event event=null;
 	private GridLayoutManager lLayout;
 	ArrayList<Event> events= new ArrayList<>();
 	String[] value;
@@ -69,33 +74,46 @@ public class OrgEventFragment extends Fragment {
 		id = getActivity().getIntent().getStringExtra("id");
 		//initEvent();
 		getEventByGroupID();
-		/*recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				//Toast.makeText(getContext(), adap.getItem(position).getTitle(), Toast.LENGTH_SHORT).show();
-			}
-		});*/
 		return v;
 	}
-	void getEventByGroupID(){
+	void getEventByGroupID() {
 		events = new ArrayList<>();
 		Engine.getGroupEventByGroupId(getContext(), id, new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
-				try{
+				try {
 					JSONArray data = obj.getJSONArray("data");
-					for(int i=0;i<data.length();i++){
-						Event event = Converter.convertEvent(data.getJSONObject(i));
+					for (int i = 0; i < data.length(); i++) {
+						event = Converter.convertEvent(data.getJSONObject(i));
 						events.add(event);
 					}
-				}catch (JSONException e){
+				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				adap = new OrganizationEventAdapter(getContext(),events);
+				adap = new OrganizationEventAdapter(getContext(), events);
 				recyclerView.setAdapter(adap);
 			}
 		});
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/*void initEvent(){
 		Calendar cal = Calendar.getInstance();
 		cal.set(2016,3,15,9,0);

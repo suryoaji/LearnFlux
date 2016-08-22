@@ -231,16 +231,11 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 				details = etDesc.getText().toString().trim();
 				title = etTitle.getText().toString().trim();
 				location = etLocation.getText().toString().trim();
-				Date date = calStart.getTime();
-				Long miliseconds= date.getTime();
-				Engine.createEvent(getApplicationContext(), true, title, details, location, miliseconds, null, id, type, new RequestTemplate.ServiceCallback() {
+				Engine.createEvent(getApplicationContext(), true, title, details, location, calStart.getTimeInMillis() / 1000, null, id, type, new RequestTemplate.ServiceCallback() {
 					@Override
 					public void execute(JSONObject obj) {
 						Log.i("Data Event", "execute: "+ title+", "+location+", "+id+", "+type);
 						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
-						Intent event = new Intent(OrgDetailActivity.this, OrgEventFragment.class);
-						event.putExtra("id",id);
-						startActivity(event);
 						dialog.dismiss();
 					}
 				});
