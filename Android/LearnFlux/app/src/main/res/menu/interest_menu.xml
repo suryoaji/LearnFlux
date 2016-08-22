@@ -5,10 +5,6 @@
         android:orderInCategory="101"
         android:title="Add new event"
         app:showAsAction="never"/>
-    <item android:id="@+id/interest_new_group"
-        android:orderInCategory="102"
-        android:title="Add new group"
-        app:showAsAction="never"/>
     <item android:id="@+id/interest_invite_people"
         android:orderInCategory="100"
         android:title="Invite people"

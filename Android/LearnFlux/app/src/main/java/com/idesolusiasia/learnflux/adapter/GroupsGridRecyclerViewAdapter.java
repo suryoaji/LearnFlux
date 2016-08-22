@@ -74,6 +74,7 @@ public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsGr
 					Intent i = new Intent(view.getContext(), GroupDetailActivity.class);
 					i.putExtra("id", groups.get(pos).getId());
 					i.putExtra("title", groups.get(pos).getName());
+					i.putExtra("type", groups.get(pos).getType());
 					i.putExtra("color",Colors.get(pos));
 					view.getContext().startActivity(i);
 				}

@@ -67,6 +67,7 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
                     Intent i = new Intent(view.getContext(), GroupDetailActivity.class);
                     i.putExtra("id", organizations.get(pos).getId());
                     i.putExtra("title",organizations.get(pos).getName());
+                    i.putExtra("type", organizations.get(pos).getType());
                     view.getContext().startActivity(i);
                 }
             });

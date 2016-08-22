@@ -110,6 +110,8 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 					Event e= Converter.convertEvent(obj.getJSONObject("data"));
 					Intent i = new Intent(c, ChattingActivity.class);
 					i.putExtra("idThread", e.getThread().getId());
+					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					c.startActivity(i);
 				}catch (JSONException e){
 					e.printStackTrace();

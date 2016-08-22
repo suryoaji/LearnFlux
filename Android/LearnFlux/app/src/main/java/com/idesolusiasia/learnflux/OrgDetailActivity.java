@@ -38,7 +38,7 @@ import java.util.Locale;
 public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
-	public String id, title, details, type, location;
+	public String id, type;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents;
@@ -228,13 +228,11 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		btnAdd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				details = etDesc.getText().toString().trim();
-				title = etTitle.getText().toString().trim();
-				location = etLocation.getText().toString().trim();
-				Engine.createEvent(getApplicationContext(), true, title, details, location, calStart.getTimeInMillis() / 1000, null, id, type, new RequestTemplate.ServiceCallback() {
+				Engine.createEvent(getApplicationContext(), true, etTitle.getText().toString(), etDesc.getText().toString(),
+						etLocation.getText().toString(), calStart.getTimeInMillis() / 1000, null, id, type, new RequestTemplate.ServiceCallback() {
 					@Override
 					public void execute(JSONObject obj) {
-						Log.i("Data Event", "execute: "+ title+", "+location+", "+id+", "+type);
+						Log.i("Data Event", "execute: "+id+", "+type);
 						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
 						dialog.dismiss();
 					}
