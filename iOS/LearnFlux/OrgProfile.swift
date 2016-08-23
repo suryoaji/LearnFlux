@@ -15,12 +15,17 @@ class OrgProfile : UIViewController, UITableViewDelegate, UITableViewDataSource 
     var cellPadHeight : CGFloat! = 0;
     @IBOutlet var tv : UITableView!;
     
-    let dummyDesc = "Lasalle College of The Arts, formerly LASALLE-SIA College of The Arts, is a private arts educational institute in Singapore. LASALLE College of The Arts in partnership with Goldsmiths, University of London, provides tertiary arts education.";
+    var dummyDesc = "Lasalle College of The Arts, formerly LASALLE-SIA College of The Arts, is a private arts educational institute in Singapore. LASALLE College of The Arts in partnership with Goldsmiths, University of London, provides tertiary arts education.";
     let dummyAddress = "9 Winstedt Rd\nSingapore 227976";
     let dummyHours = "0800 - 1700";
     let dummyPhone = "+65 6496 5000";
     let dummyEnrollment = "2,500 (2010)";
     let dummyFounded = "1984";
+    
+    func setOrganizationInfo(info: Group){
+        self.dummyDesc = info.description!
+        self.tv.reloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad();

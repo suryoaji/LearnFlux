@@ -98,6 +98,13 @@ class Login: UIViewController, UITextFieldDelegate {
                 Engine.me() { status, JSON in
                     Engine.getGroups()
                     Engine.getThreads()
+                    Engine.getEvents(){ status, JSON in
+                        if let events = Engine.clientData.getMyEvents(){
+                            for eachEvent in events{
+                                Engine.getEventDetail(event: eachEvent)
+                            }
+                        }
+                    }
                     self.navigationController?.navigationBar.hidden = false
                     self.performSegueWithIdentifier("Home", sender: self);
                 }

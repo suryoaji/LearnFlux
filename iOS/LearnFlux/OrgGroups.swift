@@ -15,7 +15,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     var pushDelegate : PushDelegate!;
     var refreshDelegate : RefreshDelegate!;
     var orgId : String! = "";
-    var groups : [Group]?;
+    var groups : [Group]?
     
     func randomizePastelColor () -> UIColor {
         let r = (CGFloat(arc4random_uniform(128)) + 128.0) / 255.0;
@@ -30,12 +30,17 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print (orgId);
+//        print (orgId);
         NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        
+        if self.navigationController != nil{
+            self.cv.frame.origin.y += self.navigationController!.navigationBar.bounds.height + UIApplication.sharedApplication().statusBarFrame.height
+            self.cv.frame.size.height -= self.cv.frame.origin.y
+        }
+        
     }
     
     func update () {
-        print (groups);
         cv.reloadData();
     }
     
@@ -70,7 +75,19 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         guard let data = groups else { return; }
         let vc = Util.getViewControllerID("GroupDetails") as! GroupDetails;
         vc.initFromCall(data[indexPath.row]);
-        pushDelegate.pushViewController(vc, animated: true);
+        if pushDelegate == nil{
+            Engine.getGroupInfo(groupId: data[indexPath.row].id){status, group in
+                if status == .Success{
+                    var newGroup = data[indexPath.row]
+                    newGroup.update(group!)
+                    vc.initFromCall(newGroup)
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        }else{
+            vc.initFromCall(data[indexPath.row]);
+            pushDelegate.pushViewController(vc, animated: true);
+        }
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {

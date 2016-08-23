@@ -8,7 +8,12 @@
 
 import Foundation
 
-class GroupDetails : UIViewController {
+@objc protocol GroupDetailsDelegate {
+    func pushViewController (viewController: UIViewController, animated: Bool)
+    func presentViewController (viewController: UIViewController, animated: Bool)
+}
+
+class GroupDetails : UIViewController, GroupDetailsDelegate {
     
     @IBOutlet var viewSelection : UIView!;
     @IBOutlet var viewTabs : UIView!;
@@ -23,7 +28,6 @@ class GroupDetails : UIViewController {
     
     var group : Group?;
     
-    
     func initFromCall(groupInfo : Group) {
         group = groupInfo;
         self.strTitle = groupInfo.name!;
@@ -32,15 +36,12 @@ class GroupDetails : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad();
-//        tabs.addObject(Util.getViewControllerID("OrgGroups"))
-//        tabs.addObject(Util.getViewControllerID("OrgEvents"))
-//        tabs.addObject(Util.getViewControllerID("OrgActivities"))
         tabs.addObject(Util.getViewControllerID("GroupProfile"))
         tabs.addObject(Util.getViewControllerID("OrgEvents"))
         tabs.addObject(Util.getViewControllerID("OrgActivities"))
-        
         changeView(0);
         (tabs[0] as! GroupProfile).initFromCall(group!);
+        (tabs[0] as! GroupProfile).groupDetailsDelegate = self
         
         self.title = "Details";
         self.lblTitle.text = self.strTitle.uppercaseString;
@@ -48,9 +49,6 @@ class GroupDetails : UIViewController {
     }
     
     func changeView (index : Int) {
-//        (tabs[0] as! OrgGroups).view.removeFromSuperview();
-//        (tabs[1] as! OrgEvents).view.removeFromSuperview();
-//        (tabs[2] as! OrgActivities).view.removeFromSuperview();
         (tabs[0] as! GroupProfile).view.removeFromSuperview();
         (tabs[1] as! OrgEvents).view.removeFromSuperview();
         (tabs[2] as! OrgActivities).view.removeFromSuperview();
@@ -58,7 +56,6 @@ class GroupDetails : UIViewController {
         let vc = tabs[index];
         self.view.addSubview(vc.view);
         vc.view.frame = self.view.viewWithTag(50)!.frame;
-        print (vc.view.frame);
         self.view.bringSubviewToFront(vc.view);
         
         UIView.animateWithDuration(0.3) {
@@ -71,5 +68,13 @@ class GroupDetails : UIViewController {
         let btn = sender as! UIButton;
         let idx = btn.tag - 100;
         changeView(idx);
+    }
+    
+    func pushViewController(viewController: UIViewController, animated: Bool) {
+        self.navigationController?.pushViewController(viewController, animated: animated)
+    }
+    
+    func presentViewController(viewController: UIViewController, animated: Bool){
+        self.presentViewController(viewController, animated: animated, completion: nil)
     }
 }

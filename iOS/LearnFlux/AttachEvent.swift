@@ -15,6 +15,7 @@ protocol AttachEventReturnDelegate {
 class AttachEvent : UITableViewController {
     
     var delegate : AttachEventReturnDelegate!;
+    let flow = Flow.sharedInstance
     
     var chosenDate = NSDate();
     var chosenTime = NSDate();
@@ -105,7 +106,14 @@ class AttachEvent : UITableViewController {
         }
         
         if (indexPath.section == 2) {
-            delegate.sendSelectedEventData(events[indexPath.row]);
+            if let activeFlow = flow.activeFlow() where activeFlow == .NewEvent{
+                if let param = Engine.paramForCreateEvent(events[indexPath.row], idGroup: "", isOrganization: true){
+                    flow.add(dict: param)
+                    flow.end(andClear: true)
+                }
+            }else{
+                delegate.sendSelectedEventData(events[indexPath.row]);
+            }
             self.navigationController?.popViewControllerAnimated(true);
         }
     }

@@ -82,7 +82,9 @@
                                         <rect key="frame" x="55" y="123" width="171" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <state key="normal" title="Forgot your password?"/>
+                                        <state key="normal" title="Forgot your password?">
+                                            <color key="titleColor" red="0.48627450980392156" green="0.74901960784313726" blue="0.19215686274509802" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
                                         <connections>
                                             <segue destination="fo0-VI-74u" kind="push" identifier="forgot password" id="mIV-U5-4x7"/>
                                         </connections>
@@ -126,6 +128,17 @@
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" red="0.95686274510000002" green="0.035467094290000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowOpacity">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="size" keyPath="layer.shadowOffset">
+                                                <size key="value" width="0.0" height="0.40000000000000002"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowRadius">
+                                                <real key="value" value="0.80000000000000004"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </view>
                                     <view clipsSubviews="YES" contentMode="scaleToFill" id="FA6-Gh-DlC">
                                         <rect key="frame" x="217" y="83" width="88" height="85"/>
@@ -202,6 +215,7 @@
                     <navigationItem key="navigationItem" title="Home" id="I9p-fU-uji"/>
                     <connections>
                         <segue destination="Rh2-Qn-7zs" kind="push" identifier="chat" id="LXE-qM-iFt"/>
+                        <segue destination="2zF-YP-I8D" kind="push" identifier="InterestGroup" id="bKE-qK-WT0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8qf-w8-mVz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1040,6 +1054,7 @@ MAY</string>
                             </collectionView>
                         </subviews>
                     </view>
+                    <navigationItem key="navigationItem" id="AGK-gb-oF7"/>
                     <connections>
                         <outlet property="cv" destination="dFA-y2-6O8" id="vb1-9t-EDO"/>
                     </connections>
@@ -1199,6 +1214,7 @@ MAY</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="0p4-8T-ZZN"/>
                     <connections>
                         <outlet property="tv" destination="H1d-Na-MS1" id="HI7-qx-cb0"/>
                     </connections>
@@ -1427,7 +1443,10 @@ Coming soon</string>
                                 <real key="value" value="0.87"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="size" keyPath="layer.shadowOffset">
-                                <size key="value" width="0.0" height="-2"/>
+                                <size key="value" width="0.0" height="0.0"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowRadius">
+                                <real key="value" value="1.5"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </navigationBar>
@@ -2394,7 +2413,7 @@ Need to be sizefit</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.94999999999999996" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="5qU-4x-f0r">
-                            <rect key="frame" x="0.0" y="243" width="320" height="0.0"/>
+                            <rect key="frame" x="0.0" y="179" width="320" height="0.0"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
@@ -2803,7 +2822,7 @@ Polling Title</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.96538342927631582" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="lIu-2Y-Gu4">
-                            <rect key="frame" x="0.0" y="325" width="320" height="0.0"/>
+                            <rect key="frame" x="0.0" y="261" width="320" height="0.0"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
@@ -3168,9 +3187,12 @@ Coming soon</string>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" red="0.48627450979999998" green="0.74901960779999999" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="OpenSans-CondensedBold" family="Open Sans Condensed" pointSize="22"/>
-                                <state key="normal" title="MORE">
+                                <state key="normal" title="START CONVERSATION">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="startConversationTapped:" destination="IOo-aH-rBP" eventType="touchUpInside" id="RiA-3x-7K1"/>
+                                </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="U1u-j2-w1r">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="520"/>
@@ -3252,6 +3274,7 @@ Coming soon</string>
                     </view>
                     <connections>
                         <outlet property="tv" destination="U1u-j2-w1r" id="Qpz-2m-tzH"/>
+                        <segue destination="yBf-01-q50" kind="push" identifier="StartConversationSegue" id="oWU-JU-478"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tj4-ii-a1i" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3306,6 +3329,6 @@ Coming soon</string>
     <inferredMetricsTieBreakers>
         <segue reference="slP-p0-8EU"/>
         <segue reference="4Kv-ZS-f2o"/>
-        <segue reference="ijq-R4-gNR"/>
+        <segue reference="oWU-JU-478"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -320,47 +320,14 @@ class Engine : NSObject {
             if (callback != nil) { callback! (status, JSON); }
         }
     }
-    
-//    static func createThread (viewController: UIViewController? = nil, title: String = "", userId: [Int], callback: JSONreturn? = nil) {
-//        let param = ["participants":userId, "title":title] as [String: AnyObject];
-//        makeRequestAlamofire(viewController, method: .POST, url: Url.messages, param: param) { status, JSON in
-//            if let rawJSON = JSON{
-//                if let rawData = (rawJSON as! Dictionary<String, AnyObject>)["data"]{
-//                    if let rawThread = (rawData as! Dictionary<String, AnyObject>)["message"]{
-//                        let dictThread = rawThread as! Dictionary<String, AnyObject>
-//                        clientData.addNewThread(dictThread)
-//                        clientData.addNewGroup(rawData as! Dictionary<String, AnyObject>)
-//                    }
-//                }
-//            }
-//            if (callback != nil) { callback! (status, JSON); }
-//        }
-//    }
 
     static func getGroupInfo(viewController: UIViewController? = nil, groupId: String, callback: ((RequestStatusType, Group?)->Void)? = nil) {
         let url = Url.groups + "/" + groupId;
-        print (url);
         makeRequestAlamofire(viewController, url: url, param: nil){ status, dataJSON in
-            print (dataJSON);
             let data = self.getDictData(dataJSON);
             if callback != nil { callback!(status, Group (dict: data)) }
         }
     }
-    
-    //    static func getGroupDetails(viewController: UIViewController? = nil, parentId: String, callback: JSONreturn? = nil){
-    //        makeRequestAlamofire(viewController, url: Url.groups + "/" + parentId, param: nil){ status, dataJSON in
-    //            if let rawJSON = dataJSON{
-    //                let json = JSON(rawJSON).dictionaryObject
-    //                if let data = json?["data"]{
-    //                    let arrData = data as! Array<Dictionary<String, AnyObject>>
-    ////                    self.setGroupDetails(arrData)
-    //                }
-    //            }
-    //            if callback != nil{ callback!(status, clientData.getGroups()) }
-    //        }
-    //    }
-    
-    
     
     static func getThreads (viewController: UIViewController? = nil, callback: JSONreturn? = nil) {
         var lastSync : Double = 0
@@ -494,8 +461,8 @@ class Engine : NSObject {
         }
     }
     
-    static func createEvent(dict: Dictionary<String, AnyObject>, idGroup: String, callback: JSONreturn? = nil){
-        let param = paramForCreateEvent(dict, idGroup: idGroup)
+    static func createEvent(dict: Dictionary<String, AnyObject>, idGroup: String = "", callback: JSONreturn? = nil){
+        let param = !idGroup.isEmpty ? paramForCreateEvent(dict, idGroup: idGroup) : dict
         makeRequestAlamofire(method: .POST, url: Url.events, param: param){ status, JSON in
             
             if callback != nil { callback!(status, JSON) }
@@ -531,7 +498,7 @@ class Engine : NSObject {
         return param
     }
     
-    static func paramForCreateEvent(dict: Dictionary<String, AnyObject>, idGroup: String) -> (Dictionary<String, AnyObject>)?{
+    static func paramForCreateEvent(dict: Dictionary<String, AnyObject>, idGroup: String, isOrganization: Bool = false) -> (Dictionary<String, AnyObject>)?{
         guard let title = dict["title"],
               let location = dict["location"],
               let date = dict["date"],
@@ -544,12 +511,14 @@ class Engine : NSObject {
               let sTime = time as? String else{
                 return nil
         }
-        let newParam : Dictionary<String, AnyObject> = ["title"     : sTitle,
+        var newParam : Dictionary<String, AnyObject> = ["title"     : sTitle,
                                                         "details"   : sTitle + "'s detail",
                                                         "location"  : sLocation,
-                                                        "timestamp" : "\(dateToTimestamp(sDate, time: sTime)))",
-                                                        "reference" : ["id"   : idGroup,
-                                                                       "type" : "group"]]
+                                                        "timestamp" : "\(dateToTimestamp(sDate, time: sTime)))"]
+        if !isOrganization{
+            newParam["reference"] = ["id"   : idGroup,
+                                     "type" : "group"]
+        }
         return newParam
     }
     

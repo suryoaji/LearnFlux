@@ -342,6 +342,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         if openedBy == From.OpenChat{
             loadMessages()
         }
+        self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
     }
     
     func getIdGroupOfThisThread(){
@@ -736,20 +737,19 @@ extension ChatFlow{
         return JSQMessagesAvatarImage.initWithSenderId(messages[indexPath.row].message.senderId)
     }
     
-//    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
-//        if messages[indexPath.row].message.senderId == clientData.cacheMe()!["id"] as! Int{
-//            return NSAttributedString(string: "Pengirim")
-//        }else{
-//            return NSAttributedString(string: "Penerima")
-//        }
-//    }
-//    
-//    override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-//        if messages[indexPath.row].message.senderId != clientData.cacheMe()!["id"] as! Int{
-//            return 20
-//        }
-//        return 0
-//    }
+    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
+        if messages[indexPath.row].message.senderId == String(clientData.cacheMe()!["id"] as! Int){
+            return NSAttributedString(string: "Pengirim")
+        }
+        return NSAttributedString(string: "Penerima")
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+        if messages[indexPath.row].message.senderId != String(clientData.cacheMe()!["id"] as! Int){
+            return 20
+        }
+        return 0
+    }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
         self.inputToolbar.contentView.textView.resignFirstResponder()

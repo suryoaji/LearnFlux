@@ -57,6 +57,11 @@ struct Group{
         if let s = data["child"] { child = Group.convertFromArr(s); }
     }
     
+    mutating func update(group: Group){
+        self.color = self.color == nil ? group.color : self.color
+        self.description = self.description == nil ? group.description : self.description
+    }
+    
     func getIdThread() -> String?{
         return self.threadId
     }

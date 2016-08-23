@@ -9,6 +9,7 @@
 import Foundation
 
 class NewHome : UIViewController {
+    let clientData = Engine.clientData
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -46,8 +47,10 @@ class NewHome : UIViewController {
     func imageTapped (sender: AnyObject) {
         let tap = sender as! UITapGestureRecognizer;
         let img = tap.view as! UIImageView;
-        if (img.tag == 2) {
+        if img.tag == 2 {
             self.performSegueWithIdentifier("chat", sender: nil);
+        }else if img.tag == 6 && Engine.clientData.getGroups() != nil{
+            self.performSegueWithIdentifier("InterestGroup", sender: nil)
         }
     }
     
@@ -58,5 +61,10 @@ class NewHome : UIViewController {
         self.revealController.showViewController(self.revealController.leftViewController);
     }
 
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let interestGroupController = segue.destinationViewController as? OrgGroups{
+            interestGroupController.groups = clientData.getGroups()?.filter({ $0.type == "group" })
+        }
+    }
 
 }

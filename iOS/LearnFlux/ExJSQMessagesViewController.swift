@@ -71,13 +71,12 @@ extension JSQMessagesBubbleImage{
 }
 
 extension JSQMessagesAvatarImage{
-    static func initWithSenderId(id: String = "0") -> JSQMessagesAvatarImage{
-        let img = JSQMessagesAvatarImageFactory.circularAvatarImage(UIImage(named: "male07.png"), withDiameter: 48)
+    static func initWithSenderId(id: String = "0") -> JSQMessagesAvatarImage?{
         let img2 = JSQMessagesAvatarImageFactory.circularAvatarImage(UIImage(named: "male01.png"), withDiameter: 48)
         let placeholder = UIImage(named: "user_male-24")
         switch id {
         case String(Engine.clientData.cacheMe()!["id"] as! Int):
-            return JSQMessagesAvatarImage(avatarImage:img, highlightedImage: img, placeholderImage: placeholder)
+            return nil
         default:
             return JSQMessagesAvatarImage(avatarImage:img2, highlightedImage: img2, placeholderImage: placeholder)
         }

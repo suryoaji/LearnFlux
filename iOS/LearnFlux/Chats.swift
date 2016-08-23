@@ -20,16 +20,17 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     var conDelete : Array<Bool> = []
     @IBOutlet weak var viewDelete: UIView!
     @IBOutlet var viewMenu : UIView!;
-    var rightBarButton : UIBarButtonItem!
     @IBOutlet weak var viewConfirmDelete: UIView!
     var idsThreadWillDeleted : Array<String> = []
     var image = ["group01", "group02", "group03", "group04", "group05", "male04", "female01", "male01", "female02", "male02"]
     
+    func updateThreadView (JSON : AnyObject? = nil) {
+        self.localThread = Engine.clientData.getMyThreads()
+        self.tv.performSelectorOnMainThread(#selector(UITableView.reloadData), withObject: nil, waitUntilDone: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad();
-        
-        //        self.toolbarItems = self.parentViewController?.toolbarItems
-        
         let menuTitle = ["Create Group Chat...", "Delete Chats...", "Delete All Chats"];
         menu = AZDropdownMenu(titles: menuTitle)
         updateThreadView();
@@ -38,38 +39,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
             self.updateThreadView(JSON);
         }
         
-        let navItem = self.parentViewController!.navigationItem;
-        
-        self.tabBarController?.title = "Chats";
-        
-        //        let left:UIBarButtonItem! = UIBarButtonItem();
-        //        left.image = UIImage(named: "menu.png");
-        //        navItem.leftBarButtonItem = left;
-        //        left.action = #selector(self.revealMenu);
-        //        left.target = self;
-        
-        rightBarButton = UIBarButtonItem();
-        rightBarButton.image = UIImage(named: "menu")
-        navItem.rightBarButtonItem = rightBarButton;
-        rightBarButton.action = #selector(self.showMenu);
-        rightBarButton.target = self;
-        
         initAnimationDeleteNeeds()
-    }
-    
-    func updateThreadView (JSON : AnyObject? = nil) {
-//        if (JSON == nil) {
-//            if(Engine.clientData.defaults.valueForKey("threads") != nil) {
-//                let threads = Engine.clientData.defaults.valueForKey("threads")!;
-//                localThread =  threads as! Array<AnyObject>
-//            }
-//        }
-//        else {
-//            //            let data = JSON!.valueForKey("data")!;
-//            self.localThread = JSON!["data"]! as! Array<AnyObject>;
-//        }
-        self.localThread = Engine.clientData.getMyThreads()
-        self.tv.performSelectorOnMainThread(#selector(UITableView.reloadData), withObject: nil, waitUntilDone: true)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -197,7 +167,6 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func initAnimationDeleteNeeds(){
-        self.navigationItem.rightBarButtonItem = rightBarButton;
         self.viewDelete.layer.shadowOpacity = 0.3
         self.viewDelete.layer.shadowOffset = CGSizeMake(0, 2)
         self.viewConfirmDelete.layer.shadowOpacity = 0.3
@@ -236,7 +205,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
             }else{
                 self.conDelete = []
             }
-            self.rightBarButton.image = UIImage(named: deleteState ? "cancel" : "menu")
+            self.tabBarController!.navigationItem.rightBarButtonItem!.image = UIImage(named: deleteState ? "back" : "menu")
         }
     }
     
@@ -278,7 +247,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    @IBAction func showMenu(sender: AnyObject) {
+    @IBAction func rightNavigationBarButtonTapped(sender: AnyObject) {
         if self.deleteState{
             self.idsThreadWillDeleted = []
             self.animateDeleteState(false)
@@ -318,22 +287,22 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBAction func filter(sender: AnyObject) {
         let alert: UIAlertController = UIAlertController(title:"Select Filter", message: "Select how do you want to filter the chats.", preferredStyle: .ActionSheet)
         let act1: UIAlertAction = UIAlertAction(title:"All", style: .Default, handler: {(action: UIAlertAction) -> Void in
-            self.navigationItem.rightBarButtonItem?.title = "All";
+            self.tabBarController!.navigationItem.rightBarButtonItem?.title = "All";
             self.tv.reloadData();
         })
         alert.addAction(act1)
         let act2: UIAlertAction = UIAlertAction(title:"Groups", style: .Default, handler: {(action: UIAlertAction) -> Void in
-            self.navigationItem.rightBarButtonItem?.title = "Groups";
+            self.tabBarController!.navigationItem.rightBarButtonItem?.title = "Groups";
             self.tv.reloadData();
         })
         alert.addAction(act2)
         let act3: UIAlertAction = UIAlertAction(title:"Orgs", style: .Default, handler: {(action: UIAlertAction) -> Void in
-            self.navigationItem.rightBarButtonItem?.title = "Orgs";
+            self.tabBarController!.navigationItem.rightBarButtonItem?.title = "Orgs";
             self.tv.reloadData();
         })
         alert.addAction(act3)
         let act4: UIAlertAction = UIAlertAction(title:"Interests", style: .Default, handler: {(action: UIAlertAction) -> Void in
-            self.navigationItem.rightBarButtonItem?.title = "Interests";
+            self.tabBarController!.navigationItem.rightBarButtonItem?.title = "Interests";
             self.tv.reloadData();
         })
         alert.addAction(act4)
@@ -409,6 +378,4 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tabBarIsVisible() ->Bool {
         return self.tabBarController?.tabBar.frame.origin.y < CGRectGetMaxY(self.view.frame)
     }
-    
-
 }

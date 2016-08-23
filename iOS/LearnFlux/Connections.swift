@@ -19,18 +19,7 @@ class Connections : UITableViewController {
     ];
     var actualConnect = Array<AnyObject>();
     var selectedConnect : Array<Bool> = [];
-    let clientData = Engine.clientData
     let flow = Flow.sharedInstance
-    
-    func loadEvents(){
-        Engine.getEvents(){ status, JSON in
-            if let events = self.clientData.getMyEvents(){
-                for eachEvent in events{
-                    Engine.getEventDetail(event: eachEvent)
-                }
-            }
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -59,8 +48,6 @@ class Connections : UITableViewController {
                 self.title = "Select Participants";
                 setupDoneButton()
             }
-        }else{
-            self.loadEvents()
         }
     }
     

@@ -74,14 +74,17 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
         oriBtnHeight = (tv.dequeueReusableCellWithIdentifier("cell")!.viewWithTag(10) as! UIButton).height;
         oriCellHeight = tv.dequeueReusableCellWithIdentifier("cell")!.height;
         
-        while (attendance.count < 10) {
-            attendance.append("Going");
-            expanded.append(false);
-            let cell = tv.dequeueReusableCellWithIdentifier("cell")!;
-            let label = cell.viewWithTag(3)! as! UILabel;
-            //label.text =
-            expDescHeight.append(Util.labelPerfectHeight(label));
+        if clientData.getMyEvents() != nil{
+            while (attendance.count < clientData.getMyEvents()!.count) {
+                attendance.append("Going");
+                expanded.append(false);
+                let cell = tv.dequeueReusableCellWithIdentifier("cell")!;
+                let label = cell.viewWithTag(3)! as! UILabel;
+                //label.text =
+                expDescHeight.append(Util.labelPerfectHeight(label));
+            }
         }
+        
         self.loadEvents(self)
         shouldRemoveHoldView()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(viewShown), name: "OrgEventsShownNotification", object: nil)

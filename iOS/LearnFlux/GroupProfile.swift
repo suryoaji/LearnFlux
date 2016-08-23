@@ -10,6 +10,8 @@ import Foundation
 
 class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    weak var groupDetailsDelegate: GroupDetailsDelegate?
+    let clientData = Engine.clientData
     var lblOriHeight : CGFloat! = 0;
     var cellOriHeight : CGFloat! = 0;
     var cellPadHeight : CGFloat! = 0;
@@ -20,7 +22,33 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
     let dummyMode = "Full Time";
     let dummyDesc2 = "The study of Fine Arts is a process of continual debate and questioning; of exploring and interrogating set perspectives. This programme situates itself at the crossroads of contemporary Western and Asian cultures, acknowledging the demands of different worldviews. It unites specialised areas, from traditional disciplines to newer art forms, providing wider options of expression relevant to the global evolution of fine arts."
     
-    var group : Group?;
+    var group : Group?
+    
+    @IBAction func startConversationTapped(sender: UIButton) {
+        if let groupDetailsDelegate = groupDetailsDelegate{
+            if let group = group where group.thread != nil{
+                if let threads = clientData.getMyThreads(){
+                    let thread = threads.filter( { $0.id == group.thread!.id })
+                    if !thread.isEmpty{
+                        let index = threads.indexOf(thread.first!)
+                        let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow
+                        vc.initChat(index!, idThread: thread.first!.id, from: .OpenChat)
+                        groupDetailsDelegate.pushViewController(vc, animated: true)
+                    }else{
+                        let alert = UIAlertController(title: "", message: "Chat of this group has been deleted accidently, so the best way is just delete this group because this could make problems in future", preferredStyle: .Alert)
+                        let alertAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                        alert.addAction(alertAction)
+                        groupDetailsDelegate.presentViewController(alert, animated: true)
+                    }
+                }
+            }else{
+                let alert = UIAlertController(title: "", message: "Chat of this group has been deleted accidently, so the best way is just delete this group because this could make problems in future", preferredStyle: .Alert)
+                let alertAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                alert.addAction(alertAction)
+                groupDetailsDelegate.presentViewController(alert, animated: true)
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -98,9 +126,7 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: false);
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
-    
-    
     
 }

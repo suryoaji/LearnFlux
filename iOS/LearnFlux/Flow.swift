@@ -12,6 +12,7 @@ enum FlowName{
     case NewGroup
     case NewThread
     case NewInterestGroup
+    case NewEvent
     case None
 }
 
@@ -33,9 +34,9 @@ class Flow {
     }
     
     func begin (flowName: FlowName) {
-        clear();
+        clear()
         self.name = flowName
-        active = true;
+        active = true
     }
     
     func activeFlow () -> FlowName? {
@@ -87,5 +88,4 @@ class Flow {
     func getViewControllers() -> ([UIViewController]){
         return self.vcStacks
     }
-    
 }

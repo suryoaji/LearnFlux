@@ -29,7 +29,15 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     var orgId : String = "";
     var orgTitle : String = "";
     
-    var orgData : Group?;
+    var orgData : Group?{
+        didSet{
+            if let orgData = orgData where !tabs.isEmpty{
+                if let profileViewController = tabs[3] as? OrgProfile{
+                    profileViewController.setOrganizationInfo(orgData)
+                }
+            }
+        }
+    }
     
     var menu : AZDropdownMenu!;
     
@@ -41,12 +49,9 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
             }
         }
     }
-    
 
-    
     func refreshData(callback: (() -> Void)?) {
         Engine.getGroupInfo(self, groupId: orgId) { status, group in
-//            print (group);
             self.orgData = group;
             self.propagateData();
             Util.mainThread() { self.updateView (); }
@@ -82,7 +87,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         tabs.append(Util.getViewControllerID("OrgGroups"))
         tabs.append(Util.getViewControllerID("OrgEvents"))
         tabs.append(Util.getViewControllerID("OrgActivities"))
-        
+        tabs.append(Util.getViewControllerID("OrgProfile"))
         changeView(0);
     }
     
@@ -107,11 +112,11 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.createScrollView()
         refreshData() {
             self.createScrollView()
             self.propagateData();
         }
-        self.title = "Details"
         
         let menuTitle = ["Edit Organisation...", "Create Official Group...", "Manage Official Group..."];
         menu = AZDropdownMenu(titles: menuTitle)
@@ -119,7 +124,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         let navItem = self.navigationItem;
 
         let right:UIBarButtonItem! = UIBarButtonItem();
-        right.title = "Menu";
+        right.image = UIImage(named: "menu")
         navItem.rightBarButtonItem = right;
         right.action = #selector(self.showMenu);
         right.target = self;
@@ -128,6 +133,17 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     }
     
     func changeView (index : Int) {
+        if index == 3{
+            self.scrollView.alpha = 0.0
+            UIView.animateWithDuration(0.14, delay: 0, options: .CurveEaseInOut, animations: {
+                self.viewSelection.alpha = 0.0
+                }, completion: nil)
+            UIView.animateWithDuration(0.7, delay: 0.14, options: .CurveEaseInOut, animations: {
+                self.scrollView.alpha = 1.0
+                }, completion: nil)
+        }else{
+            self.viewSelection.alpha = 1.0
+        }
         UIView.animateWithDuration(0.14, delay: 0.0, options: .CurveEaseInOut, animations: {
             self.scrollView.setContentOffset(CGPointMake(CGFloat(index) * self.scrollView.bounds.width, 0), animated: false)
             }, completion: { bool in
@@ -165,43 +181,86 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         if privCreateActivity && indicatorViewShown == 2 { choices.append("Create new activity"); styles.append (.Default); }
         if privDeleteActivity && indicatorViewShown == 2 { choices.append("Delete multiple activities"); styles.append (.Default); }
 
-        
         Util.showAlertMenu(self, title: "Menu", choices: choices, styles: styles, addCancel: true) { (selected) in
             switch (selected) {
             case 0: break;
             case 1:
-                let flow = Flow.sharedInstance;
-                flow.begin(.NewGroup);
-                flow.add(dict: ["parentId": (self.orgData?.id)!]);
-                flow.setCallback() { result in
-                    guard let title = result!["title"] as? String else { print ("FLOW: title not found"); return; }
-                    guard let desc = result!["desc"] as? String else { print ("FLOW: desc not found"); return; }
-                    guard let userIds = result!["userIds"] as? [Int] else { print ("FLOW: userId not found"); return; }
-                    let parentId = result!["parentId"] as? String;
-                    Engine.createGroup(self, type:"group", title: title, desc: desc, userId: userIds, parentId:parentId) { status, JSON in
-                        Util.mainThread() {
-                            if status == .Success{
-//                                let group = Group.convertFromDict(JSON);
-                                Util.mainThread() {
-                                    self.navigationController?.popToViewController(self, animated: true);
-                                    Engine.getGroupInfo(groupId: (self.orgData?.id)!) { status, group in
-                                        self.orgData = group;
-                                        self.propagateData();
-                                    }
-                                }
-                            }
-                        }
-                    }
+                if self.indicatorViewShown == 0{
+                    self.menuCreateNewGroupTapped()
+                }else if self.indicatorViewShown == 1{
+                    self.menuCreateNewEventTapped()
+                }else{
+                    self.menuCreateNewActivityTapped()
                 }
-                self.navigationController?.pushViewController(Util.getViewControllerID("NewGroups"), animated: true);
                 break;
             default: break;
             }
         }
     }
+    
+    let flow = Flow.sharedInstance;
+    func menuCreateNewEventTapped(){
+        flow.begin(.NewEvent)
+        flow.add(dict: ["reference" : ["id" : self.orgId,
+                                       "type" : "organization"]])
+        flow.setCallback { result in
+            self.handleRequest(self.flow.activeFlow()!, param: result!)
+        }
+        self.navigationController?.pushViewController(Util.getViewControllerID("AttachEvent"), animated: true)
+    }
 
+    func menuCreateNewGroupTapped(){
+        flow.begin(.NewGroup);
+        flow.add(dict: ["parentId": (self.orgData?.id)!]);
+        flow.setCallback() { result in
+            self.handleRequest(self.flow.activeFlow()!, param: result!)
+        }
+        self.navigationController?.pushViewController(Util.getViewControllerID("NewGroups"), animated: true);
+    }
     
+    func menuCreateNewActivityTapped(){
+        print("creating New Activity Tapped")
+    }
     
+    func handleRequest(type: FlowName, param: Dictionary<String, AnyObject>){
+        if type == FlowName.NewGroup{
+            handleRequestCreateGroup(param)
+        }else if type == FlowName.NewEvent{
+            handleRequestCreateEvent(param)
+        }
+    }
+    
+    func handleRequestCreateGroup(param: Dictionary<String, AnyObject>?){
+        guard let title = param!["title"] as? String else { print ("FLOW: title not found"); return; }
+        guard let desc = param!["desc"] as? String else { print ("FLOW: desc not found"); return; }
+        guard let userIds = param!["userIds"] as? [Int] else { print ("FLOW: userId not found"); return; }
+        let parentId = param!["parentId"] as? String;
+        Engine.createGroup(self, type:"group", title: title, desc: desc, userId: userIds, parentId:parentId) { status, JSON in
+            Util.mainThread() {
+                if status == .Success{
+                    //                                let group = Group.convertFromDict(JSON);
+                    Util.mainThread() {
+                        self.navigationController?.popToViewController(self, animated: true);
+                        Engine.getGroupInfo(groupId: (self.orgData?.id)!) { status, group in
+                            self.orgData = group;
+                            self.propagateData();
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func handleRequestCreateEvent(param: Dictionary<String, AnyObject>){
+        Engine.createEvent(param){ status, JSON in
+            if status == .Success{
+                let alert = UIAlertController(title: "Event's Organization has created", message: "status: \(status),\nresponse: \(JSON)", preferredStyle: .Alert)
+                let alertAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                alert.addAction(alertAction)
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+        }
+    }
 }
 
 extension OrgDetails: UIScrollViewDelegate{
