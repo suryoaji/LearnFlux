@@ -150,6 +150,8 @@ public class InterestGroup extends AppCompatActivity {
                             public void execute(JSONObject obj) {
                                 Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
                                 dial.dismiss();
+                                finish();
+                                startActivity(getIntent());
                             }
                         });
             }

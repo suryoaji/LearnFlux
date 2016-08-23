@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
@@ -246,6 +247,8 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 						Log.i("Data Event", "execute: "+id+", "+type);
 						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
 						dialog.dismiss();
+						finish();
+						startActivity(getIntent());
 					}
 				});
 			}
@@ -287,18 +290,19 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		next.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				String result="";
-				int i=0;
-				int[] ids = new int[]{};
+				List<Integer> a = new ArrayList<>();
 				for (Participant p : adap.getBox()) {
 					if (p.box) {
-						result += p.getId();
-						ids[ids.length-1]=p.getId();
-						ids = new int[]{result.length()};
+
+						a.add(p.getId());
 					}
 				}
+				int[]ids = new int[a.size()];
+				for(int i=0; i<a.size();i++){
+					ids[i]=a.get(i).intValue();
+				}
 				Engine.createGroup(getApplicationContext(), ids, name, desc, id,
-						"group", new RequestTemplate.ServiceCallback() {
+						type, new RequestTemplate.ServiceCallback() {
 							@Override
 							public void execute(JSONObject obj) {
 								Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
