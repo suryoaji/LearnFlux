@@ -1,24 +1,13 @@
 package com.idesolusiasia.learnflux;
 
 import android.app.Dialog;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,10 +15,6 @@ import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.InterestGroupAdapter;
-import com.idesolusiasia.learnflux.adapter.OrganizationGridRecyclerViewAdapter;
-import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
-import com.idesolusiasia.learnflux.db.DatabaseFunction;
-import com.idesolusiasia.learnflux.entity.Activity;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.User;
@@ -43,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Ide Solusi Asia on 8/15/2016.
@@ -147,13 +133,16 @@ public class InterestGroup extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String result = "";
-                int[] ids = new int[0];
+                List<Integer> a = new ArrayList<>();
                 for (Participant p : adap.getBox()) {
                     if (p.box) {
-                        result += "\n" + p.getId();
-                        ids = new int[]{p.getId()};
+
+                        a.add(p.getId());
                     }
+                }
+                int[]ids = new int[a.size()];
+                for(int i=0; i<a.size();i++){
+                    ids[i]=a.get(i).intValue();
                 }
                 Engine.createGroup(getApplicationContext(), ids, name, desc, null,
                         "group", new RequestTemplate.ServiceCallback() {
