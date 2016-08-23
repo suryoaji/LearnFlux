@@ -148,21 +148,21 @@ public class InterestGroup extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String result = "";
+                int[] ids = new int[0];
                 for (Participant p : adap.getBox()) {
-                    if (p.box){
+                    if (p.box) {
                         result += "\n" + p.getId();
-                        int[] ids = new int[]{p.getId()};
-                        Engine.createGroup(getApplicationContext(), ids, name, desc, null,
-                                "group", new RequestTemplate.ServiceCallback() {
-                                    @Override
-                                    public void execute(JSONObject obj) {
-                                    Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
-                                    dial.dismiss();
-                                    }
-                                });
+                        ids = new int[]{p.getId()};
                     }
                 }
-
+                Engine.createGroup(getApplicationContext(), ids, name, desc, null,
+                        "group", new RequestTemplate.ServiceCallback() {
+                            @Override
+                            public void execute(JSONObject obj) {
+                                Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
+                                dial.dismiss();
+                            }
+                        });
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
