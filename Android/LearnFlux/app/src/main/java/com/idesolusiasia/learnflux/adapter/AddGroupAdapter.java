@@ -7,88 +7,76 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Participant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Ide Solusi Asia on 8/19/2016.
  */
-public class AddGroupAdapter extends ArrayAdapter<Participant> {
+public class AddGroupAdapter extends BaseAdapter{
     List<Participant> participants;
-    private Context context;
+    private Context ctx;
     LayoutInflater inflater;
-    private SparseBooleanArray mSelectedItemsIds;
-    public AddGroupAdapter(Context context, int ResourceId, List<Participant> participants) {
-        super(context, ResourceId, participants);
-        mSelectedItemsIds = new SparseBooleanArray();
-        this.context=context;
-        this.participants=participants;
-        inflater = LayoutInflater.from(context);
-    }
-    private class ViewHolder {
-        ImageView ivPhoto;
-        TextView tvName;
-        ImageView ivCheck;
-        public Participant mItem;
-    }
 
-    public View getView(int position, View view, ViewGroup parent) {
-        final ViewHolder holder;
-        if (view == null) {
-            holder = new ViewHolder();
-            view = inflater.inflate(R.layout.row_people, null);
-            // Locate the TextViews in listview_item.xml
-            holder.ivPhoto = (ImageView) view.findViewById(R.id.ivPhoto);
-            holder.tvName = (TextView) view.findViewById(R.id.tvName);
-            holder.ivCheck = (ImageView) view.findViewById(R.id.ivCheck);
-            view.setTag(holder);
-        } else {
-            holder = (ViewHolder) view.getTag();
-        }
-        // Capture position and set to the TextViews
-        holder.mItem = participants.get(position);
-        holder.tvName.setText(participants.get(position).getFirstName());
-        holder.tvName.setTextColor(Color.parseColor("#000000"));
-        return view;
+    public AddGroupAdapter(Context context, ArrayList<Participant> participant){
+        ctx = context;
+        participants = participant;
+        inflater = (LayoutInflater) ctx
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
-    public void remove(Participant object) {
-        participants.remove(object);
-        notifyDataSetChanged();
+    public int getCount() {
+        return participants.size();
+    }
+    @Override
+    public Object getItem(int position) {
+        return participants.get(position);
     }
 
-    public List<Participant> getWorldPopulation() {
-        return participants;
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
-    public void toggleSelection(int position) {
-        selectView(position, !mSelectedItemsIds.get(position));
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View view = convertView;
+        if(view==null){
+            view = inflater.inflate(R.layout.row_layout,parent,false);
+        }
+        Participant p = getParticipant(position);
+        ((TextView) view.findViewById(R.id.tvVersionName)).setText(p.getFirstName());
+        CheckBox cbBuy = (CheckBox) view.findViewById(R.id.checkBox1);
+        cbBuy.setOnCheckedChangeListener(myCheckChangList);
+        cbBuy.setTag(position);
+        cbBuy.setChecked(p.box);
+        return view;
     }
-
-    public void removeSelection() {
-        mSelectedItemsIds = new SparseBooleanArray();
-        notifyDataSetChanged();
+    Participant getParticipant(int position) {
+        return ((Participant) getItem(position));
     }
-
-    public void selectView(int position, boolean value) {
-        if (value)
-            mSelectedItemsIds.put(position, value);
-        else
-            mSelectedItemsIds.delete(position);
-        notifyDataSetChanged();
+    public ArrayList<Participant> getBox() {
+        ArrayList<Participant> box = new ArrayList<Participant>();
+        for (Participant p : participants) {
+            if (p.box)
+                box.add(p);
+        }
+        return box;
     }
-
-    public int getSelectedCount() {
-        return mSelectedItemsIds.size();
-    }
-
-    public SparseBooleanArray getSelectedIds() {
-        return mSelectedItemsIds;
-    }
+    CompoundButton.OnCheckedChangeListener myCheckChangList = new CompoundButton.OnCheckedChangeListener() {
+        public void onCheckedChanged(CompoundButton buttonView,
+                                     boolean isChecked) {
+            getParticipant((Integer) buttonView.getTag()).box = isChecked;
+        }
+    };
 }

@@ -2,12 +2,14 @@ package com.idesolusiasia.learnflux;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.InterestGroupAdapter;
@@ -52,6 +55,7 @@ public class InterestGroup extends AppCompatActivity {
     InterestGroupAdapter rcAdapter;
     RecyclerView recyclerView;
     AddGroupAdapter adap;
+    public String name,desc;
     ListView listcontent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,69 +106,71 @@ public class InterestGroup extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
             case R.id.new_group:
-                OpenDialog2();
+                addInterestNewGroup();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+    public void addInterestNewGroup(){
+        final Dialog dialog = new Dialog(InterestGroup.this);
+        dialog.setTitle("Add new Group");
+        dialog.setContentView(R.layout.dialog_add_group);
+        final EditText groupName = (EditText) dialog.findViewById(R.id.add_group_name);
+        final EditText groupDesc = (EditText) dialog.findViewById(R.id.add_group_description);
+        Button btnNext = (Button)dialog.findViewById(R.id.btnNext);
+        Button cancel = (Button)dialog.findViewById(R.id.btnCancel);
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               name = groupName.getText().toString().trim();
+               desc = groupDesc.getText().toString().trim();
+               OpenDialog2();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
     void OpenDialog2(){
 		final Dialog dial = new Dialog(InterestGroup.this);
 		dial.setTitle("Add participant");
 		dial.setContentView(R.layout.layout_dialog);
+
 		listcontent = (ListView) dial.findViewById(R.id.alert_list);
-		listcontent.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		listcontent.setSelector(android.R.color.darker_gray);
-		listcontent.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-			@Override
-			public void onItemCheckedStateChanged(ActionMode mode, int position,
-												  long id, boolean checked) {
-                final int checkedCount = listcontent.getCheckedItemCount();
-                // Set the CAB title according to total checked items
-                mode.setTitle(checkedCount + " Selected");
-                // Calls toggleSelection method from ListViewAdapter Class
-                adap.toggleSelection(position);
-			}
-
-			@Override
-			public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-                actionMode.getMenuInflater().inflate(R.menu.activity_main, menu);
-				return true;
-			}
-
-			@Override
-			public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-				return false;
-			}
-
+        Button next = (Button)dial.findViewById(R.id.btnNext);
+        Button cancel = (Button)dial.findViewById(R.id.btnCancel);
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.delete:
-                        // Calls getSelectedIds method from ListViewAdapter Class
-                        SparseBooleanArray selected = adap
-                                .getSelectedIds();
-                        // Captures all selected ids with a loop
-                        for (int i = (selected.size() - 1); i >= 0; i--) {
-                            if (selected.valueAt(i)) {
-                                Participant selecteditem = adap
-                                        .getItem(selected.keyAt(i));
-                                // Remove selected items following the ids
-                                adap.remove(selecteditem);
-                            }
-                        }
-                        // Close CAB
-                        mode.finish();
-                        return true;
-                    default:
-                        return false;
+            public void onClick(View view) {
+                String result = "";
+                for (Participant p : adap.getBox()) {
+                    if (p.box){
+                        result += "\n" + p.getId();
+                        int[] ids = new int[]{p.getId()};
+                        Engine.createGroup(getApplicationContext(), ids, name, desc, null,
+                                "group", new RequestTemplate.ServiceCallback() {
+                                    @Override
+                                    public void execute(JSONObject obj) {
+                                    Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
+                                    dial.dismiss();
+                                    }
+                                });
+                    }
                 }
+
             }
-			@Override
-			public void onDestroyActionMode(ActionMode actionMode) {
-                adap.removeSelection();
-			}
-		});
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dial.dismiss();
+            }
+        });
 		Engine.getMyFriend(getApplicationContext(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
@@ -179,7 +185,7 @@ public class InterestGroup extends AppCompatActivity {
 					}
 
 					if (p.size()>=0){
-						adap = new AddGroupAdapter(getApplicationContext(),R.layout.row_people, p);
+						adap = new AddGroupAdapter(getApplicationContext(), p);
 						listcontent.setAdapter(adap);
 					}
 				} catch (JSONException e) {

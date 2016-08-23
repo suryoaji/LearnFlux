@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="6dip">
@@ -10,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:focusable="false"
+        android:buttonTint="#000000"
         android:focusableInTouchMode="false"
         android:textColor="#ff00bb88" />
 
@@ -20,7 +22,7 @@
         android:layout_alignBaseline="@id/checkBox1"
         android:layout_alignBottom="@id/checkBox1"
         android:layout_toRightOf="@id/checkBox1"
-        android:text="textview"
-        android:textColor="#FF00FF" />
+        android:textColor="#000000"
+        android:text="textview" />
 
 </RelativeLayout>
