@@ -27,6 +27,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
+import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
@@ -48,6 +49,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
 	public String id, type;
+	public Group group = null;
 	AddGroupAdapter adap;
 	public String name,desc;
 	ListView listcontent;
@@ -193,6 +195,19 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+	public void checkID(){
+		Engine.getOrganizationProfile(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				try{
+					JSONObject data = obj.getJSONObject("data");
+					group = Converter.convertOrganizations(data);
+				}catch (JSONException e){
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 	public void addEventProcess(){
 		final Dialog dialog = new Dialog(OrgDetailActivity.this);
