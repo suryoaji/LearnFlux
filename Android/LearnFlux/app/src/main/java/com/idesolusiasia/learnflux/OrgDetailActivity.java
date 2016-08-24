@@ -302,11 +302,13 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 					ids[i]=a.get(i).intValue();
 				}
 				Engine.createGroup(getApplicationContext(), ids, name, desc, id,
-						type, new RequestTemplate.ServiceCallback() {
+						"group", new RequestTemplate.ServiceCallback() {
 							@Override
 							public void execute(JSONObject obj) {
 								Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
 								dial.dismiss();
+								finish();
+								startActivity(getIntent());
 							}
 						});
 			}
@@ -341,5 +343,8 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 			}
 		});
 		dial.show();
+
+
 	}
 }
+
