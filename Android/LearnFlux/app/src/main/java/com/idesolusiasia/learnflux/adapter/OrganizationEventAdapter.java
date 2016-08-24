@@ -19,6 +19,7 @@ import com.idesolusiasia.learnflux.entity.EventChatBubble;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 
 import org.json.JSONException;
@@ -56,6 +57,10 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 		holder.tvTitle.setText(ev.getTitle());
 		holder.tvLocation.setText(ev.getLocation());
 		holder.tvDescription.setText(ev.getDetails());
+		holder.tvTime.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(), "kk:mm"));
+		holder.tvDay.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(),"dd"));
+		holder.tvMonth.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(),"MMM"));
+		holder.tvYear.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(),"yyyy"));
 		holder.addEvent.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -77,13 +82,15 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 	}
 
 	public class OrgTileHolder extends RecyclerView.ViewHolder {
-		public TextView tvTitle, tvDate, tvTime, tvLocation, tvDescription;
+		public TextView tvTitle,tvTime, tvLocation, tvDescription, tvMonth, tvDay, tvYear;
 		public ImageView addEvent, toChat;
 		public OrgTileHolder(View itemView) {
 			super(itemView);
 			tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
-			tvDate = (TextView) itemView.findViewById(R.id.tvDate);
 			tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+			tvMonth = (TextView)itemView.findViewById(R.id.tvMonth);
+			tvDay = (TextView)itemView.findViewById(R.id.tvDay);
+			tvYear = (TextView)itemView.findViewById(R.id.tvYear) ;
 			tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);
 			tvDescription = (TextView)itemView.findViewById(R.id.tvDescription);
 			addEvent = (ImageView)itemView.findViewById(R.id.ivAddEvent);
