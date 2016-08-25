@@ -76,6 +76,7 @@
     </string>
     <string name="color_primary">#8BC34A</string>
     <string-array name="invitee_status">
+        <item>Not Set</item>
         <item>Going</item>
         <item>Interested</item>
         <item>Not Going</item>

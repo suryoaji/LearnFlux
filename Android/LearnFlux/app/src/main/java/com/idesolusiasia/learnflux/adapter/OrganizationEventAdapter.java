@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.ChattingActivity;
@@ -85,6 +86,7 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 	public class OrgTileHolder extends RecyclerView.ViewHolder {
 		public TextView tvTitle,tvTime, tvLocation, tvDescription, tvMonth, tvDay, tvYear;
 		public ImageView addEvent, toChat, editEvent;
+		public Spinner spinner;
 		public OrgTileHolder(View itemView) {
 			super(itemView);
 			tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
@@ -97,6 +99,7 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 			tvDescription = (TextView)itemView.findViewById(R.id.tvDescription);
 			addEvent = (ImageView)itemView.findViewById(R.id.ivAddEvent);
 			toChat = (ImageView)itemView.findViewById(R.id.ivInvite);
+			spinner = (Spinner)itemView.findViewById(R.id.spinner);
 		}
 	}
 	void addEventToCalendar(Event e, Context c){
