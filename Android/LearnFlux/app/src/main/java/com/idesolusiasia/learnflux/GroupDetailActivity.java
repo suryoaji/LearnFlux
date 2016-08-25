@@ -207,6 +207,8 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 				if(User.getUser().getID()==group.getAdminID()){
 					getMenuInflater().inflate(R.menu.interest_menu, menu);
 				}
+			}else{
+				getMenuInflater().inflate(R.menu.menu_event,menu);
 			}
 		}
 		return super.onPrepareOptionsMenu(menu);

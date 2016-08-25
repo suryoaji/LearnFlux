@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.provider.CalendarContract;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.EventChatBubble;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
@@ -73,7 +75,6 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 				getEventsID(ev, context);
 			}
 		});
-
 	}
 
 	@Override

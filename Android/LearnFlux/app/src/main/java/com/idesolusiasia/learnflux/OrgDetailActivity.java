@@ -227,6 +227,8 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 			if(group.getAdminID()!= -1){
 				if(User.getUser().getID()==group.getAdminID()){
 					getMenuInflater().inflate(R.menu.menu_group, menu);
+				}else{
+					getMenuInflater().inflate(R.menu.menu_event,menu);
 				}
 			}
 		}

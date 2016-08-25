@@ -1,29 +1,15 @@
 package com.idesolusiasia.learnflux;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.OrganizationEventAdapter;
 import com.idesolusiasia.learnflux.entity.Event;
-import com.idesolusiasia.learnflux.entity.EventChatBubble;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
@@ -33,10 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class OrgEventFragment extends Fragment {
 	RecyclerView recyclerView;

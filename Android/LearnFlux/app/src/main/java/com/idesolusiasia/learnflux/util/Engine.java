@@ -411,15 +411,32 @@ public class Engine {
 			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					if (obj!=null){
+					if (obj != null) {
 						Log.i("create_event", obj.toString());
 					}
-					if (callback!=null){
+					if (callback != null) {
 						callback.execute(obj);
 					}
 
 				}
-			},null);
+			}, new RequestTemplate.ErrorCallback() {
+				@Override
+				public void execute(JSONObject error) {
+					if (error!=null){
+						try {
+							JSONArray messages = error.getJSONArray("errors");
+							if (messages.toString().contains("have successfully registered")){
+
+							}else{
+								Functions.showAlert(context,"Errors",messages.toString());
+							}
+
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			});
 		}
 	}
 
