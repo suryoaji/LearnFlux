@@ -27,6 +27,16 @@ public class Group {
     private List<Group> child;
     private BasicItem parent;
 
+    public int getAdminID(){
+        int x = -1;
+        for(int i=0; i<memberGroup.size();i++){
+           if(memberGroup.get(i).getRole().getType().equalsIgnoreCase("admin")){
+               x = memberGroup.get(i).getUser().getId();
+           }
+        }
+            return x;
+    }
+
     public BasicItem getParent() {
         return parent;
     }

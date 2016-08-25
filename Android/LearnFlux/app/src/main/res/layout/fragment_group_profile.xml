@@ -49,7 +49,8 @@
                   android:text="The study of Fine Arts is a process of continual debate and questioning; of exploring and interrogating set perspectives. This programme situates itself at the crossroads of contemporary Western and Asian cultures, acknowledging the demands of different worldviews. It unites specialised areas, from traditional disciplines to newer art forms, providing wider options of expression relevant to the global evolution of fine arts."
                   android:id="@+id/textView43" android:layout_below="@+id/textView41"
                   android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-                  android:layout_marginTop="20dp"/>
+                  android:layout_marginTop="20dp"
+            android:visibility="gone" />
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp" android:id="@+id/view2"

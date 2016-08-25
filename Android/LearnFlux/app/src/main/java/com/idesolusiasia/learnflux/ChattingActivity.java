@@ -227,6 +227,7 @@ public class ChattingActivity extends BaseActivity {
 					}else if (thread.getGroup().getType().equalsIgnoreCase("organization")){
 						Intent i = new Intent(v.getContext(),OrgDetailActivity.class);
 						i.putExtra("id",thread.getGroup().getId());
+						i.putExtra("title", thread.getTitle());
 						v.getContext().startActivity(i);
 
 					}

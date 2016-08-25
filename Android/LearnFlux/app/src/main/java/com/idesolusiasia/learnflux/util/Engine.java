@@ -60,7 +60,7 @@ public class Engine {
 				if (error!=null){
 					try {
 						String message = error.getString("error_description");
-						Functions.showAlert(context,"Error", message);
+						Toast.makeText(context, message.toString(),Toast.LENGTH_SHORT).show();
 						if (errorCallback!=null){
 							errorCallback.execute(error);
 						}
@@ -620,22 +620,34 @@ public class Engine {
 			RequestTemplate.POSTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					if (obj!=null){
+					if (obj != null) {
 
 						try {
 							Group g = Converter.convertGroup(obj.getJSONObject("data"));
-							DatabaseFunction.insertSingleThread(context,g.getThread());
+							DatabaseFunction.insertSingleThread(context, g.getThread());
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-						if (callback!=null){
+						if (callback != null) {
 							callback.execute(obj);
 						}
 
 					}
 
 				}
-			},null);
+			}, new RequestTemplate.ErrorCallback() {
+				@Override
+				public void execute(JSONObject error) {
+					if(error!=null){
+						try{
+							JSONArray errors = error.getJSONArray("errors");
+							Functions.showAlert(context,"errors", errors.toString());
+						}catch (JSONException e){
+							e.printStackTrace();
+						}
+					}
+				}
+			});
 		}
 	}
 	public static void postPollAnswer(final Context context, final String pollID, final String answerValue,

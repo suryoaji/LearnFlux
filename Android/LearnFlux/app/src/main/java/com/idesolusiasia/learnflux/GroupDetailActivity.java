@@ -50,6 +50,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 	FragmentAdapter mAdap;
 	public int color;
 	TextView title;
+	public Group group=null;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	public String name, id, reTitle, details, type, location;
@@ -111,7 +112,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 			}
 		});
 		mViewPager.setCurrentItem(0);
-
+		checkID();
 	}
 
 	@Override
@@ -164,7 +165,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.interest_menu, menu);
+//		getMenuInflater().inflate(R.menu.interest_menu, menu);
 		return true;
 	}
 
@@ -182,6 +183,33 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+	public void checkID(){
+		Engine.getOrganizationProfile(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				try{
+					JSONObject data = obj.getJSONObject("data");
+					group = Converter.convertOrganizations(data);
+					invalidateOptionsMenu();
+				}catch (JSONException e){
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		if (group!=null){
+			if(group.getAdminID()!= -1){
+				if(User.getUser().getID()==group.getAdminID()){
+					getMenuInflater().inflate(R.menu.interest_menu, menu);
+				}
+			}
+		}
+		return super.onPrepareOptionsMenu(menu);
 	}
 	public void addEventProcess(){
 		final Dialog dialog = new Dialog(GroupDetailActivity.this);

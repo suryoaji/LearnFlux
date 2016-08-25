@@ -68,6 +68,7 @@ public class OrgTileHolder extends RecyclerView.ViewHolder {
 				Intent i = new Intent(view.getContext(), OrgDetailActivity.class);
 				i.putExtra("id", organizations.get(pos).getId());
 				i.putExtra("type", organizations.get(pos).getType());
+				i.putExtra("title", organizations.get(pos).getName());
 				view.getContext().startActivity(i);
 			}
 		});

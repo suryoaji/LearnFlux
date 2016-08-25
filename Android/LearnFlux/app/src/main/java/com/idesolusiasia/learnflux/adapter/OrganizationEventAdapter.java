@@ -83,12 +83,13 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 
 	public class OrgTileHolder extends RecyclerView.ViewHolder {
 		public TextView tvTitle,tvTime, tvLocation, tvDescription, tvMonth, tvDay, tvYear;
-		public ImageView addEvent, toChat;
+		public ImageView addEvent, toChat, editEvent;
 		public OrgTileHolder(View itemView) {
 			super(itemView);
 			tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
 			tvTime = (TextView) itemView.findViewById(R.id.tvTime);
 			tvMonth = (TextView)itemView.findViewById(R.id.tvMonth);
+			editEvent = (ImageView)itemView.findViewById(R.id.imageButton);
 			tvDay = (TextView)itemView.findViewById(R.id.tvDay);
 			tvYear = (TextView)itemView.findViewById(R.id.tvYear) ;
 			tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);

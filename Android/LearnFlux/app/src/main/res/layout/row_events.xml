@@ -63,12 +63,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:layout_weight="4"
             android:layout_marginLeft="5dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Parental Meeting"
-                android:id="@+id/tvTitle"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Parental Meeting"
+                    android:id="@+id/tvTitle"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton"
+                    android:src="@drawable/ic_edit_event"
+                    android:background="@android:color/transparent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,7 +100,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Parent - Teacher meeting asdfasdfas adkfkkdfj dvdfv kjflsk  skdjf  skdjf s&apos;dlkf ;lsdfk &apos;sdl;fadsfkafsj;dkflj s"
-                android:id="@+id/tvDescription" android:layout_marginLeft="5dp"
+                android:id="@+id/tvDescription"
+                android:layout_marginLeft="5dp"
                 android:ellipsize="end"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -94,6 +111,7 @@
                 android:id="@+id/tvSeeMore" android:layout_gravity="center_horizontal"
                 android:textColor="@color/colorPrimaryDark" android:textStyle="italic"
                 android:visibility="gone"/>
+
         </LinearLayout>
     </LinearLayout>
     <LinearLayout

@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.Member;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
@@ -50,32 +51,39 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 	FragmentAdapter mAdap;
 	public String id, type;
 	public Group group = null;
+	public Member member;
 	AddGroupAdapter adap;
-	public String name,desc;
+	public String name,desc,title;
 	ListView listcontent;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
-	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents;
+	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents, tvTitle;
 	static final int ITEMS = 3;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_base);
 		super.onCreateDrawer(savedInstanceState);
 
+
+
 		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		id = getIntent().getStringExtra("id");
+		title = getIntent().getStringExtra("title");
 		type = getIntent().getStringExtra("type");
 		Log.i("TEST", "onCreate: " + id);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View childLayout = layoutInflater.inflate(
 				R.layout.activity_org_detail, null);
+
 		parentLayout.addView(childLayout);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 		fab.hide();
-
+		tvTitle= (TextView)findViewById(R.id.textView14);
+		tvTitle.setText(title);
 		///////////////////////////finish Base Init///
 
 		mAdap = new FragmentAdapter(getSupportFragmentManager());
@@ -123,7 +131,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 			}
 		});
 		mViewPager.setCurrentItem(0);
-
+		checkID();
 	}
 
 	@Override
@@ -176,7 +184,8 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_group, menu);
+		//getMenuInflater().inflate(R.menu.menu_group, menu);
+
 		return true;
 	}
 
@@ -203,12 +212,27 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 				try{
 					JSONObject data = obj.getJSONObject("data");
 					group = Converter.convertOrganizations(data);
+					invalidateOptionsMenu();
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
 			}
 		});
 	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		if (group!=null){
+			if(group.getAdminID()!= -1){
+				if(User.getUser().getID()==group.getAdminID()){
+					getMenuInflater().inflate(R.menu.menu_group, menu);
+				}
+			}
+		}
+		return super.onPrepareOptionsMenu(menu);
+	}
+
 	public void addEventProcess(){
 		final Dialog dialog = new Dialog(OrgDetailActivity.this);
 		dialog.setTitle("Create Event");
@@ -320,7 +344,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 						"group", new RequestTemplate.ServiceCallback() {
 							@Override
 							public void execute(JSONObject obj) {
-								Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
+								Toast.makeText(getApplicationContext(), "Successfull", Toast.LENGTH_SHORT).show();
 								dial.dismiss();
 								finish();
 								startActivity(getIntent());
