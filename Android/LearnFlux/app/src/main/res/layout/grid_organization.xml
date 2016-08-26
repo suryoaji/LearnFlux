@@ -87,7 +87,7 @@
         </RelativeLayout>
         <RelativeLayout android:layout_width="0dp" android:layout_height="wrap_content"
                         android:layout_weight="1">
-            <ImageView android:layout_width="45dp" android:layout_height="45dp"
+            d<ImageView android:layout_width="45dp" android:layout_height="45dp"
                        android:id="@+id/imageView8" android:src="@drawable/icon_activities"
                        android:foreground="?attr/selectableItemBackground"
                        android:clickable="true"
