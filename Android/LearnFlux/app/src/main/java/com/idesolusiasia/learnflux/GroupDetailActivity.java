@@ -112,7 +112,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 			}
 		});
 		mViewPager.setCurrentItem(0);
-		checkID();
 	}
 
 	@Override
@@ -165,7 +164,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.interest_menu, menu);
+		getMenuInflater().inflate(R.menu.interest_menu, menu);
 		return true;
 	}
 
@@ -183,35 +182,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-	public void checkID(){
-		Engine.getOrganizationProfile(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
-			@Override
-			public void execute(JSONObject obj) {
-				try{
-					JSONObject data = obj.getJSONObject("data");
-					group = Converter.convertOrganizations(data);
-					invalidateOptionsMenu();
-				}catch (JSONException e){
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.clear();
-		if (group!=null){
-			if(group.getAdminID()!= -1){
-				if(User.getUser().getID()==group.getAdminID()){
-					getMenuInflater().inflate(R.menu.interest_menu, menu);
-				}
-			}else{
-				getMenuInflater().inflate(R.menu.menu_event,menu);
-			}
-		}
-		return super.onPrepareOptionsMenu(menu);
 	}
 	public void addEventProcess(){
 		final Dialog dialog = new Dialog(GroupDetailActivity.this);
@@ -266,40 +236,13 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 						Log.i("Data Event", "execute: "+ title+", "+location+", "+id+", "+type);
 						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
 						dialog.dismiss();
+						finish();
+						startActivity(getIntent());
 					}
 				});
 			}
 		});
 		dialog.show();
-	}
-	public void addInterestNewGroup(){
-		final Dialog dialog = new Dialog(GroupDetailActivity.this);
-		dialog.setTitle("Add new Group");
-		dialog.setContentView(R.layout.dialog_add_group);
-		final EditText groupName = (EditText) dialog.findViewById(R.id.add_group_name);
-		final EditText groupDesc = (EditText) dialog.findViewById(R.id.add_group_description);
-		Button btnNext = (Button)dialog.findViewById(R.id.btnNext);
-		Button cancel = (Button)dialog.findViewById(R.id.btnCancel);
-		btnNext.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				String name = groupName.getText().toString().trim();
-				String desc = groupDesc.getText().toString().trim();
-				//OpenDialog2();
-			}
-		});
-		cancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				dialog.dismiss();
-			}
-		});
-		dialog.show();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 	}
 
 }

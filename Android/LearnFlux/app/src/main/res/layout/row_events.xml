@@ -101,6 +101,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Parent - Teacher meeting asdfasdfas adkfkkdfj dvdfv kjflsk  skdjf  skdjf s&apos;dlkf ;lsdfk &apos;sdl;fadsfkafsj;dkflj s"
                 android:id="@+id/tvDescription"
+                android:inputType="text"
                 android:layout_marginLeft="5dp"
                 android:ellipsize="end"/>
             <TextView
