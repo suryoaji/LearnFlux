@@ -207,6 +207,18 @@ public class Engine {
 							Thread t = Converter.convertThread(array.getJSONObject(i));
 							arrThread.add(t);
 						}
+						List<Thread> fromDB = DatabaseFunction.getThreadList(context);
+
+						//delete on DB threads that not in arrThread. because arrThread always give back all my valid thread.
+						//if the thread is not in arrThread, it means we have no access to it anymore. it should be deleted from DB
+						List<Thread> deletedThread = new ArrayList<Thread>();
+						for (int i=0;i<fromDB.size();i++) {
+							if (!Functions.isContainThread(fromDB.get(i),arrThread)){
+								deletedThread.add(fromDB.get(i));
+							}
+						}
+						DatabaseFunction.deleteThread(context,deletedThread);
+
 						DatabaseFunction.insertThread(context,arrThread);
 						if (callback!=null){
 							callback.execute(obj);

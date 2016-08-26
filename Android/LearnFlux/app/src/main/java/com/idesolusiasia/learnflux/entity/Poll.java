@@ -53,14 +53,24 @@ public class Poll {
 	}
 
 	public List<PollOption> getOptionsCount(){
+		int total = 0;
 		for (PollOption opt:options) {
 			opt.setCount(0);
+			opt.setPercentage(0);
 			for (AnswerData data:metadata) {
-				if (opt.getValue()==data.getAnswer()){
+				if (opt.getValue().equalsIgnoreCase(data.getAnswer())){
 					opt.setCount(opt.getCount()+1);
+					total+=1;
 				}
 			}
 		}
+		if (total!=0){
+			for (PollOption opt:options) {
+				opt.setPercentage(((double)opt.getCount()/total)*100);
+			}
+		}
+
+
 		return options;
 	}
 
@@ -89,6 +99,7 @@ public class Poll {
 		private String name;
 		private String value;
 		private int count=0;
+		private double percentage=0;
 
 		public String getName() {
 			return name;
@@ -112,6 +123,14 @@ public class Poll {
 
 		public void setCount(int count) {
 			this.count = count;
+		}
+
+		public double getPercentage() {
+			return percentage;
+		}
+
+		public void setPercentage(double percentage) {
+			this.percentage = percentage;
 		}
 	}
 

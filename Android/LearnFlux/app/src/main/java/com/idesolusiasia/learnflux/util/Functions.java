@@ -12,9 +12,11 @@ import android.widget.EditText;
 import com.idesolusiasia.learnflux.LoginActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.db.DataSource;
+import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -174,6 +176,15 @@ public class Functions {
 		} else {
 			return convertSecondToAnyFormat(time/1000,"dd MMM yyyy");
 		}
+	}
+
+	public static boolean isContainThread(Thread thing, List<Thread> threadList){
+		for (int i=0;i<threadList.size();i++) {
+			if (threadList.get(i).getId().equalsIgnoreCase(thing.getId())){
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

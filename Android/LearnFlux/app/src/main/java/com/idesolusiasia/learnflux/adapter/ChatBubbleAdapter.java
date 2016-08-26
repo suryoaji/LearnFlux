@@ -463,12 +463,13 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 
 		final List<RadioButton> radioButtons = new ArrayList<>();
 		String myAnswer = p.alreadyAnswer(meID);
-		for (Poll.PollOption opt:p.getOptions()) {
+		for (Poll.PollOption opt:p.getOptionsCount()) {
 			RadioButton rb = new RadioButton(c);
 			rb.setText(opt.getName());
 			rb.setTag(opt);
 			if (myAnswer!=null){
 				rb.setEnabled(false);
+				rb.setText(opt.getName()+" "+opt.getPercentage()+"%");
 				if (myAnswer.equalsIgnoreCase(opt.getValue())){
 					rb.setChecked(true);
 				}
@@ -495,6 +496,8 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 				}
 				if (selectedOpt!=null){
 					Engine.postPollAnswer(c, p.getId(),selectedOpt.getValue(),dismissDialog);
+				}else {
+					dialog.dismiss();
 				}
 
 			}

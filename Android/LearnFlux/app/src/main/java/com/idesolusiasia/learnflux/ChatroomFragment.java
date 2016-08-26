@@ -124,16 +124,34 @@ public class ChatroomFragment extends Fragment {
 	}
 
 	void initThreads(){
+		loadChatroomFromDatabase(DatabaseFunction.getThreadList(getContext()));
 		Engine.getThreads(getContext(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
-				ThreadQuickSort quickSort = new ThreadQuickSort();
-				quickSort.sort(DatabaseFunction.getThreadList(getContext()));
-				adap = new ThreadAdapter(getContext(),quickSort.getArray());
-				listView.setAdapter(adap);
-				quickSort=null;
+				List<Thread> fromDB = DatabaseFunction.getThreadList(getContext());
+				if (adap!=null){
+					if(adap.getCount()!=fromDB.size()){
+						loadChatroomFromDatabase(fromDB);
+					}
+				}else {
+					loadChatroomFromDatabase(fromDB);
+				}
 			}
 		});
+	}
+
+	void loadChatroomFromDatabase(List<Thread> fromDB){
+		if (fromDB.size()>0){
+			ThreadQuickSort quickSort = new ThreadQuickSort();
+			quickSort.sort(fromDB);
+			adap = new ThreadAdapter(getContext(),quickSort.getArray());
+			listView.setAdapter(adap);
+			adap.notifyDataSetChanged();
+			quickSort=null;
+			listView.refreshDrawableState();
+		}
+
+
 	}
 
 	void deleteThreads(){
