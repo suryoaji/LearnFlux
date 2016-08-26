@@ -49,7 +49,7 @@ import java.util.Locale;
 public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
 	FragmentAdapter mAdap;
-	public String id, type;
+	public String id, type, clickOrganization;
 	public Group group = null;
 	public Member member;
 	AddGroupAdapter adap;
@@ -72,6 +72,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		id = getIntent().getStringExtra("id");
 		title = getIntent().getStringExtra("title");
 		type = getIntent().getStringExtra("type");
+		clickOrganization = getIntent().getStringExtra("clickOrganization");
 		Log.i("TEST", "onCreate: " + id);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View childLayout = layoutInflater.inflate(
@@ -130,7 +131,14 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 
 			}
 		});
-		mViewPager.setCurrentItem(0);
+		if(clickOrganization.equalsIgnoreCase("Default")){
+			mViewPager.setCurrentItem(0);
+		}
+		else if(clickOrganization.equalsIgnoreCase("Event")){
+			mViewPager.setCurrentItem(1);
+		}else if(clickOrganization.equalsIgnoreCase("Activity")){
+			mViewPager.setCurrentItem(2);
+		}
 		checkID();
 	}
 

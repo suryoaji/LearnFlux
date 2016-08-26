@@ -6,11 +6,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.idesolusiasia.learnflux.ChatroomFragment;
+import com.idesolusiasia.learnflux.ChattingActivity;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
+import com.idesolusiasia.learnflux.OrgEventFragment;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
 
@@ -40,6 +44,36 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 		final Group org= organizations.get(position);
 		holder.tvName.setText(org.getName());
 		holder.ivLogo.setDefaultImageResId(R.drawable.organization);
+		holder.tvImageMessage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent i = new Intent(context, ChattingActivity.class);
+				i.putExtra("idThread", org.getThread().getId());
+				context.startActivity(i);
+			}
+		});
+		holder.tvImageEvent.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent l = new Intent(context, OrgDetailActivity.class);
+				l.putExtra("clickOrganization","Event");
+				l.putExtra("id", org.getId());
+				l.putExtra("type",org.getType());
+				l.putExtra("title",org.getName());
+				context.startActivity(l);
+			}
+		});
+		holder.tvImageActivities.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent activity = new Intent(context, OrgDetailActivity.class);
+				activity.putExtra("id", org.getId());
+				activity.putExtra("type", org.getType());
+				activity.putExtra("title", org.getName());
+				activity.putExtra("clickOrganization", "Activity");
+				context.startActivity(activity);
+			}
+		});
 
 	}
 
@@ -50,6 +84,7 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 
 public class OrgTileHolder extends RecyclerView.ViewHolder {
 	public TextView tvName, tvLastSeen, tvCountMessage, tvCountEvent, tvCountActivities;
+	public ImageView tvImageMessage, tvImageEvent, tvImageActivities;
 	public NetworkImageView ivLogo;
 
 	public OrgTileHolder(final View itemView) {
@@ -60,6 +95,9 @@ public class OrgTileHolder extends RecyclerView.ViewHolder {
 		tvCountEvent = (TextView) itemView.findViewById(R.id.tvCountEvent);
 		tvCountActivities = (TextView) itemView.findViewById(R.id.tvCountActivities);
 		ivLogo = (NetworkImageView) itemView.findViewById(R.id.ivLogo);
+		tvImageMessage = (ImageView) itemView.findViewById(R.id.imageView4);
+		tvImageEvent = (ImageView) itemView.findViewById(R.id.imageView5);
+		tvImageActivities = (ImageView)itemView.findViewById(R.id.imageView8);
 		itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -69,6 +107,7 @@ public class OrgTileHolder extends RecyclerView.ViewHolder {
 				i.putExtra("id", organizations.get(pos).getId());
 				i.putExtra("type", organizations.get(pos).getType());
 				i.putExtra("title", organizations.get(pos).getName());
+				i.putExtra("clickOrganization", "Default");
 				view.getContext().startActivity(i);
 			}
 		});
