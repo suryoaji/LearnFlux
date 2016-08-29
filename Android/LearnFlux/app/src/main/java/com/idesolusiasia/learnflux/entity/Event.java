@@ -1,5 +1,6 @@
 package com.idesolusiasia.learnflux.entity;
 
+import com.google.gson.annotations.SerializedName;
 import com.idesolusiasia.learnflux.util.Functions;
 
 import java.util.List;
@@ -14,8 +15,18 @@ public class Event {
 	private String details;
 	private String location;
 	private String title;
+	@SerializedName("rsvp")
+	private int getEventByGroupRSVP;
 
 	private String type;
+
+	public int getGetEventByGroupRSVP() {
+		return getEventByGroupRSVP;
+	}
+
+	public void setGetEventByGroupRSVP(int getEventByGroupRSVP) {
+		this.getEventByGroupRSVP = getEventByGroupRSVP;
+	}
 
 	private Participant created_by;
 	private Thread thread;

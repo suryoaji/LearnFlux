@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.ChattingActivity;
 import com.idesolusiasia.learnflux.R;
@@ -54,12 +56,20 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 	}
 
 	@Override
-	public void onBindViewHolder(OrgTileHolder holder, int position) {
+	public void onBindViewHolder(final OrgTileHolder holder, int position) {
 
 		final Event ev = event.get(position);
+//		int rspv = ev.getRSVPByParticipantID(User.getUser().getID());
+		Log.i("getrsvp",ev.getGetEventByGroupRSVP()+"");
 		holder.tvTitle.setText(ev.getTitle());
 		holder.tvLocation.setText(ev.getLocation());
 		holder.tvDescription.setText(ev.getDetails());
+		Log.i("Holder", "onBindViewHolder: "+ ev.getCreated_by().getId());
+		if(User.getUser().getID()!=ev.getCreated_by().getId()){
+			holder.editEvent.setVisibility(View.GONE);
+		}else{
+			holder.editEvent.setVisibility(View.VISIBLE);
+		}
 		holder.tvTime.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(), "kk:mm"));
 		holder.tvDay.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(),"dd"));
 		holder.tvMonth.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(),"MMM"));
@@ -74,6 +84,17 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 			@Override
 			public void onClick(View view) {
 				getEventsID(ev, context);
+			}
+		});
+		holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView) {
+
 			}
 		});
 	}
