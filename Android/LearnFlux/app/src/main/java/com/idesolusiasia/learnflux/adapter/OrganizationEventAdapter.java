@@ -29,6 +29,7 @@ import com.idesolusiasia.learnflux.util.RequestTemplate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,7 +64,27 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 		Log.i("getrsvp",ev.getGetEventByGroupRSVP()+"");
 		holder.tvTitle.setText(ev.getTitle());
 		holder.tvLocation.setText(ev.getLocation());
-		holder.tvDescription.setText(ev.getDetails());
+		if (ev.getDetails()!=null){
+			holder.tvDescription.setText(ev.getDetails());
+			holder.tvDescription.post(new Runnable() {
+				@Override
+				public void run() {
+					int a = holder.tvDescription.getLineCount();
+					if (a>2){
+						holder.tvSeeMore.setVisibility(View.VISIBLE);
+						holder.tvDescription.setMaxLines(2);
+					}
+				}
+			});
+		}
+
+		holder.tvSeeMore.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				holder.tvDescription.setMaxLines(Integer.MAX_VALUE);
+				holder.tvSeeMore.setVisibility(View.GONE);
+			}
+		});
 		Log.i("Holder", "onBindViewHolder: "+ ev.getCreated_by().getId());
 		if(User.getUser().getID()!=ev.getCreated_by().getId()){
 			holder.editEvent.setVisibility(View.GONE);
@@ -105,7 +126,7 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 	}
 
 	public class OrgTileHolder extends RecyclerView.ViewHolder {
-		public TextView tvTitle,tvTime, tvLocation, tvDescription, tvMonth, tvDay, tvYear;
+		public TextView tvTitle,tvTime, tvLocation, tvDescription, tvMonth, tvDay, tvYear,tvSeeMore;
 		public ImageView addEvent, toChat, editEvent;
 		public Spinner spinner;
 		public OrgTileHolder(View itemView) {
@@ -121,6 +142,7 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 			addEvent = (ImageView)itemView.findViewById(R.id.ivAddEvent);
 			toChat = (ImageView)itemView.findViewById(R.id.ivInvite);
 			spinner = (Spinner)itemView.findViewById(R.id.spinner);
+			tvSeeMore = (TextView) itemView.findViewById(R.id.tvSeeMore);
 		}
 	}
 	void addEventToCalendar(Event e, Context c){

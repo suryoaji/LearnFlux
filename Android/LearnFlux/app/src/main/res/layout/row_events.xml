@@ -95,15 +95,16 @@
                 android:layout_gravity="center_vertical" android:gravity="center_vertical"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Parent - Teacher meeting asdfasdfas adkfkkdfj dvdfv kjflsk  skdjf  skdjf s&apos;dlkf ;lsdfk &apos;sdl;fadsfkafsj;dkflj s"
                 android:id="@+id/tvDescription"
-                android:inputType="text"
                 android:layout_marginLeft="5dp"
-                android:ellipsize="end"/>
+                android:ellipsize="end" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
