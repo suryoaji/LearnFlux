@@ -30,8 +30,8 @@ class Event: NSObject {
     var thread: EventThread!
     var status: Int! = 0
     
-    init(id: String, time: String, details: String, location: String) {
-        self.title = ""
+    init(id: String, title: String, time: String, details: String, location: String) {
+        self.title = title
         self.id = id
         self.time = time
         self.by = (id: "", type: "", link: "")
@@ -39,6 +39,10 @@ class Event: NSObject {
         self.details = details
         self.participants = []
         self.thread = (id: "", title: "")
+    }
+    
+    convenience init(id: String, time: String, details: String, location: String) {
+        self.init(id: id, title: "", time: time, details: details, location: location)
     }
     
     func selfDescription() -> (String){
@@ -126,13 +130,23 @@ class Event: NSObject {
     }
     
     static func convertToEvent(dict: Dictionary<String, AnyObject>) -> (Event?){
-        if let id = dict["id"], let timestamp = dict["timestamp"], let details = dict["details"], let location = dict["location"]{
-            if let sId = id as? String, let dTimestamp = timestamp as? Double, let sDetails = details as? String, let sLocation = location as? String{
-                let date = NSDate(timeIntervalSince1970: dTimestamp)
-                return Event(id: sId, time: String(date), details: sDetails, location: sLocation)
-            }
+        guard let id = dict["id"],
+              let timestamp = dict["timestamp"],
+              let details = dict["details"],
+              let location = dict["location"] else{
+              return nil
         }
-        return nil
+        guard let sId        = id as? String,
+              let dTimestamp = timestamp as? Double,
+              let sDetails   = details as? String,
+              let sLocation  = location as? String else{
+                return nil
+        }
+        let date = NSDate(timeIntervalSince1970: dTimestamp)
+        if let title = dict["title"] where (title as? String) != nil{
+            return Event(id: sId, title: title as! String, time: String(date), details: sDetails, location: sLocation)
+        }
+        return Event(id: sId, time: String(date), details: sDetails, location: sLocation)
     }
     
 }

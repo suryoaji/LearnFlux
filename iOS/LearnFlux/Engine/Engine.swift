@@ -49,11 +49,23 @@ class Engine : NSObject {
     static var clientData = Data.sharedInstance
     private static var locked : Bool = false;
     
+    static func isAdminOfGroup(group: Group) -> (Bool){
+        guard let participants = group.participants?.filter({ $0.user!.userId! == clientData.cacheMe()!["id"] as! Int }) where !participants.isEmpty else{
+            return false
+        }
+        guard let role = participants.first!.role else{
+            return false
+        }
+        if role.type.lowercaseString == "admin"{
+            return true
+        }
+        return false
+    }
+    
     static func getJSON (param: [String: AnyObject])->String {
         do {
             let jsonData = try NSJSONSerialization.dataWithJSONObject(param, options: NSJSONWritingOptions.PrettyPrinted)
             let dataString = NSString(data: jsonData, encoding: NSUTF8StringEncoding)!
-//            print (dataString);
             return dataString as String;
         } catch let error as NSError {
             print(error)
@@ -251,6 +263,26 @@ class Engine : NSObject {
             }
             if (callback != nil) { callback! (status, JSON); }
         }
+    }
+    
+    static func getSpecificEventsByIdGroup(viewController: UIViewController? = nil, idGroup: String, callback: JSONreturn? = nil){
+        if clientData.getSpecificEventsByIdGroup(idGroup) != nil{
+            if callback != nil { callback!(.Success, nil) }
+        }else{
+            makeRequestAlamofire(url: Url.groupEvent(idGroup: idGroup), param: nil){status, JSON in
+                if status == .Success{
+                    if let arr = self.getArrData(JSON){
+                        if arr.isEmpty{
+                            clientData.addEmptySpecificEvents(idGroup)
+                        }else{
+                            clientData.addSpecificEvents(idGroup, arrDictEvents: arr)
+                        }
+                    }
+                }
+                if callback != nil { callback!(status, JSON) }
+            }
+        }
+        
     }
     
     static func getEvents(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
@@ -464,7 +496,6 @@ class Engine : NSObject {
     static func createEvent(dict: Dictionary<String, AnyObject>, idGroup: String = "", callback: JSONreturn? = nil){
         let param = !idGroup.isEmpty ? paramForCreateEvent(dict, idGroup: idGroup) : dict
         makeRequestAlamofire(method: .POST, url: Url.events, param: param){ status, JSON in
-            
             if callback != nil { callback!(status, JSON) }
         }
     }
@@ -511,10 +542,10 @@ class Engine : NSObject {
               let sTime = time as? String else{
                 return nil
         }
-        var newParam : Dictionary<String, AnyObject> = ["title"     : sTitle,
+        var newParam : Dictionary<String, AnyObject> = ["title"     : "\(sTitle)",
                                                         "details"   : sTitle + "'s detail",
                                                         "location"  : sLocation,
-                                                        "timestamp" : "\(dateToTimestamp(sDate, time: sTime)))"]
+                                                        "timestamp" : "\(dateToTimestamp(sDate, time: sTime))"]
         if !isOrganization{
             newParam["reference"] = ["id"   : idGroup,
                                      "type" : "group"]

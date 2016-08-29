@@ -11,10 +11,9 @@ import AZDropdownMenu
 
 class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    //    @IBOutlet var navigationItem: UINavigationItem!;
     @IBOutlet var tv : UITableView!;
     
-    var localThread : [Thread]? = Engine.clientData.getMyThreads()
+    let clientData = Engine.clientData
     var menu : AZDropdownMenu!;
     var deleteState = false
     var conDelete : Array<Bool> = []
@@ -24,19 +23,13 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     var idsThreadWillDeleted : Array<String> = []
     var image = ["group01", "group02", "group03", "group04", "group05", "male04", "female01", "male01", "female02", "male02"]
     
-    func updateThreadView (JSON : AnyObject? = nil) {
-        self.localThread = Engine.clientData.getMyThreads()
-        self.tv.performSelectorOnMainThread(#selector(UITableView.reloadData), withObject: nil, waitUntilDone: true)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad();
         let menuTitle = ["Create Group Chat...", "Delete Chats...", "Delete All Chats"];
         menu = AZDropdownMenu(titles: menuTitle)
-        updateThreadView();
         
-        Engine.getThreads(self) { status, JSON in
-            self.updateThreadView(JSON);
+        Engine.getThreads(self){status, JSON in
+            print(NSUserDefaults.standardUserDefaults().dictionaryRepresentation())
         }
         
         initAnimationDeleteNeeds()
@@ -46,15 +39,17 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewWillAppear(animated);
         setTabBarVisible(true, animated: true);
         
-//        Engine.getThreads(self) { status, JSON in
-//            self.updateThreadView(JSON);
-//        }
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.deleteState = false
-        self.tv.performSelectorOnMainThread(#selector(UITableView.reloadData), withObject: nil, waitUntilDone: true)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateTableView), name: "ThreadsUpdateNotification", object: nil)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     @IBAction func revealMenu (sender: AnyObject) {
@@ -264,7 +259,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
                     Util.showChoiceInViewController(self, title: "Confirmation", message: "Are you sure you want to erase all the chat threads?", buttonTitle: ["Yes", "Cancel"], buttonStyle: [UIAlertActionStyle.Destructive, UIAlertActionStyle.Cancel], callback: { selectedBtn in
                         var selectedThreads = Array<String>();
                         if (selectedBtn == 0) {
-                            for thread in self.localThread! {
+                            for thread in self.clientData.getMyThreads()! {
                                 //                            if (selectedThreads.count < 1) {
                                 selectedThreads.append(thread.id)
                                 //                            }
@@ -274,7 +269,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
                         Engine.getThreads(self) { status, JSON in self.tv.reloadData(); }
                         Engine.deleteThreads(self, threadIds: selectedThreads) { status, JSON in
                             
-                            Engine.getThreads(self) { status, JSON in self.updateThreadView(JSON); }
+                            Engine.getThreads(self)
                         }
                     })
                 default: break;
@@ -319,7 +314,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
             let cell = sender as! UITableViewCell;
             let indexPath = self.tv.indexPathForCell(cell)!;
             
-            let selectedThread = localThread![indexPath.row]
+            let selectedThread = self.clientData.getMyThreads()![indexPath.row]
             let chatVc = segue.destinationViewController as! ChatFlow
             
             let chatId = selectedThread.valueForKey("id")! as! String
@@ -339,11 +334,6 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
                         let chatVc = Util.getViewControllerID("ChatFlow") as! ChatFlow
                         chatVc.initChat(0, idThread: threadJSON["id"] as! String, from: ChatFlow.From.CreateThread)
                         self.navigationController?.pushViewController(chatVc, animated: true)
-//                        var vcs = self.navigationController!.viewControllers
-//                        let count = vcs.count
-//                        vcs.removeAtIndex(count - 2)
-//                        vcs.removeAtIndex(count - 3)
-//                        self.navigationController?.viewControllers = vcs
                     }
                 }
             }
@@ -377,5 +367,9 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tabBarIsVisible() ->Bool {
         return self.tabBarController?.tabBar.frame.origin.y < CGRectGetMaxY(self.view.frame)
+    }
+    
+    @IBAction func updateTableView(){
+        self.tv.performSelectorOnMainThread(#selector(UITableView.reloadData), withObject: nil, waitUntilDone: true)
     }
 }

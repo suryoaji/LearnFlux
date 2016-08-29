@@ -194,12 +194,14 @@ class Thread: NSObject {
         meta["title"] = ref["title"] as! String
         meta["question"] = ref["question"] as! String
         let answers = pollsAnswerFromArr(ref["options"] as! Array<Dictionary<String, AnyObject>>)
-        meta["answers"] = answers
+        meta["answers"] = answers.map({ $0.first!.1 })
         meta["answerers"] = pollsAnswererFromArr(ref["metadata"] as! Array<Dictionary<String, AnyObject>>, answers: answers)
         meta["id"] = ref["id"] as! String
+        
+        
     }
     
-    static func pollsAnswererFromArr(arr: Array<Dictionary<String, AnyObject>>, answers: Array<String>) -> (Dictionary<String, Int>){
+    static func pollsAnswererFromArr(arr: Array<Dictionary<String, AnyObject>>, answers: Array<Dictionary<String, String>>) -> (Dictionary<String, Int>){
         var conAnswerer : Dictionary<String, Int>= [:]
         if !arr.isEmpty{
             arrLoop : for each in arr{
@@ -215,19 +217,19 @@ class Thread: NSObject {
         return conAnswerer
     }
     
-    static func positionAnswer(answer: String, answers: Array<String>) -> Int?{
+    static func positionAnswer(answer: String, answers: Array<Dictionary<String, String>>) -> Int?{
         for i in 0..<answers.count{
-            if answers[i] == answer{
+            if answer == answers[i].first!.0 || answer == answers[i].first!.1{
                 return i
             }
         }
         return nil
     }
     
-    static func pollsAnswerFromArr(arr: Array<Dictionary<String, AnyObject>>) -> (Array<String>){
-        var conAnswer : Array<String> = []
+    static func pollsAnswerFromArr(arr: Array<Dictionary<String, AnyObject>>) -> (Array<Dictionary<String, String>>){
+        var conAnswer : Array<Dictionary<String, String>> = []
         for each in arr{
-            conAnswer.append(each["name"] as! String)
+            conAnswer.append([each["value"] as! String : each["name"] as! String])
         }
         return conAnswer
     }

@@ -15,7 +15,12 @@ enum GroupType {
     case All
 }
 
+enum FilterGroupType{
+    case ByInterestGroup
+    case None
+}
 
+typealias EventsByIdGroup = (id: String, events: [Event])
 
 class Data : NSObject {
     class var sharedInstance : Data{
@@ -51,10 +56,12 @@ class Data : NSObject {
             if threads != nil{
                 let sortedThreads = threads!.sort({ $0.lastUpdated > $1.lastUpdated })
                 threads = sortedThreads
+                NSNotificationCenter.defaultCenter().postNotificationName("ThreadsUpdateNotification", object: nil)
             }
         }
     }
     private var groups: [Group]?
+    private var specificEvents: Array<EventsByIdGroup> = []
     
     override init(){
         super.init()
@@ -62,11 +69,47 @@ class Data : NSObject {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.sortThreads), name: "sortThreads", object: nil)
     }
     
+    func getSpecificEventsByIdGroup(idGroup: String) -> [Event]?{
+        let filteredSpecificEvents =  self.specificEvents.filter({ $0.id == idGroup })
+        if !filteredSpecificEvents.isEmpty{
+            return filteredSpecificEvents.first!.events
+        }
+        return nil
+    }
+    
+    func addEmptySpecificEvents(idGroup: String){
+        self.specificEvents.append((id: idGroup, events: []))
+    }
+    
+    func addSpecificEvents(idGroup: String, arrDictEvents: Array<Dictionary<String, AnyObject>>){
+        var conEvents : [Event] = []
+        for each in arrDictEvents{
+            if let event = Event.convertToEvent(each){
+                conEvents.append(event)
+            }
+        }
+        self.specificEvents.append((id: idGroup, events: conEvents))
+    }
+    
     func sortThreads(notification: NSNotification){
         if let con = threads{
             self.threads = nil
             self.threads = con
         }
+    }
+    
+    func getFilteredGroup(filterBy: FilterGroupType) -> ([Group]){
+        let filteredGroups = getGroups()?.filter({ $0.type == "group" })
+        if filteredGroups != nil{
+            var newFilteredGroups : [Group] = []
+            for group in filteredGroups! where getMyThreads() != nil{
+                if !(getMyThreads()!.filter({ $0.id == group.thread?.id })).isEmpty{
+                    newFilteredGroups.append(group)
+                }
+            }
+            return newFilteredGroups
+        }
+        return []
     }
     
     func addNewGroup(dict: Dictionary<String, AnyObject>){

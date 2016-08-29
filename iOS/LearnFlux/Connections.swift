@@ -44,7 +44,7 @@ class Connections : UITableViewController {
                 self.title = "Invite Participants"
                 setupDoneButton();
             }
-            else if flow.activeFlow() == .NewThread {
+            else if flow.activeFlow() == .NewThread || flow.activeFlow() == .NewInterestGroup{
                 self.title = "Select Participants";
                 setupDoneButton()
             }
@@ -73,9 +73,10 @@ class Connections : UITableViewController {
         }
         flow.add(dict: ["userIds":userId]);
         if let activeFlow = flow.activeFlow() where activeFlow == .NewGroup ||
-                                                    activeFlow == .NewThread ||
-                                                    activeFlow == .NewInterestGroup{
+                                                    activeFlow == .NewThread{
             flow.end(self, andClear: true)
+        }else if let activeFlow = flow.activeFlow() where activeFlow == .NewInterestGroup{
+            flow.end()
         }
     }
     
@@ -120,7 +121,7 @@ class Connections : UITableViewController {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
         let flow = Flow.sharedInstance;
         
-        if (flow.activeFlow() == .NewGroup || flow.activeFlow() == .NewThread) {
+        if (flow.activeFlow() == .NewGroup || flow.activeFlow() == .NewThread || flow.activeFlow() == .NewInterestGroup) {
             selectedConnect[indexPath.row] = !selectedConnect[indexPath.row];
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None);
             buttonDoneShouldEnable()
@@ -159,7 +160,6 @@ class Connections : UITableViewController {
         if (segue.identifier == "InitiateChat") {
             let vc = segue.destinationViewController as! ChatFlow;
             let JSON = sender as! Dictionary<String, AnyObject>
-            print (JSON);
             let data = JSON["data"]!;
             vc.chatId = data["id"] as! String;
         }

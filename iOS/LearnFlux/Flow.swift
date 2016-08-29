@@ -55,14 +55,25 @@ class Flow {
         }
     }
     
-    func removeFlowVc (navController : UINavigationController, exceptVc: [UIViewController]? = nil) {
+    func removeFlowVc (navController : UINavigationController, exceptVc: [UIViewController]? = nil, removeLastViewController: Bool = false) {
+        var arrIndex : [Int] = []
         for vc in vcStacks{
-            if let index = navController.viewControllers.indexOf(vc){
-                if let exceptVc = exceptVc where exceptVc.contains(vc){
+            if removeLastViewController{
+                if navController.viewControllers.last! == vc{
                     continue
                 }
-                navController.viewControllers.removeAtIndex(index)
             }
+            if let index = navController.viewControllers.indexOf(vc){
+                if let exceptVc = exceptVc where exceptVc.contains(vc){
+                    arrIndex = []
+                    continue
+                }
+                arrIndex.append(index)
+            }
+        }
+        if !arrIndex.isEmpty{
+            arrIndex = arrIndex.sort({ $0 > $1 })
+            navController.viewControllers.removeRange(arrIndex.last!...arrIndex.first!)
         }
     }
     

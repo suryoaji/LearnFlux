@@ -53,13 +53,17 @@ struct Group{
         
         if let s = data["message"] as? dictType { thread = Thread(dict: s); participants = thread?.participants; threadId = thread?.id }
         
-        if let s = data["participants"] as? String { participants = Participant.convertFromArr(s); }
+        if let s = data["participants"] as? Array<dictType> { participants = Participant.convertFromArr(s) }
         if let s = data["child"] { child = Group.convertFromArr(s); }
     }
     
     mutating func update(group: Group){
         self.color = self.color == nil ? group.color : self.color
         self.description = self.description == nil ? group.description : self.description
+        self.participants = group.participants
+        self.child = group.child
+        self.thread = group.thread
+        self.threadId = group.thread?.id
     }
     
     func getIdThread() -> String?{

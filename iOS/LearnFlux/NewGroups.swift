@@ -64,10 +64,12 @@ class NewGroups : UIViewController {
         }
         else {
             let flow = Flow.sharedInstance;
-            flow.add(dict: ["title":tfTitle.text!, "desc":tvDesc.text]);
-            
-            let connections = Util.getViewControllerID("Connections") as! Connections;
-            self.navigationController?.pushViewController(connections, animated: true);
+            if flow.activeFlow() != nil{
+                flow.add(dict: ["title":tfTitle.text!, "desc":tvDesc.text]);
+                
+                let connections = Util.getViewControllerID("Connections") as! Connections;
+                self.navigationController?.pushViewController(connections, animated: true);
+            }
         }
     }
 }

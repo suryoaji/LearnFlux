@@ -63,7 +63,7 @@ class NewHome : UIViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let interestGroupController = segue.destinationViewController as? OrgGroups{
-            interestGroupController.groups = clientData.getGroups()?.filter({ $0.type == "group" })
+            interestGroupController.groups = clientData.getFilteredGroup(.ByInterestGroup)
         }
     }
 

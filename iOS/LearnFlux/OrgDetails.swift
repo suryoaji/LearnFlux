@@ -18,23 +18,52 @@ protocol RefreshDelegate {
 }
 
 class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
+    @IBOutlet weak var headerView: UIView!
     @IBOutlet var viewSelection : UIView!;
     @IBOutlet var viewTabs : UIView!;
     @IBOutlet var viewMenu : UIView!;
     @IBOutlet var logo : UIView!;
     @IBOutlet weak var scrollView: UIScrollView!
+    var shouldSetOffsetScrollView: Bool = true
+    weak var orgEventsDelegate : OrgEventsDelegate!
     
     @IBOutlet var lblTitle : UILabel!;
     
-    var orgId : String = "";
-    var orgTitle : String = "";
-    
+    var orgId : String = ""
+    var orgTitle : String = ""{
+        didSet{
+            if lblTitle != nil{ lblTitle.text = orgTitle }
+        }
+    }
+    var isAdmin: Bool = false{
+        didSet{
+            if orgEventsDelegate != nil{
+                orgEventsDelegate.setIsAdminOrNot(isAdmin)
+            }
+            if isAdmin{
+                let navItem = self.navigationItem;
+                
+                let right:UIBarButtonItem! = UIBarButtonItem();
+                right.image = UIImage(named: "menu")
+                navItem.rightBarButtonItem = right;
+                right.action = #selector(self.showMenu);
+                right.target = self;
+            }else{
+                self.navigationItem.rightBarButtonItem = nil
+            }
+        }
+    }
     var orgData : Group?{
         didSet{
             if let orgData = orgData where !tabs.isEmpty{
                 if let profileViewController = tabs[3] as? OrgProfile{
                     profileViewController.setOrganizationInfo(orgData)
                 }
+                if let orgEventsViewController = tabs[1] as? OrgEvents{
+                    orgEventsDelegate = orgEventsViewController
+                    orgEventsDelegate.setIdGroupOfEvents(idGroup: orgId)
+                }
+                self.isAdmin = checkAdmin()
             }
         }
     }
@@ -48,6 +77,10 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
                 NSNotificationCenter.defaultCenter().postNotificationName("OrgEventsShownNotification", object: self, userInfo: nil)
             }
         }
+    }
+    
+    func checkAdmin() -> (Bool){
+        return Engine.isAdminOfGroup(self.orgData!)
     }
 
     func refreshData(callback: (() -> Void)?) {
@@ -78,9 +111,9 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     }
     
     func updateView() {
-        lblTitle.text = "";
+        orgTitle = "";
         guard let data = orgData else { return; }
-        lblTitle.text = data.name;
+        orgTitle = data.name;
     }
     
     func setTabsWithController(){
@@ -92,10 +125,13 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     }
     
     func addTabsToScrollView(){
-        self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.width * CGFloat(self.tabs.count), self.scrollView.bounds.height)
-        for i in 0..<tabs.count{
-            tabs[i].view.frame = CGRectMake(CGFloat(i) * scrollView.bounds.width, 0, scrollView.bounds.width, scrollView.bounds.height)
-            self.scrollView.addSubview(tabs[i].view)
+        if shouldSetOffsetScrollView{
+            self.scrollView.contentSize = CGSizeMake(self.scrollView.bounds.width * CGFloat(self.tabs.count), self.scrollView.bounds.height)
+            for i in 0..<tabs.count{
+                tabs[i].view.frame = CGRectMake(CGFloat(i) * scrollView.bounds.width, 0, scrollView.bounds.width, scrollView.bounds.height)
+                self.scrollView.addSubview(tabs[i].view)
+            }
+            self.shouldSetOffsetScrollView = false
         }
     }
     
@@ -113,6 +149,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.createScrollView()
+        self.setIndicatorPosition()
         refreshData() {
             self.createScrollView()
             self.propagateData();
@@ -120,16 +157,15 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         
         let menuTitle = ["Edit Organisation...", "Create Official Group...", "Manage Official Group..."];
         menu = AZDropdownMenu(titles: menuTitle)
+        self.lblTitle.text = self.orgTitle
         
-        let navItem = self.navigationItem;
-
-        let right:UIBarButtonItem! = UIBarButtonItem();
-        right.image = UIImage(named: "menu")
-        navItem.rightBarButtonItem = right;
-        right.action = #selector(self.showMenu);
-        right.target = self;
-        
-//        viewMenu.y = 66;
+        self.headerView.layer.zPosition = 2
+        self.scrollView.layer.zPosition = 0
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().postNotificationName("OrgDetailDisappearNotification", object: nil)
     }
     
     func changeView (index : Int) {

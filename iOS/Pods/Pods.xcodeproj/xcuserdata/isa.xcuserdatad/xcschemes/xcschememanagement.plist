@@ -29,6 +29,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Charts.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>DropDown.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -72,7 +77,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>1B77DC2878242C9C8F3FA4D662F80B79</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2763C14E1060A2106B67756FC26185D2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>336B93337DFC5EE58B564606FF93F15D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>42E70D322981012B5E46677D2DA290B0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -97,11 +117,6 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5ECFCE0E93EF4586E9CB779D80B764ED</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
 		<dict>
 			<key>primary</key>
@@ -117,12 +132,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AB24DAB83FF0596366EFCF502568773B</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>CE1741EEF90C11A5AA6A45E9865EEF76</key>
+		<key>C6828C2508515BC0428D6BDAA1292DC9</key>
 		<dict>
 			<key>primary</key>
 			<true/>

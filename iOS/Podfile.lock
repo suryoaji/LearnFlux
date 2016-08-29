@@ -2,6 +2,9 @@ PODS:
   - Alamofire (3.4.0)
   - AMPopTip (1.0.3)
   - AZDropdownMenu (1.1.1)
+  - Charts (2.2.5):
+    - Charts/Core (= 2.2.5)
+  - Charts/Core (2.2.5)
   - CZPicker (0.4.2)
   - DropDown (1.0)
   - Eureka (1.7.0)
@@ -16,6 +19,7 @@ DEPENDENCIES:
   - Alamofire
   - AMPopTip
   - AZDropdownMenu
+  - Charts
   - CZPicker
   - DropDown
   - Eureka (~> 1.7)
@@ -28,6 +32,7 @@ SPEC CHECKSUMS:
   Alamofire: c19a627cefd6a95f840401c49ab1f124e07f54ee
   AMPopTip: 42ab801c5d4519093908d14134c8c9d7ffc435b4
   AZDropdownMenu: 0ba09d5f7b1b8dc795824ec281c4dde8515f4498
+  Charts: b48fcc8d7190de910ff9e9748f5360c8ea7856e5
   CZPicker: df3d8d0511595b7cd2f032263c82c611d45a9b8e
   DropDown: 8fcb6247170f310be8ac3a2f0dfca725ce14d0bc
   Eureka: 2020d9faeef7b7e9adeb9e3d8af779e5931c1897

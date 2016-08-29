@@ -9,6 +9,10 @@
 import Foundation
 
 class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    var rightBarButton : UIBarButtonItem!
+    let flow = Flow.sharedInstance
+    let clientData = Engine.clientData
+    var timer : NSTimer!
     
     @IBOutlet var cv : UICollectionView!;
     
@@ -30,18 +34,73 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        print (orgId);
-        NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
-        
         if self.navigationController != nil{
-            self.cv.frame.origin.y += self.navigationController!.navigationBar.bounds.height + UIApplication.sharedApplication().statusBarFrame.height
-            self.cv.frame.size.height -= self.cv.frame.origin.y
+            layoutWhenNavigationBarIsEnabled()
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.OrgDetailDisappear), name: "OrgDetailDisappearNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.enterBackground), name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.enterForeground), name: UIApplicationWillEnterForegroundNotification, object: nil)
+    }
+    
+    @IBAction func enterForeground(notification: NSNotification){
+        if !timer.valid{
+            timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        }
+    }
+    
+    @IBAction func enterBackground(notification: NSNotification){
+        if timer.valid { timer.invalidate() }
+    }
+    
+    @IBAction func OrgDetailDisappear(notification: NSNotification){
+        if timer.valid { timer.invalidate() }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        if timer != nil && timer.valid{
+            timer.invalidate()
+        }
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func layoutWhenNavigationBarIsEnabled(){
+        self.cv.frame.origin.y += self.navigationController!.navigationBar.bounds.height + UIApplication.sharedApplication().statusBarFrame.height
+        self.cv.frame.size.height -= self.cv.frame.origin.y
         
+        rightBarButton = UIBarButtonItem()
+        rightBarButton.image = UIImage(named: "menu")
+        self.navigationItem.rightBarButtonItem = rightBarButton
+        rightBarButton.action = #selector(self.rightNavigationBarButtonTapped)
+        rightBarButton.target = self
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.getGroup), name: "ThreadsUpdateNotification", object: nil)
+    }
+    
+    @IBAction func getGroup(notification : NSNotification){
+        self.groups = clientData.getFilteredGroup(.ByInterestGroup)
+        cv.reloadData()
+    }
+    
+    @IBAction func rightNavigationBarButtonTapped(sender: UIBarButtonItem){
+        Util.showAlertMenu(self, choices: ["new"], styles: [.Default], addCancel: true){ selected in
+            switch selected{
+            case 0:
+                self.performSegueWithIdentifier("NewGroups", sender: nil)
+                break
+            default:
+                break
+            }
+        }
     }
     
     func update () {
-        cv.reloadData();
+        cv.reloadData()
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -53,12 +112,16 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         
         let lblTitle = cell.viewWithTag(1)! as! UILabel;
         let lblDesc = cell.viewWithTag(2)! as! UILabel;
+        let editButton = cell.viewWithTag(3)! as! UIButton
         
         if let data = groups {
             var group = data[indexPath.row];
             lblTitle.text = group.name.uppercaseString;
     //        lblDesc.text = (group["description"]! as? String)?.uppercaseString;
             lblDesc.text = "";
+            
+            editButton.alpha = Engine.isAdminOfGroup(group) ? 1.0 : 0.0
+            
             if group.color == nil {
                 let color = randomizePastelColor();
                 group.color = color;
@@ -97,4 +160,30 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         return size;
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.destinationViewController as? NewGroups) != nil{
+            createNewInterestGroup()
+        }
+    }
+    
+    func createNewInterestGroup(){
+        flow.begin(.NewInterestGroup)
+        flow.setCallback { result in
+            guard let title = result!["title"] as? String else { print ("FLOW: title not found"); return; }
+            guard let desc = result!["desc"] as? String else { print ("FLOW: desc not found"); return; }
+            guard let userIds = result!["userIds"] as? [Int] else { print ("FLOW: userIds not found"); return; }
+            Engine.createGroupChat(self, name: title, description: desc, userId: userIds) { status, JSON in
+                if status == .Success && JSON != nil{
+                    if let groups = self.clientData.getGroups(){
+                        self.groups = groups.filter({ $0.type == "group" })
+                    }
+                    let dataJSON = JSON!["data"] as! Dictionary<String, AnyObject>
+                    let threadJSON = dataJSON["message"] as! Dictionary<String, AnyObject>
+                    let chatVc = Util.getViewControllerID("ChatFlow") as! ChatFlow
+                    chatVc.initChat(0, idThread: threadJSON["id"] as! String, from: ChatFlow.From.CreateThread)
+                    self.navigationController?.pushViewController(chatVc, animated: true)
+                }
+            }
+        }
+    }
 }

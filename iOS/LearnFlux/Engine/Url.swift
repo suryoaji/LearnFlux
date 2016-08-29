@@ -18,4 +18,8 @@ struct Url{
     static let events = base + "/v1/events"
     static let groups = base + "/v1/groups"
     static let poll = base + "/v1/poll"
+    
+    static func groupEvent(idGroup idGroup: String) -> (String){
+        return groups + "/\(idGroup)/events"
+    }
 }

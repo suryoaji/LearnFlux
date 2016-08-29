@@ -22,10 +22,17 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     var openedBy : From!
     var rowIndexPathFromThread : Int!
     var clickedMessageIndexpath : Int?
-    var chatId : String = "";
+    var chatId : String = ""{
+        didSet{
+            print("\n=========idThreadOpened")
+            print(chatId)
+            print("\n")
+        }
+    }
     var localChat : Array<AnyObject>! = [];
     
     let aDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+    let flow = Flow.sharedInstance
 
     var thisChatType : String! = "chat";
     var thisChatMetadata : Dictionary<String, AnyObject>!
@@ -385,6 +392,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.keyboardWillHide), name: UIKeyboardWillHideNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.deleteMessage), name: "LFDeleteMessageNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateRowIndexPathFromThread), name: "ThreadsUpdateNotification", object: nil)
     }
     
     func removeAllObserver(){
@@ -402,9 +410,18 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         attachmentPanel.y = scrHeight
     }
     
+    func checkFlowActive(){
+        if self.flow.activeFlow() != nil{
+            self.flow.removeFlowVc(self.navigationController!, removeLastViewController: true)
+            self.flow.clear()
+        }
+    }
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        checkFlowActive()
         finishSendingMessage();
+        scrollToBottomAnimated(false)
         
         if (thisChatType != "chat") {
             let gradient: CAGradientLayer = CAGradientLayer()
@@ -697,6 +714,10 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         }
         
     }
+    
+    func updateRowIndexPathFromThread(){
+        self.rowIndexPathFromThread = clientData.getMyThreads()!.indexOf({ $0.id == chatId })
+    }
 }
 
 //MARK Collection View
@@ -756,11 +777,9 @@ extension ChatFlow{
         let messageMeta = messages[indexPath.row].meta;
         let eventType = messageMeta["type"]! as! String;
         if (eventType == "event") {
-            for each in 0..<clientData.getMyEvents()!.count{
-                if clientData.getMyEvents()![each].id == messages[indexPath.row].secret!.idType!{
-                    popupEvent(indexPath.row, statusEvent: clientData.getMyEvents()![each].status)
-                    self.tmpRowEvent = each
-                }
+            if let index = getIndexOfEventMessageInEventsSingleton(messages[indexPath.row].secret!.idType!){
+                popupEvent(indexPath.row, statusEvent: clientData.getMyEvents()![index].status)
+                self.tmpRowEvent = index
             }
         }
         else if (eventType == "poll") {
@@ -777,6 +796,13 @@ extension ChatFlow{
             print(messages[indexPath].meta)
             print("======================\n")
         }
+    }
+    
+    func getIndexOfEventMessageInEventsSingleton(idEvent: String) -> (Int?){
+        if let index = clientData.getMyEvents()!.indexOf({ $0.id == idEvent }){
+            return index
+        }
+        return nil
     }
 }
 
@@ -799,19 +825,20 @@ extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
     func popupPoll (indexRow : Int) {
         let meta = messages[indexRow].meta
         if hasPolling(answerers: (meta["data"] as! Dictionary<String, AnyObject>)["answerers"] as! Dictionary<String, Int>){
-            return
+            self.performSegueWithIdentifier("PollChartSegue", sender: nil)
+        }else{
+            let data = meta["data"] as! Dictionary<String, AnyObject>
+            let question = data["question"] as! String
+            
+            let picker = CZPickerView(headerTitle: question, cancelButtonTitle: "Poll Details", confirmButtonTitle: "Ok");
+            picker.delegate = self;
+            picker.dataSource = self;
+            picker.needFooterView = indexRow != -2;
+            picker.tapBackgroundToDismiss = false;
+            picker.allowMultipleSelection = false;
+            popupIndexRow = indexRow;
+            picker.show();
         }
-        let data = meta["data"] as! Dictionary<String, AnyObject>
-        let question = data["question"] as! String
-        
-        let picker = CZPickerView(headerTitle: question, cancelButtonTitle: "Poll Details", confirmButtonTitle: "Ok");
-        picker.delegate = self;
-        picker.dataSource = self;
-        picker.needFooterView = indexRow != -2;
-        picker.tapBackgroundToDismiss = false;
-        picker.allowMultipleSelection = false;
-        popupIndexRow = indexRow;
-        picker.show();
     }
     
     func numberOfRowsInPickerView(pickerView: CZPickerView!) -> Int {
@@ -954,5 +981,9 @@ extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
             }
         }
         return false
+    }
+    
+    @IBAction func unwindToChatFlow(segue: UIStoryboardSegue){
+        
     }
 }

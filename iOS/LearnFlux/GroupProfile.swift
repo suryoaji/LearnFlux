@@ -68,7 +68,7 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func initFromCall (group : Group) {
-        self.group = group;
+        self.group = group
         tv.reloadData();
     }
     
@@ -119,6 +119,9 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
             let lbl = cell.viewWithTag(1)! as! UILabel;
             lbl.text = "";
             lbl.heightToFit();
+            cell.clipsToBounds = false
+            cell.contentView.clipsToBounds = false
+            
             return cell;
         default:
             return tv.dequeueReusableCellWithIdentifier("toolbar")!;

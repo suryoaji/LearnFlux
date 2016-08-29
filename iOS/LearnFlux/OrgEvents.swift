@@ -10,7 +10,12 @@ import Foundation
 import QuartzCore
 import DropDown
 
-class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
+@objc protocol OrgEventsDelegate {
+    func setIdGroupOfEvents(idGroup idGroup: String)
+    func setIsAdminOrNot(isAdmin: Bool)
+}
+
+class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, OrgEventsDelegate {
     let dropDown = DropDown()
     var activeDropDown = -1;
     var attendance : Array<String> = [];
@@ -22,6 +27,18 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
     var expDescHeight : Array<CGFloat> = [];
     var holdView = UIView()
     let clientData = Engine.clientData
+    var isAdmin: Bool = false
+    var idGroup: String = ""{
+        didSet{
+            if !idGroup.isEmpty{
+                Engine.getSpecificEventsByIdGroup(idGroup: idGroup){ status, JSON in
+                    if status == .Success{
+                        self.tv.reloadData()
+                    }
+                }
+            }
+        }
+    }
     
     @IBOutlet var tv : UITableView!;
     
@@ -87,15 +104,26 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         self.loadEvents(self)
         shouldRemoveHoldView()
+        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(viewShown), name: "OrgEventsShownNotification", object: nil)
     }
     
-    deinit{
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return clientData.getMyEvents() != nil ? clientData.getMyEvents()!.count : 0
+        if let count = clientData.getSpecificEventsByIdGroup(self.idGroup)?.count{
+            return count
+        }else if let count = clientData.getMyEvents()?.count{
+            return count
+        }
+        return 0
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -135,24 +163,38 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
             btnExpand.hidden = false;
         }
         
-        if clientData.getMyEvents() != nil{
-            let lblTitle = cell.viewWithTag(1) as! UILabel
-            let lblDay = cell.viewWithTag(22) as! UILabel
-            let lblMonth = cell.viewWithTag(21) as! UILabel
-            let lblYear = cell.viewWithTag(23) as! UILabel
-            let lblHour = cell.viewWithTag(24) as! UILabel
-            let lblLocation = cell.viewWithTag(2) as! UILabel
-            lblTitle.text = "\(clientData.getMyEvents()![indexPath.row].title)"
-            lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: clientData.getMyEvents()![indexPath.row].time)!)
-            lblDay.text = "\(Util.getElementDate(.Day, stringDate: clientData.getMyEvents()![indexPath.row].time)!)"
-            lblYear.text = "\(Util.getElementDate(.Year, stringDate: clientData.getMyEvents()![indexPath.row].time)!)"
-            lblHour.text = "\(Util.getElementDate(.Hour, stringDate: clientData.getMyEvents()![indexPath.row].time)!):\(Util.getElementDate(.Minute, stringDate: clientData.getMyEvents()![indexPath.row].time)!)"
-            lblLocation.text = clientData.getMyEvents()![indexPath.row].location
-            lblDesc.text = clientData.getMyEvents()![indexPath.row].details
-            
+        let lblTitle = cell.viewWithTag(1) as! UILabel
+        let lblDay = cell.viewWithTag(22) as! UILabel
+        let lblMonth = cell.viewWithTag(21) as! UILabel
+        let lblYear = cell.viewWithTag(23) as! UILabel
+        let lblHour = cell.viewWithTag(24) as! UILabel
+        let lblLocation = cell.viewWithTag(2) as! UILabel
+        let btnEdit = cell.viewWithTag(14) as! UIButton
+        if let event = clientData.getSpecificEventsByIdGroup(self.idGroup)?[indexPath.row]{
+            lblTitle.text = "\(event.title)"
+            lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: event.time)!)
+            lblDay.text = "\(Util.getElementDate(.Day, stringDate: event.time)!)"
+            lblYear.text = "\(Util.getElementDate(.Year, stringDate: event.time)!)"
+            lblHour.text = "\(Util.getElementDate(.Hour, stringDate: event.time)!):\(Util.getElementDate(.Minute, stringDate: event.time)!)"
+            lblLocation.text = event.location
+            lblDesc.text = event.details
+        }else if let event = clientData.getMyEvents()?[indexPath.row]{
+            lblTitle.text = "\(event.title)"
+            lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: event.time)!)
+            lblDay.text = "\(Util.getElementDate(.Day, stringDate: event.time)!)"
+            lblYear.text = "\(Util.getElementDate(.Year, stringDate: event.time)!)"
+            lblHour.text = "\(Util.getElementDate(.Hour, stringDate: event.time)!):\(Util.getElementDate(.Minute, stringDate: event.time)!)"
+            lblLocation.text = event.location
+            lblDesc.text = event.details
         }
-        
-        return cell;
+        if self.isAdmin{
+            btnEdit.alpha = 1
+            btnEdit.userInteractionEnabled = true
+        }else{
+            btnEdit.alpha = 0
+            btnEdit.userInteractionEnabled = false
+        }
+        return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -182,4 +224,11 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource {
        tv.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
     
+    func setIdGroupOfEvents(idGroup idGroup: String){
+        self.idGroup = idGroup
+    }
+    
+    func setIsAdminOrNot(isAdmin: Bool){
+        self.isAdmin = isAdmin
+    }
 }
