@@ -28,9 +28,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         let menuTitle = ["Create Group Chat...", "Delete Chats...", "Delete All Chats"];
         menu = AZDropdownMenu(titles: menuTitle)
         
-        Engine.getThreads(self){status, JSON in
-            print(NSUserDefaults.standardUserDefaults().dictionaryRepresentation())
-        }
+        Engine.getThreads(self)
         
         initAnimationDeleteNeeds()
     }

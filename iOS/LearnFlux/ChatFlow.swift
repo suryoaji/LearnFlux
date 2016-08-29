@@ -22,13 +22,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     var openedBy : From!
     var rowIndexPathFromThread : Int!
     var clickedMessageIndexpath : Int?
-    var chatId : String = ""{
-        didSet{
-            print("\n=========idThreadOpened")
-            print(chatId)
-            print("\n")
-        }
-    }
+    var chatId : String = ""
     var localChat : Array<AnyObject>! = [];
     
     let aDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
@@ -825,6 +819,7 @@ extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
     func popupPoll (indexRow : Int) {
         let meta = messages[indexRow].meta
         if hasPolling(answerers: (meta["data"] as! Dictionary<String, AnyObject>)["answerers"] as! Dictionary<String, Int>){
+            
             self.performSegueWithIdentifier("PollChartSegue", sender: nil)
         }else{
             let data = meta["data"] as! Dictionary<String, AnyObject>

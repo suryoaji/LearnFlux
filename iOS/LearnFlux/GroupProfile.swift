@@ -116,7 +116,10 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
             return cell;
         case 3:
             let cell = tv.dequeueReusableCellWithIdentifier("basic")!;
+            cell.userInteractionEnabled = false
             let lbl = cell.viewWithTag(1)! as! UILabel;
+            let coverView = cell.viewWithTag(0)
+            coverView!.alpha = 1.0
             lbl.text = "";
             lbl.heightToFit();
             cell.clipsToBounds = false
