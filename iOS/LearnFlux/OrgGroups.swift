@@ -88,7 +88,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     }
     
     @IBAction func rightNavigationBarButtonTapped(sender: UIBarButtonItem){
-        Util.showAlertMenu(self, choices: ["new"], styles: [.Default], addCancel: true){ selected in
+        Util.showAlertMenu(self, title: "Menu", choices: ["Create New Interest Group..."], styles: [.Default], addCancel: true){ selected in
             switch selected{
             case 0:
                 self.performSegueWithIdentifier("NewGroups", sender: nil)
@@ -178,10 +178,18 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
                         self.groups = groups.filter({ $0.type == "group" })
                     }
                     let dataJSON = JSON!["data"] as! Dictionary<String, AnyObject>
-                    let threadJSON = dataJSON["message"] as! Dictionary<String, AnyObject>
-                    let chatVc = Util.getViewControllerID("ChatFlow") as! ChatFlow
-                    chatVc.initChat(0, idThread: threadJSON["id"] as! String, from: ChatFlow.From.CreateThread)
-                    self.navigationController?.pushViewController(chatVc, animated: true)
+                    let vc = Util.getViewControllerID("GroupDetails") as! GroupDetails;
+                    var group = Group(dict: dataJSON);
+                    group.description = self.flow.get(key: "desc")! as? String;
+                    group.color = self.randomizePastelColor();
+                    vc.initFromCall(group);
+                    self.navigationController?.pushViewController(vc, animated: true);
+                    
+                    
+//                    let threadJSON = dataJSON["message"] as! Dictionary<String, AnyObject>
+//                    let chatVc = Util.getViewControllerID("ChatFlow") as! ChatFlow
+//                    chatVc.initChat(0, idThread: threadJSON["id"] as! String, from: ChatFlow.From.CreateThread)
+//                    self.navigationController?.pushViewController(chatVc, animated: true)
                 }
             }
         }

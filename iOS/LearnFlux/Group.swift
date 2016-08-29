@@ -45,6 +45,7 @@ struct Group{
     
     init(dict: AnyObject?) {
         guard let data = dict as? dictType else { return; }
+        print(data);
         if let s = data["type"] as? String { type = s; }
         if let s = data["id"] as? String { id = s; }
         if let s = data["name"] as? String { name = s; }

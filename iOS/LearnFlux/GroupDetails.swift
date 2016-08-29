@@ -105,6 +105,17 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         self.viewTitle.backgroundColor = colorTitle;
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated);
+        let flow = Flow.sharedInstance;
+        if (flow.activeFlow() != nil) {
+            print (flow.getViewControllers());
+            flow.popVc(self);
+            flow.removeFlowVc(self.navigationController!);
+            flow.clear();
+        }
+    }
+    
     func changeView (index : Int) {
         (tabs[0] as! GroupProfile).view.removeFromSuperview();
         (tabs[1] as! OrgEvents).view.removeFromSuperview();
