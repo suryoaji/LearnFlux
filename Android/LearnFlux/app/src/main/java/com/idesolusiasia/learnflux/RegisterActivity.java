@@ -72,12 +72,12 @@ public class RegisterActivity extends AppCompatActivity {
 
 		if (pass){
 			HashMap<String, String> par = new HashMap<>();
-			par.put("username",tvUsername.getText().toString());
-			par.put("email",tvEmail.getText().toString());
-			par.put("firstName",tvFirst.getText().toString());
-			par.put("lastName",tvLast.getText().toString());
-			par.put("password",tvPass.getText().toString());
-			par.put("passwordConfirm",tvConfirm.getText().toString());
+			par.put("username",tvUsername.getText().toString().trim());
+			par.put("email",tvEmail.getText().toString().trim());
+			par.put("firstName",tvFirst.getText().toString().trim());
+			par.put("lastName",tvLast.getText().toString().trim());
+			par.put("password",tvPass.getText().toString().trim());
+			par.put("passwordConfirm",tvConfirm.getText().toString().trim());
 			Engine.registerUser(this, par);
 		}
 	}

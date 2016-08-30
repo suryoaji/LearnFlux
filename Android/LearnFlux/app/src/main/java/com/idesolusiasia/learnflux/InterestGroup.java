@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
@@ -39,6 +40,7 @@ public class InterestGroup extends AppCompatActivity {
     public Participant participant=null;
     private GridLayoutManager lLayout;
     InterestGroupAdapter rcAdapter;
+    TextView emptyView;
     RecyclerView recyclerView;
     AddGroupAdapter adap;
     public String name,desc;
@@ -48,6 +50,7 @@ public class InterestGroup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_interest);
         recyclerView = (RecyclerView)findViewById(R.id.recycler_group_interest);
+        emptyView = (TextView) findViewById(R.id.empty_view);
         lLayout = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(lLayout);
@@ -69,8 +72,14 @@ public class InterestGroup extends AppCompatActivity {
                             arrOrg.add(org);
                         }
                     }
-                    rcAdapter = new InterestGroupAdapter(InterestGroup.this,arrOrg);
-                    recyclerView.setAdapter(rcAdapter);
+                    if(arrOrg.isEmpty()){
+                        recyclerView.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    }else {
+                        rcAdapter = new InterestGroupAdapter(InterestGroup.this, arrOrg);
+                        recyclerView.setAdapter(rcAdapter);
+                        emptyView.setVisibility(View.GONE);
+                    }
                 }catch (JSONException e){
                     e.printStackTrace();
                 }

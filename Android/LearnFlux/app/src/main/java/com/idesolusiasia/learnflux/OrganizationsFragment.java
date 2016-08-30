@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.OrganizationGridRecyclerViewAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
@@ -28,6 +29,7 @@ public class OrganizationsFragment extends Fragment {
 	OrganizationGridRecyclerViewAdapter rcAdapter;
 	ArrayList<Group> arrOrg = new ArrayList<Group>();
 	RecyclerView rView;
+	private TextView emptyView;
 
 	public OrganizationsFragment() {
 		// Required empty public constructor
@@ -58,6 +60,7 @@ public class OrganizationsFragment extends Fragment {
 
 
 		rView = (RecyclerView)v.findViewById(R.id.recycler_view);
+		emptyView = (TextView) v.findViewById(R.id.empty_view);
 		rView.setHasFixedSize(true);
 		rView.setLayoutManager(lLayout);
 		ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.item_offset);
@@ -79,8 +82,14 @@ public class OrganizationsFragment extends Fragment {
 							arrOrg.add(org);
 						}
 					}
-					rcAdapter = new OrganizationGridRecyclerViewAdapter(getContext(),arrOrg);
-					rView.setAdapter(rcAdapter);
+					if(arrOrg.isEmpty()){
+						rView.setVisibility(View.GONE);
+						emptyView.setVisibility(View.VISIBLE);
+					}else {
+						rcAdapter = new OrganizationGridRecyclerViewAdapter(getContext(), arrOrg);
+						rView.setAdapter(rcAdapter);
+						emptyView.setVisibility(View.GONE);
+					}
 				}catch (JSONException e){
 					e.printStackTrace();
 				}

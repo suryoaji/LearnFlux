@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.GroupsGridRecyclerViewAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
@@ -27,6 +28,7 @@ public class OrgGroupFragment extends Fragment {
 	public Group group =null;
 	public String id;
 	RecyclerView rView;
+	TextView emptyView;
 
 	public static OrgGroupFragment newInstance() {
 		OrgGroupFragment fragment = new OrgGroupFragment();
@@ -49,7 +51,7 @@ public class OrgGroupFragment extends Fragment {
 		id= getActivity().getIntent().getStringExtra("id");
 		getProfile();
 
-
+		emptyView = (TextView) v.findViewById(R.id.empty_view);
 		rView = (RecyclerView)v.findViewById(R.id.recycler_view);
 		rView.setHasFixedSize(true);
 		rView.setLayoutManager(lLayout);
@@ -64,8 +66,15 @@ public class OrgGroupFragment extends Fragment {
 				try{
 					JSONObject data = obj.getJSONObject("data");
 					group = Converter.convertOrganizations(data);
-					GroupsGridRecyclerViewAdapter rcAdapter = new GroupsGridRecyclerViewAdapter(getContext(), group.getChild());
-					rView.setAdapter(rcAdapter);
+					if(group.getChild().isEmpty()) {
+						rView.setVisibility(View.GONE);
+						emptyView.setVisibility(View.VISIBLE);
+					}else{
+						GroupsGridRecyclerViewAdapter rcAdapter = new GroupsGridRecyclerViewAdapter(getContext(), group.getChild());
+						rView.setAdapter(rcAdapter);
+						emptyView.setVisibility(View.GONE);
+					}
+
 				}catch (JSONException e){
 					e.printStackTrace();
 				}

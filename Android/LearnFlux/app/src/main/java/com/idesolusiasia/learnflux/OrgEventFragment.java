@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.OrganizationEventAdapter;
 import com.idesolusiasia.learnflux.entity.Event;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class OrgEventFragment extends Fragment {
 	RecyclerView recyclerView;
 	OrganizationEventAdapter adap;
+	TextView emptyView;
 	public Event event=null;
 	private GridLayoutManager lLayout;
 	ArrayList<Event> events= new ArrayList<>();
@@ -50,6 +52,7 @@ public class OrgEventFragment extends Fragment {
 		View v= inflater.inflate(R.layout.fragment_org_event, container, false);
 		recyclerView=(RecyclerView) v.findViewById(R.id.recyclerView);
 		recyclerView.setHasFixedSize(true);
+		emptyView = (TextView) v.findViewById(R.id.empty_view);
 		lLayout = new GridLayoutManager(getContext(),1);
 		recyclerView.setLayoutManager(lLayout);
 		ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.item_offset);
@@ -73,8 +76,14 @@ public class OrgEventFragment extends Fragment {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				adap = new OrganizationEventAdapter(getContext(), events);
-				recyclerView.setAdapter(adap);
+				if(events.isEmpty()){
+					recyclerView.setVisibility(View.GONE);
+					emptyView.setVisibility(View.VISIBLE);
+				}else {
+					adap = new OrganizationEventAdapter(getContext(), events);
+					recyclerView.setAdapter(adap);
+					emptyView.setVisibility(View.GONE);
+				}
 			}
 		});
 	}
