@@ -92,7 +92,7 @@ public class ChatsActivity extends BaseActivity {
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.new_group) {
+		if (id == R.id.new_Organization) {
 			createOrganization();
 			return true;
 		}
