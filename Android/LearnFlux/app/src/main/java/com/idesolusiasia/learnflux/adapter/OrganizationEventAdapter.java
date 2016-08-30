@@ -2,6 +2,7 @@ package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.provider.CalendarContract;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
@@ -62,6 +63,14 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 		final Event ev = event.get(position);
 //		int rspv = ev.getRSVPByParticipantID(User.getUser().getID());
 		Log.i("getrsvp",ev.getGetEventByGroupRSVP()+"");
+		if(ev.getGetEventByGroupRSVP()!=2){
+			holder.toChat.setEnabled(false);
+			holder.toChat.setClickable(false);
+			holder.toChat.setColorFilter(Color.GRAY);
+			holder.addEvent.setEnabled(false);
+			holder.addEvent.setClickable(false);
+			holder.addEvent.setColorFilter(Color.GRAY);
+		}
 		holder.tvTitle.setText(ev.getTitle());
 		holder.tvLocation.setText(ev.getLocation());
 		if (ev.getDetails()!=null){
@@ -110,7 +119,42 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 		holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+				 	int newRSVP=0;
+					String yes = holder.spinner.getSelectedItem().toString();
+					if(yes.equalsIgnoreCase("Not Going")){
+						newRSVP=-1;
+						holder.toChat.setEnabled(false);
+						holder.toChat.setClickable(false);
+						holder.toChat.setColorFilter(Color.GRAY);
+						holder.addEvent.setEnabled(false);
+						holder.addEvent.setClickable(false);
+						holder.addEvent.setColorFilter(Color.GRAY);
+					}else if(yes.equalsIgnoreCase("Going")){
+						newRSVP=2;
+						holder.toChat.setEnabled(true);
+						holder.toChat.setClickable(true);
+						holder.toChat.setColorFilter(Color.GREEN);
+						holder.addEvent.setEnabled(true);
+						holder.addEvent.setClickable(true);
+						holder.addEvent.setColorFilter(Color.GREEN);
+					}else if(yes.equalsIgnoreCase("Interested")){
+						newRSVP=1;
+						holder.toChat.setEnabled(false);
+						holder.toChat.setClickable(false);
+						holder.toChat.setColorFilter(Color.GRAY);
+						holder.addEvent.setEnabled(false);
+						holder.addEvent.setClickable(false);
+						holder.addEvent.setColorFilter(Color.GRAY);
+					}else{
+						newRSVP=0;
+					}
+					Engine.changeRSVPStatus(context, ev.getId(), newRSVP, new RequestTemplate.ServiceCallback() {
+						@Override
+						public void execute(JSONObject obj) {
+							Toast.makeText(context,"Success",Toast.LENGTH_SHORT).show();
 
+						}
+					});
 			}
 
 			@Override

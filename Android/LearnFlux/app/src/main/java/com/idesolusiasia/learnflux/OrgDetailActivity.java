@@ -296,8 +296,9 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 						Log.i("Data Event", "execute: "+id+", "+type);
 						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
 						dialog.dismiss();
+						Intent startActivity = getIntent();
 						finish();
-						startActivity(getIntent());
+						startActivity(startActivity);
 					}
 				});
 			}
@@ -392,8 +393,11 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 			}
 		});
 		dial.show();
+	}
 
-
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 }
 
