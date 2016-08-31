@@ -82,9 +82,11 @@ public class OrgEventFragment extends Fragment {
 				}else {
 					adap = new OrganizationEventAdapter(getContext(), events);
 					recyclerView.setAdapter(adap);
+					adap.setFirstSelection=true;
 					emptyView.setVisibility(View.GONE);
 				}
 			}
 		});
 	}
+
 }

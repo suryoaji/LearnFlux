@@ -37,6 +37,19 @@ public class Functions {
 				});
 		alertDialog.show();
 	}
+	public static void showAlertWithCallback(Context context, String title, String message, final RequestTemplate.ServiceCallback callback){
+		AlertDialog alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AppTheme)).create();
+		alertDialog.setTitle(title);
+		alertDialog.setMessage(message);
+		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						callback.execute(null);
+					}
+				});
+		alertDialog.show();
+	}
 
 	public static int generateRandomPastelColor() {
 		Random random = new Random();

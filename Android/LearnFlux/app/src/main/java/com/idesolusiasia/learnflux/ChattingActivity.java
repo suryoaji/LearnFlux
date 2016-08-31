@@ -229,6 +229,7 @@ public class ChattingActivity extends BaseActivity {
 						Intent i = new Intent(v.getContext(),OrgDetailActivity.class);
 						i.putExtra("id",thread.getGroup().getId());
 						i.putExtra("title", thread.getTitle());
+						i.putExtra("clickOrganization", "Default");
 						v.getContext().startActivity(i);
 
 					}

@@ -61,6 +61,8 @@ public class ChatsActivity extends BaseActivity {
 		mViewPager = (ViewPager) findViewById(R.id.container);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
+
+
 		TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 		tabLayout.setupWithViewPager(mViewPager);
 
@@ -73,15 +75,26 @@ public class ChatsActivity extends BaseActivity {
 			}
 		});
 		fab.hide();
-
+		invalidateOptionsMenu();
 	}
 
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.org_newgroup, menu);
+		getMenuInflater().inflate(R.menu.interest_menu_creategroup, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		if (mViewPager.getCurrentItem()==0 || mViewPager.getCurrentItem()==2){
+			getMenuInflater().inflate(R.menu.interest_menu_creategroup, menu);
+		}else {
+			getMenuInflater().inflate(R.menu.org_newgroup, menu);
+		}
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -93,9 +106,12 @@ public class ChatsActivity extends BaseActivity {
 
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.new_Organization) {
-			createOrganization();
+			createOrganization("organization");
 			return true;
-		}
+		}else if (id == R.id.new_group){
+					createOrganization("group");
+					return true;
+			}
 
 		return super.onOptionsItemSelected(item);
 	}
@@ -139,7 +155,7 @@ public class ChatsActivity extends BaseActivity {
 			return null;
 		}
 	}
-	public void createOrganization(){
+	public void createOrganization(final String type){
 		final Dialog dialog = new Dialog(ChatsActivity.this);
 		dialog.setTitle("Add new Group");
 		dialog.setContentView(R.layout.dialog_add_group);
@@ -152,7 +168,7 @@ public class ChatsActivity extends BaseActivity {
 			public void onClick(View view) {
 				name = groupName.getText().toString().trim();
 				desc = groupDesc.getText().toString().trim();
-				OpenDialog2();
+				OpenDialog2(type);
 			}
 		});
 		cancel.setOnClickListener(new View.OnClickListener() {
@@ -163,7 +179,7 @@ public class ChatsActivity extends BaseActivity {
 		});
 		dialog.show();
 	}
-	void OpenDialog2(){
+	void OpenDialog2(final String type){
 		final Dialog dial = new Dialog(ChatsActivity.this);
 		dial.setTitle("Add participant");
 		dial.setContentView(R.layout.layout_dialog);
@@ -185,7 +201,7 @@ public class ChatsActivity extends BaseActivity {
 					ids[i]=a.get(i).intValue();
 				}
 				Engine.createGroup(getApplicationContext(), ids, name, desc, null,
-						"organization", new RequestTemplate.ServiceCallback() {
+						type, new RequestTemplate.ServiceCallback() {
 							@Override
 							public void execute(JSONObject obj) {
 								Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();

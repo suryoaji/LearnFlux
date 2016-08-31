@@ -396,11 +396,16 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 
 		if (rsvp==2){
 			rbGoing.setChecked(true);
-		}else if (rsvp==-1){
-			rbNotGoing.setChecked(true);
-		}else if (rsvp==1){
-			rbInterested.setChecked(true);
+		}else{
+			btnChatRoom.setClickable(false);
+			btnChatRoom.setEnabled(false);
+			if (rsvp==-1){
+				rbNotGoing.setChecked(true);
+			}else if (rsvp==1){
+				rbInterested.setChecked(true);
+			}
 		}
+
 		btnChatRoom.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

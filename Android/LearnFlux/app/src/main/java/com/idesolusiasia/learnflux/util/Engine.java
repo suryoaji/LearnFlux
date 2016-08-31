@@ -275,20 +275,21 @@ public class Engine {
 			});
 		}
 	}
-	public static void registerUser(final Context context, final HashMap<String,String> par){
+	public static void registerUser(final Context context, final HashMap<String,String> par, final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_REGISTER);
 		JSONObject params = new JSONObject(par);
 
 		RequestTemplate.POSTJsonRequestWithoutAuth(context, url, params, new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
-				if (obj != null) {
+				/*if (obj != null) {
 					Log.i("response_POST_MSG", obj.toString());
 					Intent i = new Intent(context,LoginActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
 					context.startActivity(i);
-				}
-				Functions.showAlert(context, context.getString(R.string.URL_REGISTER), context.getString(R.string.success_registration));
+				}*/
+				Functions.showAlertWithCallback(context, "Register",
+						context.getString(R.string.success_registration),callback);
 			}
 		}, new RequestTemplate.ErrorCallback() {
 			@Override

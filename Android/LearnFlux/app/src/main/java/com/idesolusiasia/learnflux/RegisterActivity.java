@@ -1,5 +1,6 @@
 package com.idesolusiasia.learnflux;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -78,9 +82,21 @@ public class RegisterActivity extends AppCompatActivity {
 			par.put("lastName",tvLast.getText().toString().trim());
 			par.put("password",tvPass.getText().toString().trim());
 			par.put("passwordConfirm",tvConfirm.getText().toString().trim());
-			Engine.registerUser(this, par);
+			Engine.registerUser(this, par, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(i);
+				}
+			});
 		}
 	}
 
-
+	@Override
+	public void onBackPressed() {
+		Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(i);
+	}
 }

@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -171,7 +172,6 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		public FragmentAdapter(FragmentManager fm) {
 			super(fm);
 		}
-
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
@@ -183,10 +183,13 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 					return OrgActivityFragment.newInstance();
 			}
 		}
-
 		@Override
 		public int getCount() {
 			return ITEMS;
+		}
+		@Override
+		public int getItemPosition(Object object) {
+			return POSITION_NONE;
 		}
 	}
 	@Override

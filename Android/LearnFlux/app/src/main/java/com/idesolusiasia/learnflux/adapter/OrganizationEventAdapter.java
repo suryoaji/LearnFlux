@@ -1,5 +1,6 @@
 package com.idesolusiasia.learnflux.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,7 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.idesolusiasia.learnflux.ChatsActivity;
 import com.idesolusiasia.learnflux.ChattingActivity;
+import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.EventChatBubble;
@@ -44,6 +47,7 @@ import java.util.Locale;
 public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationEventAdapter.OrgTileHolder>{
 	public List<Event>	event;
 	private Context context;
+	public boolean setFirstSelection =true;
 
 
 	public OrganizationEventAdapter(Context context, ArrayList<Event> orgs) {
@@ -59,11 +63,8 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 
 	@Override
 	public void onBindViewHolder(final OrgTileHolder holder, int position) {
-
 		final Event ev = event.get(position);
-//		int rspv = ev.getRSVPByParticipantID(User.getUser().getID());
-		Log.i("getrsvp",ev.getGetEventByGroupRSVP()+"");
-		if(ev.getGetEventByGroupRSVP()!=2){
+		if (ev.getGetEventByGroupRSVP() != 2) {
 			holder.toChat.setEnabled(false);
 			holder.toChat.setClickable(false);
 			holder.toChat.setColorFilter(Color.GRAY);
@@ -73,13 +74,13 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 		}
 		holder.tvTitle.setText(ev.getTitle());
 		holder.tvLocation.setText(ev.getLocation());
-		if (ev.getDetails()!=null){
+		if (ev.getDetails() != null) {
 			holder.tvDescription.setText(ev.getDetails());
 			holder.tvDescription.post(new Runnable() {
 				@Override
 				public void run() {
 					int a = holder.tvDescription.getLineCount();
-					if (a>2){
+					if (a > 2) {
 						holder.tvSeeMore.setVisibility(View.VISIBLE);
 						holder.tvDescription.setMaxLines(2);
 					}
@@ -94,16 +95,15 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 				holder.tvSeeMore.setVisibility(View.GONE);
 			}
 		});
-		Log.i("Holder", "onBindViewHolder: "+ ev.getCreated_by().getId());
-		if(User.getUser().getID()!=ev.getCreated_by().getId()){
+		if (User.getUser().getID() != ev.getCreated_by().getId()) {
 			holder.editEvent.setVisibility(View.GONE);
-		}else{
+		} else {
 			holder.editEvent.setVisibility(View.VISIBLE);
 		}
 		holder.tvTime.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(), "kk:mm"));
-		holder.tvDay.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(),"dd"));
-		holder.tvMonth.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(),"MMM"));
-		holder.tvYear.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(),"yyyy"));
+		holder.tvDay.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(), "dd"));
+		holder.tvMonth.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(), "MMM"));
+		holder.tvYear.setText(Functions.convertSecondToAnyFormat(ev.getTimestamp(), "yyyy"));
 		holder.addEvent.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -116,54 +116,83 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 				getEventsID(ev, context);
 			}
 		});
+
+		if (ev.getGetEventByGroupRSVP() == 0) {
+			holder.spinner.setSelection(0, false);
+		} else if (ev.getGetEventByGroupRSVP() == 1) {
+			holder.spinner.setSelection(2, false);
+		} else if (ev.getGetEventByGroupRSVP() == 2) {
+			holder.spinner.setSelection(1, false);
+		} else {
+			holder.spinner.setSelection(3, false);
+		}
 		holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-				 	int newRSVP=0;
-					String yes = holder.spinner.getSelectedItem().toString();
-					if(yes.equalsIgnoreCase("Not Going")){
-						newRSVP=-1;
+				setFirstSelection=false;
+				int newRSVP = 0;
+				String yes = holder.spinner.getSelectedItem().toString();
+					if (yes.equalsIgnoreCase("Not Going")) {
+						//this position for not going
+						newRSVP = -1;
 						holder.toChat.setEnabled(false);
 						holder.toChat.setClickable(false);
 						holder.toChat.setColorFilter(Color.GRAY);
 						holder.addEvent.setEnabled(false);
 						holder.addEvent.setClickable(false);
 						holder.addEvent.setColorFilter(Color.GRAY);
-					}else if(yes.equalsIgnoreCase("Going")){
-						newRSVP=2;
+						getChange(context, ev, newRSVP,position);
+					} else if (yes.equalsIgnoreCase("Going")) {
+						//this position for going
+						newRSVP = 2;
 						holder.toChat.setEnabled(true);
 						holder.toChat.setClickable(true);
-						holder.toChat.setColorFilter(Color.GREEN);
+						holder.toChat.setColorFilter(Color.parseColor("#8bc34a"));
 						holder.addEvent.setEnabled(true);
 						holder.addEvent.setClickable(true);
-						holder.addEvent.setColorFilter(Color.GREEN);
-					}else if(yes.equalsIgnoreCase("Interested")){
-						newRSVP=1;
+						holder.addEvent.setColorFilter(Color.parseColor("#8bc34a"));
+						getChange(context, ev, newRSVP,position);
+					} else if (yes.equalsIgnoreCase("Interested")) {
+						//this position for interested
+						newRSVP = 1;
 						holder.toChat.setEnabled(false);
 						holder.toChat.setClickable(false);
 						holder.toChat.setColorFilter(Color.GRAY);
 						holder.addEvent.setEnabled(false);
 						holder.addEvent.setClickable(false);
 						holder.addEvent.setColorFilter(Color.GRAY);
-					}else{
-						newRSVP=0;
+						getChange(context, ev, newRSVP,position);
+					} else {
+						//this position for not selected
+						newRSVP = 0;
 					}
-					Engine.changeRSVPStatus(context, ev.getId(), newRSVP, new RequestTemplate.ServiceCallback() {
-						@Override
-						public void execute(JSONObject obj) {
-							Toast.makeText(context,"Success",Toast.LENGTH_SHORT).show();
-
-						}
-					});
-			}
-
+				}
 			@Override
 			public void onNothingSelected(AdapterView<?> adapterView) {
 
 			}
 		});
 	}
+	@Override
+	public int getItemViewType(int position) {
 
+		return position;
+	}
+
+	public void getChange(Context c, Event e, int rspv, final int pos){
+		Engine.changeRSVPStatus(c, e.getId(), rspv, new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				Toast.makeText(context, "Successful", Toast.LENGTH_SHORT).show();
+				notifyItemChanged(pos);
+				/*Intent intent = ((Activity) context).getIntent();
+				((Activity) context).setResult(((Activity) context).RESULT_OK,
+						intent);
+				((Activity) context).finish();*/
+
+			}
+		});
+	}
 	@Override
 	public int getItemCount() {
 		return event.size();
