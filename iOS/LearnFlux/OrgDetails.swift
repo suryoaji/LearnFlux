@@ -59,10 +59,6 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
                 if let profileViewController = tabs[3] as? OrgProfile{
                     profileViewController.setOrganizationInfo(orgData)
                 }
-                if let orgEventsViewController = tabs[1] as? OrgEvents{
-                    orgEventsDelegate = orgEventsViewController
-                    orgEventsDelegate.setIdGroupOfEvents(idGroup: orgId)
-                }
                 self.isAdmin = checkAdmin()
             }
         }
@@ -77,6 +73,14 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
                 NSNotificationCenter.defaultCenter().postNotificationName("OrgEventsShownNotification", object: self, userInfo: nil)
             }
         }
+    }
+    
+    func getOrgDetail() -> (Group?){
+        let filteredOrg = Engine.clientData.getGroups(.Organisation)!.filter({ $0.id == self.orgId })
+        if !filteredOrg.isEmpty{
+            return filteredOrg.first!
+        }
+        return nil
     }
     
     func checkAdmin() -> (Bool){
@@ -101,13 +105,17 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
                 if let data = orgData?.child { tab0.groups = data; }
                 tab0.cv.reloadData();
             }
+            if let tab1 = tabs[1] as? OrgEvents{
+                tab1.pushDelegate = self
+            }
         }
         
     }
     
-    func initView (orgId : String, orgTitle : String) {
-        self.orgId = orgId;
-        self.orgTitle = orgTitle;
+    func initView (orgId : String, orgTitle : String, indexTab: Int) {
+        self.orgId = orgId
+        self.orgTitle = orgTitle
+        self.indicatorViewShown = indexTab
     }
     
     func updateView() {
@@ -121,7 +129,11 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         tabs.append(Util.getViewControllerID("OrgEvents"))
         tabs.append(Util.getViewControllerID("OrgActivities"))
         tabs.append(Util.getViewControllerID("OrgProfile"))
-        changeView(0);
+        
+        let orgEventsViewController = tabs[1] as! OrgEvents
+        orgEventsDelegate = orgEventsViewController
+        orgEventsDelegate.setIdGroupOfEvents(idGroup: orgId)
+        orgEventsDelegate.setParentController(ParentEventController.OrgDetail)
     }
     
     func addTabsToScrollView(){
@@ -136,7 +148,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     }
     
     func setIndicatorPosition(){
-        self.viewSelection.x = self.viewTabs.x
+        self.viewSelection.x = self.viewTabs.x + CGFloat(self.indicatorViewShown) * self.viewTabs.width/3
         self.viewSelection.width = self.viewTabs.width / 3
     }
     
@@ -149,7 +161,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.createScrollView()
-        self.setIndicatorPosition()
+        self.changeView(indicatorViewShown)
         refreshData() {
             self.createScrollView()
             self.propagateData();
@@ -163,9 +175,19 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         self.scrollView.layer.zPosition = 0
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        NSNotificationCenter.defaultCenter().postNotificationName("OrgDetailAppearNotification", object: nil)
+    }
+    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         NSNotificationCenter.defaultCenter().postNotificationName("OrgDetailDisappearNotification", object: nil)
+        orgEventsDelegate.removeSpecificNotification()
+    }
+    
+    deinit{
+        orgEventsDelegate.removeAllNotification()
     }
     
     func changeView (index : Int) {
@@ -237,8 +259,8 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     let flow = Flow.sharedInstance;
     func menuCreateNewEventTapped(){
         flow.begin(.NewEvent)
-        flow.add(dict: ["reference" : ["id" : self.orgId,
-                                       "type" : "organization"]])
+        flow.add(dict: ["reference"    : ["id" : self.orgId,
+                                          "type" : "organization"]])
         flow.setCallback { result in
             self.handleRequest(self.flow.activeFlow()!, param: result!)
         }
@@ -288,14 +310,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     }
     
     func handleRequestCreateEvent(param: Dictionary<String, AnyObject>){
-        Engine.createEvent(param){ status, JSON in
-            if status == .Success{
-                let alert = UIAlertController(title: "Event's Organization has created", message: "status: \(status),\nresponse: \(JSON)", preferredStyle: .Alert)
-                let alertAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                alert.addAction(alertAction)
-                self.presentViewController(alert, animated: true, completion: nil)
-            }
-        }
+        Engine.createEvent(param)
     }
 }
 

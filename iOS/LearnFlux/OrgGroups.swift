@@ -18,7 +18,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     
     var pushDelegate : PushDelegate!;
     var refreshDelegate : RefreshDelegate!;
-    var orgId : String! = "";
+    var orgId : String! = ""
     var groups : [Group]?
     
     func randomizePastelColor () -> UIColor {
@@ -182,14 +182,9 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
                     var group = Group(dict: dataJSON);
                     group.description = self.flow.get(key: "desc")! as? String;
                     group.color = self.randomizePastelColor();
+                    vc.isAdmin = true
                     vc.initFromCall(group);
                     self.navigationController?.pushViewController(vc, animated: true);
-                    
-                    
-//                    let threadJSON = dataJSON["message"] as! Dictionary<String, AnyObject>
-//                    let chatVc = Util.getViewControllerID("ChatFlow") as! ChatFlow
-//                    chatVc.initChat(0, idThread: threadJSON["id"] as! String, from: ChatFlow.From.CreateThread)
-//                    self.navigationController?.pushViewController(chatVc, animated: true)
                 }
             }
         }

@@ -13,13 +13,26 @@ import DropDown
 @objc protocol OrgEventsDelegate {
     func setIdGroupOfEvents(idGroup idGroup: String)
     func setIsAdminOrNot(isAdmin: Bool)
+    func removeAllNotification()
+    func removeSpecificNotification()
+    func setParentController(parent: ParentEventController)
+}
+
+@objc enum ParentEventController: Int{
+    case OrgDetail
+    case GroupDetail
+    case None
 }
 
 class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, OrgEventsDelegate {
+    var pushDelegate : PushDelegate!
+    var groupDetailsDelegate: GroupDetailsDelegate!
+    
+    var parentController : ParentEventController!
     let dropDown = DropDown()
     var activeDropDown = -1;
     var attendance : Array<String> = [];
-    var expanded : Array<Bool> = [];
+    var expanded : Array<Bool> = []
     
     var oriDescHeight : CGFloat! = 0;
     var oriBtnHeight : CGFloat! = 0;
@@ -33,7 +46,9 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
             if !idGroup.isEmpty{
                 Engine.getSpecificEventsByIdGroup(idGroup: idGroup){ status, JSON in
                     if status == .Success{
-                        self.tv.reloadData()
+                        if self.tv != nil{
+                            self.reloadData()
+                        }
                     }
                 }
             }
@@ -48,14 +63,14 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         target.view.addSubview(holdView)
         Engine.getEvents(target){ status, JSON in
             
-            self.tv.reloadData()
+            self.reloadData()
             if let events = self.clientData.getMyEvents(){
                 var countLoaded = 0
                 for eachEvent in events{
                     Engine.getEventDetail(self, event: eachEvent){ status, JSON in
                         countLoaded += 1
                         if countLoaded >= events.count{
-                            self.tv.reloadData()
+                            self.reloadData()
                         }
                         
                     }
@@ -81,40 +96,110 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     override func viewDidLoad() {
         super.viewDidLoad();
-        dropDown.dataSource = ["Going", "Interested", "Not Going"];
-        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
-//            print("Selected item: \(item) at index: \(index)")
-            self.attendance[self.activeDropDown] = item;
-            self.tv.reloadData();
-        }
+        setUpDropDownLib()
+        
         oriDescHeight = (tv.dequeueReusableCellWithIdentifier("cell")!.viewWithTag(3) as! UILabel).height;
         oriBtnHeight = (tv.dequeueReusableCellWithIdentifier("cell")!.viewWithTag(10) as! UIButton).height;
         oriCellHeight = tv.dequeueReusableCellWithIdentifier("cell")!.height;
         
-        if clientData.getMyEvents() != nil{
-            while (attendance.count < clientData.getMyEvents()!.count) {
-                attendance.append("Going");
-                expanded.append(false);
-                let cell = tv.dequeueReusableCellWithIdentifier("cell")!;
-                let label = cell.viewWithTag(3)! as! UILabel;
-                //label.text =
-                expDescHeight.append(Util.labelPerfectHeight(label));
-            }
-        }
-        
+        self.setTableViewData()
+
         self.loadEvents(self)
         shouldRemoveHoldView()
+        if self.parentController == .OrgDetail{
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(addObservers), name: "OrgDetailAppearNotification", object: nil)
+        }else if self.parentController == .GroupDetail{
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(addObservers), name: "GroupDetailAppearNotification", object: nil)
+        }
+    }
+    
+    func setStatusEvent(event: Event)-> (String){
+        switch event.status {
+        case -1:
+            return dropDown.dataSource[2]
+        case 1:
+            return dropDown.dataSource[1]
+        case 2:
+            return dropDown.dataSource[0]
+        default:
+            return "Please Choose"
+        }
+    }
+    
+    func setUpDropDownLib(){
+        dropDown.dataSource = ["Going", "Interested", "Not Going"];
+        dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
+            self.dropDownChoosen(index, item: item)
+        }
+    }
+    
+    func dropDownChoosen(index: Int, item: String){
+        self.attendance[self.activeDropDown] = item
+        self.tv.reloadData()
         
+        var rowEvent : Int? = activeDropDown
+        if clientData.getSpecificEventsByIdGroup(self.idGroup) != nil{
+            Engine.updateStatusEvent(indexToRsvp(index), rowEvent: &rowEvent, specificGroup: self.idGroup)
+        }else{
+            Engine.updateStatusEvent(indexToRsvp(index), rowEvent: &rowEvent)
+        }
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    func indexToRsvp(index: Int) -> (Int){
+        switch index {
+        case 0:
+            return 2
+        case 1:
+            return 1
+        case 2:
+            return -1
+        default:
+            return 0
+        }
+    }
+    
+    func addObservers(){
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(viewShown), name: "OrgEventsShownNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(reloadData), name: "SpecificEventsUpdateNotification", object: nil)
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
+    func removeAllNotification() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func removeSpecificNotification(){
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: "OrgEventsShownNotification", object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: "SpecificEventsUpdateNotification", object: nil)
+    }
+    
+    func reloadData(){
+        self.setTableViewData()
+        if idGroup == "57bffe803a603f4477a5039d"{
+            NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(test), userInfo: nil, repeats: true)
+        }
+        self.tv.reloadData()
+    }
+    
+    func test(){
+        print(clientData.getSpecificEventsByIdGroup(self.idGroup)?.first?.status)
+    }
+    
+    func setTableViewData(){
+        var sEvents : [Event] = []
+        if let events = clientData.getSpecificEventsByIdGroup(self.idGroup){
+            sEvents = events
+        }else if let events = clientData.getMyEvents(){
+            sEvents = events
+        }
+        attendance = Array(count: sEvents.count, repeatedValue: "")
+        expanded = Array(count: sEvents.count, repeatedValue: false)
+        expDescHeight = Array(count: sEvents.count, repeatedValue: 0.0)
+        for i in 0..<sEvents.count{
+            attendance[i] = self.setStatusEvent(sEvents[i])
+            let cell = tv.dequeueReusableCellWithIdentifier("cell")!;
+            let label = cell.viewWithTag(3)! as! UILabel;
+            expDescHeight[i] = Util.labelPerfectHeight(label)
+        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -170,6 +255,8 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let lblHour = cell.viewWithTag(24) as! UILabel
         let lblLocation = cell.viewWithTag(2) as! UILabel
         let btnEdit = cell.viewWithTag(14) as! UIButton
+        let btnMessage = cell.viewWithTag(11) as! UIButton
+        btnMessage.addTarget(self, action: #selector(btnMessageTapped), forControlEvents: .TouchUpInside)
         if let event = clientData.getSpecificEventsByIdGroup(self.idGroup)?[indexPath.row]{
             lblTitle.text = "\(event.title)"
             lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: event.time)!)
@@ -178,6 +265,13 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
             lblHour.text = "\(Util.getElementDate(.Hour, stringDate: event.time)!):\(Util.getElementDate(.Minute, stringDate: event.time)!)"
             lblLocation.text = event.location
             lblDesc.text = event.details
+            btnMessage.enabled = false
+            if event.thread != nil{
+                if let indexThread = clientData.getMyThreads()!.indexOf({ $0.id == event.thread.id }){
+                    btnMessage.enabled = true
+                    btnMessage.layer.name = "\(indexThread)"
+                }
+            }
         }else if let event = clientData.getMyEvents()?[indexPath.row]{
             lblTitle.text = "\(event.title)"
             lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: event.time)!)
@@ -186,6 +280,12 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
             lblHour.text = "\(Util.getElementDate(.Hour, stringDate: event.time)!):\(Util.getElementDate(.Minute, stringDate: event.time)!)"
             lblLocation.text = event.location
             lblDesc.text = event.details
+            btnMessage.enabled = false
+            if event.thread != nil{
+                if clientData.getMyThreads()!.indexOf({ $0.id == event.thread.id }) != nil{
+                    btnMessage.enabled = true
+                }
+            }
         }
         if self.isAdmin{
             btnEdit.alpha = 1
@@ -199,6 +299,17 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
+    }
+    
+    @IBAction func btnMessageTapped(sender: UIButton){
+        let indexThread = Int(sender.layer.name!)!
+        let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow
+        vc.initChat(indexThread, idThread: clientData.getMyThreads()![indexThread].id, from: .OpenChat)
+        if pushDelegate != nil{
+            pushDelegate.pushViewController(vc, animated: true)
+        }else if groupDetailsDelegate != nil{
+            groupDetailsDelegate.pushViewController(vc, animated: true)
+        }
     }
     
     @IBAction func dropDownGoing (sender: AnyObject) {
@@ -230,5 +341,9 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func setIsAdminOrNot(isAdmin: Bool){
         self.isAdmin = isAdmin
+    }
+    
+    func setParentController(parent: ParentEventController){
+        self.parentController = parent
     }
 }

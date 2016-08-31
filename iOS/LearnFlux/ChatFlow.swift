@@ -662,6 +662,13 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
             if let vc: PollDetails = segue.destinationViewController as? PollDetails {
                 vc.meta = sender as! Dictionary<String, AnyObject>
             }
+        }else if segue.identifier == "PollChartSegue"{
+            let vc = segue.destinationViewController as! PollChart
+            let meta = sender as! Dictionary<String, AnyObject>
+            let answerers = Engine.getDictData(meta)!["answerers"] as! Dictionary<String, Int>
+            let answers = Engine.getDictData(meta)!["answers"] as! Array<String>
+            let participants = clientData.getMyThreads()![rowIndexPathFromThread].participants
+            vc.initPollChart(answers, answerers: answerers, participant: participants)
         }
     }
     
@@ -819,8 +826,7 @@ extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
     func popupPoll (indexRow : Int) {
         let meta = messages[indexRow].meta
         if hasPolling(answerers: (meta["data"] as! Dictionary<String, AnyObject>)["answerers"] as! Dictionary<String, Int>){
-            
-            self.performSegueWithIdentifier("PollChartSegue", sender: nil)
+            self.performSegueWithIdentifier("PollChartSegue", sender: meta)
         }else{
             let data = meta["data"] as! Dictionary<String, AnyObject>
             let question = data["question"] as! String

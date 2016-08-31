@@ -30,9 +30,9 @@ class Login: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated);
         self.revealController.setMinimumWidth(0, maximumWidth: 0, forViewController: self.revealController.leftViewController)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.Default
-//        self.revealController.setMinimumWidth(220.0, maximumWidth: 244.0, forViewController: self.revealController.leftViewController)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(pushToHomeVC), name: "dataSingletonReady", object: nil)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -90,6 +90,7 @@ class Login: UIViewController, UITextFieldDelegate {
             self.tfPassword.becomeFirstResponder();
             return;
         }
+        Util.showIndicatorDarkOverlay(self.view, message: "loading")
         Engine.login(self, username: tfUsername.text!, password: tfPassword.text!) { status, JSON in
             if (JSON == nil) {
                 self.tfUsername.becomeFirstResponder();
@@ -105,8 +106,8 @@ class Login: UIViewController, UITextFieldDelegate {
                             }
                         }
                     }
-                    self.navigationController?.navigationBar.hidden = false
-                    self.performSegueWithIdentifier("Home", sender: self);
+                    Engine.getConnection()
+                    
                 }
             }
         }
@@ -114,5 +115,11 @@ class Login: UIViewController, UITextFieldDelegate {
     
     @IBAction func beginEdit (sender: AnyObject) {
         popTip.hide();
+    }
+    
+    @IBAction func pushToHomeVC(){
+        Util.stopIndicator(self.view)
+        self.navigationController?.navigationBar.hidden = false
+        self.performSegueWithIdentifier("Home", sender: self)
     }
 }

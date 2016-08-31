@@ -11,15 +11,14 @@ import Foundation
 class Connections : UITableViewController {
     
     var buttonDone : UIBarButtonItem!
-    let connect = [
-        ["name":"admin", "id":6],
-        ["name":"tester", "id":7],
-        ["name":"tester2", "id":8],
-        ["name":"tiatiatia", "id":60]
-    ];
-    var actualConnect = Array<AnyObject>();
+    var connect = [User(dict: ["id" : 6, "first_name" : "admin"]),
+                  User(dict: ["id" : 7, "first_name" : "tester"]),
+                  User(dict: ["id" : 8, "first_name" : "tester2"]),
+                  User(dict: ["id" : 60, "first_name" : "tiatiatia"])]
+    var actualConnect = Array<User>()
     var selectedConnect : Array<Bool> = [];
     let flow = Flow.sharedInstance
+    let clientData = Engine.clientData
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -29,10 +28,10 @@ class Connections : UITableViewController {
         item.action = #selector(self.revealMenu);
         item.target = self;
         
-        for myConnect in connect {
-            if (myConnect["id"] != (Engine.clientData.defaults.valueForKey("me")!.valueForKey("id")! as! Int)) {
-                actualConnect.append(myConnect);
-                selectedConnect.append(false);
+        for user in connect {
+            if (user.userId! != (Engine.clientData.defaults.valueForKey("me")!.valueForKey("id")! as! Int)) {
+                actualConnect.append(user)
+                selectedConnect.append(false)
             }
         }
         
@@ -48,6 +47,26 @@ class Connections : UITableViewController {
                 self.title = "Select Participants";
                 setupDoneButton()
             }
+        }
+        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.updateConnection()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateConnection), name: "ConnectionsUpdateNotification", object: self)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    @IBAction func updateConnection(){
+        if let connection = clientData.getMyConnection(){
+            self.actualConnect = connection
+            self.selectedConnect = Array(count: actualConnect.count, repeatedValue: false)
+            self.tableView.reloadData()
         }
     }
     
@@ -67,8 +86,8 @@ class Connections : UITableViewController {
         var userId : Array<Int> = [];
         for i in 0..<selectedConnect.count {
             if (selectedConnect[i]) {
-                let el = connect[i] as NSDictionary;
-                userId.append(el.valueForKey("id")! as! Int);
+                let el = connect[i]
+                userId.append(el.userId!);
             }
         }
         flow.add(dict: ["userIds":userId]);
@@ -96,15 +115,19 @@ class Connections : UITableViewController {
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return tableView.dequeueReusableCellWithIdentifier(indexPath.code)!.height;
+        return tableView.dequeueReusableCellWithIdentifier("1-0")!.height;
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("1-0")!;
         cell.setSeparatorType(CellSeparatorFull);
         let lbl = cell.viewWithTag(1) as! UILabel;
-        let row = actualConnect[indexPath.row];
-        lbl.text = row.valueForKey("name") as? String;
+        let user = actualConnect[indexPath.row];
+        var name = "\(user.userId!)"
+        if user.firstName != nil{
+            name += " \(user.firstName!)"
+        }
+        lbl.text = name
         let img = cell.viewWithTag(10) as! UIImageView;
         img.makeRounded();
         
@@ -127,9 +150,9 @@ class Connections : UITableViewController {
             buttonDoneShouldEnable()
         }
         else {
-            let row = actualConnect[indexPath.row];
+            let user = actualConnect[indexPath.row];
             var arrUserId = Array<Int>();
-            arrUserId.append((row.valueForKey("id") as? Int)!)
+            arrUserId.append(user.userId!)
             Engine.createGroupChat(self, userId: arrUserId) { status, JSON in
                 if (JSON != nil) {
                     dispatch_async(dispatch_get_main_queue()) {

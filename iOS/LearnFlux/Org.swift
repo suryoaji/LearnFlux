@@ -12,7 +12,7 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     
     @IBOutlet var cv : UICollectionView!;
     
-    var groups : [Group]?;
+    var groups : [Group]?
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -40,6 +40,15 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         let lblMessage = cell.viewWithTag(3) as! UILabel;
         let lblEvent = cell.viewWithTag(4) as! UILabel;
         let lblActivities = cell.viewWithTag(5) as! UILabel;
+        let btnMessage = cell.viewWithTag(20) as! UIButton
+        let btnEvents = cell.viewWithTag(21) as! UIButton
+        let btnActivities = cell.viewWithTag(22) as! UIButton
+        btnEvents.layer.name = "\(indexPath.row)"
+        btnActivities.layer.name = "\(indexPath.row)"
+        btnMessage.layer.name = "\(indexPath.row)"
+        btnActivities.addTarget(self, action: #selector(self.btnAccOrgTapped), forControlEvents: .TouchUpInside)
+        btnMessage.addTarget(self, action: #selector(self.btnAccOrgTapped), forControlEvents: .TouchUpInside)
+        btnEvents.addTarget(self, action: #selector(self.btnAccOrgTapped), forControlEvents: .TouchUpInside)
         lblName.text = groups![indexPath.row].name;
         lblDesc.text = "";
         lblMessage.makeViewRounded();
@@ -53,6 +62,14 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         return cell;
     }
     
+    func btnAccOrgTapped(sender: UIButton){
+        if sender.tag == 21 || sender.tag == 22{
+            self.performSegueWithIdentifier("OrganisationDetails", sender: sender)
+        }else if sender.tag == 20{
+            self.performSegueWithIdentifier("ChatFlow", sender: sender)
+        }
+    }
+    
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         var size = CGSizeMake(148, 278);
         let screenSize = UIScreen.mainScreen().bounds.width;
@@ -62,11 +79,26 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "OrganisationDetails") {
-            let vc = segue.destinationViewController as! OrgDetails;
-            let cell = sender as! UICollectionViewCell;
-            let indexPath = cv.indexPathForCell(cell)!;
-            let group : Group = groups![indexPath.row];
-            vc.initView(group.id, orgTitle: group.name);
+            let vc = segue.destinationViewController as! OrgDetails
+            var group = groups![0]
+            var indexTab = 0
+            if let cell = sender as? UICollectionViewCell{
+                let indexPath = cv.indexPathForCell(cell)!;
+                group = groups![indexPath.row];
+            }else if let btn = sender as? UIButton{
+                let value = Int(btn.layer.name!)!
+                group = groups![value]
+                if btn.tag == 21{ indexTab = 1 }
+                else if btn.tag == 22{ indexTab = 2 }
+            }
+            vc.initView(group.id, orgTitle: group.name, indexTab: indexTab)
+        }else if segue.identifier == "ChatFlow"{
+            if let btn = sender as? UIButton{
+                let vc = segue.destinationViewController as! ChatFlow
+                let value = Int(btn.layer.name!)!
+                let index = Engine.clientData.getMyThreads()!.indexOf({ $0.id == groups![value].thread!.id })
+                vc.initChat(index!, idThread: groups![value].thread!.id, from: .OpenChat)
+            }
         }
     }
 

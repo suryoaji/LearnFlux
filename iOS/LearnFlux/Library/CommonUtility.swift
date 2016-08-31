@@ -65,10 +65,28 @@ class Util : NSObject {
         return (date: dateFormatter.stringFromDate(date), time: timeFormatter.stringFromDate(date))
     }
     
+    static func changeModelTime(timestamp: Double) -> (String){
+        let dateFormatter: NSDateFormatter = {
+            let tmpFormattter = NSDateFormatter()
+            tmpFormattter.dateFormat = "H:m"
+            return tmpFormattter
+        }()
+        return dateFormatter.stringFromDate(NSDate(timeIntervalSince1970: timestamp))
+    }
+    
     static func dateFromString(string: String)->NSDate?{
         let formatter = NSDateFormatter()
         formatter.dateFormat = "yy-MM-dd HH:mm:ss +0000"
         return formatter.dateFromString(string)
+    }
+    
+    static func stringFromTimestamp(timestamp: Double)->(String){
+        let formatter: NSDateFormatter = {
+            let tmpFormatter = NSDateFormatter()
+            tmpFormatter.dateFormat = "yy-MM-dd HH:mm:ss +0000"
+            return tmpFormatter
+        }()
+        return formatter.stringFromDate(NSDate(timeIntervalSince1970: timestamp))
     }
     
     static func getElementDate(element: NSCalendarUnit, stringDate: String)->Int?{

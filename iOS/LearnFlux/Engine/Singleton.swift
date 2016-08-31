@@ -50,6 +50,15 @@ class Data : NSObject {
     
     var newMessageCreated : String! = "";
     
+    private var connection: [User]?{
+        didSet{
+            if let index = connection?.indexOf({ $0.userId == (cacheMe()!["id"] as! Int) }){
+                connection?.removeAtIndex(index)
+            }
+            NSNotificationCenter.defaultCenter().postNotificationName("ConnectionsUpdateNotification", object: nil)
+            checkAllDataReady()
+        }
+    }
     private var events : [Event]?
     private var threads: [Thread]?{
         didSet{
@@ -57,16 +66,70 @@ class Data : NSObject {
                 let sortedThreads = threads!.sort({ $0.lastUpdated > $1.lastUpdated })
                 threads = sortedThreads
                 NSNotificationCenter.defaultCenter().postNotificationName("ThreadsUpdateNotification", object: nil)
+                checkAllDataReady()
             }
         }
     }
-    private var groups: [Group]?
-    private var specificEvents: Array<EventsByIdGroup> = []
+    private var groups: [Group]?{
+        didSet{
+            checkAllDataReady()
+        }
+    }
+    private var specificEvents: Array<EventsByIdGroup> = []{
+        didSet{
+            NSNotificationCenter.defaultCenter().postNotificationName("SpecificEventsUpdateNotification", object: nil)
+            checkAllDataReady()
+        }
+    }
     
     override init(){
         super.init()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.sortThreads), name: "sortThreads", object: nil)
+    }
+    
+    deinit{
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func checkAllDataReady(){
+        if threads != nil && groups != nil && events != nil && connection != nil{
+            NSNotificationCenter.defaultCenter().postNotificationName("dataSingletonReady", object: nil)
+        }
+    }
+    
+    func getMyConnection() -> ([User]?){
+        return self.connection
+    }
+    
+    func setMyConnections(arr: Array<Dictionary<String, AnyObject>>){
+        self.connection = makeConnectionsArr(arr)
+    }
+    
+    func makeConnectionsArr(rawArr: Array<Dictionary<String, AnyObject>>) -> ([User]){
+        var tempUsers : [User] = []
+        for dicUser in rawArr{
+            let user = User(dict: dicUser)
+            tempUsers.append(user)
+        }
+        return tempUsers
+    }
+    
+    func updateSpecificEventsByIdGroup(idGroup : String, events: [Event]?){
+        let indexSpecificEvents = specificEvents.indexOf({ $0.id == idGroup })
+        var conSpecificEvents = specificEvents[indexSpecificEvents!]
+        specificEvents.removeAtIndex(indexSpecificEvents!)
+        if let events = events{
+            for event in events{
+                if let indexEvent = conSpecificEvents.events.indexOf({ $0.id == event.id }){
+                    conSpecificEvents.events.removeAtIndex(indexEvent)
+                    conSpecificEvents.events.insert(event, atIndex: indexEvent)
+                }else{
+                    conSpecificEvents.events.append(event)
+                }
+            }
+        }
+        self.specificEvents.insert(conSpecificEvents, atIndex: indexSpecificEvents!)
     }
     
     func getSpecificEventsByIdGroup(idGroup: String) -> [Event]?{

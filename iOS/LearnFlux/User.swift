@@ -10,11 +10,11 @@ import Foundation
 
 struct User {
     
-    var userId : Int?;
-    var type : String?;
-    var link : String?;
-    
-    init () { }
+    var userId : Int?
+    var type : String?
+    var link : String?
+    var firstName: String?
+    var picture: String?
     
     init (userId: Int?, type: String?, link: String?) {
         self.userId = userId;
@@ -23,11 +23,12 @@ struct User {
     }
     
     init (dict : AnyObject?)  {
-//        guard let data = User.convertFromDict(dict) else { return; }
-        guard let data = dict else { return; }
-        if let s = data["id"] as? Int { self.userId = s; }
-        if let s = data["type"] as? String { self.type = s; }
-        if let s = data["link"] as? String { self.link = s; }
+        guard let data = dict else { return }
+        if let s = data["id"] as? Int { self.userId = s }
+        if let s = data["type"] as? String { self.type = s }
+        if let s = data["link"] as? String { self.link = s }
+        if let s = data["first_name"] as? String { self.firstName = s }
+        if let s = data["profile_picture"] as? String{ self.picture = s }
     }
     
     static func convertFromArr (arr : AnyObject?) -> [User]? {

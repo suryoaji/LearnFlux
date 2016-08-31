@@ -15,14 +15,7 @@ import Foundation
 
 class GroupDetails : UIViewController, GroupDetailsDelegate {
     let clientData = Engine.clientData
-    weak var orgEventsDelegate : OrgEventsDelegate!{
-        didSet{
-            if orgEventsDelegate != nil{
-                orgEventsDelegate.setIsAdminOrNot(isAdmin)
-                if group != nil { orgEventsDelegate.setIdGroupOfEvents(idGroup: group!.id) }
-            }
-        }
-    }
+    weak var orgEventsDelegate : OrgEventsDelegate!
     
     @IBOutlet var viewSelection : UIView!;
     @IBOutlet var viewTabs : UIView!;
@@ -30,6 +23,7 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
     var tabs: Array<UIViewController> = []
     var indexActiveTabs : Int = 0{
         didSet{
+            setLabelMenuesColor(indexActiveTabs)
             if isAdmin{
                 switch indexActiveTabs {
                 case 0:
@@ -49,6 +43,10 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         }
     }
     
+    
+    @IBOutlet weak var lblGroupsMenu: UILabel!
+    @IBOutlet weak var lblEventsMenu: UILabel!
+    @IBOutlet weak var lblActivitiesMenu: UILabel!
     @IBOutlet var lblTitle : UILabel!;
     @IBOutlet var viewTitle : UIView!;
     
@@ -90,15 +88,24 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         self.colorTitle = groupInfo.color;
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad();
+    func setTabsWithController(){
         tabs.append(Util.getViewControllerID("GroupProfile"))
         tabs.append(Util.getViewControllerID("OrgEvents"))
         tabs.append(Util.getViewControllerID("OrgActivities"))
-        changeView(0);
         (tabs[0] as! GroupProfile).initFromCall(group!);
         (tabs[0] as! GroupProfile).groupDetailsDelegate = self
+        (tabs[1] as! OrgEvents).groupDetailsDelegate = self
         self.orgEventsDelegate = (tabs[1] as! OrgEvents)
+        orgEventsDelegate.setIdGroupOfEvents(idGroup: group!.id)
+        orgEventsDelegate.setIsAdminOrNot(isAdmin)
+        orgEventsDelegate.setParentController(.GroupDetail)
+        changeView(0)
+        
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad();
+        self.setTabsWithController()
         
         self.title = "Details";
         self.lblTitle.text = self.strTitle.uppercaseString;
@@ -114,6 +121,16 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
             flow.removeFlowVc(self.navigationController!);
             flow.clear();
         }
+        NSNotificationCenter.defaultCenter().postNotificationName("GroupDetailAppearNotification", object: nil)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        orgEventsDelegate.removeSpecificNotification()
+    }
+    
+    deinit{
+        orgEventsDelegate.removeAllNotification()
     }
     
     func changeView (index : Int) {
@@ -167,6 +184,28 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
             break
         case 2:
             print("create activity is tapped")
+            break
+        default:
+            break
+        }
+    }
+    
+    func setLabelMenuesColor(index: Int){
+        switch index {
+        case 0:
+            lblGroupsMenu.textColor = UIColor.blackColor()
+            lblEventsMenu.textColor = UIColor.lightGrayColor()
+            lblActivitiesMenu.textColor = UIColor.lightGrayColor()
+            break
+        case 1:
+            lblGroupsMenu.textColor = UIColor.lightGrayColor()
+            lblEventsMenu.textColor = UIColor.blackColor()
+            lblActivitiesMenu.textColor = UIColor.lightGrayColor()
+            break
+        case 2:
+            lblGroupsMenu.textColor = UIColor.lightGrayColor()
+            lblEventsMenu.textColor = UIColor.lightGrayColor()
+            lblActivitiesMenu.textColor = UIColor.blackColor()
             break
         default:
             break

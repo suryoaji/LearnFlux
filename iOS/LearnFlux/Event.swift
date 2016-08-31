@@ -30,7 +30,7 @@ class Event: NSObject {
     var thread: EventThread!
     var status: Int! = 0
     
-    init(id: String, title: String, time: String, details: String, location: String) {
+    init(id: String, title: String, time: String, details: String, location: String, status: Int) {
         self.title = title
         self.id = id
         self.time = time
@@ -39,10 +39,11 @@ class Event: NSObject {
         self.details = details
         self.participants = []
         self.thread = (id: "", title: "")
+        self.status = status
     }
     
-    convenience init(id: String, time: String, details: String, location: String) {
-        self.init(id: id, title: "", time: time, details: details, location: location)
+    convenience init(id: String, time: String, details: String, location: String, status: Int) {
+        self.init(id: id, title: "", time: time, details: details, location: location, status: status)
     }
     
     func selfDescription() -> (String){
@@ -84,19 +85,22 @@ class Event: NSObject {
         guard let rawTitle        = newInfo["title"],
               let rawParticipants = newInfo["participants"],
               let rawBy           = newInfo["created_by"],
-              let rawThread       = newInfo["thread"] else{
+              let rawThread       = newInfo["thread"],
+              let status          = newInfo["rsvp"] else{
                 return
         }
         guard let sTitle          = rawTitle as? String,
               let arrParticipants = rawParticipants as? Array<AnyObject>,
               let dictBy          = rawBy as? Dictionary<String, AnyObject>,
-              let dictThread      = rawThread as? Dictionary<String, AnyObject> else{
+              let dictThread      = rawThread as? Dictionary<String, AnyObject>,
+              let iStatus         = status as? Int else{
                 return
         }
         self.setPropertyParticipants(getParticipantsFromArr(arrParticipants))
         self.setPropertyThread(getThreadFromDict(dictThread))
         self.setPropertyBy(getByFromDict(dictBy))
         self.title = sTitle
+        self.status = iStatus
     }
     
     func getByFromDict(dict: Dictionary<String, AnyObject>)->(User){
@@ -133,20 +137,27 @@ class Event: NSObject {
         guard let id = dict["id"],
               let timestamp = dict["timestamp"],
               let details = dict["details"],
-              let location = dict["location"] else{
+              let location = dict["location"],
+              let status = dict["rsvp"] else{
               return nil
         }
         guard let sId        = id as? String,
               let dTimestamp = timestamp as? Double,
               let sDetails   = details as? String,
-              let sLocation  = location as? String else{
+              let sLocation  = location as? String,
+              let iStatus = status as? Int else{
                 return nil
         }
         let date = NSDate(timeIntervalSince1970: dTimestamp)
+        let returnedEvent : Event!
         if let title = dict["title"] where (title as? String) != nil{
-            return Event(id: sId, title: title as! String, time: String(date), details: sDetails, location: sLocation)
+             returnedEvent = Event(id: sId, title: title as! String, time: String(date), details: sDetails, location: sLocation, status: iStatus)
+        }else{
+             returnedEvent = Event(id: sId, time: String(date), details: sDetails, location: sLocation, status: iStatus)
         }
-        return Event(id: sId, time: String(date), details: sDetails, location: sLocation)
+        returnedEvent.updateMe(dict)
+        
+        return returnedEvent
     }
     
 }

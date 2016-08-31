@@ -69,7 +69,6 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     func initFromCall (group : Group) {
         self.group = group
-        tv.reloadData();
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

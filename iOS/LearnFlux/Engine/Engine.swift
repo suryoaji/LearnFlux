@@ -280,9 +280,26 @@ class Engine : NSObject {
                     }
                 }
                 if callback != nil { callback!(status, JSON) }
+                getDetailSpecificEventsByIdGroup(idGroup)
             }
         }
         
+    }
+    
+    static func getDetailSpecificEventsByIdGroup(idGroup: String){
+        if let events = clientData.getSpecificEventsByIdGroup(idGroup) where !events.isEmpty{
+            for event in events{
+                makeRequestAlamofire(url: Url.events + "/\(event.id)", param: nil){status, JSON in
+                    if status == .Success{
+                        if let dict = self.getDictData(JSON){
+                            if let newEvent = Event.convertToEvent(dict){
+                                clientData.updateSpecificEventsByIdGroup(idGroup, events: [newEvent])
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     static func getEvents(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
@@ -292,6 +309,19 @@ class Engine : NSObject {
                 if let data = json?["data"]{
                     let arrData = data as! Array<Dictionary<String, AnyObject>>
                     clientData.setMyEvents(arrData)
+                }
+            }
+            if callback != nil{ callback!(status, dataJSON) }
+        }
+    }
+    
+    static func getConnection(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
+        makeRequestAlamofire(viewController, url: Url.connections, param: nil){ status, dataJSON in
+            if let rawJSON = dataJSON{
+                let json = JSON(rawJSON).dictionaryObject
+                if let data = json?["data"]{
+                    let arrData = data as! Array<Dictionary<String, AnyObject>>
+                    clientData.setMyConnections(arrData)
                 }
             }
             if callback != nil{ callback!(status, dataJSON) }
@@ -482,20 +512,42 @@ class Engine : NSObject {
         }
     }
     
-    static func updateStatusEvent(status: Int, inout rowEvent: Int?, callback: JSONreturn? = nil){
-        if clientData.getMyEvents()![rowEvent!].status != status{
-            makeRequestAlamofire(method: .PUT, url: Url.events + "/\(clientData.getMyEvents()![rowEvent!].id)", param: ["rsvp" : status], callback: { (stateReq, _) in
-                if stateReq == .Success{
-                    clientData.getMyEvents()![rowEvent!].status = status
+    static func updateStatusEvent(status: Int, inout rowEvent: Int?, specificGroup: String? = nil, callback: JSONreturn? = nil){
+        if let idGroup = specificGroup{
+            if let events = clientData.getSpecificEventsByIdGroup(idGroup) where !events.isEmpty{
+                if events[rowEvent!].status != status{
+                    makeRequestAlamofire(method: .PUT, url: Url.events + "/\(events[rowEvent!].id)", param: ["rsvp" : status], callback: { (stateReq, _) in
+                        if stateReq == .Success{
+                            clientData.getSpecificEventsByIdGroup(idGroup)![rowEvent!].status = status
+                        }
+                        rowEvent = nil
+                        if callback != nil { callback!(stateReq, nil) }
+                    })
                 }
-                rowEvent = nil
-            })
+            }
+        }else{
+            if clientData.getMyEvents()![rowEvent!].status != status{
+                makeRequestAlamofire(method: .PUT, url: Url.events + "/\(clientData.getMyEvents()![rowEvent!].id)", param: ["rsvp" : status], callback: { (stateReq, _) in
+                    if stateReq == .Success{
+                        clientData.getMyEvents()![rowEvent!].status = status
+                    }
+                    rowEvent = nil
+                    if callback != nil { callback!(stateReq, nil) }
+                })
+            }
         }
     }
     
     static func createEvent(dict: Dictionary<String, AnyObject>, idGroup: String = "", callback: JSONreturn? = nil){
         let param = !idGroup.isEmpty ? paramForCreateEvent(dict, idGroup: idGroup) : dict
         makeRequestAlamofire(method: .POST, url: Url.events, param: param){ status, JSON in
+            if status == .Success && JSON != nil{
+                var dict = getDictData(JSON)
+                dict!["rsvp"] = 2
+                let event = Event.convertToEvent(dict!)
+                let idGroup = (param!["reference"] as! Dictionary<String, AnyObject>)["id"] as! String
+                clientData.updateSpecificEventsByIdGroup(idGroup, events: [event!])
+            }
             if callback != nil { callback!(status, JSON) }
         }
     }

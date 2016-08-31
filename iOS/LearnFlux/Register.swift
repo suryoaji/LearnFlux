@@ -28,61 +28,47 @@ class Register : UIViewController {
     
     @IBAction func submit (sender: AnyObject) {
         popTip.hide()
-        if (self.tfUsername.text == "") {
-            self.popTip.showText("Enter your desired username", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfUsername.frame);
-            return;
+        guard let username = self.tfUsername.text else{
+            self.popError("Enter your desired username", inView: tfUsername)
+            return
         }
-        else if (self.tfEmail.text == "") {
-            self.popTip.showText("Enter valid email address", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfEmail.frame);
-            return;
+        guard let email = self.tfEmail.text else{
+            self.popError("Enter valid email address", inView: tfEmail)
+            return
         }
-        else if (self.tfFirstName.text == "") {
-            self.popTip.showText("Enter your firstname", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfFirstName.frame);
-            return;
+        guard let firstName = self.tfFirstName.text else{
+            self.popError("Enter your firstname", inView: tfFirstName)
+            return
         }
-        else if (self.tfLastName.text == "") {
-            self.popTip.showText("Enter your lastname (use '-' if there isn't any)", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfLastName.frame);
-            return;
+        guard let lastName = self.tfLastName.text else{
+            self.popError("Enter your lastname (use '-' if there isn't any)", inView: tfLastName)
+            return
         }
-        else if (self.tfPassword.text == "") {
-            self.popTip.showText("Enter desired password", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfPassword.frame);
-            return;
+        guard let password = self.tfPassword.text else{
+            self.popError("Enter desired password", inView: tfPassword)
+            return
         }
-        else if (self.tfConfirm.text == "") {
-            self.popTip.showText("Please re-enter your password", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfConfirm.frame);
-            return;
+        guard let confirm = self.tfConfirm.text else{
+            self.popError("Please re-enter your password", inView: tfConfirm)
+            return
         }
-        
-        Engine.register(self, username: tfUsername.text!, firstName: tfFirstName.text!, lastName: tfLastName.text!, email: tfEmail.text!, password: tfPassword.text!, passwordConfirm: tfConfirm.text!) { status, JSON in
+        Engine.register(self, username: username, firstName: firstName, lastName: lastName, email: email, password: password, passwordConfirm: confirm) { status, JSON in
             if (status == .CustomError) {
-//                let errorWrapper = JSON!["errors"]! as! NSDictionary;
-//                let error = errorWrapper.valueForKey("messages")! as! NSDictionary;
-//                print (error);
-//                dispatch_async(dispatch_get_main_queue()) {
-//                    if let errMsg = error.valueForKey("username") as? String {
-//                        self.tfUsername.becomeFirstResponder();
-//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfUsername.frame)
-//                    }
-//                    else if let errMsg = error.valueForKey("email") as? String {
-//                        self.tfEmail.becomeFirstResponder();
-//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfEmail.frame)
-//                    }
-//                    else if let errMsg = error.valueForKey("password") as? String {
-//                        self.tfPassword.becomeFirstResponder();
-//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfPassword.frame)
-//                    }
-//                    else if let errMsg = error.valueForKey("passwordEqualToConfirmationPassword") as? String {
-//                        self.tfPassword.becomeFirstResponder();
-//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfPassword.frame)
-//                    }
-//                    else if let errMsg = error.valueForKey("passwordConfirm") as? String {
-//                        self.tfConfirm.becomeFirstResponder();
-//                        self.popTip.showText(errMsg, direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfConfirm.frame)
-//                    }
-//                    else {
-//                        self.popTip.showText("Sorry, unhandled error occured.", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view.viewWithTag(100), fromFrame: self.tfConfirm.frame)
-//                    }
-//                }
+                let errors = JSON!["errors"] as! Dictionary<String, AnyObject>
+                if let messages = errors["messages"] where (messages as? Array<String>) != nil{
+                    if let message = (messages as! Array<String>).first{
+                        if message.lowercaseString.containsString("password"){
+                            self.popError(message, inView: self.tfPassword)
+                        }else if message.lowercaseString.containsString("email"){
+                            self.popError(message, inView: self.tfEmail)
+                        }else if message.lowercaseString.containsString("username"){
+                            self.popError(message, inView: self.tfUsername)
+                        }else{
+                            self.popError(message, inView: self.btnSubmit)
+                        }
+                    }
+                    return
+                }
             }
             else if (status == .Success) {
                 self.navigationController?.popViewControllerAnimated(true);
@@ -162,6 +148,8 @@ class Register : UIViewController {
         return false // We do not want UITextField to insert line-breaks.
     }
     
-
+    func popError(message: String, inView: UIView){
+        self.popTip.showText(message, direction: AMPopTipDirection.Up, maxWidth: message.characters.count > 30 ? 200 : 100, inView: self.view.viewWithTag(100), fromFrame: inView.frame);
+    }
     
 }
