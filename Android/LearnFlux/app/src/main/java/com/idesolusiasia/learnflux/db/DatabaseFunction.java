@@ -42,13 +42,15 @@ public class DatabaseFunction {
 	}
 
 	public static List<Thread> getThreadList (Context c){
-		DataSource ds = new DataSource(c.getApplicationContext());
-		ds.open();
-		List<Thread> ts= ds.getAllThread();
-		ds.close();
-		ds=null;
-
-		return ts;
+		if (c!=null){
+			DataSource ds = new DataSource(c.getApplicationContext());
+			ds.open();
+			List<Thread> ts= ds.getAllThread();
+			ds.close();
+			ds=null;
+			return ts;
+		}
+		return null;
 	}
 
 	public static Thread getThreadDetail(Context c, String id){
