@@ -10,7 +10,7 @@ import UIKit
 
 class Event: NSObject {
     
-    typealias User = (id: String, type: String, link: String)
+//    typealias User = (id: String, type: String, link: String)
     typealias EventThread = (id: String, title: String)
     typealias Participant = (user: User, rsvp: Int)
     struct statusEvent{
@@ -34,7 +34,8 @@ class Event: NSObject {
         self.title = title
         self.id = id
         self.time = time
-        self.by = (id: "", type: "", link: "")
+//        self.by = (id: "", type: "", link: "")
+        self.by = User(userId: 0, type: "", link: "")
         self.location = location
         self.details = details
         self.participants = []
@@ -104,7 +105,7 @@ class Event: NSObject {
     }
     
     func getByFromDict(dict: Dictionary<String, AnyObject>)->(User){
-        return (id: String(dict["id"] as! Int), type: dict["type"] as! String, link: dict["link"] as! String)
+        return User(userId: dict["id"] as? Int, type: dict["type"] as? String, link: dict["link"] as? String)
     }
     
     func getThreadFromDict(dict: Dictionary<String, AnyObject>)->(EventThread){
@@ -123,14 +124,14 @@ class Event: NSObject {
     func getParticipant(dict: Dictionary<String, AnyObject>)->(Participant){
         let user = getUser(dict["user"] as! Dictionary<String, AnyObject>)
         let rsvp = dict["rsvp"] as! Int
-        if user.id == String(Engine.clientData.cacheMe()!["id"] as! Int){
+        if user.userId == Engine.clientData.cacheMe()!["id"] as? Int{
             self.setPropertyStatus(rsvp)
         }
         return (user: user, rsvp: rsvp)
     }
     
     func getUser(dict: Dictionary<String, AnyObject>) -> (User){
-        return (id: String(dict["id"] as! Int), type: String(dict["type"]!), link: String(dict["link"]!))
+        return User(userId: dict["id"] as? Int, type: String(dict["type"]!), link: String(dict["link"]!))
     }
     
     static func convertToEvent(dict: Dictionary<String, AnyObject>) -> (Event?){

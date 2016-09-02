@@ -13,21 +13,44 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
     @IBOutlet var cv : UICollectionView!;
     
     var groups : [Group]?
+    let clientData = Engine.clientData
+    let flow = Flow.sharedInstance
+    
+    func getOrganization(){
+        self.groups = clientData.getGroups(.Organisation)
+        cv.reloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad();
-        self.groups = Engine.getGroups(self, filter: .Organisation) { status, groups in
-            self.groups = groups!;
-            Util.mainThread() { self.cv.reloadData(); }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        getOrganization()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(getOrganization), name: "GroupsUpdateNotification", object: nil)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    @IBAction func rightNavigationBarButtonTapped(sender: UIBarButtonItem){
+        flow.begin(.NewOrganization)
+        flow.setCallback { result in
+            guard let title = result!["title"] as? String else { print ("FLOW: title not found"); return; }
+            guard let desc = result!["desc"] as? String else { print ("FLOW: desc not found"); return; }
+            guard let userIds = result!["userIds"] as? [Int] else { print ("FLOW: userIds not found"); return; }
+            Engine.createOrganization(self, name: title, description: desc, userId: userIds)
         }
-        self.cv.reloadData();
+        self.performSegueWithIdentifier("NewOrganization", sender: sender)
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if (groups != nil) {
-            return groups!.count;
-        }
-        else {
+        if (groups !=  nil) {
+            return groups!.count
+        }else {
             return 0;
         }
     }

@@ -59,26 +59,30 @@ class Data : NSObject {
             checkAllDataReady()
         }
     }
-    private var events : [Event]?
+    private var events : [Event]?{
+        didSet{
+            checkAllDataReady()
+        }
+    }
     private var threads: [Thread]?{
         didSet{
             if threads != nil{
                 let sortedThreads = threads!.sort({ $0.lastUpdated > $1.lastUpdated })
                 threads = sortedThreads
                 NSNotificationCenter.defaultCenter().postNotificationName("ThreadsUpdateNotification", object: nil)
-                checkAllDataReady()
             }
+            checkAllDataReady()
         }
     }
     private var groups: [Group]?{
         didSet{
+            NSNotificationCenter.defaultCenter().postNotificationName("GroupsUpdateNotification", object: nil)
             checkAllDataReady()
         }
     }
     private var specificEvents: Array<EventsByIdGroup> = []{
         didSet{
             NSNotificationCenter.defaultCenter().postNotificationName("SpecificEventsUpdateNotification", object: nil)
-            checkAllDataReady()
         }
     }
     
@@ -94,7 +98,9 @@ class Data : NSObject {
     
     func checkAllDataReady(){
         if threads != nil && groups != nil && events != nil && connection != nil{
-            NSNotificationCenter.defaultCenter().postNotificationName("dataSingletonReady", object: nil)
+            if groups!.filter({ $0.participants != nil && !$0.participants!.isEmpty }).count == groups!.count{
+                NSNotificationCenter.defaultCenter().postNotificationName("dataSingletonReady", object: nil)
+            }
         }
     }
     
@@ -161,6 +167,12 @@ class Data : NSObject {
         }
     }
     
+    func updateGroup(group: Group){
+        let index = groups!.indexOf({ $0.id == group.id })!
+        groups!.removeAtIndex(index)
+        groups!.insert(group, atIndex: index)
+    }
+    
     func getFilteredGroup(filterBy: FilterGroupType) -> ([Group]){
         let filteredGroups = getGroups()?.filter({ $0.type == "group" })
         if filteredGroups != nil{
@@ -215,7 +227,8 @@ class Data : NSObject {
                 conThreads.append(Thread(dict: arr[i], index: i))
             }
         }
-        self.threads = !conThreads.isEmpty ? conThreads : nil
+//        self.threads = !conThreads.isEmpty ? conThreads : nil
+        self.threads = conThreads
     }
     
     func addNewThread(dict: Dictionary<String, AnyObject>){
@@ -229,6 +242,26 @@ class Data : NSObject {
             saveThread(cacheThreads)
         }else{
             saveThread([dict])
+        }
+    }
+    
+    func deleteThread(id: String){
+        deleteThreadObject(id)
+        deleteThreadFromCache(id)
+    }
+    
+    func deleteThreadObject(id: String){
+        if let index = threads!.indexOf({ $0.id == id }){
+            threads!.removeAtIndex(index)
+        }
+    }
+    
+    func deleteThreadFromCache(id: String){
+        if var cache = cacheThreads(){
+            if let index = cache.indexOf({ $0["id"] != nil && ($0["id"]! as! String) == id }){
+                cache.removeAtIndex(index)
+                saveThread(cache)
+            }
         }
     }
     
@@ -256,6 +289,22 @@ class Data : NSObject {
         }else{
             threads = [Thread(dict: dict, isNew: true)]
         }
+    }
+    
+    func getThread(dict: Dictionary<String, AnyObject>) -> (Thread)?{
+        guard let id = dict["id"] where (id as? String) != nil else{
+            return nil
+        }
+        let sId = id as! String
+        if self.threads != nil{
+            let thread = self.threads!.filter({ $0.id == sId })
+            if thread.isEmpty{
+                addThread(dict)
+            }
+        }else{
+            addThread(dict)
+        }
+        return self.threads!.filter({ $0.id == sId }).first!
     }
     
     func getMyEvents()->[Event]?{

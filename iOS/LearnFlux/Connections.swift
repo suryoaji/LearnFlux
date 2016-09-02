@@ -11,11 +11,7 @@ import Foundation
 class Connections : UITableViewController {
     
     var buttonDone : UIBarButtonItem!
-    var connect = [User(dict: ["id" : 6, "first_name" : "admin"]),
-                  User(dict: ["id" : 7, "first_name" : "tester"]),
-                  User(dict: ["id" : 8, "first_name" : "tester2"]),
-                  User(dict: ["id" : 60, "first_name" : "tiatiatia"])]
-    var actualConnect = Array<User>()
+//    var actualConnect = Array<User>()
     var selectedConnect : Array<Bool> = [];
     let flow = Flow.sharedInstance
     let clientData = Engine.clientData
@@ -28,18 +24,15 @@ class Connections : UITableViewController {
         item.action = #selector(self.revealMenu);
         item.target = self;
         
-        for user in connect {
-            if (user.userId! != (Engine.clientData.defaults.valueForKey("me")!.valueForKey("id")! as! Int)) {
-                actualConnect.append(user)
-                selectedConnect.append(false)
-            }
+        if let connection = clientData.getMyConnection(){
+            selectedConnect = Array(count: connection.count, repeatedValue: false)
         }
         
         self.tabBarController?.title = "Connections";
         let flow = Flow.sharedInstance;
         
         if let activeFlow = flow.activeFlow() {
-            if activeFlow == .NewGroup {
+            if activeFlow == .NewGroup || activeFlow == .NewOrganization{
                 self.title = "Invite Participants"
                 setupDoneButton();
             }
@@ -48,7 +41,6 @@ class Connections : UITableViewController {
                 setupDoneButton()
             }
         }
-        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -64,8 +56,7 @@ class Connections : UITableViewController {
     
     @IBAction func updateConnection(){
         if let connection = clientData.getMyConnection(){
-            self.actualConnect = connection
-            self.selectedConnect = Array(count: actualConnect.count, repeatedValue: false)
+            self.selectedConnect = Array(count: connection.count, repeatedValue: false)
             self.tableView.reloadData()
         }
     }
@@ -85,14 +76,15 @@ class Connections : UITableViewController {
     func buttonDoneTapped(sender: UIBarButtonItem) {
         var userId : Array<Int> = [];
         for i in 0..<selectedConnect.count {
-            if (selectedConnect[i]) {
-                let el = connect[i]
-                userId.append(el.userId!);
+            if selectedConnect[i] && clientData.getMyConnection() != nil {
+                let el = clientData.getMyConnection()![i]
+                userId.append(el.userId!)
             }
         }
         flow.add(dict: ["userIds":userId]);
         if let activeFlow = flow.activeFlow() where activeFlow == .NewGroup ||
-                                                    activeFlow == .NewThread{
+                                                    activeFlow == .NewThread ||
+                                                    activeFlow == .NewOrganization{
             flow.end(self, andClear: true)
         }else if let activeFlow = flow.activeFlow() where activeFlow == .NewInterestGroup{
             flow.end()
@@ -109,8 +101,12 @@ class Connections : UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (section) {
-        case 1: return actualConnect.count;
-        default: return 0;
+        case 1:
+            if let count = clientData.getMyConnection()?.count{
+                return count
+            }
+            return 0
+        default: return 0
         }
     }
     
@@ -122,7 +118,7 @@ class Connections : UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("1-0")!;
         cell.setSeparatorType(CellSeparatorFull);
         let lbl = cell.viewWithTag(1) as! UILabel;
-        let user = actualConnect[indexPath.row];
+        let user = clientData.getMyConnection()![indexPath.row]
         var name = "\(user.userId!)"
         if user.firstName != nil{
             name += " \(user.firstName!)"
@@ -144,32 +140,17 @@ class Connections : UITableViewController {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
         let flow = Flow.sharedInstance;
         
-        if (flow.activeFlow() == .NewGroup || flow.activeFlow() == .NewThread || flow.activeFlow() == .NewInterestGroup) {
+        if (flow.activeFlow() != nil) {
             selectedConnect[indexPath.row] = !selectedConnect[indexPath.row];
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None);
             buttonDoneShouldEnable()
-        }
-        else {
-            let user = actualConnect[indexPath.row];
+        }else{
+            let user = clientData.getMyConnection()![indexPath.row]
             var arrUserId = Array<Int>();
             arrUserId.append(user.userId!)
-            Engine.createGroupChat(self, userId: arrUserId) { status, JSON in
-                if (JSON != nil) {
-                    dispatch_async(dispatch_get_main_queue()) {
-        //                self.performSegueWithIdentifier("InitiateChat", sender: JSON);
-                        let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow;
-        //                let JSON = sender as! Dictionary<String, AnyObject>
-                        let data = JSON!["data"]!!;
-                        print (data);
-                        vc.chatId = data["id"] as! String;
-                        let me = Engine.clientData.defaults.valueForKey("me")!;
-                        vc.senderId = String(me.valueForKey("id")!);
-                        vc.senderDisplayName = "";
-//                        vc.participants = Participant.convertFromArr(data["participants"])!;
-                        vc.thisChatType = "chat";
-                        vc.thisChatMetadata = ["title":"User ID = " + String(arrUserId[0])];
-                        self.navigationController?.pushViewController(vc, animated: true);
-                    }
+            Engine.createPrivateThread(userId: arrUserId){ status, thread in
+                if let thread = thread where status == .Success{
+                    self.performSegueWithIdentifier("InitiateChat", sender: thread)
                 }
             }
         }
@@ -181,10 +162,10 @@ class Connections : UITableViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "InitiateChat") {
-            let vc = segue.destinationViewController as! ChatFlow;
-            let JSON = sender as! Dictionary<String, AnyObject>
-            let data = JSON["data"]!;
-            vc.chatId = data["id"] as! String;
+            let chatVC = segue.destinationViewController as! ChatFlow;
+            let thread = sender as! Thread
+            
+            chatVC.initChat(clientData.getMyThreads()!.indexOf({ $0.id == thread.id })!, idThread: thread.id, from: .OpenChat)
         }
     }
 }

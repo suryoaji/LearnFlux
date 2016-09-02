@@ -162,6 +162,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         super.viewDidLoad()
         self.createScrollView()
         self.changeView(indicatorViewShown)
+        
         refreshData() {
             self.createScrollView()
             self.propagateData();

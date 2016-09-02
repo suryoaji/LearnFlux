@@ -174,13 +174,14 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         self.presentViewController(viewController, animated: animated, completion: nil)
     }
     
+    let flow = Flow.sharedInstance
     @IBAction func rightBarButtonTapped(sender: UIBarButtonItem) {
         switch indexActiveTabs {
         case 0:
             print("edit is tapped")
             break
         case 1:
-            print("create event is tapped")
+            menuCreateNewEventTapped()
             break
         case 2:
             print("create activity is tapped")
@@ -189,6 +190,18 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
             break
         }
     }
+    
+    func menuCreateNewEventTapped(){
+        flow.begin(.NewEvent)
+        flow.add(dict: ["reference"    : ["id" : self.group!.id,
+                                          "type" : "group"]])
+        flow.setCallback { result in
+            Engine.createEvent(result!)
+        }
+        self.navigationController?.pushViewController(Util.getViewControllerID("AttachEvent"), animated: true)
+    }
+    
+    
     
     func setLabelMenuesColor(index: Int){
         switch index {

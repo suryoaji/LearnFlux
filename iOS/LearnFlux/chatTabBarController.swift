@@ -20,13 +20,8 @@ class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
         self.tabBar.layer.shadowOffset = CGSizeMake(0, 2)
         self.tabBar.barTintColor = LFColor.green
         self.tabBar.tintColor = UIColor.whiteColor()
-        
+        self.view.backgroundColor = UIColor.whiteColor()
         // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController){
@@ -36,7 +31,7 @@ class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
             self.setRightNavigationBarButton(viewController)
         }else if viewController.isKindOfClass(Org){
             self.title = "Organisations"
-            self.removeRightNavigationBarButton()
+            self.setRightNavigationBarButton(viewController)
         }else{
             self.title = "Connections"
             self.removeRightNavigationBarButton()
@@ -55,6 +50,13 @@ class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
             navItem.rightBarButtonItem = rightBarButton
             rightBarButton.action = #selector(viewController.rightNavigationBarButtonTapped)
             rightBarButton.target = viewController
+        } else if let viewController = viewController as? Org{
+            let navItem = self.navigationItem
+            rightBarButton = UIBarButtonItem()
+            rightBarButton.image = UIImage(named: "addCalendar")
+            navItem.rightBarButtonItem = rightBarButton
+            rightBarButton.action = #selector(viewController.rightNavigationBarButtonTapped)
+            rightBarButton.target = viewController
         }
     }
     
@@ -62,14 +64,6 @@ class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
         self.navigationItem.rightBarButtonItem = nil
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//    }
 }

@@ -58,7 +58,7 @@ class NewGroups : UIViewController {
     }
     
     @IBAction func next (sender: AnyObject) {
-        let remaining = 25 - tfTitle.text!.characters.count;
+        let remaining = 40 - tfTitle.text!.characters.count;
         if (remaining < 0) {
             self.popTip.showText("The Group's subject is too long.", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view, fromFrame: self.tfTitle.frame);
         }

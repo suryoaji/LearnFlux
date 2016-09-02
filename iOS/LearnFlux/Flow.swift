@@ -13,6 +13,7 @@ enum FlowName{
     case NewThread
     case NewInterestGroup
     case NewEvent
+    case NewOrganization
     case None
 }
 

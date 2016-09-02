@@ -62,8 +62,10 @@ class NewHome : UIViewController {
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let interestGroupController = segue.destinationViewController as? OrgGroups{
-            interestGroupController.groups = clientData.getFilteredGroup(.ByInterestGroup)
+        if segue.identifier == "InterestGroup"{
+            if let interestGroupController = segue.destinationViewController as? OrgGroups{
+                interestGroupController.groups = clientData.getFilteredGroup(.ByInterestGroup)
+            }
         }
     }
 

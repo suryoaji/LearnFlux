@@ -252,6 +252,16 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         self.isShowParticipantsPanel = !self.isShowParticipantsPanel
     }
     
+    @IBAction func backButtonTapped(sender: UIBarButtonItem) {
+        let messages = clientData.getMyThreads()![rowIndexPathFromThread].messages
+        let countParticipants = clientData.getMyThreads()![rowIndexPathFromThread].participants.count
+        if countParticipants == 2 && (messages == nil || messages!.isEmpty) {
+            Engine.removeThread(threadId: self.chatId){ status, JSON in
+            }
+        }
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
     func initParticipantsPanel(){
         var textParticipants = ""
         let arrIdParticipants = clientData.getMyThreads()![rowIndexPathFromThread].participants

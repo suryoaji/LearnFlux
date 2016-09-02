@@ -22,6 +22,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var viewConfirmDelete: UIView!
     var idsThreadWillDeleted : Array<String> = []
     var image = ["group01", "group02", "group03", "group04", "group05", "male04", "female01", "male01", "female02", "male02"]
+    var timer : NSTimer!
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -33,16 +34,13 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         initAnimationDeleteNeeds()
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated);
-        setTabBarVisible(true, animated: true);
-        
-    }
-    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.deleteState = false
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateTableView), name: "ThreadsUpdateNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.countForUpdate), name: "ThreadsUpdateNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.countForUpdate), name: "GroupsUpdateNotification", object: nil)
+        self.tv.reloadData()
+        setTabBarVisible(true, animated: true);
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -74,7 +72,9 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.setSeparatorType(CellSeparatorFull);
         let threadName = cell.viewWithTag(1) as! UILabel;
         let threadLastMessage = cell.viewWithTag(2) as! UILabel;
-        threadLastMessage.text = "Description";
+        
+        threadLastMessage.text = self.setThreadLastMessage(indexPath.row)
+        
         let selectedThread = Engine.clientData.getMyThreads()![indexPath.row]
         threadName.text = Engine.generateThreadName(selectedThread);
         let pp = cell.viewWithTag(10) as! UIImageView;
@@ -101,37 +101,6 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
             labelLastUpdated.text = self.setLabelLastUpdated(threads[indexPath.row])
         }
         return cell;
-    }
-    
-    func setLabelLastUpdated(thread: Thread) -> (String){
-        let dateNow = NSDate().timeIntervalSince1970
-        let dateMessage = thread.lastUpdated
-        let rangeDate = dateNow - dateMessage
-        let minutes = Int(rangeDate / 60)
-        let hours = minutes / 60
-        
-        if minutes <= 60{
-            if minutes < 2{ return "Just now" }else{ return "\(minutes) minutes ago" }
-        }else{
-            let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
-            let components = calendar?.components([.Year, .Month, .Day, .Hour, .Minute, .Second], fromDate: NSDate())
-            let formatter : NSDateFormatter = {
-                let tmpFormatter = NSDateFormatter()
-                tmpFormatter.dateFormat = "y M d H m s"
-                return tmpFormatter
-            }()
-            let string = "\(components!.year) \(components!.month) \(components!.day) 0 0 0"
-            let range = dateMessage - formatter.dateFromString(string)!.timeIntervalSince1970
-            if range < 0{
-                if range < -60*60*24{
-                    return Util.getDateFromTimestamp(dateMessage).date
-                }else{
-                    return "Yesterday"
-                }
-            }else{
-                return "\(hours) hours ago"
-            }
-        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
@@ -339,6 +308,53 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    func setThreadLastMessage(row: Int) -> (String){
+        var threadLastMessage = ""
+        if let myThreads = clientData.getMyThreads(){
+            if let myGroups = clientData.getGroups(){
+                let group = myGroups.filter({ $0.thread != nil && $0.thread!.id == myThreads[row].id })
+                if !group.isEmpty && group.first!.description != nil{
+                    threadLastMessage = group.first!.description!
+                }
+            }
+            if myThreads[row].messages != nil && !myThreads[row].messages!.isEmpty{
+                threadLastMessage = myThreads[row].messages!.last!.message.text
+            }
+        }
+        return threadLastMessage
+    }
+    
+    func setLabelLastUpdated(thread: Thread) -> (String){
+        let dateNow = NSDate().timeIntervalSince1970
+        let dateMessage = thread.lastUpdated
+        let rangeDate = dateNow - dateMessage
+        let minutes = Int(rangeDate / 60)
+        let hours = minutes / 60
+        
+        if minutes <= 60{
+            if minutes < 2{ return "Just now" }else{ return "\(minutes) minutes ago" }
+        }else{
+            let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+            let components = calendar?.components([.Year, .Month, .Day, .Hour, .Minute, .Second], fromDate: NSDate())
+            let formatter : NSDateFormatter = {
+                let tmpFormatter = NSDateFormatter()
+                tmpFormatter.dateFormat = "y M d H m s"
+                return tmpFormatter
+            }()
+            let string = "\(components!.year) \(components!.month) \(components!.day) 0 0 0"
+            let range = dateMessage - formatter.dateFromString(string)!.timeIntervalSince1970
+            if range < 0{
+                if range < -60*60*24{
+                    return Util.getDateFromTimestamp(dateMessage).date
+                }else{
+                    return "Yesterday"
+                }
+            }else{
+                return "\(hours) hours ago"
+            }
+        }
+    }
+    
     func setTabBarVisible(visible:Bool, animated:Bool) {
         
         //* This cannot be called before viewDidLayoutSubviews(), because the frame is not set before this time
@@ -367,7 +383,11 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         return self.tabBarController?.tabBar.frame.origin.y < CGRectGetMaxY(self.view.frame)
     }
     
-    @IBAction func updateTableView(){
+    func updateTableView(){
         self.tv.performSelectorOnMainThread(#selector(UITableView.reloadData), withObject: nil, waitUntilDone: true)
+    }
+    
+    @IBAction func countForUpdate(){
+        timer = NSTimer(timeInterval: 2, target: self, selector: #selector(updateTableView), userInfo: nil, repeats: false)
     }
 }

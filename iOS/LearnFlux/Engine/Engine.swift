@@ -364,11 +364,19 @@ class Engine : NSObject {
     
     //Create Interest Group in API
     static func createGroupChat (viewController: UIViewController? = nil, name: String = "", description: String = "", userId: [Int], callback: JSONreturn? = nil) {
+        createGroupe(viewController, isOrganization: false, name: name, description: description, userId: userId, callback: callback)
+    }
+    
+    static func createOrganization (viewController: UIViewController? = nil, name: String = "", description: String = "", userId: [Int], callback: JSONreturn? = nil) {
+        createGroupe(viewController, isOrganization: true, name: name, description: description, userId: userId, callback: callback)
+    }
+    
+    static func createGroupe(viewController: UIViewController? = nil, isOrganization : Bool, name: String = "", description: String = "", userId: [Int], callback: JSONreturn? = nil){
         let param : Dictionary<String, AnyObject> =
-                    ["type"        : "group",
-                     "participants": userId,
-                     "name"       : name.capitalizedString,
-                     "description" : "\(description.capitalizedString) description"]
+            ["type"        : isOrganization ? "organization" : "group",
+             "participants": userId,
+             "name"       : name.capitalizedString,
+             "description" : "\(description.capitalizedString) description"]
         makeRequestAlamofire(viewController, method: .POST, url: Url.groups, param: param) { status, JSON in
             if let rawJSON = JSON{
                 if let rawData = (rawJSON as! Dictionary<String, AnyObject>)["data"]{
@@ -380,6 +388,23 @@ class Engine : NSObject {
                 }
             }
             if (callback != nil) { callback! (status, JSON); }
+        }
+    }
+    
+    static func createPrivateThread(viewController: UIViewController? = nil, userId: [Int], callback: ((RequestStatusType, Thread?) -> Void)? = nil){
+        makeRequestAlamofire(viewController, method: .POST, url: Url.messages, param: ["participants" : userId]){ status, JSON in
+            if let threadDict = getDictData(JSON) where status == .Success && JSON != nil{
+                let thread : Thread? = clientData.getThread(threadDict)
+                    if callback != nil { callback!(status, thread) }
+            }
+        }
+    }
+    
+    static func removeThread(viewController: UIViewController? = nil, threadId: String, callback: JSONreturn? = nil){
+        makeRequestAlamofire(viewController, method: .DELETE, url: Url.messages, param: ["ids" : [threadId]]){ status, JSON in
+            if status == .Success{
+                clientData.deleteThread(threadId)
+            }
         }
     }
 
@@ -545,6 +570,7 @@ class Engine : NSObject {
                 var dict = getDictData(JSON)
                 dict!["rsvp"] = 2
                 let event = Event.convertToEvent(dict!)
+                event?.setPropertyBy(User.convertFromDict(clientData.cacheMe())!)
                 let idGroup = (param!["reference"] as! Dictionary<String, AnyObject>)["id"] as! String
                 clientData.updateSpecificEventsByIdGroup(idGroup, events: [event!])
             }

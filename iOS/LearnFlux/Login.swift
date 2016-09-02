@@ -97,7 +97,15 @@ class Login: UIViewController, UITextFieldDelegate {
             }
             else {
                 Engine.me() { status, JSON in
-                    Engine.getGroups()
+                    Engine.getGroups(){ status, arrGroup in
+                        if let groups = arrGroup{
+                            for eachGroup in groups{
+                                Engine.getGroupInfo(groupId: eachGroup.id){ status, group in
+                                    Engine.clientData.updateGroup(group!)
+                                }
+                            }
+                        }
+                    }
                     Engine.getThreads()
                     Engine.getEvents(){ status, JSON in
                         if let events = Engine.clientData.getMyEvents(){
@@ -117,9 +125,13 @@ class Login: UIViewController, UITextFieldDelegate {
         popTip.hide();
     }
     
+    var isPush = false
     @IBAction func pushToHomeVC(){
-        Util.stopIndicator(self.view)
-        self.navigationController?.navigationBar.hidden = false
-        self.performSegueWithIdentifier("Home", sender: self)
+        if !isPush{
+            Util.stopIndicator(self.view)
+            self.navigationController?.navigationBar.hidden = false
+            self.performSegueWithIdentifier("Home", sender: self)
+            isPush = true
+        }
     }
 }

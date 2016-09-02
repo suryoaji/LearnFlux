@@ -54,6 +54,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
             }
         }
     }
+    var timer: NSTimer!
     
     @IBOutlet var tv : UITableView!;
     
@@ -104,7 +105,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         self.setTableViewData()
 
-        self.loadEvents(self)
+//        self.loadEvents(self)
         shouldRemoveHoldView()
         if self.parentController == .OrgDetail{
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(addObservers), name: "OrgDetailAppearNotification", object: nil)
@@ -160,7 +161,8 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func addObservers(){
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(viewShown), name: "OrgEventsShownNotification", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(reloadData), name: "SpecificEventsUpdateNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(countToReloadData), name: "SpecificEventsUpdateNotification", object: nil)
+        reloadData()
     }
     
     func removeAllNotification() {
@@ -174,14 +176,11 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func reloadData(){
         self.setTableViewData()
-        if idGroup == "57bffe803a603f4477a5039d"{
-            NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(test), userInfo: nil, repeats: true)
-        }
         self.tv.reloadData()
     }
     
-    func test(){
-        print(clientData.getSpecificEventsByIdGroup(self.idGroup)?.first?.status)
+    func countToReloadData(){
+        timer = NSTimer(timeInterval: 2, target: self, selector: #selector(reloadData), userInfo: nil, repeats: false)
     }
     
     func setTableViewData(){
@@ -222,6 +221,40 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         }
     }
     
+    func setViewDropdownState(viewDropdown: UIView, row: Int){
+        let expandImageView = viewDropdown.viewWithTag(30) as! UIImageView
+        var events = getEventsShown()
+        
+        if isCreatorOfEvent(events[row]){
+            viewDropdown.userInteractionEnabled = false
+            expandImageView.alpha = 0
+            viewDropdown.backgroundColor = UIColor(red: 246/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1)
+        }else{
+            viewDropdown.userInteractionEnabled = true
+            expandImageView.alpha = 1
+            viewDropdown.backgroundColor = UIColor.whiteColor()
+        }
+    }
+    
+    func getEventsShown() -> ([Event]){
+        var events : [Event] = []
+        if let eventsData = clientData.getSpecificEventsByIdGroup(self.idGroup){
+            events = eventsData
+        }else if let eventsData = clientData.getMyEvents(){
+            events = eventsData
+        }
+        return events
+    }
+    
+    func isCreatorOfEvent(event: Event) -> (Bool){
+        let idCreatorEvent = event.by.userId
+        if idCreatorEvent == clientData.cacheMe()!["id"] as? Int{
+            return true
+        }else{
+            return false
+        }
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell")!;
         
@@ -233,6 +266,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         viewDropdown.makeViewRoundedRectWithCornerRadius(5);
         viewDropdown.layer.borderColor = UIColor.init(red: 0.85, green: 0.85, blue: 0.85, alpha: 1).CGColor;
         viewDropdown.layer.borderWidth = 1;
+        setViewDropdownState(viewDropdown, row: indexPath.row)
         
         let lblAttendance = cell.viewWithTag(4)! as! UILabel;
         lblAttendance.text = attendance[indexPath.row];
@@ -257,37 +291,25 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let btnEdit = cell.viewWithTag(14) as! UIButton
         let btnMessage = cell.viewWithTag(11) as! UIButton
         btnMessage.addTarget(self, action: #selector(btnMessageTapped), forControlEvents: .TouchUpInside)
-        if let event = clientData.getSpecificEventsByIdGroup(self.idGroup)?[indexPath.row]{
-            lblTitle.text = "\(event.title)"
-            lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: event.time)!)
-            lblDay.text = "\(Util.getElementDate(.Day, stringDate: event.time)!)"
-            lblYear.text = "\(Util.getElementDate(.Year, stringDate: event.time)!)"
-            lblHour.text = "\(Util.getElementDate(.Hour, stringDate: event.time)!):\(Util.getElementDate(.Minute, stringDate: event.time)!)"
-            lblLocation.text = event.location
-            lblDesc.text = event.details
-            btnMessage.enabled = false
-            if event.thread != nil{
-                if let indexThread = clientData.getMyThreads()!.indexOf({ $0.id == event.thread.id }){
-                    btnMessage.enabled = true
-                    btnMessage.layer.name = "\(indexThread)"
-                }
-            }
-        }else if let event = clientData.getMyEvents()?[indexPath.row]{
-            lblTitle.text = "\(event.title)"
-            lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: event.time)!)
-            lblDay.text = "\(Util.getElementDate(.Day, stringDate: event.time)!)"
-            lblYear.text = "\(Util.getElementDate(.Year, stringDate: event.time)!)"
-            lblHour.text = "\(Util.getElementDate(.Hour, stringDate: event.time)!):\(Util.getElementDate(.Minute, stringDate: event.time)!)"
-            lblLocation.text = event.location
-            lblDesc.text = event.details
-            btnMessage.enabled = false
-            if event.thread != nil{
-                if clientData.getMyThreads()!.indexOf({ $0.id == event.thread.id }) != nil{
-                    btnMessage.enabled = true
-                }
+        
+        let events = getEventsShown()
+        let event = events[indexPath.row]
+        lblTitle.text = "\(event.title)"
+        lblMonth.text = Util.getSmallStringMonth(Util.getElementDate(.Month, stringDate: event.time)!)
+        lblDay.text = "\(Util.getElementDate(.Day, stringDate: event.time)!)"
+        lblYear.text = "\(Util.getElementDate(.Year, stringDate: event.time)!)"
+        lblHour.text = "\(Util.getElementDate(.Hour, stringDate: event.time)!):\(Util.getElementDate(.Minute, stringDate: event.time)!)"
+        lblLocation.text = event.location
+        lblDesc.text = event.details
+        btnMessage.enabled = false
+        if event.thread != nil{
+            if let indexThread = events.indexOf({ $0.id == event.thread.id }){
+                btnMessage.enabled = true
+                btnMessage.layer.name = "\(indexThread)"
             }
         }
-        if self.isAdmin{
+        
+        if self.isCreatorOfEvent(event){
             btnEdit.alpha = 1
             btnEdit.userInteractionEnabled = true
         }else{
