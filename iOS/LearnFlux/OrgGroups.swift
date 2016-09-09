@@ -16,8 +16,8 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     
     @IBOutlet var cv : UICollectionView!;
     
-    var pushDelegate : PushDelegate!;
-    var refreshDelegate : RefreshDelegate!;
+    weak var pushDelegate : PushDelegate!;
+    weak var refreshDelegate : RefreshDelegate!;
     var orgId : String! = ""
     var groups : [Group]?
     

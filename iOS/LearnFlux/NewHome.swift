@@ -7,9 +7,11 @@
 //
 
 import Foundation
+import PKRevealController
 
 class NewHome : UIViewController {
     let clientData = Engine.clientData
+    @IBOutlet weak var contentView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -21,7 +23,13 @@ class NewHome : UIViewController {
         item.target = self;
         
         self.addTapHandlerToAllImages(self.view);
-//        Util.showMessageInViewController(self, title: "Hello", message: "Hello, \(Data.defaults.valueForKey("me")!.valueForKey!("email")! as! String)");
+        
+        contentView.alpha = 0.3
+        contentView.frame.origin.x += UIScreen.mainScreen().bounds.width
+        UIView.animateWithDuration(0.23, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.0, options: .CurveEaseIn, animations: {
+            self.contentView.frame.origin.x = 0
+            self.contentView.alpha = 1.0
+            }, completion: nil)
     }
     
     override func viewDidAppear(animated: Bool) {

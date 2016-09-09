@@ -71,7 +71,7 @@ class Register : UIViewController {
                 }
             }
             else if (status == .Success) {
-                self.navigationController?.popViewControllerAnimated(true);
+                self.performSegueWithIdentifier("unwind", sender: self)
             }
         }
     }
@@ -81,7 +81,7 @@ class Register : UIViewController {
     }
     
     @IBAction func login (sender: AnyObject) {
-        self.navigationController?.popViewControllerAnimated(true);
+        self.performSegueWithIdentifier("unwind", sender: self)
     }
     
     override func viewDidLoad() {

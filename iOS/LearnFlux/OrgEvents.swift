@@ -25,8 +25,8 @@ import DropDown
 }
 
 class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, OrgEventsDelegate {
-    var pushDelegate : PushDelegate!
-    var groupDetailsDelegate: GroupDetailsDelegate!
+    weak var pushDelegate : PushDelegate!
+    weak var groupDetailsDelegate: GroupDetailsDelegate!
     
     var parentController : ParentEventController!
     let dropDown = DropDown()

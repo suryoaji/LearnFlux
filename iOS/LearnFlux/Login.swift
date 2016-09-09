@@ -21,10 +21,6 @@ class Login: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.hidden = true
-        self.navigationController?.navigationBar.barTintColor = LFColor.green
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor(), NSFontAttributeName : UIFont(name: "PingFangHK-Medium", size: 18)!]
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -44,10 +40,6 @@ class Login: UIViewController, UITextFieldDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        self.globalResignFirstResponder();
     }
     
     // MARK: magic code for adjusting text field into view.
@@ -91,6 +83,7 @@ class Login: UIViewController, UITextFieldDelegate {
             return;
         }
         Util.showIndicatorDarkOverlay(self.view, message: "loading")
+        self.isPush = false
         Engine.login(self, username: tfUsername.text!, password: tfPassword.text!) { status, JSON in
             if (JSON == nil) {
                 self.tfUsername.becomeFirstResponder();
@@ -129,9 +122,49 @@ class Login: UIViewController, UITextFieldDelegate {
     @IBAction func pushToHomeVC(){
         if !isPush{
             Util.stopIndicator(self.view)
-            self.navigationController?.navigationBar.hidden = false
-            self.performSegueWithIdentifier("Home", sender: self)
-            isPush = true
+            self.isPush = true
+            
+            let coverView = UIView(frame: UIScreen.mainScreen().bounds)
+            coverView.backgroundColor = UIColor.whiteColor()
+            coverView.alpha = 0.0
+            self.view.addSubview(coverView)
+            UIView.animateWithDuration(0.2, delay: 0, options: .CurveEaseInOut, animations: {
+                coverView.alpha = 1.0
+                }, completion: { finished in
+                    coverView.removeFromSuperview()
+                    let vc = Util.getViewControllerID("NavCon")
+                    self.revealController.frontViewController = vc
+            })
         }
     }
+    
+    @IBAction func unwindToLogin(segue: UIStoryboardSegue){
+        
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        self.globalResignFirstResponder();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

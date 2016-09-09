@@ -18,9 +18,11 @@ class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
         self.delegate = self
         self.tabBar.layer.shadowOpacity = 0.3
         self.tabBar.layer.shadowOffset = CGSizeMake(0, 2)
-        self.tabBar.barTintColor = LFColor.green
-        self.tabBar.tintColor = UIColor.whiteColor()
+//        self.tabBar.barTintColor = LFColor.green
+        self.tabBar.tintColor = LFColor.green
         self.view.backgroundColor = UIColor.whiteColor()
+        UITabBarItem.appearance().setTitleTextAttributes([NSFontAttributeName : UIFont(name: "BanglaSangamMN", size: 10)!], forState: .Normal)
+        
         // Do any additional setup after loading the view.
     }
     
@@ -40,6 +42,58 @@ class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
         transition.duration = 0.14
         transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
         self.view.window?.layer.addAnimation(transition, forKey: nil)
+        
+        
+        self.animatePressedTabBarButton(self.tabBar.subviews[tabBarController.selectedIndex + 1])
+    }
+    
+    override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+        if let animation = anim as? CABasicAnimation{
+            if let layer = animation.valueForKey("layer") as? CALayer{
+                let view = animation.valueForKey("view") as! UIView
+                view.backgroundColor = UIColor(red: 165.0/255, green: 210.0/255, blue: 113.0/255, alpha: 1.0)
+                view.clipsToBounds = false
+                layer.removeFromSuperlayer()
+            }
+        }
+    }
+    
+    func animatePressedTabBarButton(selectedTabBarItemView: UIView){
+        selectedTabBarItemView.transform = CGAffineTransformIdentity
+        UIView.animateKeyframesWithDuration(0.2, delay: 0, options: .CalculationModeLinear, animations: {
+            UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 1/2, animations: {
+                selectedTabBarItemView.transform = CGAffineTransformMakeScale(0.8, 0.8)
+            })
+            UIView.addKeyframeWithRelativeStartTime(1/2, relativeDuration: 1/2, animations: {
+                selectedTabBarItemView.transform = CGAffineTransformIdentity
+            })
+            }, completion: { finished in
+        })
+//        let path = UIBezierPath(ovalInRect: CGRectMake(selectedTabBarItemView.bounds.width/2, selectedTabBarItemView.bounds.height/2, 0, 0))
+//        let path2 = UIBezierPath(ovalInRect: CGRectMake(selectedTabBarItemView.bounds.width/2 - 100, selectedTabBarItemView.bounds.height/2 - 100, 200, 200))
+//        let layer = CAShapeLayer()
+//        layer.path = path.CGPath
+//        layer.fillColor = UIColor.whiteColor().CGColor
+//        layer.shadowOpacity = 1.0
+//        layer.shadowOffset = CGSizeMake(0, 0)
+//        layer.shadowRadius = 5.0
+//        layer.shadowColor = UIColor.darkGrayColor().CGColor
+//        layer.opacity = 0.2
+//        selectedTabBarItemView.layer.addSublayer(layer)
+//        selectedTabBarItemView.clipsToBounds = true
+//        let animation = CABasicAnimation(keyPath: "path")
+//        animation.fromValue = path.CGPath
+//        animation.toValue = path2.CGPath
+//        animation.duration = 0.2
+//        animation.delegate = self
+//        animation.setValue(layer, forKey: "layer")
+//        animation.setValue(selectedTabBarItemView, forKey: "view")
+//        layer.addAnimation(animation, forKey: "1")
+        
+//        viewController.tabBarItem = UITabBarItem(title: "Connections", image: UIImage(named: "group-24.png")?.imageWithRenderingMode(.AlwaysOriginal), selectedImage: UIImage(named: "group-24.png"))
+//        var firstViewController:UIViewController = UIViewController()
+//        var customTabBarItem:UITabBarItem = UITabBarItem(title: nil, image: UIImage(named: "YOUR_IMAGE_NAME")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal), selectedImage: UIImage(named: "YOUR_IMAGE_NAME"))
+//        firstViewController.tabBarItem = customTabBarItem
     }
     
     func setRightNavigationBarButton(viewController: UIViewController){
