@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -340,6 +341,29 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		listcontent = (ListView) dial.findViewById(R.id.alert_list);
 		Button next = (Button)dial.findViewById(R.id.btnNext);
 		Button cancel = (Button)dial.findViewById(R.id.btnCancel);
+		Engine.getMyFriend(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				try {
+					JSONArray datas = obj.getJSONArray("data");
+					ArrayList<Participant> p = new ArrayList<Participant>();
+					for (int i=0;i<datas.length();i++){
+						Participant participant = Converter.convertPeople(datas.getJSONObject(i));
+						if (participant.getId()!= User.getUser().getID()){
+							p.add(participant);
+						}
+					}
+
+					if (p.size()>=0){
+						adap = new AddGroupAdapter(getApplicationContext(), p);
+						listcontent.setAdapter(adap);
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+			}
+		});
 		next.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -370,29 +394,6 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 			@Override
 			public void onClick(View view) {
 				dial.dismiss();
-			}
-		});
-		Engine.getMyFriend(getApplicationContext(), new RequestTemplate.ServiceCallback() {
-			@Override
-			public void execute(JSONObject obj) {
-				try {
-					JSONArray datas = obj.getJSONArray("data");
-					ArrayList<Participant> p = new ArrayList<Participant>();
-					for (int i=0;i<datas.length();i++){
-						Participant participant = Converter.convertPeople(datas.getJSONObject(i));
-						if (participant.getId()!= User.getUser().getID()){
-							p.add(participant);
-						}
-					}
-
-					if (p.size()>=0){
-						adap = new AddGroupAdapter(getApplicationContext(), p);
-						listcontent.setAdapter(adap);
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-
 			}
 		});
 		dial.show();

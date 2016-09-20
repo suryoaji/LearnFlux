@@ -30,6 +30,7 @@ public class HomeActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(HomeActivity.this,ChatsActivity.class);
+				i.putExtra("chatroom", "fromHome");
 				startActivity(i);
 			}
 		});
