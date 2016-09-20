@@ -123,5 +123,10 @@ public class LoginActivity extends AppCompatActivity{
         //TODO: Replace this with your own logic
         return password.length() > 4;
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }
 
