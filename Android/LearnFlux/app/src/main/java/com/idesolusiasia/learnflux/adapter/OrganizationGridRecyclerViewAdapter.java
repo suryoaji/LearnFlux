@@ -49,6 +49,7 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 			public void onClick(View view) {
 				Intent i = new Intent(context, ChattingActivity.class);
 				i.putExtra("idThread", org.getThread().getId());
+				i.putExtra("name", org.getName());
 				context.startActivity(i);
 			}
 		});
