@@ -68,9 +68,6 @@ public class ChatsActivity extends BaseActivity {
 		if(i.equalsIgnoreCase("org")){
 			mViewPager.setCurrentItem(1);
 		}
-		if(i.equalsIgnoreCase("fromHome")){
-			mViewPager.setCurrentItem(0);
-		}
 		else if(i.equalsIgnoreCase("chat")){
 			mViewPager.setCurrentItem(2);
 		}

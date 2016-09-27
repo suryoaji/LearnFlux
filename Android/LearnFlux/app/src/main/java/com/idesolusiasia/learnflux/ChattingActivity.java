@@ -53,6 +53,7 @@ public class ChattingActivity extends BaseActivity {
 	ChatBubbleAdapter adap;
 	ListView listView;
 	String idThread = "";
+	String name = "";
 	Gson gson= new Gson();
 	boolean firstTime = true;
 	int positionLast =0;
@@ -75,6 +76,7 @@ public class ChattingActivity extends BaseActivity {
 		super.onCreateDrawer(savedInstanceState);
 
 		idThread = getIntent().getStringExtra("idThread");
+		name = getIntent().getStringExtra("name");
 
 		Log.i(TAG, "onCreate: "+ getIntent().getStringExtra("idThread") );
 
@@ -86,6 +88,7 @@ public class ChattingActivity extends BaseActivity {
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+		toolbar.setTitle(name);
 
 
 		ivScrollDown = (ImageView) findViewById(R.id.ivScrollDown);
