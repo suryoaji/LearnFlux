@@ -2,14 +2,18 @@ package com.idesolusiasia.learnflux;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +38,7 @@ import java.util.List;
 /**
  * Created by Ide Solusi Asia on 8/15/2016.
  */
-public class InterestGroup extends AppCompatActivity {
+public class InterestGroup extends BaseActivity{
 
     ArrayList<Group> arrOrg = new ArrayList<Group>();
     public Participant participant=null;
@@ -48,14 +52,21 @@ public class InterestGroup extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_interest);
+        //setContentView(R.layout.activity_group_interest);
+        setContentView(R.layout.activity_base);
+        super.onCreateDrawer(savedInstanceState);
+
+
+        FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
+        final LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View childLayout = layoutInflater.inflate(
+                R.layout.activity_group_interest, null);
+        parentLayout.addView(childLayout);
         recyclerView = (RecyclerView)findViewById(R.id.recycler_group_interest);
         emptyView = (TextView) findViewById(R.id.empty_view);
         lLayout = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(lLayout);
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getApplicationContext(), R.dimen.item_offset);
-        recyclerView.addItemDecoration(itemDecoration);
         initGroup();
     }
     private void initGroup(){

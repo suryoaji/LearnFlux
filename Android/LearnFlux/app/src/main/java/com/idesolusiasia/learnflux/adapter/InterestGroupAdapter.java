@@ -40,7 +40,7 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
     }
 
     @Override
-    public void onBindViewHolder(OrgTileHolder holder, int position) {
+    public void onBindViewHolder(OrgTileHolder holder, final int position) {
         final Group org= organizations.get(position);
         holder.tvName.setText(org.getName());
         holder.ivLogo.setDefaultImageResId(R.drawable.organization);
@@ -49,6 +49,7 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
             public void onClick(View view) {
                 Intent i = new Intent(context, ChattingActivity.class);
                 i.putExtra("idThread", org.getThread().getId());
+                i.putExtra(("name"), org.getName());
                 context.startActivity(i);
             }
         });

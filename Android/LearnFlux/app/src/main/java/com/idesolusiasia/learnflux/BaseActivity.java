@@ -83,6 +83,7 @@ public class BaseActivity extends AppCompatActivity
 			startActivity(i);
 		}else if (id == R.id.nav_chats){
 			Intent i = new Intent(BaseActivity.this, ChatsActivity.class);
+			i.putExtra("chatroom", "chat");
 			//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
 		}else if (id == R.id.nav_logout){

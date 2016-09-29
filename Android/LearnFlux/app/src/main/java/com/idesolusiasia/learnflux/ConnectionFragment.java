@@ -67,7 +67,7 @@ public class ConnectionFragment extends Fragment {
 			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 				@Override
-				public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+				public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
 					int[] ids = new int[]{adap.getItem(position).getId()};
 					Engine.createThread(getContext(), ids, adap.getItem(position).getFirstName(), new RequestTemplate.ServiceCallback() {
 						@Override
@@ -76,6 +76,7 @@ public class ConnectionFragment extends Fragment {
 								String id = obj.getJSONObject("data").getString("id");
 								Intent i = new Intent(getContext(),ChattingActivity.class);
 								i.putExtra("idThread",id);
+								i.putExtra("name", adap.getItem(position).getFirstName());
 								startActivity(i);
 							} catch (JSONException e) {
 								e.printStackTrace();
