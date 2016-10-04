@@ -56,21 +56,17 @@ class Menu : UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
-        
-        if (indexPath.isEqualCode("2-0")) {
-            self.revealController.showViewController(self);
-            let vc = Util.getViewControllerID("Profile");
-            let nc = UINavigationController();
-            nc.setViewControllers([vc], animated: false);
-//            self.revealController.frontViewController.navigationController?.setViewControllers([vc], animated: true);
-            self.revealController.setFrontViewController(nc, focusAfterChange: true, completion: nil);
-            self.revealController.showViewController(nc);
+        self.revealController.showViewController(self)
+        var vc : UIViewController?
+        if indexPath.isEqualCode("2-0") {
+            vc = Util.getViewControllerID("Profile")
+        }else if indexPath.isEqualCode("3-7"){
+            vc = Util.getViewControllerID("InterestGroups")
         }
-        
-        if (indexPath.isEqualCode("3-1")) {
-            self.revealController.showViewController(self);
-//            self.revealController.frontViewController.navigationController?.pushViewController(Util.getViewControllerID("Chats"), animated: true);
-            self.revealController.setFrontViewController(Util.getViewControllerID("Chats"), focusAfterChange: true, completion: nil);
+        if let vc = vc where self.revealController.frontViewController.isKindOfClass(NavController){
+            let navController = self.revealController.frontViewController as! NavController
+            navController.pushViewController(vc, animated: false)
+            self.revealController.showViewController(navController)
         }
     }
     

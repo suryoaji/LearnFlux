@@ -43,6 +43,7 @@ typealias JSONreturn = ((RequestStatusType, AnyObject?)->Void)
 
 struct LFColor{
     static let green = UIColor(red: 124/255.0, green: 191/255.0, blue: 49/255.0, alpha: 1)
+    static let blue = UIColor(red: 10/255.0, green: 65/255.0, blue: 71/255.0, alpha: 1.0)
 }
 
 class Engine : NSObject {

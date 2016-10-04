@@ -1,5 +1,5 @@
 //
-//  navController.swift
+//  NavController.swift
 //  LearnFlux
 //
 //  Created by ISA on 8/19/16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class navController: UINavigationController {
+class NavController: UINavigationController {
     
     let flow = Flow.sharedInstance
     
