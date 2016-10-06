@@ -85,7 +85,7 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
     func initFromCall(groupInfo : Group) {
         group = groupInfo;
         self.strTitle = groupInfo.name!;
-        self.colorTitle = groupInfo.color;
+        self.colorTitle = groupInfo.color ?? LFColor.blue
     }
     
     func setTabsWithController(){

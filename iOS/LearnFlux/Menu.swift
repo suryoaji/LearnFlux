@@ -36,7 +36,6 @@ class Menu : UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let code = indexPath.code;
-        NSLog(code);
         let cell = tableView.dequeueReusableCellWithIdentifier(code)!;
         
         if (indexPath.isEqualCode("1-0") ||

@@ -10,7 +10,7 @@ import UIKit
 
 class RowInterestsCell: UITableViewCell {
 
-    @IBOutlet weak var view: UIView!
+    @IBOutlet weak var imageViewPhoto: UIImageView!
     @IBOutlet weak var label: UILabel!
     
     override func awakeFromNib() {
@@ -28,11 +28,11 @@ class RowInterestsCell: UITableViewCell {
             }
             switch row {
             case 0:
-                view.backgroundColor = UIColor.redColor()
+                imageViewPhoto.image = UIImage(named: "interest1.png")
             case 1:
-                view.backgroundColor = UIColor.greenColor()
+                imageViewPhoto.image = UIImage(named: "interest2.png")
             case 2:
-                view.backgroundColor = UIColor.blueColor()
+                imageViewPhoto.image = UIImage(named: "interest3.png")
             default:
                 break
             }
@@ -43,6 +43,7 @@ class RowInterestsCell: UITableViewCell {
         for subview in contentView.subviews{
             subview.removeFromSuperview()
         }
+        self.frame.size.height /= 2
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

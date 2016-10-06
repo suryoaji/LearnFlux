@@ -23,7 +23,7 @@ class IndividualCell: UITableViewCell {
     func customInit(){
         self.contentView.layer.borderWidth = 0.6
         self.contentView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
-        imageViewPhoto.layer.cornerRadius = self.frame.height == 44 ? (UIScreen.mainScreen().applicationFrame.height / 568.0 * imageViewPhoto.frame.width) / 2 : imageViewPhoto.frame.width / 2
+        imageViewPhoto.layer.cornerRadius = self.frame.height == 44 ? (UIScreen.mainScreen().bounds.height / 568.0 * imageViewPhoto.frame.width) / 2 : imageViewPhoto.frame.width / 2
     }
     
     func setValues(contact: Dictionary<String, String>){

@@ -26,7 +26,7 @@ class GroupCell: UITableViewCell {
     func customInit(){
         self.contentView.layer.borderWidth = 0.6
         self.contentView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
-        containerPhoto.layer.cornerRadius = self.frame.height == 44 ? (UIScreen.mainScreen().applicationFrame.height / 568 * containerPhoto.frame.width) / 2 : containerPhoto.frame.width / 2
+        containerPhoto.layer.cornerRadius = self.frame.height == 44 ? (UIScreen.mainScreen().bounds.height / 568 * containerPhoto.frame.width) / 2 : containerPhoto.frame.width / 2
         randomPhotos()
     }
     
@@ -41,7 +41,12 @@ class GroupCell: UITableViewCell {
         labelName.text = group["name"]
         labelSide.text = group["side"]
         if type == 1 { buttonAction.setImage(UIImage(named: "add-group"), forState: .Normal) }
-        
+    }
+    
+    func setValues(group: Group, type: Int = 0){
+        labelName.text = group.name
+        labelSide.text = "Art and Craft Teacher"
+        if type == 1 { buttonAction.setImage(UIImage(named: "add-group"), forState: .Normal) }
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
