@@ -19,6 +19,14 @@
 		4A47F2D11D9DFB5D00225FB6 /* contacts-80.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A47F2CE1D9DFB5D00225FB6 /* contacts-80.png */; };
 		4A47F2D21D9DFB5D00225FB6 /* organizations-85.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A47F2CF1D9DFB5D00225FB6 /* organizations-85.png */; };
 		4A48C1001D548FED00E85BA3 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A48C0FF1D548FED00E85BA3 /* Group.swift */; };
+		4A49499F1DA744F0008F5FDE /* kid3.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A49499C1DA744F0008F5FDE /* kid3.png */; };
+		4A4949A01DA744F0008F5FDE /* kid2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A49499D1DA744F0008F5FDE /* kid2.png */; };
+		4A4949A11DA744F0008F5FDE /* kid1.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A49499E1DA744F0008F5FDE /* kid1.png */; };
+		4A4949A31DA747D0008F5FDE /* FriendRequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4949A21DA747D0008F5FDE /* FriendRequestCell.swift */; };
+		4A4949A51DA74BD6008F5FDE /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4949A41DA74BD6008F5FDE /* NotificationCell.swift */; };
+		4A4949A91DA75496008F5FDE /* company7.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A4949A61DA75496008F5FDE /* company7.png */; };
+		4A4949AA1DA75496008F5FDE /* company6.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A4949A71DA75496008F5FDE /* company6.png */; };
+		4A4949AB1DA75496008F5FDE /* company5.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A4949A81DA75496008F5FDE /* company5.png */; };
 		4A4985251D40A4FD00B823CA /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4985241D40A4FD00B823CA /* Event.swift */; };
 		4A4E38641D3DD78B00955E6F /* OSTextfieldR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */; };
 		4A5105F51DA1E9260026F302 /* IndividualCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5105F41DA1E9260026F302 /* IndividualCell.swift */; };
@@ -438,6 +446,14 @@
 		4A47F2CE1D9DFB5D00225FB6 /* contacts-80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contacts-80.png"; sourceTree = "<group>"; };
 		4A47F2CF1D9DFB5D00225FB6 /* organizations-85.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "organizations-85.png"; sourceTree = "<group>"; };
 		4A48C0FF1D548FED00E85BA3 /* Group.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		4A49499C1DA744F0008F5FDE /* kid3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kid3.png; sourceTree = "<group>"; };
+		4A49499D1DA744F0008F5FDE /* kid2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kid2.png; sourceTree = "<group>"; };
+		4A49499E1DA744F0008F5FDE /* kid1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kid1.png; sourceTree = "<group>"; };
+		4A4949A21DA747D0008F5FDE /* FriendRequestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendRequestCell.swift; sourceTree = "<group>"; };
+		4A4949A41DA74BD6008F5FDE /* NotificationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
+		4A4949A61DA75496008F5FDE /* company7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company7.png; sourceTree = "<group>"; };
+		4A4949A71DA75496008F5FDE /* company6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company6.png; sourceTree = "<group>"; };
+		4A4949A81DA75496008F5FDE /* company5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company5.png; sourceTree = "<group>"; };
 		4A4985241D40A4FD00B823CA /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		4A4E38631D3DD78B00955E6F /* OSTextfieldR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSTextfieldR.swift; sourceTree = "<group>"; };
 		4A5105F41DA1E9260026F302 /* IndividualCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndividualCell.swift; sourceTree = "<group>"; };
@@ -895,6 +911,8 @@
 				4A5105F31DA1E8F40026F302 /* Connection */,
 				4A5105FC1DA24AD00026F302 /* Interest Groups */,
 				4A5A14F81DA5E3AD00024FE3 /* NotificationView.swift */,
+				4A4949A21DA747D0008F5FDE /* FriendRequestCell.swift */,
+				4A4949A41DA74BD6008F5FDE /* NotificationCell.swift */,
 			);
 			name = Profile;
 			sourceTree = "<group>";
@@ -975,6 +993,9 @@
 				5B04EA961CE3191800D961BF /* company2.png */,
 				5B04EA971CE3191800D961BF /* company3.png */,
 				4A5A150E1DA6226700024FE3 /* company4.png */,
+				4A4949A81DA75496008F5FDE /* company5.png */,
+				4A4949A71DA75496008F5FDE /* company6.png */,
+				4A4949A61DA75496008F5FDE /* company7.png */,
 				5B04A25A1CBCEE2F00FA5CCA /* group05a.jpg */,
 				5B04A2581CBCEC3100FA5CCA /* group05.png */,
 				5B04A2501CBCEABE00FA5CCA /* group01.png */,
@@ -1006,6 +1027,9 @@
 				4A5A15281DA6429400024FE3 /* interest3.png */,
 				4A5A15291DA6429400024FE3 /* interest2.png */,
 				4A5A152A1DA6429400024FE3 /* interest1.png */,
+				4A49499E1DA744F0008F5FDE /* kid1.png */,
+				4A49499D1DA744F0008F5FDE /* kid2.png */,
+				4A49499C1DA744F0008F5FDE /* kid3.png */,
 			);
 			name = "Images Mockup";
 			sourceTree = "<group>";
@@ -1672,6 +1696,7 @@
 				5B3743FA1CC0CBFD00AF2897 /* right-24.png in Resources */,
 				5B37438F1CC0CBFD00AF2897 /* alarm_clock-24@3x.png in Resources */,
 				5B3744381CC0CBFD00AF2897 /* plus-16@3x.png in Resources */,
+				4A4949AA1DA75496008F5FDE /* company6.png in Resources */,
 				5B37441C1CC0CBFD00AF2897 /* user_male-24@3x.png in Resources */,
 				5B3743991CC0CBFD00AF2897 /* bookmark-24.png in Resources */,
 				5B3743D01CC0CBFD00AF2897 /* key-24@2x.png in Resources */,
@@ -1745,6 +1770,7 @@
 				5B04A2471CBCE64D00FA5CCA /* female02.png in Resources */,
 				4A5A151D1DA6226700024FE3 /* male10.png in Resources */,
 				5BAF77EA1CE17ED4004D2A3E /* globe_white-512.png in Resources */,
+				4A4949A91DA75496008F5FDE /* company7.png in Resources */,
 				5B3743EC1CC0CBFD00AF2897 /* picture-512.png in Resources */,
 				5B3743DC1CC0CBFD00AF2897 /* location-24@2x.png in Resources */,
 				5BDBCC041CBE518900655A61 /* clip-18.png in Resources */,
@@ -1838,7 +1864,9 @@
 				5B3743BD1CC0CBFD00AF2897 /* globe-24.png in Resources */,
 				5B04A2551CBCEABE00FA5CCA /* group02.png in Resources */,
 				5B3743D71CC0CBFD00AF2897 /* like-24@3x.png in Resources */,
+				4A4949A11DA744F0008F5FDE /* kid1.png in Resources */,
 				5B3743651CC0CBFD00AF2897 /* ios_contact-512 in Resources */,
+				4A4949AB1DA75496008F5FDE /* company5.png in Resources */,
 				5B4D10CD1D376F5800AB9449 /* calendar-40.png in Resources */,
 				5B37440F1CC0CBFD00AF2897 /* trash-24.png in Resources */,
 				5B37439C1CC0CBFD00AF2897 /* clock-24.png in Resources */,
@@ -1866,6 +1894,7 @@
 				4A47F2D11D9DFB5D00225FB6 /* contacts-80.png in Resources */,
 				5B37438E1CC0CBFD00AF2897 /* alarm_clock-24@2x.png in Resources */,
 				5BAF77EE1CE18064004D2A3E /* headphones_white-512.png in Resources */,
+				4A4949A01DA744F0008F5FDE /* kid2.png in Resources */,
 				5B3743781CC0CBFD00AF2897 /* home_background4.jpg in Resources */,
 				5B3743D31CC0CBFD00AF2897 /* left2-24@2x.png in Resources */,
 				5B04A24D1CBCE64E00FA5CCA /* male04.png in Resources */,
@@ -1914,6 +1943,7 @@
 				4A5A15171DA6226700024FE3 /* company4.png in Resources */,
 				5B3743FB1CC0CBFD00AF2897 /* right-24@2x.png in Resources */,
 				5B3743E41CC0CBFD00AF2897 /* opened_folder-24@2x.png in Resources */,
+				4A49499F1DA744F0008F5FDE /* kid3.png in Resources */,
 				5B0226551CEAFB7200C5E8EE /* mosaic_attendance.png in Resources */,
 				5BEB83491CBC9AF700EB818C /* OpenSans-CondLight.ttf in Resources */,
 				5B3743B61CC0CBFD00AF2897 /* download2-24@3x.png in Resources */,
@@ -1997,6 +2027,7 @@
 				5B09CEBB1CBB4A330042C70B /* LearnFlux.xcdatamodeld in Sources */,
 				5B02556B1D5B247C001CBF15 /* User.swift in Sources */,
 				5B3742641CC0CBAD00AF2897 /* UIView+RoundedRect.m in Sources */,
+				4A4949A51DA74BD6008F5FDE /* NotificationCell.swift in Sources */,
 				4A368BD61D66A0D500E38942 /* NavController.swift in Sources */,
 				5B3742741CC0CBAD00AF2897 /* UITextField+HeightToFit.m in Sources */,
 				5B04A2361CBCDEE000FA5CCA /* Connections.swift in Sources */,
@@ -2039,6 +2070,7 @@
 				4A5106001DA24B310026F302 /* IGGroupCell.swift in Sources */,
 				5B3742601CC0CBAD00AF2897 /* NSInteger+String.m in Sources */,
 				5B02264C1CEAD67A00C5E8EE /* NewHome.swift in Sources */,
+				4A4949A31DA747D0008F5FDE /* FriendRequestCell.swift in Sources */,
 				5B3742661CC0CBAD00AF2897 /* NSIndexPath+MockupShortcut.m in Sources */,
 				5B3742751CC0CBAD00AF2897 /* UIView+Positioning.m in Sources */,
 				5BF4812B1CE07166006930CC /* PollDetails.swift in Sources */,

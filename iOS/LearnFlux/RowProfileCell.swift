@@ -18,7 +18,7 @@ class RowProfileCell: UITableViewCell {
     }
     
     func customInit(){
-        containerView.layer.borderColor = LFColor.blue.CGColor
+        containerView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
         containerView.layer.borderWidth = 1.0
     }
 

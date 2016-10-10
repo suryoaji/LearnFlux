@@ -15,7 +15,7 @@ class GroupCell: UITableViewCell {
     @IBOutlet weak var labelName: UILabel!
     @IBOutlet weak var labelSide: UILabel!
     
-    var photos = ["male01.png", "male02.png", "male03.png", "male04.png", "male05.png", "male06.png", "male07.png", "female01.png", "female02.png", "female03.png", "female04.png"]
+    var photos = ["male01.png", "male02.png", "male03.png", "male04.png", "male05.png", "male06.png", "male07.png", "male08.png", "male09.png", "male10.png", "male11.png", "male12.png", "female01.png", "female02.png", "female03.png", "female04.png", "female05.png", "female06.png", "female07.png", "kid1.png", "kid2.png", "kid3.png"]
     
     override func awakeFromNib() {
         super.awakeFromNib()

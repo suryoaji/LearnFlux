@@ -31,7 +31,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     
     var shouldShowOrganizations = false{
         didSet{
-            tableViewMyProfile.reloadDataSection(1, animate: false)
+            tableViewMyProfile.reloadDataSection(2, animate: false)
         }
     }
     
@@ -69,22 +69,17 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     var shouldSeeAllUpper : Bool = false{
         didSet{
             if shouldSeeAllUpper{
-                containerViewTableViewConnectionUpper.frame.size.height = containerViewTableViewConnectionLower.frame.origin.y + containerViewTableViewConnectionLower.frame.height - containerViewTableViewConnectionUpper.frame.origin.y
-                self.view.bringSubviewToFront(containerViewTableViewConnectionUpper)
-                tableViewConnectionUpper.scrollEnabled = true
-                tableViewConnectionUpper.reloadData()
-                tableViewConnectionUpper.frame.size.height = containerViewTableViewConnectionUpper.frame.height - buttonSeeAllUpper.frame.height
+                expandContainerTableViewConnectionUpper()
             }else{
-                containerViewTableViewConnectionUpper.frame.size.height = originalSizeConnectionTableView.size.height
-                tableViewConnectionUpper.scrollEnabled = true
-                tableViewConnectionUpper.reloadData()
-                tableViewConnectionUpper.frame.size.height = containerViewTableViewConnectionUpper.frame.height
+                minimizeContainerTableViewConnectionUpper()
             }
         }
     }
     
     @IBAction func buttonSeeAllUpperTapped(sender: UIButton) {
-        shouldSeeAllUpper = !shouldSeeAllUpper
+        if indicatorAccConnection == 2{
+            shouldSeeAllUpper = !shouldSeeAllUpper
+        }
     }
     
     func hideSeeAllButton(){
@@ -115,10 +110,9 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         return (activeAccConnections.upper > 3 ? false : true, activeAccConnections.lower > 3 ? false : true)
     }
     
-    let sectionTitle = ["", "Affilated organizations", "Interests"];
+    let sectionTitle = ["", "My Children", "Affilated organizations", "Interests"];
     let friendRequestSectionTitle = ["Connections", "People you may know"]
     let rowInterest = ["Physical Health", "Environmental Science", "Child Education"]
-    let rowHighlights = [""]
     
     let titleAddAccConnection = ["+add contact", "+add group", "+add organizations", "add contacts"]
     let titleSuggesting = ["People you may know", "Groups you might interested", "Organizations you might interested", "People you may know"]
@@ -221,41 +215,22 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                           "icon"      : "notification1.png",
                           "checked"   : "0"]]
     
+    let kids = ["kid1.png", "kid2.png", "kid3.png"]
+    
     @IBAction func buttonHeadersTapped(sender: UIButton) {
         if let title = sender.currentTitle{
             switch title.lowercaseString {
             case "my profile":
                 indicatorHeader = 0
-                viewFriendRequest.hidden = true
-                viewNotification.hidden = true
-                labelFriendRequest.hidden = false
-                labelNotification.hidden = false
+                hideNotificationViews()
             case "connection":
                 indicatorHeader = 1
-                viewFriendRequest.hidden = true
-                viewNotification.hidden = true
-                labelFriendRequest.hidden = false
-                labelNotification.hidden = false
+                hideNotificationViews()
             default:
                 break
             }
         }else{
-            switch sender.tag{
-            case 1:
-                labelFriendRequest.hidden = !labelFriendRequest.hidden
-                viewFriendRequest.hidden = !viewFriendRequest.hidden
-                viewNotification.hidden = true
-                labelNotification.hidden = false
-            case 2:
-                labelNotification.hidden = !labelNotification.hidden
-                viewNotification.hidden = !viewNotification.hidden
-                viewFriendRequest.hidden = true
-                labelFriendRequest.hidden = false
-            case 3:
-                break
-            default:
-                break
-            }
+            showNotificationViews(sender.tag)
         }
     }
     
@@ -364,11 +339,12 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     @IBOutlet weak var accContactView: UIView!
     @IBOutlet weak var viewFriendRequest: NotificationView!
     @IBOutlet weak var viewNotification: NotificationView!
+    var companies = ["company1.png", "company2.png", "company3.png", "company4.png", "company5.png", "company6.png", "company7.png"]
     
     @IBAction func accConnectionTapped(sender: UIButton) {
         let row = abs(sender.tag - 10)
-        selectAccConnection(row, animated: true)
         self.indicatorAccConnection = row
+        selectAccConnection(row, animated: true)
         shouldSeeAllUpper = false
     }
 }
@@ -400,11 +376,7 @@ extension Profile{
             }
         case 2:
             if let organizations = clientData.getGroups(.Organisation){
-                if shouldSeeAllUpper{
-                    return organizations.count
-                }else{
-                    return organizations.count >= 3 ? 3 : organizations.count
-                }
+                return organizations.count
             }
         case 3:
             return 0
@@ -416,10 +388,8 @@ extension Profile{
     
     func numberOfRowTableViewMyProfile(section: Int) -> Int{
         switch section {
-        case 2:
-            return rowInterest.count + 3
         case 3:
-            return rowHighlights.count + 1
+            return rowInterest.count + 3
         default:
             return 2
         }
@@ -451,18 +421,20 @@ extension Profile{
                 let profileCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("1") as! RowProfileCell
                 return profileCell
             case 1:
+                let childrenCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("5")!
+                let collectionView = childrenCell.viewWithTag(2) as! UICollectionView
+                collectionView.reloadData()
+                return childrenCell
+            case 2:
                 let organizationCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("2")!
                 let collectionView = organizationCell.viewWithTag(1) as! UICollectionView
                 if self.shouldShowOrganizations{ collectionView.frame.size.width = organizationCell.frame.width }
                 collectionView.reloadData()
                 return organizationCell
-            case 2:
+            case 3:
                 let interestCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("3") as! RowInterestsCell
                 interestCell.customInit(rowInterest, indexPath: indexPath)
                 return interestCell
-            case 3:
-                let highlightCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("4") as! RowHighlightsCell
-                return highlightCell
             default:
                 return UITableViewCell()
             }
@@ -519,47 +491,17 @@ extension Profile{
             let labelHeader = cell.viewWithTag(1) as! UILabel
             labelHeader.text = friendRequestSectionTitle[indexPath.section]
         default:
-            cell = tableViewFriendRequest.dequeueReusableCellWithIdentifier("Cell")!
-            let labelName = cell.viewWithTag(1) as! UILabel
-            let labelFriends = cell.viewWithTag(2) as! UILabel
-            let buttonCancel = cell.viewWithTag(3) as! UIButton
-            let photoImageView = cell.viewWithTag(4) as! UIImageView
-            switch indexPath.section {
-            case 0:
-                labelName.text = friendConnections[indexPath.row - 1]["name"]
-                labelFriends.text = friendConnections[indexPath.row - 1]["friends"] != nil ? "\(friendConnections[indexPath.row - 1]["friends"]!) mutual friends" : ""
-                buttonCancel.setTitle(indexPath.section == 0 ? "cancel" : "remove", forState: .Normal)
-                photoImageView.image = UIImage(named: friendConnections[indexPath.row - 1]["photo"]!)
-            case 1:
-                labelName.text = suggestFriendConnections[indexPath.row - 1]["name"]
-                labelFriends.text = suggestFriendConnections[indexPath.row - 1]["friends"] != nil ? "\(suggestFriendConnections[indexPath.row - 1]["friends"]!) mutual friends" : ""
-                buttonCancel.setTitle(indexPath.section == 0 ? "cancel" : "remove", forState: .Normal)
-                photoImageView.image = UIImage(named: suggestFriendConnections[indexPath.row - 1]["photo"]!)
-            default: break
-            }
+            let friendRequestCell = tableViewFriendRequest.dequeueReusableCellWithIdentifier("Cell") as! FriendRequestCell
+            let friendDict = indexPath.section == 0 ? friendConnections[indexPath.row - 1] : suggestFriendConnections[indexPath.row - 1]
+            friendRequestCell.setValues(friendDict, indexPath: indexPath)
+            cell = friendRequestCell
         }
         return cell
     }
     
     func cellForRowTableViewNotification(indexPath: NSIndexPath) -> UITableViewCell{
-        var cell = UITableViewCell()
-        cell = tableViewNotification.dequeueReusableCellWithIdentifier("Cell")!
-        let labelDetails = cell.viewWithTag(1) as! UILabel
-        let labelDate = cell.viewWithTag(2) as! UILabel
-        let imageViewIconActivity = cell.viewWithTag(3) as! UIImageView
-        let imageViewPhoto = cell.viewWithTag(4) as! UIImageView
-        imageViewPhoto.image = UIImage(named: notifications[indexPath.row]["photo"]!)
-        labelDate.text = notifications[indexPath.row]["timestamp"]
-        
-        let detailAttributedString = NSMutableAttributedString(string: notifications[indexPath.row]["name"]! + " ", attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(12)])
-        let stringActivity = NSMutableAttributedString(string: notifications[indexPath.row]["activity"]!, attributes: [NSFontAttributeName : UIFont(name: "Helvetica Neue", size: 12)!])
-        detailAttributedString.appendAttributedString(stringActivity)
-        let stringTo = NSMutableAttributedString(string: notifications[indexPath.row]["to"] != nil ? " " + notifications[indexPath.row]["to"]! + ".\n" : ".\n", attributes: [NSFontAttributeName : notifications[indexPath.row]["to"] != nil ? UIFont.boldSystemFontOfSize(12) : UIFont(name: "Helvetica Neue", size: 12)!])
-        detailAttributedString.appendAttributedString(stringTo)
-        
-        labelDetails.attributedText = detailAttributedString
-        imageViewIconActivity.image = UIImage(named: notifications[indexPath.row]["icon"]!)
-        cell.contentView.backgroundColor = notifications[indexPath.row]["checked"]! == "1" ? UIColor(white: 245.0/255, alpha: 1.0) : UIColor.whiteColor()
+        let cell = tableViewNotification.dequeueReusableCellWithIdentifier("Cell") as! NotificationCell
+        cell.setValues(notifications[indexPath.row])
         return cell
     }
     
@@ -588,45 +530,82 @@ extension Profile{
 // - MARK Collection View
 extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        if let count = clientData.getGroups(.Organisation)?.count{
-            if shouldShowOrganizations{
-                return count
-            }else{
-                return count > 3 ? 4 : count
+        switch collectionView.tag {
+        case 1:
+            if let count = clientData.getGroups(.Organisation)?.count{
+                if shouldShowOrganizations{
+                    return count
+                }else{
+                    return count > 3 ? 4 : count
+                }
             }
-        }else{
-            return 0
+        case 2:
+            return 4
+        default: return 0
         }
+        return 0
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         var cell = UICollectionViewCell()
-        if indexPath.row == 3 && !self.shouldShowOrganizations{
-            cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddMore", forIndexPath: indexPath)
-            let number = cell.viewWithTag(1) as! UILabel
-            let button = cell.viewWithTag(2) as! UIButton
-            number.layer.cornerRadius = number.bounds.size.width / 2
-            number.text = "\(clientData.getGroups(.Organisation)!.count - 3)"
-            button.enabled = true
-            button.addTarget(self, action: #selector(showOrganizations), forControlEvents: .TouchUpInside)
-        }else{
-            cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
+        switch collectionView.tag {
+        case 1:
+            if indexPath.row == 3 && !self.shouldShowOrganizations{
+                cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddMore", forIndexPath: indexPath)
+                let number = cell.viewWithTag(1) as! UILabel
+                let button = cell.viewWithTag(2) as! UIButton
+                number.layer.cornerRadius = number.bounds.size.width / 2
+                number.text = "\(clientData.getGroups(.Organisation)!.count - 3)"
+                button.enabled = true
+                button.addTarget(self, action: #selector(showOrganizations), forControlEvents: .TouchUpInside)
+            }else{
+                cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
+                let imageViewPhoto = cell.viewWithTag(1) as! UIImageView
+                imageViewPhoto.image = UIImage(named: companies[Int(arc4random_uniform(UInt32(companies.count)))])
+            }
+        case 2:
+            if indexPath.row == 3{
+                cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddMore", forIndexPath: indexPath)
+                let number = cell.viewWithTag(1) as! UILabel
+                number.layer.cornerRadius = number.bounds.size.width / 2
+            }else{
+                cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
+                let imageViewPhoto = cell.viewWithTag(1) as! UIImageView
+                imageViewPhoto.image = UIImage(named: kids[indexPath.row])
+            }
+        default: break
         }
         return cell
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize{
-        if indexPath.row == 3 && !self.shouldShowOrganizations{
-            return CGSizeMake(40, 70)
-        }else{
-            return CGSizeMake(80, 70)
+        switch collectionView.tag {
+        case 1:
+            if indexPath.row == 3 && !self.shouldShowOrganizations{
+                return CGSizeMake(40, 70)
+            }else{
+                return CGSizeMake(80, 70)
+            }
+        case 2:
+            if indexPath.row == 3{
+                return CGSizeMake(40, 50)
+            }else{
+                return CGSizeMake(50, 50)
+            }
+        default: return CGSizeZero
         }
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row == 3 && !self.shouldShowOrganizations{
-        }else{
-            self.performSegueWithIdentifier("OrgSegue", sender: indexPath.row)
+        switch collectionView.tag {
+        case 1:
+            if indexPath.row == 3 && !self.shouldShowOrganizations{
+            }else{
+                self.performSegueWithIdentifier("OrgSegue", sender: indexPath.row)
+            }
+        case 2:
+            break
+        default: break
         }
     }
     
@@ -753,7 +732,43 @@ extension Profile{
         }
     }
     
+    func expandContainerTableViewConnectionUpper(){
+        containerViewTableViewConnectionUpper.frame.size.height = containerViewTableViewConnectionLower.frame.origin.y + containerViewTableViewConnectionLower.frame.height - containerViewTableViewConnectionUpper.frame.origin.y
+        self.view.bringSubviewToFront(containerViewTableViewConnectionUpper)
+        tableViewConnectionUpper.scrollEnabled = true
+        tableViewConnectionUpper.frame.size.height = containerViewTableViewConnectionUpper.frame.height - buttonSeeAllUpper.frame.height
+    }
     
+    func minimizeContainerTableViewConnectionUpper(){
+        containerViewTableViewConnectionUpper.frame.size.height = originalSizeConnectionTableView.size.height
+        tableViewConnectionUpper.scrollEnabled = false
+        tableViewConnectionUpper.frame.size.height = containerViewTableViewConnectionUpper.frame.height
+    }
+    
+    func showNotificationViews(senderTag: Int){
+        switch senderTag {
+        case 1:
+            labelFriendRequest.hidden = !labelFriendRequest.hidden
+            viewFriendRequest.hidden = !viewFriendRequest.hidden
+            viewNotification.hidden = true
+            labelNotification.hidden = false
+        case 2:
+            labelNotification.hidden = !labelNotification.hidden
+            viewNotification.hidden = !viewNotification.hidden
+            viewFriendRequest.hidden = true
+            labelFriendRequest.hidden = false
+        case 3:
+            break
+        default: break
+        }
+    }
+    
+    func hideNotificationViews(){
+        viewFriendRequest.hidden = true
+        viewNotification.hidden = true
+        labelFriendRequest.hidden = false
+        labelNotification.hidden = false
+    }
     
 }
 

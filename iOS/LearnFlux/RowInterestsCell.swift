@@ -41,7 +41,7 @@ class RowInterestsCell: UITableViewCell {
     
     func cleanSubview(){
         for subview in contentView.subviews{
-            subview.removeFromSuperview()
+            subview.hidden = true
         }
         self.frame.size.height /= 2
     }

@@ -15,7 +15,7 @@ class RowHighlightsCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        customInit()
+//        customInit()
         // Initialization code
     }
     
