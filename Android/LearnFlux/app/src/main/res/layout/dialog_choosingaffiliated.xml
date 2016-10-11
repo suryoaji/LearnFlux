@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@drawable/border_black"
+        android:layout_width="match_parent"
+        android:padding="3dp"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:src="@drawable/ic_leftarrow"
+            android:layout_marginTop="37dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/lasalle_logo"
+                android:layout_width="60dp"
+                android:layout_height="60dp" />
+            <TextView
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="#000"
+                android:layout_marginLeft="12dp"
+                android:gravity="center"
+                android:text="Lassalle College of the Arts"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <LinearLayout
+            android:background="#E0E0E0"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/nus_logo"
+                android:layout_width="60dp"
+                android:layout_height="60dp" />
+            <TextView
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="#000"
+                android:layout_marginLeft="12dp"
+                android:gravity="center"
+                android:text="National Council of Social Service"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

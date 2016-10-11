@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/border_black"
+    android:layout_width="match_parent"
+    android:padding="3dp"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:src="@drawable/ic_leftarrow"
+        android:layout_marginTop="140dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclee"
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+</FrameLayout>

@@ -18,10 +18,17 @@ public class HomeActivity extends BaseActivity {
 		super.onCreateDrawer(savedInstanceState);
 
 		ImageView ivInterest  = (ImageView)findViewById(R.id.ivInterest);
-		ivInterest.setOnClickListener(new View.OnClickListener() {
+		/*ivInterest.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				Intent a = new Intent(HomeActivity.this, InterestGroup.class);
+				startActivity(a);
+			}
+		});*/
+		ivInterest.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent a = new Intent(HomeActivity.this, NewInterestGroup.class);
 				startActivity(a);
 			}
 		});
@@ -32,6 +39,14 @@ public class HomeActivity extends BaseActivity {
 				Intent i = new Intent(HomeActivity.this,ChatsActivity.class);
 				i.putExtra("chatroom", "org");
 				startActivity(i);
+			}
+		});
+		ImageView ivGallery = (ImageView)findViewById(R.id.ivGallery);
+		ivGallery.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent e = new Intent(HomeActivity.this, MyProfileActivity.class);
+				startActivity(e);
 			}
 		});
 	}
