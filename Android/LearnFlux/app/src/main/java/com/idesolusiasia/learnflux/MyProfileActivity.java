@@ -37,8 +37,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	MyProfileAdapter rcAdapter;
 	int totalItem = 3;
 	RecyclerView recyclerView;
-	boolean visible = true;
-	boolean visible2 = true;
+	boolean visible;
+	boolean visible2;
 	ArrayList<Group> arrOrg = new ArrayList<Group>();
 	static final int ITEMS = 4;
 
@@ -101,16 +101,19 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		ImageButton userNotif = (ImageButton)findViewById(R.id.menotif);
 		final TextView txtNotification1 = (TextView)findViewById(R.id.textNotif1);
 		final TextView txtNotification2 = (TextView)findViewById(R.id.textNotif2);
+		visible=true;
+		visible2=true;
 
 		connectionNotif.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(visible) {
+				if(visible || !visible2) {
 					includedLayout.setVisibility(View.VISIBLE);
 					includedLayout.bringToFront();
 					txtNotification1.setVisibility(View.GONE);
 					visible=false;
-				}else {
+					visible2=true;
+				}else if(!visible){
 					includedLayout.setVisibility(View.GONE);
 					visible=true;
 				}
@@ -119,15 +122,16 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		userNotif.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(visible && visible2){
+				if(visible2 || !visible){
 					includedLayout2.setVisibility(View.VISIBLE);
 					includedLayout2.bringToFront();
 					includedLayout.setVisibility(View.GONE);
 					txtNotification2.setVisibility(View.GONE);
 					visible2=false;
-				}else{
+					visible=true;
+				}else if(!visible2){
 					includedLayout2.setVisibility(View.GONE);
-					visible2=true;;
+					visible2=true;
 				}
 			}
 		});
