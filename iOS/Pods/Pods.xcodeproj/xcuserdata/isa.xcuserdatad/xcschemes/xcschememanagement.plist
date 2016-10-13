@@ -54,6 +54,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Kingfisher.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>PKRevealController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -77,22 +82,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1B77DC2878242C9C8F3FA4D662F80B79</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>2763C14E1060A2106B67756FC26185D2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>336B93337DFC5EE58B564606FF93F15D</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>42E70D322981012B5E46677D2DA290B0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -132,7 +122,27 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>A14D8BA6703C474E6BC2E4686663CD68</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A45D027C503DD129A4B29328DC64A044</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C32025D9CEA3F659020A7F5DDF6DDBF2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>C6828C2508515BC0428D6BDAA1292DC9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D8D82A1E050B36811D2F6FF5BC376A7F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

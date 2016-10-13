@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import Kingfisher
 
 extension UIViewController{
     func e_globalResignFirstResponderRec(view: UIView){
@@ -207,6 +208,28 @@ class Engine : NSObject {
         }
     }
     
+    static func requestImage(urlString: String, shouldCacheData: Bool = false, callback: ((UIImage?) -> Void)?){
+        let downloader = KingfisherManager.sharedManager.downloader
+        downloader.requestModifier = { mutableUrl in
+            mutableUrl.setValue("Bearer \(clientData.getAccessToken())", forHTTPHeaderField: "Authorization")
+        }
+        
+        ImageDownloader.defaultDownloader.downloadImageWithURL(NSURL(string: urlString)!, options: [], progressBlock: nil) { (image, error, imageURL, originalData) in
+            if let image = image{
+                if callback != nil { callback!(image) }
+                if shouldCacheData{
+                    ImageCache.defaultCache.storeImage(image, forKey: urlString)
+                }
+            }
+        }
+    }
+    
+    static func fetchCacheImage(key: String, callback: ((UIImage?) -> Void)?){
+        ImageCache.defaultCache.retrieveImageForKey(key, options: []) { image, cacheType in
+            if callback != nil{ callback!(image) }
+        }
+    }
+    
     private static func createURLRequest(string: String, method: Alamofire.Method, param: Dictionary<String,AnyObject>?) -> (NSMutableURLRequest){
         let headers = authHeaders(string)
         var newUrl = string
@@ -361,6 +384,100 @@ class Engine : NSObject {
             if callback != nil { callback!(status, clientData.getGroups(filter)) }
         }
         return clientData.getGroups(filter);
+    }
+    
+    static func getImageGroup(viewController: UIViewController? = nil, group: Group, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
+        let urlString = Url.getImage(.Group, id: group.id)
+        if fromCache  && ImageCache.defaultCache.isImageCachedForKey(urlString).cached{
+            fetchCacheImage(urlString, callback: callback)
+        }else{
+            requestImage(urlString, shouldCacheData: false, callback: callback)
+        }
+    }
+    
+    static func getImageSelf(viewController: UIViewController? = nil, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
+        getImageIndividual(id: String(clientData.cacheMe()!["id"] as! Int), callback: callback)
+    }
+    static func getImageIndividual(viewController: UIViewController? = nil, id: String, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
+        let urlString = Url.getImage(.Me, id: id)
+        if fromCache  && ImageCache.defaultCache.isImageCachedForKey(urlString).cached{
+            fetchCacheImage(urlString, callback: callback)
+        }else{
+            requestImage(urlString, shouldCacheData: true, callback: callback)
+        }
+    }
+    
+    static func getChildsOfAllOrganizations(viewController: UIViewController? = nil, callback: ((Array<Group>?) -> Void)? = nil){
+        let organizationHaveChild = clientData.getGroups(.Organisation)!.filter({ $0.child != nil && !$0.child!.isEmpty })
+        let unorderedChilds = organizationHaveChild.map({ $0.child! })
+        let childs = unorderedChilds.reduce([Group](), combine: { $0 + $1 })
+        if callback != nil { callback!(childs) }
+    }
+    
+    static func getPhotoOfConnection(indexPath: NSIndexPath, callback: (Bool -> Void)?){
+        if clientData.getMyConnection()![indexPath.row].photo == nil{
+            Engine.getImageIndividual(id: String(clientData.getMyConnection()![indexPath.row].userId!)){ image in
+                if image != nil{
+                    self.clientData.getMyConnection()![indexPath.row].photo = image
+                    if callback != nil { callback!(true) }
+                }
+            }
+        }
+    }
+    
+    static func getAvailableInterests(viewController: UIViewController? = nil, callback: (([String]?)->Void)? = nil) {
+        makeRequestAlamofire(viewController, url: Url.availableInterests, param: nil){ status, dataJSON in
+            if status == .Success{
+                guard let objectInterests = dataJSON!["data"] else{
+                    if callback != nil { callback!(nil) }
+                    return
+                }
+                if let arrInterests = objectInterests as? Array<String> where callback != nil{
+                    callback!(arrInterests)
+                }
+            }
+        }
+    }
+    
+    static func getFriendRequests(viewController: UIViewController? = nil, callback: (([Dictionary<String, AnyObject>]?)->Void)? = nil){
+        guard let rawFriendRequests = clientData.cacheMe()!["friend_request"] else{
+            return
+        }
+        let arrFriendRequests = rawFriendRequests as! arrType
+        if !arrFriendRequests.isEmpty{
+            var newArrFriendRequests = reduceArrJSON(arrFriendRequests, indicator: "id")
+            removeFriendRequestByConnection(&newArrFriendRequests)
+            let friendRequests : AnyObject = newArrFriendRequests.map({ ["name" : "\($0["first_name"]!) \($0["last_name"]!)",
+                                                                            "id"   : "\($0["id"]!)",
+                                                                            "key"  : "\($0["profile_picture"]!)",
+                                                                            "friends" : "\(arc4random_uniform(25))"] })
+            if callback != nil { callback!(friendRequests as? [Dictionary<String, AnyObject>]) }
+        }
+    }
+    
+    static func removeFriendRequestByConnection(inout arrFriendRequests: arrType){
+        for connection in clientData.getMyConnection()!{
+            if let index = arrFriendRequests.indexOf({ $0["id"] as! Int == connection.userId! }){
+                arrFriendRequests.removeAtIndex(index)
+            }
+        }
+    }
+    
+    static func reduceArrJSON(arr: Array<Dictionary<String, AnyObject>>, indicator: String) -> Array<Dictionary<String, AnyObject>>{
+        var newArr = Array<Dictionary<String, AnyObject>>()
+        for each in arr{
+            if !newArr.isEmpty{
+                let filtered = newArr.indexOf({ $0[indicator] as! Int == each[indicator] as! Int })
+                if filtered != nil{
+                    newArr[filtered!] = each
+                }else{
+                    newArr.append(each)
+                }
+            }else{
+                newArr.append(each)
+            }
+        }
+        return newArr
     }
     
     //Create Interest Group in API

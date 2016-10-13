@@ -30,6 +30,12 @@ class NewHome : UIViewController {
             self.contentView.frame.origin.x = 0
             self.contentView.alpha = 1.0
             }, completion: nil)
+        
+        Engine.getImageSelf(){ image in
+            if let image = image{
+                self.clientData.photo = image
+            }
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -67,14 +73,6 @@ class NewHome : UIViewController {
         dark.backgroundColor = UIColor.clearColor();
         
         self.revealController.showViewController(self.revealController.leftViewController);
-    }
-
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "InterestGroup"{
-            if let interestGroupController = segue.destinationViewController as? OrgGroups{
-                interestGroupController.groups = clientData.getFilteredGroup(.ByInterestGroup)
-            }
-        }
     }
 
 }

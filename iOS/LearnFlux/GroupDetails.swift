@@ -82,13 +82,15 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         return admin
     }
     
-    func initFromCall(groupInfo : Group) {
+    var initIndex : Int!
+    func initFromCall(groupInfo : Group, indexTab: Int = 0) {
         group = groupInfo;
         self.strTitle = groupInfo.name!;
         self.colorTitle = groupInfo.color ?? LFColor.blue
+        self.initIndex = indexTab
     }
     
-    func setTabsWithController(){
+    func setTabsWithController(index: Int){
         tabs.append(Util.getViewControllerID("GroupProfile"))
         tabs.append(Util.getViewControllerID("OrgEvents"))
         tabs.append(Util.getViewControllerID("OrgActivities"))
@@ -99,13 +101,12 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         orgEventsDelegate.setIdGroupOfEvents(idGroup: group!.id)
         orgEventsDelegate.setIsAdminOrNot(isAdmin)
         orgEventsDelegate.setParentController(.GroupDetail)
-        changeView(0)
-        
+        changeView(index)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad();
-        self.setTabsWithController()
+        self.setTabsWithController(initIndex)
         
         self.title = "Details";
         self.lblTitle.text = self.strTitle.uppercaseString;

@@ -8,6 +8,11 @@
 
 import Foundation
 
+enum GetImageType{
+    case Me
+    case Group
+}
+
 struct Url{
     private static let base = "http://lfapp.learnflux.net"
     
@@ -19,8 +24,26 @@ struct Url{
     static let groups = base + "/v1/groups"
     static let poll = base + "/v1/poll"
     static let connections = me + "/friend"
+    static let uploadImageMe = me + "/image"
+    static let availableInterests = base + "/v1/interests"
     
     static func groupEvent(idGroup idGroup: String) -> (String){
         return groups + "/\(idGroup)/events"
+    }
+    
+    static func uploadImageGroup(idGroup idGroup: String) -> String{
+        return groups + "/\(idGroup)/image"
+    }
+    
+    static func getImage(type: GetImageType, id: String) -> String{
+        let imageUrlString = base + "/v1/image"
+        var typeString = ""
+        switch type {
+        case .Me:
+            typeString = "profile"
+        case .Group:
+            typeString = "group"
+        }
+        return imageUrlString + "?key=\(typeString)/\(id)"
     }
 }

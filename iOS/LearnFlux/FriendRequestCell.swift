@@ -20,11 +20,17 @@ class FriendRequestCell: UITableViewCell {
         // Initialization code
     }
     
-    func setValues(friend: Dictionary<String, String>, indexPath: NSIndexPath){
-        labelName.text = friend["name"]
+    func setValues(friend: Dictionary<String, AnyObject>, indexPath: NSIndexPath){
+        labelName.text = friend["name"] as? String
         labelFriends.text = friend["friends"] != nil ? "\(friend["friends"]!) mutual friends" : ""
         buttonCancel.setTitle(indexPath.section == 0 ? "cancel" : "remove", forState: .Normal)
-        imageViewPhoto.image = UIImage(named: friend["photo"]!)
+        imageViewPhoto.image = friend["photo"] as? UIImage ?? UIImage(named: "photo-container.png")
+        
+        if friend["photo"] != nil{
+            if let stringPhoto = friend["photo"] as? String{
+                imageViewPhoto.image = UIImage(named: stringPhoto)
+            }
+        }
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

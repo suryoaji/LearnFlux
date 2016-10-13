@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Group{
+class Group{
     var type: String!
     var id: String!
     var name: String!
@@ -20,6 +20,8 @@ struct Group{
     var participants : [Participant]?;
     var description : String?;
     var child : [Group]?;
+    var imageString: String?
+    var image: UIImage?
     
     init(type: String, id: String, name: String, threadId: String? = nil, parentId: String! = ""){
         self.type = type
@@ -55,9 +57,17 @@ struct Group{
         
         if let s = data["participants"] as? Array<dictType> { participants = Participant.convertFromArr(s) }
         if let s = data["child"] { child = Group.convertFromArr(s); }
+        if let s = data["image"] as? String { imageString = s; loadImage() }
     }
     
-    mutating func update(group: Group){
+    func loadImage(){
+        Engine.getImageGroup(group: self){ image in
+            self.image = image
+            self.imageString = nil
+        }
+    }
+    
+    func update(group: Group){
         self.color = self.color == nil ? group.color : self.color
         self.description = self.description == nil ? group.description : self.description
         self.participants = group.participants
@@ -85,10 +95,10 @@ struct Group{
         return Group(dict: data);
     }
     
-    mutating func set (dict: AnyObject?) {
-        guard let data = dict as? dictType else { return; }
-        guard let result = Group.convertFromDict (data) else { return; }
-        self = result;
-    }
+//    func set (dict: AnyObject?) {
+//        guard let data = dict as? dictType else { return; }
+//        guard let result = Group.convertFromDict (data) else { return; }
+//        self = result;
+//    }
     
 }

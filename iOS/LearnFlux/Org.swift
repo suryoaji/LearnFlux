@@ -66,6 +66,7 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         let btnMessage = cell.viewWithTag(20) as! UIButton
         let btnEvents = cell.viewWithTag(21) as! UIButton
         let btnActivities = cell.viewWithTag(22) as! UIButton
+        let imageView = cell.viewWithTag(10) as! UIImageView
         btnEvents.layer.name = "\(indexPath.row)"
         btnActivities.layer.name = "\(indexPath.row)"
         btnMessage.layer.name = "\(indexPath.row)"
@@ -81,6 +82,7 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         cell.makeViewRoundedRectWithCornerRadius(5);
         cell.layer.borderWidth = 1;
         cell.layer.borderColor = UIColor.init(red: 0.85, green: 0.85, blue: 0.85, alpha: 1).CGColor
+        imageView.image = groups![indexPath.row].image != nil ? groups![indexPath.row].image : UIImage(named: "company1.png")
         
         return cell;
     }

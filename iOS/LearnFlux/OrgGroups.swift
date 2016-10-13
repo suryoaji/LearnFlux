@@ -115,7 +115,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         let editButton = cell.viewWithTag(3)! as! UIButton
         
         if let data = groups {
-            var group = data[indexPath.row];
+            let group = data[indexPath.row];
             lblTitle.text = group.name.uppercaseString;
     //        lblDesc.text = (group["description"]! as? String)?.uppercaseString;
             lblDesc.text = "";
@@ -141,7 +141,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         if pushDelegate == nil{
             Engine.getGroupInfo(groupId: data[indexPath.row].id){status, group in
                 if status == .Success{
-                    var newGroup = data[indexPath.row]
+                    let newGroup = data[indexPath.row]
                     newGroup.update(group!)
                     vc.initFromCall(newGroup)
                     self.navigationController?.pushViewController(vc, animated: true)
@@ -179,7 +179,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
                     }
                     let dataJSON = JSON!["data"] as! Dictionary<String, AnyObject>
                     let vc = Util.getViewControllerID("GroupDetails") as! GroupDetails;
-                    var group = Group(dict: dataJSON);
+                    let group = Group(dict: dataJSON);
                     group.description = self.flow.get(key: "desc")! as? String;
                     group.color = self.randomizePastelColor();
                     vc.isAdmin = true

@@ -19,6 +19,8 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     @IBOutlet weak var tableViewConnectionLower: UITableView!
     @IBOutlet weak var tableViewFriendRequest: UITableView!
     @IBOutlet weak var tableViewNotification: UITableView!
+    @IBOutlet weak var tableViewListInterests: UITableView!
+    @IBOutlet weak var tableViewListOrganizations: UITableView!
     @IBOutlet weak var buttonSeeAllUpper: UIButton!
     @IBOutlet weak var buttonSeeAllLower: UIButton!
     @IBOutlet weak var buttonAddAccConnection: UIButton!
@@ -31,7 +33,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     
     var shouldShowOrganizations = false{
         didSet{
-            tableViewMyProfile.reloadDataSection(2, animate: false)
+            tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 2)], withRowAnimation: .None)
         }
     }
     
@@ -91,7 +93,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     func activeAccConnection() -> (lower: Int, upper: Int){
         switch indicatorAccConnection {
         case 0:
-            return (lower: suggestContacts.count, upper: contacts.count)
+            return (lower: suggestContacts.count, upper: clientData.getMyConnection()?.count ?? 0)
         case 1:
             let groups = clientData.getGroups(.InterestGroup)
             return(lower: suggestGroups.count, upper: groups!.count)
@@ -110,24 +112,12 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         return (activeAccConnections.upper > 3 ? false : true, activeAccConnections.lower > 3 ? false : true)
     }
     
-    let sectionTitle = ["", "My Children", "Affilated organizations", "Interests"];
+    let sectionTitle = ["", "My Children", "Affiliated organizations", "Interests"];
     let friendRequestSectionTitle = ["Connections", "People you may know"]
     let rowInterest = ["Physical Health", "Environmental Science", "Child Education"]
     
     let titleAddAccConnection = ["+add contact", "+add group", "+add organizations", "add contacts"]
     let titleSuggesting = ["People you may know", "Groups you might interested", "Organizations you might interested", "People you may know"]
-    let contacts = [["name"  : "Alice Whitmans",
-                     "side"  : "Art and Craft Teacher",
-                     "photo" : "female01.png"],
-                    ["name"  : "Jack Whitmans",
-                     "side"  : "Associate Engineer",
-                     "photo" : "female02.png"],
-                    ["name"  : "Jane Pearson",
-                     "side"  : "Physician",
-                     "photo" : "female03.png"],
-                    ["name"  : "Jane Pearson",
-                     "side"  : "Physician",
-                     "photo" : "female03.png"]]
     let suggestContacts = [["name" : "Alice Whitsmans",
                             "side" : "Art and Craft Teacher",
                             "photo" : "male01.png"],
@@ -141,6 +131,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                             "side" : "Physician",
                             "photo" : "male04.png"]]
     
+    var groups = [Group]()
     let suggestGroups = [["name" : "Whitman's Youth Team",
                    "side" : "Art and Craft Teacher"],
                   ["name" : "Jones's Youth Team",
@@ -163,14 +154,24 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                                  "side"  : "Physician",
                                  "photo" : "company3.png"]]
     
-    let friendConnections = [["name"   : "Justin Young",
-                              "photo"  : "male12.png"],
-                             ["name"   : "Mervyn Yeoh",
-                              "photo"  : "male11.png",
-                              "friends": "6"],
-                             ["name"   : "Caren Chong",
-                              "photo"  : "female07.png",
-                              "friends": "9"]]
+    var friendRequests = [Dictionary<String, AnyObject>](){
+        didSet{
+            tableViewFriendRequest.reloadData()
+            for friend in friendRequests{
+                if friend["key"] as! String != ""{
+                    Engine.getImageIndividual(id: friend["id"] as! String){ image in
+                        if let index = self.friendRequests.indexOf({ $0["id"] as! String == friend["id"] as! String }){
+                            if image != nil{
+                                self.friendRequests[index]["photo"] = image!
+                                self.tableViewFriendRequest.reloadRowsAtIndexPaths([NSIndexPath(forRow: index + 1, inSection: 0)], withRowAnimation: .Fade)
+                            }
+                            self.friendRequests[index]["key"] = ""
+                        }
+                    }
+                }
+            }
+        }
+    }
     let suggestFriendConnections = [["name"   : "Lee Chopong Kin",
                                      "photo"  : "male10.png",
                                      "friends": "1"],
@@ -234,8 +235,28 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         }
     }
     
+    func loadDataForScreen(){
+        Engine.getAvailableInterests(){ interests in
+            if let interests = interests{
+                self.interests = interests
+            }
+        }
+        Engine.getFriendRequests(){ friends in
+            if let friends = friends{
+                self.friendRequests = friends
+            }
+        }
+        Engine.getChildsOfAllOrganizations(){ groups in
+            if let groups = groups{
+                self.groups = groups
+            }
+        }
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadDataForScreen()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -258,6 +279,8 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             return sectionTitle.count
         case tableViewFriendRequest:
             return 2
+        case tableViewListInterests:
+            return 2
         default:
             return 1
         }
@@ -275,6 +298,10 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             return numberOfRowTableViewFriendRequest(section)
         case tableViewNotification:
             return numberOfRowTableViewNotification(section)
+        case tableViewListInterests:
+            return numberOfRowTableViewListInterests(section)
+        case tableViewListOrganizations:
+            return numberOfRowTableViewListOrganizations(section)
         default:
             return 0
         }
@@ -289,6 +316,10 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             cell = cellForRowTableViewFriendRequest(indexPath)
         case tableViewNotification:
             cell = cellForRowTableViewNotification(indexPath)
+        case tableViewListInterests:
+            cell = cellForRowTableViewListInterests(indexPath)
+        case tableViewListOrganizations:
+            cell = cellForRowTableViewListOrganizations(indexPath)
         default:
             cell.height = (originalSizeConnectionTableView.height - buttonSeeAllUpper.frame.height) / 3
         }
@@ -308,6 +339,10 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             cell = self.cellForRowTableViewFriendRequest(indexPath)
         case tableViewNotification:
             cell = self.cellForRowTableViewNotification(indexPath)
+        case tableViewListInterests:
+            cell = self.cellForRowTableViewListInterests(indexPath)
+        case tableViewListOrganizations:
+            cell = self.cellForRowTableViewListOrganizations(indexPath)
         default:
             break
         }
@@ -328,6 +363,11 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     }
     
     var shouldMockUp = true
+    var shouldEditMyProfile = false{
+        didSet{
+            tableViewMyProfile.reloadData()
+        }
+    }
     var indicatorAccConnectionView = UIView()
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var indicatorHeaderView: UIView!
@@ -339,7 +379,25 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     @IBOutlet weak var accContactView: UIView!
     @IBOutlet weak var viewFriendRequest: NotificationView!
     @IBOutlet weak var viewNotification: NotificationView!
-    var companies = ["company1.png", "company2.png", "company3.png", "company4.png", "company5.png", "company6.png", "company7.png"]
+    @IBOutlet weak var viewEditInterest: NotificationView!
+    @IBOutlet weak var viewEditAffiliatedOrganization: NotificationView!
+    
+    var interests = [String](){
+        didSet{
+            tableViewListInterests.reloadData()
+        }
+    }
+    
+    var organizations = [["image" : "company7.png",
+                          "name"  : "LASSALE Collage of The Arts"],
+                         ["image" : "company6.png",
+                          "name"  : "National Council of Social Service"],
+                         ["image" : "company5.png",
+                          "name"  : "Singapore Cares"],
+                         ["image" : "company1.png",
+                          "name"  : "Name of Organization"],
+                         ["image" : "company2.png",
+                          "name"  : "Name of Organization"]]
     
     @IBAction func accConnectionTapped(sender: UIButton) {
         let row = abs(sender.tag - 10)
@@ -369,11 +427,11 @@ extension Profile{
     func numberOfRowTableViewConnectionUpper() -> Int{
         switch indicatorAccConnection {
         case 0:
-            return contacts.count >= 3 ? 3 : contacts.count
-        case 1:
-            if let groups = clientData.getGroups(.InterestGroup){
-                return groups.count >= 3 ? 3 : groups.count
+            if clientData.getMyConnection() != nil{
+                return clientData.getMyConnection()!.count >= 3 ? 3 : clientData.getMyConnection()!.count
             }
+        case 1:
+            return groups.count >= 3 ? 3 : groups.count
         case 2:
             if let organizations = clientData.getGroups(.Organisation){
                 return organizations.count
@@ -389,7 +447,7 @@ extension Profile{
     func numberOfRowTableViewMyProfile(section: Int) -> Int{
         switch section {
         case 3:
-            return rowInterest.count + 3
+            return shouldEditMyProfile ? 2 : rowInterest.count + 3
         default:
             return 2
         }
@@ -398,7 +456,7 @@ extension Profile{
     func numberOfRowTableViewFriendRequest(section: Int) -> Int{
         switch section {
         case 0:
-            return friendConnections.count + 1
+            return friendRequests.count + 1
         case 1:
             return suggestFriendConnections.count + 1
         default:
@@ -410,15 +468,36 @@ extension Profile{
         return 5
     }
     
+    func numberOfRowTableViewListInterests(section: Int) -> Int{
+        switch section {
+        case 0:
+            return 1
+        default:
+            return interests.count
+        }
+    }
+    
+    func numberOfRowTableViewListOrganizations(section: Int) -> Int{
+        return organizations.count
+    }
+    
     func cellForRowTableViewMyProfile(indexPath: NSIndexPath) -> UITableViewCell{
+        return shouldEditMyProfile ? cellForRowTableViewMyProfileEdit(indexPath) : cellForRowTableViewMyProfileNormal(indexPath)
+    }
+    
+    func cellForRowTableViewMyProfileNormal(indexPath: NSIndexPath) -> UITableViewCell{
         if indexPath.row == 0{
             let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
-            headerCell.customInit(sectionTitle[indexPath.section], indexPath: indexPath)
+            headerCell.customInit(sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: "+ edit profile")
+            headerCell.delegate = self
             return headerCell
         }else{
             switch indexPath.section{
             case 0:
                 let profileCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("1") as! RowProfileCell
+                let values = ["photo" : clientData.photo,
+                              "name"  : "\(clientData.cacheMe()!["first_name"] as! String) \(clientData.cacheMe()!["first_name"] as! String)"]
+                profileCell.setValues(values)
                 return profileCell
             case 1:
                 let childrenCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("5")!
@@ -441,17 +520,79 @@ extension Profile{
         }
     }
     
+    func cellForRowTableViewMyProfileEdit(indexPath: NSIndexPath) -> UITableViewCell{
+        if indexPath.row == 0{
+            let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
+            headerCell.customInit(sectionTitle[indexPath.section], indexPath: indexPath, icon: "save", titleEdit: "save")
+            headerCell.delegate = self
+            return headerCell
+        }else{
+            switch indexPath.section{
+            case 0:
+                let profileCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("edit1")!
+                return profileCell
+            case 1:
+                let childrenCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("edit2")!
+                let collectionView = childrenCell.viewWithTag(3) as! UICollectionView
+                collectionView.reloadData()
+                return childrenCell
+            case 2:
+                let organizationCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("edit3")!
+                let buttonAllCauses = organizationCell.viewWithTag(2) as! UIButton
+                buttonAllCauses.addTarget(self, action: #selector(buttonAllCausesTapped), forControlEvents: .TouchUpInside)
+                return organizationCell
+            case 3:
+                let interestCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("edit4")!
+                let buttonAllCauses = interestCell.viewWithTag(1) as! UIButton
+                buttonAllCauses.addTarget(self, action: #selector(buttonAllCausesTapped), forControlEvents: .TouchUpInside)
+                return interestCell
+            default:
+                return UITableViewCell()
+            }
+        }
+    }
+    
+    func cellForRowTableViewListInterests(indexPath: NSIndexPath) -> UITableViewCell{
+        let cell = tableViewListInterests.dequeueReusableCellWithIdentifier("Cell")!
+        let buttonChecked = cell.viewWithTag(1) as! UIButton
+        let labelInterest = cell.viewWithTag(2) as! UILabel
+        switch indexPath.section {
+        case 0:
+            labelInterest.text = "All Causes"
+        default:
+            labelInterest.text = interests[indexPath.row]
+            if indexPath.row == 0 || indexPath.row == 8{
+                buttonChecked.tintColor = LFColor.green
+            }
+        }
+        return cell
+    }
+    
+    func cellForRowTableViewListOrganizations(indexPath: NSIndexPath) -> UITableViewCell{
+        let cell = tableViewListOrganizations.dequeueReusableCellWithIdentifier("Cell")!
+        let imageView = cell.viewWithTag(1) as! UIImageView
+        let labelOrganization = cell.viewWithTag(2) as! UILabel
+        imageView.image = UIImage(named: organizations[indexPath.row]["image"]!)
+        labelOrganization.text = organizations[indexPath.row]["name"]
+        return cell
+    }
+    
     func cellForRowTableViewConnectionUpper(indexPath: NSIndexPath) -> UITableViewCell{
         var cell = UITableViewCell()
         switch indicatorAccConnection {
         case 0:
             let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
-            individualCell.setValues(contacts[indexPath.row])
+            individualCell.setValues(clientData.getMyConnection()![indexPath.row])
+            Engine.getPhotoOfConnection(indexPath){ success in
+                if success{
+                    self.tableViewConnectionUpper.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+                }
+            }
             cell = individualCell
         case 1:
             let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
-            let groups = clientData.getGroups(.InterestGroup)
-            groupCell.setValues(groups![indexPath.row], type: 0)
+            groupCell.delegate = self
+            groupCell.setValues(indexPath, group: groups[indexPath.row], type: 0)
             cell = groupCell
         case 2:
             let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
@@ -472,7 +613,7 @@ extension Profile{
             cell = individualCell
         case 1:
             let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
-            groupCell.setValues(suggestGroups[indexPath.row], type: 1)
+            groupCell.setValues(indexPath, group: suggestGroups[indexPath.row], type: 1)
             cell = groupCell
         case 2:
             let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
@@ -492,7 +633,7 @@ extension Profile{
             labelHeader.text = friendRequestSectionTitle[indexPath.section]
         default:
             let friendRequestCell = tableViewFriendRequest.dequeueReusableCellWithIdentifier("Cell") as! FriendRequestCell
-            let friendDict = indexPath.section == 0 ? friendConnections[indexPath.row - 1] : suggestFriendConnections[indexPath.row - 1]
+            let friendDict = indexPath.section == 0 ? friendRequests[indexPath.row - 1] : suggestFriendConnections[indexPath.row - 1]
             friendRequestCell.setValues(friendDict, indexPath: indexPath)
             cell = friendRequestCell
         }
@@ -541,6 +682,8 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
             }
         case 2:
             return 4
+        case 3:
+            return 1
         default: return 0
         }
         return 0
@@ -561,7 +704,7 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
             }else{
                 cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
                 let imageViewPhoto = cell.viewWithTag(1) as! UIImageView
-                imageViewPhoto.image = UIImage(named: companies[Int(arc4random_uniform(UInt32(companies.count)))])
+                imageViewPhoto.image = clientData.getGroups(.Organisation)![indexPath.row].image ?? UIImage(named: "company1.png")
             }
         case 2:
             if indexPath.row == 3{
@@ -573,6 +716,8 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
                 let imageViewPhoto = cell.viewWithTag(1) as! UIImageView
                 imageViewPhoto.image = UIImage(named: kids[indexPath.row])
             }
+        case 3:
+            cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
         default: break
         }
         return cell
@@ -592,6 +737,8 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
             }else{
                 return CGSizeMake(50, 50)
             }
+        case 3:
+            return CGSizeMake(65, 65)
         default: return CGSizeZero
         }
     }
@@ -604,6 +751,8 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
                 self.performSegueWithIdentifier("OrgSegue", sender: indexPath.row)
             }
         case 2:
+            break
+        case 3:
             break
         default: break
         }
@@ -770,6 +919,28 @@ extension Profile{
         labelNotification.hidden = false
     }
     
+    func buttonAllCausesTapped(sender: UIButton){
+        let holdView = UIView(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height))
+        holdView.backgroundColor = UIColor.clearColor()
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(holdViewTapped))
+        holdView.addGestureRecognizer(gesture)
+        self.view.addSubview(holdView)
+        switch sender.tag {
+        case 1:
+            viewEditInterest.customInit(self, viewIndicator: sender, type: .Row)
+        case 2:
+            viewEditAffiliatedOrganization.customInit(self, viewIndicator: sender, type: .Row)
+        default: break
+        }
+        
+    }
+    
+    func holdViewTapped(gesture: UITapGestureRecognizer){
+        gesture.view?.removeFromSuperview()
+        viewEditInterest.hidden = true
+        viewEditAffiliatedOrganization.hidden = true
+    }
+    
 }
 
 // - MARK Perform Segues
@@ -786,15 +957,39 @@ extension Profile{
             orgDetailController.initView(group.id, orgTitle: group.name, indexTab: 0)
         }else if segue.identifier == "GroupSegue"{
             let groupDetailController = segue.destinationViewController as! GroupDetails
-            let group = clientData.getGroups(.InterestGroup)![sender as! Int]
+            let group = groups[sender as! Int]
             groupDetailController.initFromCall(group)
+        }else if segue.identifier == "ChatSegue"{
+            let chatController = segue.destinationViewController as! ChatFlow
+            let group = groups[sender as! Int]
+            chatController.initChat(sender as! Int, idThread: group.threadId!, from: .OpenChat)
         }
     }
 }
 
+// - MARK: SectionTitleCell My Profile Delegate
+extension Profile: SectionTitleCellDelegate{
+    func editButtonTapped(cell: SectionTitleCell){
+        if !shouldEditMyProfile{
+            switch cell.indexPath.section {
+            case 0:
+                shouldEditMyProfile = true
+            default: break
+            }
+        }else{
+            shouldEditMyProfile = false
+        }
+    }
+}
 
-
-
+// - MARK: GroupCell My Profile Delegate
+extension Profile: GroupCellDelegate{
+    func buttonActionTapped(cell: GroupCell) {
+        if cell.indexPath != nil{
+            performSegueWithIdentifier("ChatSegue", sender: cell.indexPath.row)
+        }
+    }
+}
 
 
 

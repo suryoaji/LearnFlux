@@ -8,13 +8,14 @@
 
 import Foundation
 
-struct User {
+class User {
     
     var userId : Int?
     var type : String?
     var link : String?
     var firstName: String?
     var picture: String?
+    var photo: UIImage?
     
     init (userId: Int?, type: String?, link: String?) {
         self.userId = userId;
@@ -44,10 +45,6 @@ struct User {
     static func convertFromDict (dict : AnyObject?) -> User? {
         guard let data = dict as? dictType else { return nil; }
         return User(dict: data);
-    }
-    
-    mutating func set (dict : AnyObject?) {
-        self = User.convertFromDict (dict)!;
     }
     
 }

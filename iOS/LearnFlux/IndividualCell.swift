@@ -10,6 +10,8 @@ import UIKit
 
 class IndividualCell: UITableViewCell {
 
+    var dummySides = ["Arts and Craft Teacher", "Associate Engineer", "Physician"]
+    
     @IBOutlet weak var imageViewPhoto: UIImageView!
     @IBOutlet weak var labelName: UILabel!
     @IBOutlet weak var labelSide: UILabel!
@@ -30,6 +32,12 @@ class IndividualCell: UITableViewCell {
         labelName.text = contact["name"]
         labelSide.text = contact["side"]
         imageViewPhoto.image = UIImage(named: contact["photo"]!)
+    }
+    
+    func setValues(contact: User){
+        labelName.text = contact.firstName
+        labelSide.text = dummySides[Int(arc4random_uniform(2))]
+        imageViewPhoto.image = contact.photo ?? UIImage(named: "photo-container.png")
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

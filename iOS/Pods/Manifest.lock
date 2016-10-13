@@ -11,6 +11,7 @@ PODS:
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
+  - Kingfisher (2.6.0)
   - PKRevealController (2.0.6)
   - RAReorderableLayout (0.4.1)
   - SwiftyJSON (2.3.2)
@@ -24,6 +25,7 @@ DEPENDENCIES:
   - DropDown
   - Eureka (~> 1.7)
   - JSQMessagesViewController
+  - Kingfisher (~> 2.x)
   - PKRevealController
   - RAReorderableLayout
   - SwiftyJSON
@@ -38,6 +40,7 @@ SPEC CHECKSUMS:
   Eureka: 2020d9faeef7b7e9adeb9e3d8af779e5931c1897
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  Kingfisher: d84c5fd176ea86cc7b8aac65fd55feda6f70f130
   PKRevealController: ffb45a16f5a5032ad90a3d16e5cbb0d8e035bd58
   RAReorderableLayout: d5d3839bfc2a732a0463f08a6c91d76c9951cb77
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a

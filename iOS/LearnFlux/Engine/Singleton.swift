@@ -30,6 +30,8 @@ class Data : NSObject {
         return Singleton.instance
     }
     
+    var photo = UIImage(named: "photo-container.png")!
+    
     let defaults = NSUserDefaults.standardUserDefaults();
     
     private struct cacheName{
