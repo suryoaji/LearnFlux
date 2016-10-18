@@ -30,7 +30,11 @@ class Data : NSObject {
         return Singleton.instance
     }
     
-    var photo = UIImage(named: "photo-container.png")!
+    var photo = UIImage(named: "photo-container.png")!{
+        didSet{
+            NSNotificationCenter.defaultCenter().postNotificationName("photoUpdateNotification", object: self)
+        }
+    }
     
     let defaults = NSUserDefaults.standardUserDefaults();
     

@@ -58,7 +58,7 @@ class GroupCell: UITableViewCell {
     
     func setValues(indexPath: NSIndexPath, group: Group, type: Int = 0){
         labelName.text = group.name
-        labelSide.text = "Art and Craft Teacher"
+        labelSide.text = Engine.getRoleOfGroup(group)?.name.capitalizedString ?? "Member"
         if type == 1 { buttonAction.setImage(UIImage(named: "add-group"), forState: .Normal) }
         self.indexPath = indexPath
     }

@@ -73,8 +73,8 @@ class NotificationView: UIView {
         var path = UIBezierPath()
         switch type {
         case .Header:
-            self.layer.borderColor = LFColor.green.CGColor
-            layerArrow.fillColor = LFColor.green.CGColor
+            self.layer.borderColor = LFColor.blue.CGColor
+            layerArrow.fillColor = LFColor.blue.CGColor
             path = UIBezierPath(rect: CGRectMake(0, 0, self.frame.width, borderHeight))
         case .Row:
             self.layer.borderColor = LFColor.blue.CGColor

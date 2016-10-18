@@ -19,7 +19,7 @@ class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
         self.tabBar.layer.shadowOpacity = 0.3
         self.tabBar.layer.shadowOffset = CGSizeMake(0, 2)
 //        self.tabBar.barTintColor = LFColor.green
-        self.tabBar.tintColor = LFColor.green
+        self.tabBar.tintColor = LFColor.blue
         self.view.backgroundColor = UIColor.whiteColor()
         UITabBarItem.appearance().setTitleTextAttributes([NSFontAttributeName : UIFont(name: "BanglaSangamMN", size: 10)!], forState: .Normal)
         

@@ -15,10 +15,9 @@ class NavController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        self.navigationBar.hidden = false
-        self.navigationBar.barTintColor = LFColor.green
+        self.navigationBar.barTintColor = LFColor.blue
         self.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor(), NSFontAttributeName : UIFont(name: "PingFangHK-Medium", size: 18)!]
         self.navigationBar.tintColor = UIColor.whiteColor()
-        
     }
     
     override func pushViewController(viewController: UIViewController, animated: Bool) {

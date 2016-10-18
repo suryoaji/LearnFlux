@@ -27,7 +27,7 @@ class Home: UICollectionViewController {
         
         let screenWidth = UIScreen.mainScreen().bounds.width;
         
-        self.revealController.setMinimumWidth(screenWidth * 0.8, maximumWidth: screenWidth * 0.9, forViewController: self.revealController.leftViewController)
+        self.revealController.setMinimumWidth(screenWidth * 0.65, maximumWidth: screenWidth * 0.9, forViewController: self.revealController.leftViewController)
 
 //        var navigationArray: [UIViewController] = self.navigationController!.viewControllers
 //        navigationArray.removeAtIndex(0)

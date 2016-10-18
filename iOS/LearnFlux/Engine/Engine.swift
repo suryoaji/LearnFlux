@@ -425,6 +425,32 @@ class Engine : NSObject {
         }
     }
     
+    static func getSelfRoles(callback: (String? -> Void)?){
+        if callback != nil{
+            let flatted = clientData.getGroups(.Organisation)!.flatMap { group -> [String] in
+                let participantFlated = group.participants!.map({ participant -> String in
+                    var string = ""
+                    if let userId = participant.user?.userId where userId == clientData.cacheMe()!["id"] as! Int{
+                        if let role = participant.role?.type where role.lowercaseString != "user"{
+                            string += "\(participant.role!.name) of \(group.name)"
+                        }
+                    }
+                    return string
+                })
+                return participantFlated.filter({ !$0.isEmpty })
+            }
+            callback!(flatted.joinWithSeparator(", "))
+        }
+    }
+    
+    static func getRoleOfGroup(group: Group) -> Role?{
+        let arr = group.participants!.filter({ $0.user!.userId! == clientData.cacheMe()!["id"] as! Int })
+        if let participant = arr.first where participant.role!.type.lowercaseString != "user"{
+            return participant.role
+        }
+        return nil
+    }
+    
     static func getAvailableInterests(viewController: UIViewController? = nil, callback: (([String]?)->Void)? = nil) {
         makeRequestAlamofire(viewController, url: Url.availableInterests, param: nil){ status, dataJSON in
             if status == .Success{
@@ -439,11 +465,29 @@ class Engine : NSObject {
         }
     }
     
+    static func getAllContacts(callback: (Array<Dictionary<String, String>> -> Void)){
+        var allContacts = Array<Dictionary<String, String>>()
+        Engine.getChildsOfAllOrganizations(){ groups in
+            if let individualContacts = clientData.getMyConnection(){
+                allContacts += individualContacts.map({ ["type" : "individual", "id" : "\($0.userId!)", "name" : $0.firstName!] })
+            }
+            if let groups = groups{
+                allContacts += groups.map({ ["type" : "group", "id" : "\($0.id)", "name" : $0.name] })
+            }
+            if let organizations = clientData.getGroups(.Organisation){
+                allContacts += organizations.map({ ["type" : "organization", "id" : "\($0.id)", "name" : $0.name] })
+            }
+            allContacts.sortInPlace({ $0["name"] < $1["name"] })
+            callback(allContacts)
+        }
+        
+    }
+    
     static func getFriendRequests(viewController: UIViewController? = nil, callback: (([Dictionary<String, AnyObject>]?)->Void)? = nil){
         guard let rawFriendRequests = clientData.cacheMe()!["friend_request"] else{
             return
         }
-        let arrFriendRequests = rawFriendRequests as! arrType
+        let arrFriendRequests = rawFriendRequests as! Dictionary<String, Dictionary<String, AnyObject>>
         if !arrFriendRequests.isEmpty{
             var newArrFriendRequests = reduceArrJSON(arrFriendRequests, indicator: "id")
             removeFriendRequestByConnection(&newArrFriendRequests)
@@ -463,18 +507,18 @@ class Engine : NSObject {
         }
     }
     
-    static func reduceArrJSON(arr: Array<Dictionary<String, AnyObject>>, indicator: String) -> Array<Dictionary<String, AnyObject>>{
+    static func reduceArrJSON(arr: Dictionary<String, Dictionary<String, AnyObject>>, indicator: String) -> Array<Dictionary<String, AnyObject>>{
         var newArr = Array<Dictionary<String, AnyObject>>()
         for each in arr{
             if !newArr.isEmpty{
-                let filtered = newArr.indexOf({ $0[indicator] as! Int == each[indicator] as! Int })
+                let filtered = newArr.indexOf({ $0[indicator] as! Int == each.1[indicator] as! Int })
                 if filtered != nil{
-                    newArr[filtered!] = each
+                    newArr[filtered!] = each.1
                 }else{
-                    newArr.append(each)
+                    newArr.append(each.1)
                 }
             }else{
-                newArr.append(each)
+                newArr.append(each.1)
             }
         }
         return newArr

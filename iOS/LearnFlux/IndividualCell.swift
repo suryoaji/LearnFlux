@@ -15,6 +15,7 @@ class IndividualCell: UITableViewCell {
     @IBOutlet weak var imageViewPhoto: UIImageView!
     @IBOutlet weak var labelName: UILabel!
     @IBOutlet weak var labelSide: UILabel!
+    @IBOutlet weak var buttonChat: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
