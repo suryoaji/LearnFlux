@@ -95,10 +95,4 @@ class Group{
         return Group(dict: data);
     }
     
-//    func set (dict: AnyObject?) {
-//        guard let data = dict as? dictType else { return; }
-//        guard let result = Group.convertFromDict (data) else { return; }
-//        self = result;
-//    }
-    
 }

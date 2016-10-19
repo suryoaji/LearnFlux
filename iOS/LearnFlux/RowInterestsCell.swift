@@ -34,7 +34,7 @@ class RowInterestsCell: UITableViewCell {
             case 2:
                 imageViewPhoto.image = UIImage(named: "interest3.png")
             default:
-                break
+                imageViewPhoto.image = UIImage(named: "photo-container.png")
             }
         }
     }

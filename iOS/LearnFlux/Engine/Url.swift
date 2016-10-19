@@ -27,6 +27,10 @@ struct Url{
     static let uploadImageMe = me + "/image"
     static let availableInterests = base + "/v1/interests"
     
+    static func addConnection(id: Int) -> String{
+        return base + "/v1/user/\(id)/friend"
+    }
+    
     static func groupEvent(idGroup idGroup: String) -> (String){
         return groups + "/\(idGroup)/events"
     }

@@ -18,6 +18,7 @@ import AZDropdownMenu
 }
 
 class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
+    let clientData = Engine.clientData
     @IBOutlet weak var headerView: UIView!
     @IBOutlet var viewSelection : UIView!;
     @IBOutlet var viewTabs : UIView!;
@@ -26,6 +27,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     var shouldSetOffsetScrollView: Bool = true
     weak var orgEventsDelegate : OrgEventsDelegate!
+    @IBOutlet weak var orgImageViewLogo: UIImageView!
     
     @IBOutlet var lblTitle : UILabel!;
     
@@ -121,7 +123,8 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     func updateView() {
         orgTitle = "";
         guard let data = orgData else { return; }
-        orgTitle = data.name;
+        orgTitle = data.name
+        orgImageViewLogo.image = data.image ?? UIImage(named: "company1.png")
     }
     
     func setTabsWithController(){

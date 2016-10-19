@@ -77,7 +77,7 @@ class Menu : UITableViewController {
             let imageViewPhoto = cell.viewWithTag(4) as! UIImageView
             view.frame.size.width = UIScreen.mainScreen().bounds.width * 0.65 - 4.0
             imageViewPhoto.image = clientData.photo
-            labelName.text = "\(clientData.cacheMe()!["first_name"]!) \(clientData.cacheMe()!["last_name"]!)"
+            labelName.text = "\(clientData.cacheMe()!["first_name"]!) \(clientData.cacheMe()!["last_name"]!)".capitalizedString
             labelEmail.text = "\(clientData.cacheMe()!["email"]!)"
         }
         

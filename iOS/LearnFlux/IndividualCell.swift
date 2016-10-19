@@ -8,14 +8,25 @@
 
 import UIKit
 
-class IndividualCell: UITableViewCell {
+protocol IndividualCellDelegate: class {
+    func buttonChatTapped(cell: IndividualCell)
+}
 
+class IndividualCell: UITableViewCell {
+    weak var delegate : IndividualCellDelegate?
+    var indexPath: NSIndexPath!
     var dummySides = ["Arts and Craft Teacher", "Associate Engineer", "Physician"]
     
     @IBOutlet weak var imageViewPhoto: UIImageView!
     @IBOutlet weak var labelName: UILabel!
     @IBOutlet weak var labelSide: UILabel!
     @IBOutlet weak var buttonChat: UIButton!
+    
+    @IBAction func buttonChatTapped(sender: UIButton) {
+        if let delegate = delegate{
+            delegate.buttonChatTapped(self)
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -35,8 +46,9 @@ class IndividualCell: UITableViewCell {
         imageViewPhoto.image = UIImage(named: contact["photo"]!)
     }
     
-    func setValues(contact: User){
-        labelName.text = contact.firstName
+    func setValues(contact: User, indexPath: NSIndexPath){
+        self.indexPath = indexPath
+        labelName.text = contact.firstName?.capitalizedString
         labelSide.text = dummySides[Int(arc4random_uniform(2))]
         imageViewPhoto.image = contact.photo ?? UIImage(named: "photo-container.png")
     }

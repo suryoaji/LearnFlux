@@ -8,12 +8,23 @@
 
 import UIKit
 
-class FriendRequestCell: UITableViewCell {
+protocol FriendRequestCellDelegate: class{
+    func buttonAcceptTapped(cell: FriendRequestCell)
+}
 
+class FriendRequestCell: UITableViewCell {
+    weak var delegate: FriendRequestCellDelegate?
     @IBOutlet weak var imageViewPhoto: UIImageView!
     @IBOutlet weak var labelName: UILabel!
     @IBOutlet weak var labelFriends: UILabel!
     @IBOutlet weak var buttonCancel: UIButton!
+    var indexPath: NSIndexPath!
+    
+    @IBAction func buttonAccept(sender: UIButton) {
+        if let delegate = delegate{
+            delegate.buttonAcceptTapped(self)
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -21,6 +32,7 @@ class FriendRequestCell: UITableViewCell {
     }
     
     func setValues(friend: Dictionary<String, AnyObject>, indexPath: NSIndexPath){
+        self.indexPath = indexPath
         labelName.text = friend["name"] as? String
         labelFriends.text = friend["friends"] != nil ? "\(friend["friends"]!) mutual friends" : ""
         buttonCancel.setTitle(indexPath.section == 0 ? "cancel" : "remove", forState: .Normal)
@@ -31,6 +43,14 @@ class FriendRequestCell: UITableViewCell {
                 imageViewPhoto.image = UIImage(named: stringPhoto)
             }
         }
+    }
+    
+    func setValues(friend: User, indexPath: NSIndexPath){
+        self.indexPath = indexPath
+        labelName.text = friend.lastName == nil ? friend.firstName! : friend.firstName! + " " + friend.lastName!
+        labelFriends.text = friend.mutualFriend != nil && friend.mutualFriend! != 0 ? "\(friend.mutualFriend!) mutual friends" : ""
+        buttonCancel.setTitle(indexPath.section == 0 ? "cancel" : "remove", forState: .Normal)
+        imageViewPhoto.image = friend.photo ?? UIImage(named: "photo-container.png")
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

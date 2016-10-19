@@ -480,10 +480,23 @@ class Engine : NSObject {
             allContacts.sortInPlace({ $0["name"] < $1["name"] })
             callback(allContacts)
         }
-        
     }
     
-    static func getFriendRequests(viewController: UIViewController? = nil, callback: (([Dictionary<String, AnyObject>]?)->Void)? = nil){
+    static func generateContactsByFirstLetter(arrContacts: Array<Dictionary<String, String>>) -> Dictionary<String, Array<Dictionary<String, String>>>{
+        var allContacts = Dictionary<String, Array<Dictionary<String, String>>>()
+        for each in arrContacts{
+            let key = each["name"]!.substringToIndex(each["name"]!.startIndex.advancedBy(1)).uppercaseString
+            if var contactValues = allContacts[key]{
+                contactValues.append(each)
+                allContacts[key] = contactValues
+            }else{
+                allContacts[key] = [each]
+            }
+        }
+        return allContacts
+    }
+    
+    static func getFriendRequests(viewController: UIViewController? = nil, callback: (([User]?)->Void)? = nil){
         guard let rawFriendRequests = clientData.cacheMe()!["friend_request"] else{
             return
         }
@@ -491,11 +504,17 @@ class Engine : NSObject {
         if !arrFriendRequests.isEmpty{
             var newArrFriendRequests = reduceArrJSON(arrFriendRequests, indicator: "id")
             removeFriendRequestByConnection(&newArrFriendRequests)
-            let friendRequests : AnyObject = newArrFriendRequests.map({ ["name" : "\($0["first_name"]!) \($0["last_name"]!)",
-                                                                            "id"   : "\($0["id"]!)",
-                                                                            "key"  : "\($0["profile_picture"]!)",
-                                                                            "friends" : "\(arc4random_uniform(25))"] })
-            if callback != nil { callback!(friendRequests as? [Dictionary<String, AnyObject>]) }
+            let friendRequests = newArrFriendRequests.map({User(dict: $0)})
+            if callback != nil { callback!(friendRequests) }
+        }
+    }
+    
+    static func addFriend(viewController: UIViewController? = nil, user: User, callback: (RequestStatusType -> Void)? = nil){
+        makeRequestAlamofire(viewController, url: Url.addConnection(user.userId!), param: nil){ status, JSON in
+            if status == .Success{
+                clientData.addToConnection(user)
+            }
+            if callback != nil { callback!(status) }
         }
     }
     
@@ -571,10 +590,13 @@ class Engine : NSObject {
     }
 
     static func getGroupInfo(viewController: UIViewController? = nil, groupId: String, callback: ((RequestStatusType, Group?)->Void)? = nil) {
-        let url = Url.groups + "/" + groupId;
+        let url = Url.groups + "/" + groupId
         makeRequestAlamofire(viewController, url: url, param: nil){ status, dataJSON in
-            let data = self.getDictData(dataJSON);
-            if callback != nil { callback!(status, Group (dict: data)) }
+            let data = self.getDictData(dataJSON)
+            let group = Group(dict: data)
+            let index = clientData.getGroups()!.indexOf({ $0.id == group.id })!
+            clientData.getGroups()![index].update(group)
+            if callback != nil { callback!(status, clientData.getGroups()![index]) }
         }
     }
     

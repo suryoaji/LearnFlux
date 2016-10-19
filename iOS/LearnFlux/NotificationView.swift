@@ -43,6 +43,39 @@ class NotificationView: UIView {
         self.hidden = true
     }
     
+    func dinamicCustomInit(location: CGRect, type: NotificationViewType = .Header){
+        dinamicSetFrame(location, type: type)
+        setBorderLayer(2.0, borderHeight: 10.0, type: type)
+        dinamicSetMaskLayer(location, height: 8.0)
+    }
+    
+    private func dinamicSetFrame(location: CGRect, type: NotificationViewType){
+        self.frame.size.width = UIScreen.mainScreen().bounds.width * 0.65
+        self.frame.size.height = self.frame.size.width * 0.85
+        if location.origin.x < UIScreen.mainScreen().bounds.width / 2{
+            self.frame.origin.x = (UIScreen.mainScreen().bounds.width - self.frame.size.width) * 1/5
+        }else{
+            self.frame.origin.x = (UIScreen.mainScreen().bounds.width - self.frame.size.width) * 4/5
+        }
+        self.frame.origin.y = location.origin.y + location.size.height
+    }
+    
+    func dinamicSetMaskLayer(location: CGRect, height: CGFloat){
+        let pointXLocation = location.origin.x - self.frame.origin.x + location.size.width / 2
+        let maskPath = UIBezierPath()
+        maskPath.moveToPoint(CGPointMake(0, height))
+        maskPath.addLineToPoint(CGPointMake(pointXLocation - 8, height))
+        maskPath.addLineToPoint(CGPointMake(pointXLocation, 0))
+        maskPath.addLineToPoint(CGPointMake(pointXLocation + 8, 8))
+        maskPath.addLineToPoint(CGPointMake(self.frame.width, 8))
+        maskPath.addLineToPoint(CGPointMake(self.frame.width, self.frame.height))
+        maskPath.addLineToPoint(CGPointMake(0, self.frame.height))
+        maskPath.closePath()
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = maskPath.CGPath
+        self.layer.mask = maskLayer
+    }
+    
     func customInit(viewController: UIViewController, viewIndicator: UIView, type: NotificationViewType = .Header){
         let viewIndicatorPosition = viewIndicator.convertRect(viewIndicator.frame, toView: viewController.view)
         self.setFrame(viewController, rect: viewIndicatorPosition, type: type)

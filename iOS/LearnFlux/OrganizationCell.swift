@@ -29,7 +29,7 @@ class OrganizationCell: UITableViewCell {
     
     func setValues(organization: Group, type: Int = 0){
         labelName.text = organization.name
-        labelSide.text = Engine.getRoleOfGroup(organization)?.name.capitalizedString ?? "Member"
+        labelSide.text = Engine.getRoleOfGroup(organization)?.name.lowercaseString ?? "member"
         imageViewOrganization.image = organization.image != nil ? organization.image! : UIImage(named: "company1.png")
         if type == 0 {
             buttonAction.hidden = true

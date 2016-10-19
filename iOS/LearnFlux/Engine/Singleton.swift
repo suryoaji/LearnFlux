@@ -118,6 +118,14 @@ class Data : NSObject {
         self.connection = makeConnectionsArr(arr)
     }
     
+    func addToConnection(user: User){
+        if connection == nil{
+            connection = [user]
+        }else{
+            connection?.append(user)
+        }
+    }
+    
     func makeConnectionsArr(rawArr: Array<Dictionary<String, AnyObject>>) -> ([User]){
         var tempUsers : [User] = []
         for dicUser in rawArr{
