@@ -43,6 +43,7 @@
 		4A5105FB1DA200900026F302 /* InterestGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5105FA1DA200900026F302 /* InterestGroups.swift */; };
 		4A5106001DA24B310026F302 /* IGGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5105FF1DA24B310026F302 /* IGGroupCell.swift */; };
 		4A5106021DA24FA40026F302 /* IGSuggestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5106011DA24FA40026F302 /* IGSuggestCell.swift */; };
+		4A52B9FD1DB75AC600C54302 /* RowEditProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A52B9FC1DB75AC600C54302 /* RowEditProfileCell.swift */; };
 		4A5A14F91DA5E3AD00024FE3 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5A14F81DA5E3AD00024FE3 /* NotificationView.swift */; };
 		4A5A15171DA6226700024FE3 /* company4.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A5A150E1DA6226700024FE3 /* company4.png */; };
 		4A5A15181DA6226700024FE3 /* male11.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A5A150F1DA6226700024FE3 /* male11.png */; };
@@ -492,6 +493,7 @@
 		4A5105FA1DA200900026F302 /* InterestGroups.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterestGroups.swift; sourceTree = "<group>"; };
 		4A5105FF1DA24B310026F302 /* IGGroupCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IGGroupCell.swift; sourceTree = "<group>"; };
 		4A5106011DA24FA40026F302 /* IGSuggestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IGSuggestCell.swift; sourceTree = "<group>"; };
+		4A52B9FC1DB75AC600C54302 /* RowEditProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RowEditProfileCell.swift; sourceTree = "<group>"; };
 		4A5A14F81DA5E3AD00024FE3 /* NotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		4A5A150E1DA6226700024FE3 /* company4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company4.png; sourceTree = "<group>"; };
 		4A5A150F1DA6226700024FE3 /* male11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = male11.png; sourceTree = "<group>"; };
@@ -995,6 +997,7 @@
 			children = (
 				4A382AC81D9CCD5D00E12BFE /* SectionTitleCell.swift */,
 				4A382ACA1D9CD18A00E12BFE /* RowProfileCell.swift */,
+				4A52B9FC1DB75AC600C54302 /* RowEditProfileCell.swift */,
 				4A382ACE1D9CD71100E12BFE /* RowInterestsCell.swift */,
 				4A382AD01D9CE77E00E12BFE /* RowHighlightsCell.swift */,
 			);
@@ -2099,6 +2102,7 @@
 				5B09CEB51CBB4A330042C70B /* Login.swift in Sources */,
 				5BE7BBB11CD1DE2500BDFCE1 /* AttachPoll.swift in Sources */,
 				5B98B59B1CC8DB190070AE97 /* ChatFlow.swift in Sources */,
+				4A52B9FD1DB75AC600C54302 /* RowEditProfileCell.swift in Sources */,
 				5B6DECBC1D016BA000E16650 /* Url.swift in Sources */,
 				4A5FF51C1D700198009818E4 /* PollChart.swift in Sources */,
 				5B0AC9A01D110A4D00594E4C /* Org.swift in Sources */,

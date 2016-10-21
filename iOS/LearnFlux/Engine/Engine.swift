@@ -35,6 +35,7 @@ enum RequestStatusType {
 
 enum RequestType{
     case MakeToken
+    case UploadImage
     case None
 }
 
@@ -52,7 +53,7 @@ class Engine : NSObject {
     private static var locked : Bool = false;
     
     static func isAdminOfGroup(group: Group) -> (Bool){
-        guard let participants = group.participants?.filter({ $0.user!.userId! == clientData.cacheMe()!["id"] as! Int }) where !participants.isEmpty else{
+        guard let participants = group.participants?.filter({ $0.user!.userId! == clientData.cacheSelfId() }) where !participants.isEmpty else{
             return false
         }
         guard let role = participants.first!.role else{
@@ -150,61 +151,73 @@ class Engine : NSObject {
         let urlReq = self.createURLRequest(url, method: method, param: param)
         Alamofire.request(method, urlReq.URLString, parameters: method == .GET ? nil : param, encoding: .JSON, headers: urlReq.allHTTPHeaderFields)
             .responseJSON { response in
-                if let json = response.result.value{
-                    let restat = statusMaker(response.response!.statusCode, JSON: json)
-                    switch (restat) {
-                    case .Success:
+                handleResponseOfAlamofire(viewController, method: method, urlReq: urlReq, response: response, param: param, requestType: requestType, callback: callback)
+        }
+    }
+    
+    static func makeUploadAlamofire(viewController: UIViewController? = nil, method : Alamofire.Method = .PUT, url: String, image: UIImage, param: Dictionary<String,AnyObject>? = nil, callback: JSONreturn? = nil){
+        let imageData = UIImagePNGRepresentation(image)!
+        let urlReq = self.createURLRequest(url, method: method, param: param, requestType: .UploadImage)
+        Alamofire.upload(method, urlReq.URLString, headers: urlReq.allHTTPHeaderFields, data: imageData).responseJSON{ response in
+            handleResponseOfAlamofire(viewController, method: method, urlReq: urlReq, response: response, param: param, requestType: .None, callback: callback)
+        }
+    }
+    
+    static func handleResponseOfAlamofire(viewController: UIViewController?, method: Alamofire.Method, urlReq: NSURLRequest, response: Response<AnyObject, NSError>, param: Dictionary<String, AnyObject>?, requestType: RequestType, callback: JSONreturn?){
+        if let json = response.result.value{
+            let restat = statusMaker(response.response!.statusCode, JSON: json)
+            switch (restat) {
+            case .Success:
+                if (callback != nil) { callback! (restat, json); }
+                break;
+            case .CustomError:
+                print("CustomError")
+                print("Status Code: \(response.response!.statusCode)")
+                print("JSON: \(json)")
+                if let errorDesc = json["error_description"]! {
+                    Util.showMessageInViewController(viewController, title: "Error", message: errorDesc as! String) {
                         if (callback != nil) { callback! (restat, json); }
-                        break;
-                    case .CustomError:
-                        print("CustomError")
-                        print("Status Code: \(response.response!.statusCode)")
-                        print("JSON: \(json)")
-                        if let errorDesc = json["error_description"]! {
-                            Util.showMessageInViewController(viewController, title: "Error", message: errorDesc as! String) {
-                                if (callback != nil) { callback! (restat, json); }
-                            }
-                        }
-                        else {
-                            if (callback != nil) { callback! (restat, json); }
-                        }
-                        break;
-                    case .InvalidAccessToken:
-                        print("InvalidAccessToken")
-                        print("Status Code: \(response.response!.statusCode)")
-                        print("JSON: \(json)")
-                        if requestType == .MakeToken{
-                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, json); } } );
-                        }else{
-                            if (!locked) {
-                                locked = true;
-                                refreshToken() { status, JSON in
-                                    if JSON == nil {
-                                        Util.showMessageInViewController(viewController, title: "Error", message: "There's an error with the network. Please try again later.") {
-                                            print ("CANNOT OBTAIN ACCESS TOKEN ERROR occured while making request for url = \(urlReq.URLString)\nWith param: \(param)\nError code: \((response.response?.statusCode)!)");
-                                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                                        }
-                                    }
-                                    else {
-                                        makeRequestAlamofire(viewController, method: method, url: url, param: param) { status, JSON in
-                                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
-                                        }
-                                    }
-                                }
-                            }
-                            locked = false;
-                        }
-                        break;
-                    default:
-                        print("Error")
-                        print("Status Code: \(response.response!.statusCode)")
-                        print("JSON: \(json)")
-                        Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later." + printErrorCode((response.response?.statusCode)!)) {
-                            dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, json); } } );
-                        };
-                        break;
                     }
                 }
+                else {
+                    if (callback != nil) { callback! (restat, json); }
+                }
+                break;
+            case .InvalidAccessToken:
+                print("InvalidAccessToken")
+                print("Status Code: \(response.response!.statusCode)")
+                print("JSON: \(json)")
+                if requestType == .MakeToken{
+                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, json); } } );
+                }else{
+                    if (!locked) {
+                        locked = true;
+                        refreshToken() { status, JSON in
+                            if JSON == nil {
+                                Util.showMessageInViewController(viewController, title: "Error", message: "There's an error with the network. Please try again later.") {
+                                    print ("CANNOT OBTAIN ACCESS TOKEN ERROR occured while making request for url = \(urlReq.URLString)\nWith param: \(param)\nError code: \((response.response?.statusCode)!)");
+                                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+                                }
+                            }
+                            else {
+                                makeRequestAlamofire(viewController, method: method, url: urlReq.URLString, param: param) { status, JSON in
+                                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, JSON); } } );
+                                }
+                            }
+                        }
+                    }
+                    locked = false;
+                }
+                break;
+            default:
+                print("Error")
+                print("Status Code: \(response.response!.statusCode)")
+                print("JSON: \(json)")
+                Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later." + printErrorCode((response.response?.statusCode)!)) {
+                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, json); } } );
+                };
+                break;
+            }
         }
     }
     
@@ -230,8 +243,8 @@ class Engine : NSObject {
         }
     }
     
-    private static func createURLRequest(string: String, method: Alamofire.Method, param: Dictionary<String,AnyObject>?) -> (NSMutableURLRequest){
-        let headers = authHeaders(string)
+    private static func createURLRequest(string: String, method: Alamofire.Method, param: Dictionary<String,AnyObject>?, requestType: RequestType = .None) -> (NSMutableURLRequest){
+        let headers = authHeaders(string, requestType: requestType)
         var newUrl = string
         let urlReq = NSMutableURLRequest()
         if let tParam = param{
@@ -255,9 +268,9 @@ class Engine : NSObject {
         return urlReq
     }
     
-    private static func authHeaders(urlString: String) -> (Dictionary<String, String>){
+    private static func authHeaders(urlString: String, requestType: RequestType = .None) -> (Dictionary<String, String>){
         let headers : Dictionary<String, String> = [
-            "Content-Type"  : "application/json",
+            "Content-Type"  : requestType != .UploadImage ? "application/json" : "image/*",
             "cache-control" : "no-cache",
             "Authorization" : urlString == Url.register ? "" : "Bearer \(clientData.getAccessToken())"
         ]
@@ -396,7 +409,7 @@ class Engine : NSObject {
     }
     
     static func getImageSelf(viewController: UIViewController? = nil, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
-        getImageIndividual(id: String(clientData.cacheMe()!["id"] as! Int), callback: callback)
+        getImageIndividual(id: String(clientData.cacheSelfId()), callback: callback)
     }
     static func getImageIndividual(viewController: UIViewController? = nil, id: String, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
         let urlString = Url.getImage(.Me, id: id)
@@ -430,7 +443,7 @@ class Engine : NSObject {
             let flatted = clientData.getGroups(.Organisation)!.flatMap { group -> [String] in
                 let participantFlated = group.participants!.map({ participant -> String in
                     var string = ""
-                    if let userId = participant.user?.userId where userId == clientData.cacheMe()!["id"] as! Int{
+                    if let userId = participant.user?.userId where userId == clientData.cacheSelfId(){
                         if let role = participant.role?.type where role.lowercaseString != "user"{
                             string += "\(participant.role!.name) of \(group.name)"
                         }
@@ -444,7 +457,7 @@ class Engine : NSObject {
     }
     
     static func getRoleOfGroup(group: Group) -> Role?{
-        let arr = group.participants!.filter({ $0.user!.userId! == clientData.cacheMe()!["id"] as! Int })
+        let arr = group.participants!.filter({ $0.user!.userId! == clientData.cacheSelfId() })
         if let participant = arr.first where participant.role!.type.lowercaseString != "user"{
             return participant.role
         }
@@ -496,17 +509,23 @@ class Engine : NSObject {
         return allContacts
     }
     
-    static func getFriendRequests(viewController: UIViewController? = nil, callback: (([User]?)->Void)? = nil){
-        guard let rawFriendRequests = clientData.cacheMe()!["friend_request"] else{
-            return
-        }
-        let arrFriendRequests = rawFriendRequests as! Dictionary<String, Dictionary<String, AnyObject>>
-        if !arrFriendRequests.isEmpty{
-            var newArrFriendRequests = reduceArrJSON(arrFriendRequests, indicator: "id")
+    static func getFriendRequests(viewController: UIViewController? = nil, callback: ((Array<User>?)->Void)? = nil){
+        if !clientData.cacheSelfFriendRequest().isEmpty{
+            var newArrFriendRequests = reduceArrJSON(clientData.cacheSelfFriendRequest(), indicator: "id")
             removeFriendRequestByConnection(&newArrFriendRequests)
             let friendRequests = newArrFriendRequests.map({User(dict: $0)})
             if callback != nil { callback!(friendRequests) }
         }
+    }
+    
+    static func getFriendRequesteds() -> Array<User>?{
+        if !clientData.cacheSelfFriendRequested().isEmpty{
+            var newArrFriendRequesteds = reduceArrJSON(clientData.cacheSelfFriendRequested(), indicator: "id")
+            removeFriendRequestByConnection(&newArrFriendRequesteds)
+            let friendRequests = newArrFriendRequesteds.map({User(dict: $0)})
+            return friendRequests
+        }
+        return nil
     }
     
     static func addFriend(viewController: UIViewController? = nil, user: User, callback: (RequestStatusType -> Void)? = nil){
@@ -518,6 +537,30 @@ class Engine : NSObject {
         }
     }
     
+    static func editName(viewController: UIViewController? = nil, name: String, callback: (RequestStatusType -> Void)? = nil){
+        var arrName = name.componentsSeparatedByString(" ")
+        if !arrName.isEmpty{
+            let firstname = arrName.first!
+            arrName.removeFirst()
+            let lastname = arrName.joinWithSeparator(" ")
+            makeRequestAlamofire(viewController, method: .PUT, url: Url.me, param: ["firstname" : firstname, "lastname" : lastname]){ status, JSON in
+                if status == .Success{
+                    clientData.updateMe(["first_name": firstname, "last_name": lastname])
+                }
+                if callback != nil{ callback!(status) }
+            }
+        }
+    }
+    
+    static func editPhoto(viewController: UIViewController? = nil, photo: UIImage, callback: (RequestStatusType -> Void)? = nil){
+        makeUploadAlamofire(viewController, method: .PUT, url: Url.uploadImageMe, image: photo, param: nil){ status, JSON in
+            if status == .Success{
+                clientData.photo = photo
+            }
+            if callback != nil{ callback!(status) }
+        }
+    }
+    
     static func removeFriendRequestByConnection(inout arrFriendRequests: arrType){
         for connection in clientData.getMyConnection()!{
             if let index = arrFriendRequests.indexOf({ $0["id"] as! Int == connection.userId! }){
@@ -526,18 +569,18 @@ class Engine : NSObject {
         }
     }
     
-    static func reduceArrJSON(arr: Dictionary<String, Dictionary<String, AnyObject>>, indicator: String) -> Array<Dictionary<String, AnyObject>>{
+    static func reduceArrJSON(arr: Array<Dictionary<String, AnyObject>>, indicator: String) -> Array<Dictionary<String, AnyObject>>{
         var newArr = Array<Dictionary<String, AnyObject>>()
         for each in arr{
             if !newArr.isEmpty{
-                let filtered = newArr.indexOf({ $0[indicator] as! Int == each.1[indicator] as! Int })
+                let filtered = newArr.indexOf({ $0[indicator] as! Int == each[indicator] as! Int })
                 if filtered != nil{
-                    newArr[filtered!] = each.1
+                    newArr[filtered!] = each
                 }else{
-                    newArr.append(each.1)
+                    newArr.append(each)
                 }
             }else{
-                newArr.append(each.1)
+                newArr.append(each)
             }
         }
         return newArr

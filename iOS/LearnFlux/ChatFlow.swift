@@ -270,7 +270,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
             for x in conArr{
                 if x == i.user?.userId{ continue loopCheck }
             }
-            if i.user?.userId == clientData.cacheMe()!["id"] as? Int{
+            if i.user!.userId! == clientData.cacheSelfId() {
                 continue loopCheck
             }
             conArr.append((i.user?.userId)!)
@@ -329,7 +329,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
                 func filterNewMessage(con: Array<Thread.ThreadMessage>) -> Array<Thread.ThreadMessage>{
                     var message : Array<Thread.ThreadMessage> = []
                     for each in con{
-                        if each.message.senderId == String(self.clientData.cacheMe()!["id"] as! Int) && each.meta["type"] as! String == "chat"{
+                        if each.message.senderId == String(self.clientData.cacheSelfId()) && each.meta["type"] as! String == "chat"{
                             continue
                         }
                         message.append(each)
@@ -770,14 +770,14 @@ extension ChatFlow{
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
-        if messages[indexPath.row].message.senderId == String(clientData.cacheMe()!["id"] as! Int){
+        if messages[indexPath.row].message.senderId == String(clientData.cacheSelfId()){
             return NSAttributedString(string: "Pengirim")
         }
         return NSAttributedString(string: "Penerima")
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        if messages[indexPath.row].message.senderId != String(clientData.cacheMe()!["id"] as! Int){
+        if messages[indexPath.row].message.senderId != String(clientData.cacheSelfId()){
             return 20
         }
         return 0
@@ -903,7 +903,7 @@ extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
             let indexRow : Int = popupIndexRow
             Engine.sendPollOption((pollMetaData["answers"] as! Array<String>)[row], pollId: pollMetaData["id"] as! String){ status, _ in
                 if status == .Success{
-                    let newData = self.updateAnswererPoll(pollMetaData["answerers"] as? Dictionary<String, Int>, newValue: (id: String(self.clientData.cacheMe()!["id"] as! Int), value : row))
+                    let newData = self.updateAnswererPoll(pollMetaData["answerers"] as? Dictionary<String, Int>, newValue: (id: String(self.clientData.cacheSelfId()), value : row))
                     let newMeta = self.makeNewMeta(meta, newValue: ["answerers" : newData])
                     self.messages[indexRow].meta = newMeta
                     self.clientData.getMyThreads()![self.rowIndexPathFromThread].messages![indexRow].meta = newMeta
@@ -926,7 +926,7 @@ extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
         var value : Dictionary<String, Int> = [:]
         if let answerers = answerers{
             for each in answerers{
-                if each.0 == String(clientData.cacheMe()!["id"] as! Int){ return answerers }
+                if each.0 == String(clientData.cacheSelfId()){ return answerers }
             }
             value = answerers
         }
@@ -987,7 +987,7 @@ extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
     
     func hasPolling(answerers answerers: Dictionary<String, Int>) -> (Bool){
         for each in answerers{
-            if String(clientData.cacheMe()!["id"] as! Int) == each.0{
+            if String(clientData.cacheSelfId()) == each.0{
                 return true
             }
         }

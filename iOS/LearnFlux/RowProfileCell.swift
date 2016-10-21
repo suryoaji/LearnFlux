@@ -53,7 +53,7 @@ class RowProfileCell: UITableViewCell {
         if let photo = values["photo"] { self.imageViewPhoto.image = photo as? UIImage }
         if let name = values["name"] { self.labelName.text = (name as? String)?.capitalizedString }
         if let roles = values["roles"] { self.labelRoles.text = roles as? String }
-        if let id = values["id"] as? Int where id == Engine.clientData.cacheMe()!["id"] as! Int{ buttonOpenChat.hidden = true } else{ buttonOpenChat.hidden = false }
+        if let id = values["id"] as? Int where id == Engine.clientData.cacheSelfId(){ buttonOpenChat.hidden = true } else{ buttonOpenChat.hidden = false }
         if stateMore{ resizeLabelRoles(scale) }
     }
 

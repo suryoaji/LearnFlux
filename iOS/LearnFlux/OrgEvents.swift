@@ -248,7 +248,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func isCreatorOfEvent(event: Event) -> (Bool){
         let idCreatorEvent = event.by.userId
-        if idCreatorEvent == clientData.cacheMe()!["id"] as? Int{
+        if idCreatorEvent == clientData.cacheSelfId(){
             return true
         }else{
             return false

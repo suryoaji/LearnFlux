@@ -20,6 +20,17 @@ enum FilterGroupType{
     case None
 }
 
+struct keyCacheMe{
+    static let firstName = "first_name"
+    static let lastName = "last_name"
+    static let id = "id"
+    static let email = "email"
+    static let interests = "interests"
+    static let friends = "friends"
+    static let friendRequest = "friend_request"
+    static let friendRequested = "friend_requested"
+}
+
 typealias EventsByIdGroup = (id: String, events: [Event])
 
 class Data : NSObject {
@@ -30,11 +41,7 @@ class Data : NSObject {
         return Singleton.instance
     }
     
-    var photo = UIImage(named: "photo-container.png")!{
-        didSet{
-            NSNotificationCenter.defaultCenter().postNotificationName("photoUpdateNotification", object: self)
-        }
-    }
+    var photo = UIImage(named: "photo-container.png")!
     
     let defaults = NSUserDefaults.standardUserDefaults();
     
@@ -398,16 +405,62 @@ class Data : NSObject {
         return nil
     }
     
+    func updateMe(me: Dictionary<String, AnyObject>){
+        var cache = cacheMe()!
+        for each in me{
+            cache[each.0] = each.1
+        }
+        saveMe(cache)
+    }
+    
+    func cacheSelfFriends() -> Array<Dictionary<String, AnyObject>>{
+        return cacheMe()![keyCacheMe.friends] as! Array<Dictionary<String, AnyObject>>
+    }
+    
+    func cacheFullname() -> String{
+        return "\(cacheMe()![keyCacheMe.firstName]!) \(cacheMe()![keyCacheMe.lastName]!)"
+    }
+    
+    func cacheSelfId() -> Int{
+        return cacheMe()![keyCacheMe.id] as! Int
+    }
+    
+    func cacheSelfEmail() -> String{
+        return cacheMe()![keyCacheMe.email] as! String
+    }
+    
+    func cacheSelfInterests() -> Array<String>{
+        return cacheMe()![keyCacheMe.interests] as! Array<String>
+    }
+    
+    func cacheSelfFriendRequest() -> Array<Dictionary<String, AnyObject>>{
+        return arrayFromDict(cacheMe()![keyCacheMe.friendRequest]!)
+    }
+    
+    func cacheSelfFriendRequested() -> Array<Dictionary<String, AnyObject>>{
+        return arrayFromDict(cacheMe()![keyCacheMe.friendRequested]!)
+    }
+    
+    func arrayFromDict(dict: AnyObject) -> Array<Dictionary<String, AnyObject>>{
+        if let dict = dict as? Dictionary<String, Dictionary<String, AnyObject>>{
+            return [Dictionary<String, AnyObject>](dict.values)
+        }else if let arr = dict as? Array<Dictionary<String, AnyObject>>{
+            return arr
+        }else{
+            return []
+        }
+    }
+    
+    func saveMe(me: AnyObject){
+        defaults.setValue(me, forKey: cacheName.Me)
+    }
+    
     func clearCacheThreads(){
         self.defaults.removeObjectForKey(cacheName.Threads)
     }
     
     func clearCacheLastSync(){
         self.defaults.removeObjectForKey(cacheName.LastSync)
-    }
-    
-    func saveMe(me: AnyObject){
-        defaults.setValue(me, forKey: cacheName.Me)
     }
     
     func setAccessToken(string: String){

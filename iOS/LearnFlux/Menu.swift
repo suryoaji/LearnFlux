@@ -10,6 +10,7 @@ import Foundation
 
 class Menu : UITableViewController {
     let clientData = Engine.clientData
+    var lastSelected = NSIndexPath(forRow: 0, inSection: 2)
     
     override func viewDidLoad () {
         super.viewDidLoad();
@@ -17,15 +18,35 @@ class Menu : UITableViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(updateFirstSectionTableView), name: "photoUpdateNotification", object: self)
+        updateFirstSectionTableView()
+        
+        if let lastVC = checkLastViewController(){
+            lastSelected = lastVC
+        }
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    func checkLastViewController() -> NSIndexPath?{
+        if self.revealController.frontViewController.isKindOfClass(NavController){
+            let navController = self.revealController.frontViewController as! NavController
+            return getIndexPathOf(navController.viewControllers.last!)
+        }
+        return nil
     }
     
-    func updateFirstSectionTableView(notification: NSNotification){
+    func getIndexPathOf(lastVc: UIViewController) -> NSIndexPath{
+        switch lastVc {
+        case is Profile:
+            return NSIndexPath(forRow: 0, inSection: 1)
+        case is NewHome:
+            return NSIndexPath(forRow: 0, inSection: 2)
+        case is InterestGroups:
+            return NSIndexPath(forRow: 5, inSection: 3)
+        default:
+            return NSIndexPath(forRow: 0, inSection: 0)
+        }
+    }
+    
+    func updateFirstSectionTableView(){
         tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: .None)
     }
     
@@ -77,26 +98,36 @@ class Menu : UITableViewController {
             let imageViewPhoto = cell.viewWithTag(4) as! UIImageView
             view.frame.size.width = UIScreen.mainScreen().bounds.width * 0.65 - 4.0
             imageViewPhoto.image = clientData.photo
-            labelName.text = "\(clientData.cacheMe()!["first_name"]!) \(clientData.cacheMe()!["last_name"]!)".capitalizedString
-            labelEmail.text = "\(clientData.cacheMe()!["email"]!)"
+            labelName.text = clientData.cacheFullname().capitalizedString
+            labelEmail.text = clientData.cacheSelfEmail()
         }
         
         return cell;
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: false);
-        self.revealController.showViewController(self)
-        var vc : UIViewController?
-        if indexPath.isEqualCode("1-0") {
-            vc = Util.getViewControllerID("Profile")
-        }else if indexPath.isEqualCode("3-5"){
-            vc = Util.getViewControllerID("InterestGroups")
-        }
-        if let vc = vc where self.revealController.frontViewController.isKindOfClass(NavController){
-            let navController = self.revealController.frontViewController as! NavController
-            navController.pushViewController(vc, animated: false)
-            self.revealController.showViewController(navController)
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        if lastSelected != indexPath{
+            self.revealController.showViewController(self)
+            var vc : UIViewController?
+            if indexPath.isEqualCode("1-0") {
+                vc = Util.getViewControllerID("Profile")
+            }else if indexPath.isEqualCode("3-5"){
+                vc = Util.getViewControllerID("InterestGroups")
+            }else if indexPath.isEqualCode("2-0"){
+                vc = Util.getViewControllerID("NewHome")
+            }
+            if let vc = vc where self.revealController.frontViewController.isKindOfClass(NavController){
+                let navController = self.revealController.frontViewController as! NavController
+                let homeVc = Util.getViewControllerID("NewHome")
+                if vc.isKindOfClass(NewHome){
+                    navController.setViewControllers([vc], animated: false)
+                }else{
+                    navController.setViewControllers([homeVc, vc], animated: false)
+                }
+                self.revealController.showViewController(navController)
+            }
+            lastSelected = indexPath
         }
     }
     

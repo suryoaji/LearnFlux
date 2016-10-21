@@ -48,7 +48,11 @@ class IndividualCell: UITableViewCell {
     
     func setValues(contact: User, indexPath: NSIndexPath){
         self.indexPath = indexPath
-        labelName.text = contact.firstName?.capitalizedString
+        if let lastname = contact.lastName{
+            labelName.text = "\(contact.firstName!) \(lastname)".capitalizedString
+        }else{
+            labelName.text = contact.firstName?.capitalizedString
+        }
         labelSide.text = dummySides[Int(arc4random_uniform(2))]
         imageViewPhoto.image = contact.photo ?? UIImage(named: "photo-container.png")
     }
