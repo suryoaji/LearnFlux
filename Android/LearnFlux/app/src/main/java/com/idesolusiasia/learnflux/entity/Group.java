@@ -18,7 +18,8 @@ public class Group {
     private String type;
     private String id;
     private String name;
-    private String thumb;
+    private String image;
+    private String access;
     private String description;
     @SerializedName("message")
     private Thread thread;
@@ -85,15 +86,18 @@ public class Group {
         this.name = name;
     }
 
-    public void setThumb(String thumb){
-        this.thumb = thumb;
+    public void setImage(String image){
+        this.image = image;
     }
-    public String getThumb(){
-        return thumb;
+
+    public String getImage(){
+        return image;
     }
+
     public String getDescription(){
         return description;
     }
+
     public void setDescription(String description){
         this.description = description;
     }
@@ -105,6 +109,14 @@ public class Group {
 
     public void setMemberGroup(List<Member> memberGroup) {
         this.memberGroup = memberGroup;
+    }
+
+    public String getAccess() {
+        return access;
+    }
+
+    public void setAccess(String access) {
+        this.access = access;
     }
 
 }

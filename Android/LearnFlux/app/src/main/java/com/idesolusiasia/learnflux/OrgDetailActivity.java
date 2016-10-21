@@ -83,8 +83,6 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		parentLayout.addView(childLayout);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.hide();
 		tvTitle= (TextView)findViewById(R.id.textView14);
 		tvTitle.setText(title);
 		///////////////////////////finish Base Init///

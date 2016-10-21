@@ -42,13 +42,6 @@ public class HomeActivity extends BaseActivity {
 			}
 		});
 		ImageView ivGallery = (ImageView)findViewById(R.id.ivGallery);
-		ivGallery.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent e = new Intent(HomeActivity.this, MyProfileActivity.class);
-				startActivity(e);
-			}
-		});
 	}
 
 

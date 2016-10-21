@@ -1,37 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="#FFFFFF">
-
-
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent" android:background="#FFFFFF">
     <LinearLayout
-        android:layout_gravity="right" android:layout_marginTop="5dp"
-        android:layout_width="wrap_content" android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:src="@drawable/save_button"
-            android:textSize="14sp"
-            android:layout_marginRight="2dp"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:id="@+id/imageView18" />
+        <LinearLayout
+            android:layout_gravity="right"    android:padding="5dp"
+            android:layout_width="wrap_content" android:layout_marginRight="10dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/save_button"
+                android:layout_marginRight="2dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:id="@+id/imageView18" />
+
+            <TextView
+                android:text="save" android:textColor="#8bc34a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/save" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:background="@drawable/relative_border"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/profileImageChange"
+                    android:src="@drawable/photo_container"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="#E0E0E0"
+                    android:layout_width="45dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="0.07" />
+
+                <ImageView
+                    android:src="@drawable/photo"
+                    android:layout_marginTop="37dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="0.9"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:hint="Name" android:textSize="12sp" android:layout_marginLeft="5dp"
+                    android:background="#EEEEEE" android:layout_marginTop="5dp"
+                    android:layout_width="match_parent" android:layout_marginRight="30dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextName" />
+
+                <EditText
+                    android:hint="Roles (example, Parent, ACS Teacher, Engineer)" android:textSize="12sp"
+                    android:background="#EEEEEE" android:layout_marginRight="30dp" android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent" android:layout_marginTop="5dp" android:gravity="top"
+                    android:layout_height="match_parent" android:layout_marginBottom="5dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <TextView
-            android:text="save" android:textColor="#8bc34a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView36" />
-      ]
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_margin="5dp"
-        android:background="@drawable/relative_border"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="80dp">
-
+            android:layout_marginTop="6dp"
+            android:text="My Children"
+            android:textColor="#000"
+            android:paddingLeft="15dp" android:paddingTop="7dp"
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -53,170 +109,169 @@
                 android:layout_height="20dp" />
         </FrameLayout>
 
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.9"
-            android:layout_height="match_parent">
-
-            <EditText
-                android:hint="Name" android:textSize="12sp" android:layout_marginLeft="5dp"
-                android:background="#EEEEEE" android:layout_marginTop="5dp"
-                android:layout_width="match_parent" android:layout_marginRight="30dp"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:hint="Roles (example, Parent, ACS Teacher, Engineer)" android:textSize="12sp"
-                android:background="#EEEEEE" android:layout_marginRight="30dp" android:layout_marginLeft="5dp"
-                android:layout_width="match_parent" android:layout_marginTop="5dp" android:gravity="top"
-                android:layout_height="match_parent" android:layout_marginBottom="5dp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_marginTop="6dp"
-        android:text="My Children"
-        android:textColor="#000"
-        android:paddingLeft="15dp" android:paddingTop="7dp"
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:src="@drawable/photo_container"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:background="#E0E0E0"
-            android:layout_width="45dp"
-            android:layout_height="50dp"
-            android:layout_weight="0.07" />
-
-        <ImageView
-            android:src="@drawable/photo"
-            android:layout_marginTop="37dp"
-            android:layout_marginLeft="30dp"
-            android:layout_width="20dp"
-            android:layout_height="20dp" />
-    </FrameLayout>
-
-    <TextView
-        android:layout_marginTop="6dp"
-        android:text="Affiliated Organization"
-        android:textColor="#000"
-        android:paddingLeft="15dp" android:paddingTop="7dp"
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
-
-            <ImageView
-                android:src="@drawable/org_container_45"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:background="#E0E0E0"
-                android:layout_width="30dp"
-                android:layout_height="20dp"/>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <EditText
-                    android:hint="Search" android:textSize="12sp" android:layout_marginLeft="5dp"
-                    android:background="#EEEEEE" android:layout_marginTop="5dp"
-                    android:layout_width="match_parent" android:layout_marginRight="30dp"
-                    android:layout_height="wrap_content" android:padding="3dp" />
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:hint="All Causes" android:id="@+id/causesOrganization" android:textSize="12sp" android:padding="3dp"
-                        android:background="#EEEEEE" android:layout_marginRight="30dp" android:layout_marginLeft="5dp"
-                        android:layout_width="match_parent" android:layout_marginTop="5dp" android:gravity="top"
-                        android:layout_height="wrap_content" android:layout_marginBottom="5dp" />
-                    <ImageView
-                        android:id="@+id/rightArrow1"
-                        android:layout_marginLeft="70dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/right_arrow"
-                        android:layout_width="30dp"
-                        android:layout_height="14dp"/>
-                </FrameLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <include
-            android:visibility="gone"
-            android:id="@+id/included1"
-            layout="@layout/dialog_choosingaffiliated"
-            android:layout_height="250dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="10dp"
-            android:layout_width="230dp"/>
-        <include
-            android:visibility="gone"
-            android:id="@+id/included2"
-            layout="@layout/dialog_choosinginterest"
-            android:layout_height="250dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="10dp"
-            android:layout_width="230dp"/>
         <TextView
-            android:layout_marginTop="70dp"
-            android:text="Interests"
+            android:layout_marginTop="6dp"
+            android:text="Affiliated Organization"
             android:textColor="#000"
             android:paddingLeft="15dp" android:paddingTop="7dp"
             android:background="#E0E0E0"
             android:layout_width="match_parent"
             android:layout_height="30dp" />
-        <LinearLayout
-            android:layout_marginTop="110dp"
-            android:orientation="horizontal"
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:weightSum="1">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:src="@drawable/ic_star_transparent"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
+            <LinearLayout
+                android:layout_margin="5dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:src="@drawable/org_container_45"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="#E0E0E0"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <EditText
+                        android:hint="Search" android:textSize="12sp" android:layout_marginLeft="5dp"
+                        android:background="#EEEEEE" android:layout_marginTop="5dp"
+                        android:layout_width="match_parent" android:layout_marginRight="30dp"
+                        android:layout_height="wrap_content" android:padding="3dp" />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:hint="All Causes" android:id="@+id/causesOrganization" android:textSize="12sp" android:padding="3dp"
+                            android:background="#EEEEEE" android:layout_marginRight="30dp" android:layout_marginLeft="5dp"
+                            android:layout_width="match_parent" android:layout_marginTop="5dp" android:gravity="top"
+                            android:layout_height="wrap_content" android:layout_marginBottom="5dp" />
+                        <ImageView
+                            android:id="@+id/rightArrow1"
+                            android:layout_marginLeft="70dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/right_arrow"
+                            android:layout_width="30dp"
+                            android:layout_height="14dp"/>
+                    </FrameLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <include
+                android:visibility="gone"
+                android:id="@+id/included1"
+                layout="@layout/dialog_choosingaffiliated"
+                android:layout_height="250dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_width="230dp"/>
+            <include
+                android:visibility="gone"
+                android:id="@+id/included2"
+                layout="@layout/dialog_choosinginterest"
+                android:layout_height="250dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_width="230dp"/>
+            <TextView
+                android:layout_marginTop="70dp"
+                android:text="Interests"
+                android:textColor="#000"
+                android:paddingLeft="15dp" android:paddingTop="7dp"
                 android:background="#E0E0E0"
-                android:layout_width="30dp"
-                android:layout_height="20dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+            <LinearLayout
+                android:layout_marginTop="110dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:weightSum="1">
 
+                <ImageView
+                    android:src="@drawable/ic_star_transparent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="#E0E0E0"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_weight="0.98">
+
+                    <EditText
+                        android:hint="Search" android:textSize="12sp" android:layout_marginLeft="5dp"
+                        android:background="#EEEEEE" android:layout_marginTop="5dp"
+                        android:layout_width="match_parent" android:layout_marginRight="30dp"
+                        android:layout_height="wrap_content" android:padding="3dp" />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/causes2"
+                            android:hint="All Causes" android:textSize="12sp" android:padding="3dp"
+                            android:background="#EEEEEE" android:layout_marginRight="30dp" android:layout_marginLeft="5dp"
+                            android:layout_width="match_parent" android:layout_marginTop="5dp" android:gravity="top"
+                            android:layout_height="wrap_content" android:layout_marginBottom="5dp" />
+                        <ImageView
+                            android:layout_marginLeft="70dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/right_arrow"
+                            android:layout_width="30dp"
+                            android:layout_height="14dp"/>
+                    </FrameLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_marginTop="170dp"
+                android:text="Connections"
+                android:textColor="#000"
+                android:paddingLeft="15dp" android:paddingTop="7dp"
+                android:background="#E0E0E0"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <LinearLayout
+                android:layout_marginTop="200dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_star_transparent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="#E0E0E0"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"/>
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_weight="0.98">
+                android:layout_height="wrap_content">
 
                 <EditText
                     android:hint="Search" android:textSize="12sp" android:layout_marginLeft="5dp"
-                    android:background="#EEEEEE" android:layout_marginTop="5dp"
+                    android:background="#EEEEEE" android:layout_marginTop="10dp"
                     android:layout_width="match_parent" android:layout_marginRight="30dp"
-                    android:layout_height="wrap_content" android:padding="3dp" />
+                    android:layout_height="wrap_content" android:padding="3dp"
+                    android:id="@+id/editText2" />
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
-                        android:id="@+id/causes2"
+                        android:id="@+id/causes3"
                         android:hint="All Causes" android:textSize="12sp" android:padding="3dp"
                         android:background="#EEEEEE" android:layout_marginRight="30dp" android:layout_marginLeft="5dp"
-                        android:layout_width="match_parent" android:layout_marginTop="5dp" android:gravity="top"
+                        android:layout_width="match_parent" android:layout_marginTop="5dp"
                         android:layout_height="wrap_content" android:layout_marginBottom="5dp" />
                     <ImageView
                         android:layout_marginLeft="70dp"
@@ -225,8 +280,9 @@
                         android:layout_width="30dp"
                         android:layout_height="14dp"/>
                 </FrameLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </FrameLayout>
 
-</LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</ScrollView>

@@ -3,4 +3,23 @@
     <declare-styleable name="ForegroundImageView">
         <attr name="android:foreground"/>
     </declare-styleable>
+    <!-- CircularImageView Custom Styling -->
+    <declare-styleable name="RoundedCornerNetworkImageView">
+        <!-- true for circular imageview -->
+        <attr name="isCircular" format="boolean" />
+        <!-- radius for circular edges of imageview -->
+        <attr name="radius" format="integer" />
+        <!-- margin for imageview -->
+        <attr name="margin" format="integer" />
+        <!-- true for drawing shadow on imageview -->
+        <attr name="isShadowPresent" format="boolean" />
+        <!-- specify color for the circular border -->
+        <attr name="circleColor" format="color"/>
+        <!-- true to draw circular border -->
+        <attr name="drawCircle" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CircularImageViewStyle">
+        <attr name="circularImageViewDefault" format="reference"/>
+    </declare-styleable>
 </resources>

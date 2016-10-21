@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.idesolusiasia.learnflux.LoginActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
@@ -96,9 +97,9 @@ public class Engine {
 		});
 	}
 
+
 	public static void getMe(final Context context){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME);
-
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
 			reLogin(context, null);
 		}else {
@@ -107,9 +108,11 @@ public class Engine {
 				public void execute(JSONObject obj) {
 					Log.i("response_ME", obj.toString());
 					try {
-						User.getUser().setID(obj.getJSONObject("data").getInt("id"));
-						User.getUser().setEmail(obj.getJSONObject("data").getString("email"));
-
+						JSONObject data = obj.getJSONObject("data");
+						User.getUser().setID(data.getInt("id"));
+						User.getUser().setEmail(data.getString("email"));
+						User.getUser().setProfile_picture(data.getString("profile_picture"));
+						User.getUser().setInterests(data.getString("interests"));
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -118,7 +121,21 @@ public class Engine {
 		}
 
 	}
-
+	public static void getMeWithRequest(final Context context, final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME);
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, null);
+		}else{
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+				if(callback!=null){
+					callback.execute(obj);
+				}
+				}
+			},null);
+		}
+	}
 	public static void getMyFriend(final Context context, final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_FRIEND);
 
@@ -743,6 +760,59 @@ public class Engine {
 			},null);
 		}
 	}
+	public static void getInterest(final Context context,
+								   final RequestTemplate.ServiceCallback callback){
+		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+"interests";
 
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					getInterest(context, callback);
+				}
+			});
+		}else{
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if(obj!=null){
+						Log.i("get", "execute: "+obj);
+					}if(callback!=null){
+						callback.execute(obj);
+					}
+				}
+			},null);
+		}
+	}
+	public static void editProfileName(final Context context, final String lastname, final String firstname, final String token, final RequestTemplate.ServiceCallback callback){
+		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME);
 
+		JSONObject params = new JSONObject();
+		try {
+			params.put("lastname", lastname);
+			params.put("firstname", firstname);
+			params.put("token", token);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					editProfileName(context, lastname, firstname, token, callback);
+				}
+			});
+		}else{
+			RequestTemplate.PUTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if(obj!=null){
+						Log.i("PUT NAME", "execute" + obj);
+					}if(callback!=null){
+						callback.execute(obj);
+					}
+				}
+			},null);
+		}
+	}
 }

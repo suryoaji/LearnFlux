@@ -98,6 +98,7 @@
     <string name="URL_GROUP_PROFILE">groups/%s</string>
     <string name="URL_GROUP">groups</string>
     <string name="URL_POLL">poll</string>
+    <string name="URL_IMAGE">image</string>
 
     //alert
     <string name="success_registration">You have successfully registered.

@@ -3,14 +3,22 @@ package com.idesolusiasia.learnflux.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.http.AndroidHttpClient;
+import android.util.LruCache;
+import android.widget.ImageView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
+import com.idesolusiasia.learnflux.entity.User;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,9 +34,11 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import android.widget.ImageView.ScaleType;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -39,13 +49,12 @@ public class VolleySingleton {
 
     private static VolleySingleton mInstance;
     private RequestQueue mRequestQueue;
-    private ImageLoader mImageLoader;
+    public ImageLoader mImageLoader;
     private static Context mCtx;
 
     private VolleySingleton(Context context) {
         mCtx = context.getApplicationContext();
 	    mRequestQueue = getRequestQueue();
-
         /*mImageLoader = new ImageLoader(mRequestQueue,
                 new ImageLoader.ImageCache() {
                     private final LruCache<String, Bitmap>
@@ -95,7 +104,48 @@ public class VolleySingleton {
     }
 
     public ImageLoader getImageLoader() {
-        return mImageLoader;
+		mImageLoader = new ImageLoader(mRequestQueue,
+				new ImageLoader.ImageCache() {
+					private final LruCache<String, Bitmap>
+							cache = new LruCache<String, Bitmap>(20);
+
+					@Override
+					public Bitmap getBitmap(String url) {
+						return cache.get(url);
+					}
+
+					@Override
+					public void putBitmap(String url, Bitmap bitmap) {
+						cache.put(url, bitmap);
+					}
+				}) {
+			@Override
+			protected Request<Bitmap> makeImageRequest(String requestUrl, int maxWidth, int maxHeight, ScaleType scaleType, final String cacheKey) {
+				//return super.makeImageRequest(requestUrl, maxWidth, maxHeight, cacheKey);
+
+				return new ImageRequest(requestUrl, new Response.Listener<Bitmap>() {
+					@Override
+					public void onResponse(Bitmap response) {
+						onGetImageSuccess(cacheKey, response);
+					}
+				}, maxWidth, maxHeight,
+						Bitmap.Config.RGB_565, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						onGetImageError(cacheKey, error);
+					}
+				}) {
+					@Override
+					public Map<String, String> getHeaders() throws AuthFailureError {
+						HashMap<String, String> params = new HashMap<String, String>();
+						params.put("Content-Type","application/image");
+						params.put("Authorization", "Bearer " + User.getUser().getAccess_token());
+						return params;
+					}
+				};
+			}
+		};
+		return mImageLoader;
     }
 
     public void deleteImageCache(String url){
@@ -196,6 +246,7 @@ class OwnHttpClientStack extends com.android.volley.toolbox.HttpClientStack {
 		}
 	}
 
+
 	private static class OwnHttpDelete extends HttpPost {
 		public static final String METHOD_NAME = "DELETE";
 
@@ -215,4 +266,5 @@ class OwnHttpClientStack extends com.android.volley.toolbox.HttpClientStack {
 			return METHOD_NAME;
 		}
 	}
+
 }

@@ -9,11 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.ChattingActivity;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
+import com.idesolusiasia.learnflux.OrgProfileActivity;
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +29,7 @@ import java.util.List;
 public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFragmentAdapter.OrgTileHolder> {
     List<Group> organizations;
     private Context context;
-
+    ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
     public ConnectionFragmentAdapter(Context context, ArrayList<Group> orgs){
         this.organizations = orgs;
         this.context= context;
@@ -41,9 +45,10 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
     @Override
     public void onBindViewHolder(OrgTileHolder holder, int position) {
         final Group org= organizations.get(position);
-        holder.image.setDefaultImageResId(R.drawable.organization);
+        String url = "http://lfapp.learnflux.net/v1/image?key="+org.getImage();
+        holder.image.setImageUrl(url, imageLoader);
         holder.txt1.setText(org.getName());
-        holder.txt2.setText(org.getType());
+        holder.txt2.setText(org.getAccess());
 
     }
 
@@ -60,6 +65,15 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
             image = (NetworkImageView) itemView.findViewById(R.id.imageOrgConnection);
             txt1 = (TextView)itemView.findViewById(R.id.titleOrgConnection);
             txt2 = (TextView)itemView.findViewById(R.id.StatusOrgConnection);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int pos = getAdapterPosition();
+                    Intent i = new Intent(view.getContext() , OrgProfileActivity.class);
+                    i.putExtra("id", organizations.get(pos).getId());
+                    view.getContext().startActivity(i);
+                }
+            });
         }
     }
 }

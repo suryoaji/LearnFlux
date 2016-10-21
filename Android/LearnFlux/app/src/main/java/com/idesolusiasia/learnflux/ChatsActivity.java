@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -171,6 +172,7 @@ public class ChatsActivity extends BaseActivity {
 		dialog.setContentView(R.layout.dialog_add_group);
 		final EditText groupName = (EditText) dialog.findViewById(R.id.add_group_name);
 		final EditText groupDesc = (EditText) dialog.findViewById(R.id.add_group_description);
+		groupName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 		Button btnNext = (Button)dialog.findViewById(R.id.btnNext);
 		Button cancel = (Button)dialog.findViewById(R.id.btnCancel);
 		btnNext.setOnClickListener(new View.OnClickListener() {

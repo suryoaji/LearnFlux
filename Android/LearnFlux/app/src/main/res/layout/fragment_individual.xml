@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".IndividualFragment">
 
     <LinearLayout
@@ -18,118 +19,15 @@
         android:textColor="#8bc34a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <RelativeLayout
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/relative_border"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
 
-        <ImageView
-            android:id="@+id/image1"
-            android:src="@drawable/circle_image"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
-        <TextView
-            android:id="@+id/txt1" android:textStyle="bold" android:textColor="#000"
-            android:layout_marginTop="8dp"
-            android:text="Alice Whitmans"
-            android:layout_toRightOf="@id/image1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView android:id="@+id/txt1Desc" android:textColor="#8bc34a"
-            android:textSize="12sp"
-            android:text="Artis and Crafts Teacher" android:layout_below="@+id/txt1"
-            android:layout_toRightOf="@id/image1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+   <android.support.v7.widget.RecyclerView
+       android:id="@+id/recyclerIndividual"
+       android:layout_marginLeft="15dp"
+       android:layout_marginRight="15dp"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
 
-        <ImageView
-            android:src="@drawable/ic_person_pin_black_24dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/imageView1" />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/relative_border"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
-
-        <ImageView
-            android:id="@+id/image2"
-            android:src="@drawable/circle_image"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
-        <TextView
-            android:id="@+id/txt2" android:textStyle="bold" android:textColor="#000"
-            android:layout_marginTop="8dp"
-            android:text="Jack Whitmans"
-            android:layout_toRightOf="@id/image2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView android:id="@+id/txt2Desc" android:textColor="#8bc34a"
-            android:textSize="12sp"
-            android:text="Associate Engineer" android:layout_below="@+id/txt2"
-            android:layout_toRightOf="@id/image2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:src="@drawable/ic_person_pin_black_24dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/imageView2" />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/relative_border"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
-
-        <ImageView
-            android:id="@+id/image3"
-            android:src="@drawable/circle_image"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
-        <TextView
-            android:id="@+id/txt3" android:textStyle="bold" android:textColor="#000"
-            android:layout_marginTop="8dp"
-            android:text="Jane Pearson"
-            android:layout_toRightOf="@id/image3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView android:id="@+id/txt3Desc" android:textColor="#8bc34a"
-            android:textSize="12sp"
-            android:text="Physician" android:layout_below="@+id/txt3"
-            android:layout_toRightOf="@id/image3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:src="@drawable/ic_person_pin_black_24dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/imageView3" />
-    </RelativeLayout>
+   </android.support.v7.widget.RecyclerView>
     <Button
         android:text="see All"
         android:background="#8bc34a"

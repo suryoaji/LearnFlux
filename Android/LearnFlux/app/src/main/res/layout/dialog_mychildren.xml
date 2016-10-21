@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent" android:id="@+id/popup"
+    android:layout_height="match_parent" android:background="#FFFFFF">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:layout_marginLeft="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_arrowup"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:id="@+id/imageView21" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_margin="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/kid1"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Nicholas Cheong" android:layout_marginTop="15dp"
+                android:textSize="14sp" android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="Student" android:layout_marginTop="2dp"
+                android:textSize="12sp" android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:text="Age: 9" android:layout_marginTop="2dp"
+        android:textSize="12sp" android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:text="School: White Sand Primary School" android:layout_marginTop="2dp"
+        android:textSize="12sp" android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginLeft="15dp"
+        android:text="Class: P3 Blue" android:layout_marginTop="2dp"
+        android:textSize="12sp" android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginTop="6dp"
+        android:text="Interests"
+        android:textColor="#000"
+        android:paddingLeft="15dp" android:paddingTop="7dp"
+        android:background="#E0E0E0"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/interest1"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:id="@+id/interest1"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#000"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="11dp"
+            android:text="Physical Health"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/interest2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+        <TextView
+            android:id="@+id/interest2"
+            android:layout_marginTop="2dp"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#000"
+            android:layout_marginLeft="12dp"
+            android:text="Environmental Science"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+</LinearLayout>

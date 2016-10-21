@@ -1,35 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="@dimen/nav_header_height"
-              android:background="@drawable/side_nav_bar"
-              android:gravity="bottom"
-              android:orientation="vertical"
-              android:paddingBottom="@dimen/activity_vertical_margin"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:paddingTop="@dimen/activity_vertical_margin"
-              android:theme="@style/ThemeOverlay.AppCompat.Dark">
+              android:layout_height="100dp"
+              android:layout_marginTop="20dp"
+              android:background="#BDBDBD"
+              android:orientation="horizontal">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+    <com.android.volley.toolbox.NetworkImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="25dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
         android:id="@+id/ivDrawerPic"
-        android:src="@android:drawable/sym_def_app_icon"/>
+        android:src="@drawable/user_profile"/>
 
-    <TextView
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:id="@+id/linearNavigation"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Administrator"
-        android:id="@+id/tvDrawerName"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:layout_height="match_parent"
+        android:layout_weight="0.07">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvDrawerEmail"
-        android:text="admin@learnflux.com"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000" android:textStyle="bold"
+            android:text="Administrator"
+            android:id="@+id/tvDrawerName"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+        <TextView
+            android:textColor="#000000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvDrawerEmail"
+            android:text="admin@learnflux.com"/>
+    </LinearLayout>
+
 
 </LinearLayout>

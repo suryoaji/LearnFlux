@@ -12,10 +12,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
+import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.User;
+import com.idesolusiasia.learnflux.util.Converter;
+import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+import com.idesolusiasia.learnflux.util.VolleySingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class BaseActivity extends AppCompatActivity
@@ -29,9 +41,6 @@ public class BaseActivity extends AppCompatActivity
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.hide();
-
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -39,11 +48,34 @@ public class BaseActivity extends AppCompatActivity
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
 
-				TextView tvName = (TextView) drawerView.findViewById(R.id.tvDrawerName);
-				TextView tvEmail = (TextView) drawerView.findViewById(R.id.tvDrawerEmail);
-
-				tvName.setText(User.getUser().getUsername());
-				tvEmail.setText(User.getUser().getEmail());
+				LinearLayout navigation = (LinearLayout)drawerView.findViewById(R.id.linearNavigation) ;
+				final TextView tvName = (TextView) drawerView.findViewById(R.id.tvDrawerName);
+				final TextView tvEmail = (TextView) drawerView.findViewById(R.id.tvDrawerEmail);
+				final NetworkImageView ivDrawerPic = (NetworkImageView)drawerView.findViewById(R.id.ivDrawerPic);
+				ivDrawerPic.setDefaultImageResId(R.drawable.user_profile);
+				final ImageLoader imageLoader = VolleySingleton.getInstance(getApplicationContext()).getImageLoader();
+				Engine.getMeWithRequest(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+					@Override
+					public void execute(JSONObject obj) {
+						try{
+							JSONObject data = obj.getJSONObject("data");
+							Contact contact = Converter.convertContact(data);
+							String url = "http://lfapp.learnflux.net/v1/image?key=profile/"+contact.getId();
+							tvName.setText(contact.getFirst_name()+" " + contact.getLast_name());
+							tvEmail.setText(contact.getEmail());
+							ivDrawerPic.setImageUrl(url, imageLoader);
+						}catch (JSONException e){
+							e.printStackTrace();
+						}
+					}
+				});
+				navigation.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						Intent e = new Intent(BaseActivity.this, MyProfileActivity.class);
+						startActivity(e);
+					}
+				});
 			}
 		};
 		if (drawer != null) {
@@ -52,6 +84,7 @@ public class BaseActivity extends AppCompatActivity
 		toggle.syncState();
 
 		navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setItemIconTintList(null);
 		if (navigationView != null) {
 			navigationView.setNavigationItemSelectedListener(this);
 		}

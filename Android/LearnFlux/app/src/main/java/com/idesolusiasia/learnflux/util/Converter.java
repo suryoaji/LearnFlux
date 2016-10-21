@@ -3,6 +3,8 @@ package com.idesolusiasia.learnflux.util;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.idesolusiasia.learnflux.entity.AllContact;
+import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.MessageEvent;
@@ -10,6 +12,7 @@ import com.idesolusiasia.learnflux.entity.MessagePoll;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.Poll;
 import com.idesolusiasia.learnflux.entity.Thread;
+import com.idesolusiasia.learnflux.entity.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,11 +43,13 @@ public class Converter {
 
 		return t;
 	}
-
+	public static Contact convertContact(JSONObject obj)throws JSONException{
+		return gson.fromJson(obj.toString(), Contact.class);
+	}
 	public static Participant convertPeople(JSONObject obj)throws JSONException{
 		return gson.fromJson(obj.toString(),Participant.class);
 	}
-	public static Group convertOrganizations(JSONObject obj)throws  JSONException{
+	public static Group convertOrganizations(JSONObject obj)throws  JSONException {
 		return gson.fromJson(obj.toString(), Group.class);
 	}
 
@@ -66,5 +71,8 @@ public class Converter {
 
 	public static Poll convertPoll(JSONObject obj)throws  JSONException{
 		return gson.fromJson(obj.toString(), Poll.class);
+	}
+	public static AllContact convertAllContact(JSONObject obj)throws  JSONException{
+		return gson.fromJson(obj.toString(), AllContact.class);
 	}
 }

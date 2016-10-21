@@ -24,6 +24,94 @@
         android:layout_toRightOf="@+id/imageView9" android:layout_alignBottom="@+id/imageView9"
         android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
         android:gravity="center_vertical|center_horizontal" android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_below="@+id/imageView9" android:layout_centerHorizontal="true"
+        android:orientation="horizontal" android:id="@+id/linearTab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:clickable="true" android:focusable="true"
+            android:id="@+id/tabGroups">
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:id="@+id/imageView11"
+                    android:src="@drawable/icon_groups" android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                    android:layout_gravity="center_horizontal"/>
+            </FrameLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Groups"
+                android:id="@+id/textView27" android:textSize="12dp"
+                android:layout_gravity="center_horizontal"/>
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp" android:background="@color/colorPrimary"
+                android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal" android:id="@+id/indicator_groups"
+                android:visibility="gone"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:clickable="true" android:focusable="true"
+            android:id="@+id/tabEvents" android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+            <FrameLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <ImageView android:layout_width="45dp" android:layout_height="45dp"
+                    android:id="@+id/imageView14" android:src="@drawable/icon_events"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="center_horizontal"/>
+
+            </FrameLayout>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Events" android:id="@+id/textView28" android:textSize="12dp"
+                android:layout_gravity="center_horizontal"/>
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp" android:background="@color/colorPrimary"
+                android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal" android:id="@+id/indicator_events"
+                android:visibility="gone"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:clickable="true" android:focusable="true"
+            android:orientation="vertical"
+            android:id="@+id/tabActivities">
+            <FrameLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <ImageView android:layout_width="45dp" android:layout_height="45dp"
+                    android:id="@+id/imageView12" android:src="@drawable/icon_activities"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="center_horizontal"/>
+
+            </FrameLayout>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Activities" android:id="@+id/textView29"
+                android:textSize="12dp" android:layout_gravity="center_horizontal"/>
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp" android:background="@color/colorPrimary"
+                android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal" android:id="@+id/indicator_act"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </LinearLayout>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,13 +136,14 @@
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView2" android:layout_below="@+id/imageView9"
+        android:id="@+id/scrollView2" android:layout_below="@+id/linearTab"
         android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" android:layout_above="@+id/imageView10"
         android:fillViewport="true">
         <RelativeLayout
-            android:orientation="vertical"
+            android:padding="5dp"
+            android:orientation="vertical" android:background="@drawable/relative_border"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/imageView9" android:layout_alignParentLeft="true"
@@ -131,4 +220,14 @@
                       android:layout_toEndOf="@+id/textView26"/>
         </RelativeLayout>
     </ScrollView>
+
+    <ImageView
+        android:background="@android:color/transparent"
+        android:src="@drawable/add_people"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/addPeople"
+        android:layout_above="@+id/scrollView2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

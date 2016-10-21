@@ -31,13 +31,11 @@ public class LoginActivity extends AppCompatActivity{
 	    String username = sharedPref.getString("username","");
 	    String password = sharedPref.getString("password","");
 	    if ((!username.equals(""))||(!TextUtils.isEmpty(username))){
-		    User.getUser().setUsername(username);
 		    User.getUser().setPassword(password);
 		    Engine.login(this, username, password, new RequestTemplate.ServiceCallback() {
 			    @Override
 			    public void execute(JSONObject obj) {
 				    Engine.getMe(LoginActivity.this);
-
 				    Intent i = new Intent(LoginActivity.this, HomeActivity.class);
 				    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				    startActivity(i);
