@@ -50,7 +50,7 @@ extension JSQMessagesBubbleImage{
     static func fromMessage(threadMessage: Thread.ThreadMessage) -> JSQMessagesBubbleImage{
         let message = threadMessage.message
         let messageMeta = threadMessage.meta
-        let selfId = String(Engine.clientData.cacheSelfId())
+        let selfId = String(Engine.clientData.cacheMe()!["id"] as! Int)
         let typeMessage : State!
         switch (messageMeta["type"]! as! String) {
         case "event":
@@ -75,7 +75,7 @@ extension JSQMessagesAvatarImage{
         let img2 = JSQMessagesAvatarImageFactory.circularAvatarImage(UIImage(named: "male01.png"), withDiameter: 48)
         let placeholder = UIImage(named: "user_male-24")
         switch id {
-        case String(Engine.clientData.cacheSelfId()):
+        case String(Engine.clientData.cacheMe()!["id"] as! Int):
             return nil
         default:
             return JSQMessagesAvatarImage(avatarImage:img2, highlightedImage: img2, placeholderImage: placeholder)

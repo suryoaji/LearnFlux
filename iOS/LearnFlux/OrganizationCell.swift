@@ -32,10 +32,8 @@ class OrganizationCell: UITableViewCell {
         labelSide.text = Engine.getRoleOfGroup(organization)?.name.lowercaseString ?? "member"
         imageViewOrganization.image = organization.image != nil ? organization.image! : UIImage(named: "company1.png")
         if type == 0 {
-            if buttonAction.hidden == false{
-                viewContainerLabels.frame.size.width = self.frame.width - viewContainerLabels.frame.origin.x - 13
-            }
             buttonAction.hidden = true
+            viewContainerLabels.frame.size.width = self.frame.width - viewContainerLabels.frame.origin.x - 13
         }else{
             buttonAction.hidden = false
         }

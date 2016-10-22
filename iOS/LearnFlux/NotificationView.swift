@@ -43,15 +43,15 @@ class NotificationView: UIView {
         self.hidden = true
     }
     
-    func dinamicCustomInit(location: CGRect = CGRectZero, type: NotificationViewType = .Header){
+    func dinamicCustomInit(location: CGRect, type: NotificationViewType = .Header){
         dinamicSetFrame(location, type: type)
         setBorderLayer(2.0, borderHeight: 10.0, type: type)
         dinamicSetMaskLayer(location, height: 8.0)
     }
     
     private func dinamicSetFrame(location: CGRect, type: NotificationViewType){
-        self.frame.size.width = UIScreen.mainScreen().bounds.width * 0.72
-        self.frame.size.height = self.frame.size.width * 0.95
+        self.frame.size.width = UIScreen.mainScreen().bounds.width * 0.65
+        self.frame.size.height = self.frame.size.width * 0.85
         if location.origin.x < UIScreen.mainScreen().bounds.width / 2{
             self.frame.origin.x = (UIScreen.mainScreen().bounds.width - self.frame.size.width) * 1/5
         }else{

@@ -21,8 +21,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     @IBOutlet weak var tableViewNotification: UITableView!
     @IBOutlet weak var tableViewListInterests: UITableView!
     @IBOutlet weak var tableViewListOrganizations: UITableView!
-    @IBOutlet weak var tableViewListConnection: UITableView!
-    @IBOutlet weak var tableViewChildrenDetail: UITableView!
     @IBOutlet weak var buttonSeeAllUpper: UIButton!
     @IBOutlet weak var buttonSeeAllLower: UIButton!
     @IBOutlet weak var buttonAddAccConnection: UIButton!
@@ -103,7 +101,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         return (activeAccConnections.upper > 3 ? false : true, activeAccConnections.lower > 3 ? false : true)
     }
     
-    let sectionTitle = ["", "My Children", "Affiliated organizations", "Interests", "Connections"]
+    let sectionTitle = ["", "My Children", "Affiliated organizations", "Interests"]
     let friendRequestSectionTitle = ["Connections", "People you may know"]
     var roles = ""
     
@@ -223,8 +221,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             case 3:
                 viewSearch.alpha = 1.0
                 textfieldSearch.becomeFirstResponder()
-                hideNotificationViews()
-                viewChildrenProfileNotification.hidden = true
             default: break
             }
         }
@@ -308,14 +304,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             return numberOfRowTableViewListInterests(section)
         case tableViewListOrganizations:
             return numberOfRowTableViewListOrganizations(section)
-        case tableViewListConnection:
-            return numberOfRowTableViewListConnections(section)
-        case tableViewChildrenDetail:
-            return numberOfRowTableViewChildrenDetail(section)
         default:
-            if tableView.tag == 1{
-                return numberOfRowTableViewConnectionMyProfile(section)
-            }
             return 0
         }
     }
@@ -333,15 +322,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             cell = cellForRowTableViewListInterests(indexPath)
         case tableViewListOrganizations:
             cell = cellForRowTableViewListOrganizations(indexPath)
-        case tableViewListConnection:
-            cell = cellForRowTableViewListConnections(indexPath)
-        case tableViewChildrenDetail:
-            switch indexPath.row {
-            case 0:
-                return tableViewChildrenDetail.frame.height * 0.6
-            default:
-                cell = cellForRowTableViewChildrenDetail(indexPath)
-            }
         default:
             cell.height = (originalSizeConnectionTableView.height - buttonSeeAllUpper.frame.height) / 3
         }
@@ -365,14 +345,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             cell = self.cellForRowTableViewListInterests(indexPath)
         case tableViewListOrganizations:
             cell = self.cellForRowTableViewListOrganizations(indexPath)
-        case tableViewListConnection:
-            cell = self.cellForRowTableViewListConnections(indexPath)
-        case tableViewChildrenDetail:
-            cell = self.cellForRowTableViewChildrenDetail(indexPath)
         default:
-            if tableView.tag == 1{
-                cell = cellForRowTableViewConnectionMyProfile(tableView, indexPath: indexPath)
-            }
             break
         }
         return cell
@@ -387,9 +360,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         case tableViewConnectionLower:
             didSelectRowTableViewConnectionLower(indexPath)
         default:
-            if tableView.tag == 1{
-                didSelectRowTableViewConnectionMyProfile(tableView, indexPath: indexPath)
-            }
             break
         }
     }
@@ -401,17 +371,11 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         return nil
     }
     
-    var childLastTapped = -1
     var shouldMoreLabelRoles = false
     var shouldMockUp = true
     var shouldEditMyProfile = false{
         didSet{
             tableViewMyProfile.reloadData()
-        }
-        willSet{
-            if newValue == true{
-                viewChildrenProfileNotification.hidden = true
-            }
         }
     }
     var indicatorAccConnectionView = UIView()
@@ -427,7 +391,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     @IBOutlet weak var viewNotification: NotificationView!
     @IBOutlet weak var viewEditInterest: NotificationView!
     @IBOutlet weak var viewEditAffiliatedOrganization: NotificationView!
-    @IBOutlet weak var viewEditConnection: NotificationView!
     @IBOutlet weak var viewSearch: UIView!
     @IBOutlet weak var viewChildrenProfileNotification: NotificationView!
     
@@ -447,21 +410,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                           "name"  : "Name of Organization"],
                          ["image" : "company2.png",
                           "name"  : "Name of Organization"]]
-    var connections = [["photo" : "male01.png",
-                        "side"  : "Art and Craft Teacher",
-                        "name"  : "This Is A Pen"],
-                       ["photo" : "male02.png",
-                        "side"  : "Associate Engineer",
-                        "name"  : "This is An Apple"],
-                       ["photo" : "male03.png",
-                        "side"  : "Physician",
-                        "name"  : "Hop"],
-                       ["photo" : "male04.png",
-                        "side" : "Physician",
-                        "name"  : "ApplePen"],
-                       ["photo" : "male05.png",
-                        "side" : "Physician",
-                        "name"  : "This Is A Pen"]]
     
     @IBAction func accConnectionTapped(sender: UIButton) {
         let row = abs(sender.tag - 10)
@@ -485,15 +433,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
 
 // - MARK TableView Helper
 extension Profile{
-    
-    func numberOfRowTableViewConnectionMyProfile(section: Int) -> Int{
-        return 4
-    }
-    
-    func numberOfRowTableViewChildrenDetail(section: Int) -> Int{
-        return 4
-    }
-    
     func numberOfRowTableViewConnectionLower() -> Int{
         switch indicatorAccConnection {
         case 0:
@@ -532,7 +471,7 @@ extension Profile{
     func numberOfRowTableViewMyProfile(section: Int) -> Int{
         switch section {
         case 3:
-            let interests = clientData.cacheSelfInterests()
+            let interests = clientData.cacheMe()!["interests"] as! Array<String>
             return shouldEditMyProfile ? 2 : interests.count + 3
         default:
             return 2
@@ -567,28 +506,6 @@ extension Profile{
         return organizations.count
     }
     
-    func numberOfRowTableViewListConnections(section: Int) -> Int{
-        return connections.count
-    }
-    
-    func cellForRowTableViewChildrenDetail(indexPath: NSIndexPath) -> UITableViewCell{
-        var cell = UITableViewCell()
-        switch indexPath.row {
-        case 0:
-            cell = tableViewChildrenDetail.dequeueReusableCellWithIdentifier("Cell")!
-            let imageView = cell.viewWithTag(1) as! UIImageView
-            imageView.image = UIImage(named: "kid\(childLastTapped + 1).png")
-        case 1:
-            cell = tableViewChildrenDetail.dequeueReusableCellWithIdentifier("InterestHeader")!
-        case 2:
-            cell = tableViewChildrenDetail.dequeueReusableCellWithIdentifier("InterestCell1")!
-        case 3:
-            cell = tableViewChildrenDetail.dequeueReusableCellWithIdentifier("InterestCell2")!
-        default: break
-        }
-        return cell
-    }
-    
     func cellForRowTableViewMyProfile(indexPath: NSIndexPath) -> UITableViewCell{
         return shouldEditMyProfile ? cellForRowTableViewMyProfileEdit(indexPath) : cellForRowTableViewMyProfileNormal(indexPath)
     }
@@ -605,8 +522,8 @@ extension Profile{
                 let profileCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("1") as! RowProfileCell
                 profileCell.delegate = self
                 let values = ["photo" : clientData.photo,
-                              "id"    : clientData.cacheSelfId(),
-                              "name"  : clientData.cacheFullname(),
+                              "id"    : clientData.cacheMe()!["id"]!,
+                              "name"  : "\(clientData.cacheMe()!["first_name"] as! String) \(clientData.cacheMe()!["last_name"] as! String)",
                               "roles" : self.roles]
                 profileCell.setValues(values, scale: self.view.frame.width / profileCell.frame.width, stateMore: shouldMoreLabelRoles)
                 return profileCell
@@ -623,14 +540,8 @@ extension Profile{
                 return organizationCell
             case 3:
                 let interestCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("3") as! RowInterestsCell
-                interestCell.customInit(clientData.cacheSelfInterests(), indexPath: indexPath)
+                interestCell.customInit(clientData.cacheMe()!["interests"] as! Array<String>, indexPath: indexPath)
                 return interestCell
-            case 4:
-                let connectionCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("6")!
-                let connectionTableView = connectionCell.viewWithTag(1) as! UITableView
-                connectionTableView.reloadData()
-                connectionCell.height = originalSizeConnectionTableView.size.height * 4/3 + connectionTableView.superview!.frame.origin.y
-                return connectionCell
             default:
                 return UITableViewCell()
             }
@@ -646,11 +557,8 @@ extension Profile{
         }else{
             switch indexPath.section{
             case 0:
-                let editProfileCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("edit1") as! RowEditProfileCell
-                editProfileCell.setValues(self,values: ["photo" : clientData.photo,
-                                                        "name"  : clientData.cacheFullname(),
-                                                        "roles" : self.roles])
-                return editProfileCell
+                let profileCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("edit1")!
+                return profileCell
             case 1:
                 let childrenCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("edit2")!
                 let collectionView = childrenCell.viewWithTag(3) as! UICollectionView
@@ -666,11 +574,6 @@ extension Profile{
                 let buttonAllCauses = interestCell.viewWithTag(1) as! UIButton
                 buttonAllCauses.addTarget(self, action: #selector(buttonAllCausesTapped), forControlEvents: .TouchUpInside)
                 return interestCell
-            case 4:
-                let connectionCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("edit5")!
-                let buttonAllCauses = connectionCell.viewWithTag(3) as! UIButton
-                buttonAllCauses.addTarget(self, action: #selector(buttonAllCausesTapped), forControlEvents: .TouchUpInside)
-                return connectionCell
             default:
                 return UITableViewCell()
             }
@@ -699,19 +602,6 @@ extension Profile{
         let labelOrganization = cell.viewWithTag(2) as! UILabel
         imageView.image = UIImage(named: organizations[indexPath.row]["image"]!)
         labelOrganization.text = organizations[indexPath.row]["name"]
-        return cell
-    }
-    
-    func cellForRowTableViewListConnections(indexPath: NSIndexPath) -> UITableViewCell{
-        let cell = tableViewListConnection.dequeueReusableCellWithIdentifier("Cell")!
-        let imageView = cell.viewWithTag(4) as! UIImageView
-        let labelName = cell.viewWithTag(2) as! UILabel
-        let labelSide = cell.viewWithTag(3) as! UILabel
-        imageView.frame.size.width = imageView.frame.size.height
-        imageView.layer.cornerRadius = imageView.frame.width / 2
-        imageView.image = UIImage(named: connections[indexPath.row]["photo"]!)
-        labelName.text = connections[indexPath.row]["name"]
-        labelSide.text = connections[indexPath.row]["side"]
         return cell
     }
     
@@ -769,41 +659,6 @@ extension Profile{
                 cell = organizationCell
             default: break
             }
-        default: break
-        }
-        return cell
-    }
-    
-    func cellForRowTableViewConnectionMyProfile(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell{
-        var cell = UITableViewCell()
-        switch indexPath.row {
-        case 0:
-            let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
-            individualCell.setValues(clientData.getMyConnection()![0], indexPath: NSIndexPath(forRow: 0, inSection: 0))
-            individualCell.delegate = self
-            if clientData.getMyConnection()![0].photo == nil{
-                Engine.getPhotoOfConnection(NSIndexPath(forRow: 0, inSection: 0)){ success in
-                    if success{
-                        self.tableViewConnectionUpper.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
-                    }
-                }
-            }
-            cell = individualCell
-        case 1:
-            let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
-            groupCell.delegate = self
-            groupCell.setValues(NSIndexPath(forRow: 0, inSection: 0), group: groups[0])
-            cell = groupCell
-        case 2:
-            let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
-            groupCell.delegate = self
-            groupCell.setValues(NSIndexPath(forRow: 0, inSection: 0), group: clientData.getFilteredGroup(.ByInterestGroup)[0], groupType: .InterestGroup)
-            cell = groupCell
-        case 3:
-            let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
-            let organizations = clientData.getGroups(.Organisation)!
-            organizationCell.setValues(organizations[0])
-            cell = organizationCell
         default: break
         }
         return cell
@@ -868,8 +723,7 @@ extension Profile{
         case 0:
             break
         case 1:
-            let cell = tableViewConnectionUpper.cellForRowAtIndexPath(indexPath) as! GroupCell
-            self.performSegueWithIdentifier("GroupSegue", sender: cell)
+            self.performSegueWithIdentifier("GroupSegue", sender: indexPath.row)
         case 2:
             self.performSegueWithIdentifier("OrgSegue", sender: indexPath.row)
         case 3:
@@ -878,8 +732,8 @@ extension Profile{
             case "individual":
                 break
             case "group":
-                let cell = tableViewConnectionUpper.cellForRowAtIndexPath(indexPath) as! GroupCell
-                self.performSegueWithIdentifier("GroupSegue", sender: cell)
+                let index = self.groups.indexOf({ $0.id == contacts[indexPath.row]["id"]! })
+                self.performSegueWithIdentifier("GroupSegue", sender: index!)
             case "organization":
                 let index = clientData.getGroups(.Organisation)!.indexOf({ $0.id == contacts[indexPath.row]["id"]! })
                 self.performSegueWithIdentifier("OrgSegue", sender: index!)
@@ -892,19 +746,6 @@ extension Profile{
     
     func didSelectRowTableViewConnectionLower(indexPath: NSIndexPath){
         
-    }
-    
-    func didSelectRowTableViewConnectionMyProfile(tableView: UITableView, indexPath: NSIndexPath){
-        switch indexPath.row {
-        case 0:
-            break
-        case 1, 2:
-            let cell = tableView.cellForRowAtIndexPath(indexPath) as! GroupCell
-            self.performSegueWithIdentifier("GroupSegue", sender: cell)
-        case 3:
-            self.performSegueWithIdentifier("OrgSegue", sender: 0)
-        default: break
-        }
     }
 }
 
@@ -991,19 +832,10 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
                 self.performSegueWithIdentifier("OrgSegue", sender: indexPath.row)
             }
         case 2:
-            if indexPath.row != 3{
-                if childLastTapped == indexPath.row{
-                    viewChildrenProfileNotification.hidden = !viewChildrenProfileNotification.hidden
-                }else{
-                    let cell = collectionView.cellForItemAtIndexPath(indexPath)!
-                    let positionCellToTableView = cell.convertRect(cell.bounds, toView: tableViewMyProfile)
-                    viewChildrenProfileNotification.dinamicCustomInit(positionCellToTableView)
-                    viewChildrenProfileNotification.hidden = false
-                    childLastTapped = indexPath.row
-                    tableViewChildrenDetail.reloadData()
-                }
-                
-            }
+            let cell = collectionView.cellForItemAtIndexPath(indexPath)!
+            let positionCellToTableView = cell.convertRect(cell.bounds, toView: tableViewMyProfile)
+            viewChildrenProfileNotification.dinamicCustomInit(positionCellToTableView)
+            viewChildrenProfileNotification.hidden = false
         case 3:
             break
         default: break
@@ -1034,7 +866,6 @@ extension Profile{
         viewSearch.alpha = 0
         
         tableViewMyProfile.addSubview(viewChildrenProfileNotification)
-        viewChildrenProfileNotification.dinamicCustomInit()
     }
     
     func setAccNavBar(){
@@ -1184,9 +1015,6 @@ extension Profile{
             viewEditInterest.customInit(self, viewIndicator: sender, type: .Row)
         case 2:
             viewEditAffiliatedOrganization.customInit(self, viewIndicator: sender, type: .Row)
-        case 3:
-            viewEditConnection.customInit(self, viewIndicator: sender, type: .Row)
-            tableViewListConnection.reloadData()
         default: break
         }
         
@@ -1196,7 +1024,6 @@ extension Profile{
         gesture.view?.removeFromSuperview()
         viewEditInterest.hidden = true
         viewEditAffiliatedOrganization.hidden = true
-        viewEditConnection.hidden = true
     }
     
 }
@@ -1211,14 +1038,13 @@ extension Profile{
             orgDetailController.initView(group.id, orgTitle: group.name, indexTab: 0)
         }else if segue.identifier == "GroupSegue"{
             let groupDetailController = segue.destinationViewController as! GroupDetails
-            let sender = sender! as! GroupCell
-            let group = groups[sender.indexPath.row]
+            let group = groups[sender as! Int]
             groupDetailController.initFromCall(group)
         }else if segue.identifier == "ChatSegue"{
             let chatController = segue.destinationViewController as! ChatFlow
             var indexThread = 0
-            if let sender = sender as? GroupCell{
-                let group = sender.groupType! == .InterestGroup ? clientData.getFilteredGroup(.ByInterestGroup).first! : groups[sender.indexPath.row]
+            if let sender = sender as? Int{
+                let group = groups[sender]
                 indexThread = clientData.getMyThreads()!.indexOf({ $0.id == group.threadId! })!
             }else if let sender = sender as? Thread{
                 indexThread = clientData.getMyThreads()!.indexOf({ $0.id == sender.id })!
@@ -1238,25 +1064,6 @@ extension Profile: SectionTitleCellDelegate{
             default: break
             }
         }else{
-            switch cell.indexPath.section {
-            case 0:
-                let valuesCell = tableViewMyProfile.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: cell.indexPath.section)) as! RowEditProfileCell
-                if valuesCell.textfieldName.text! != clientData.cacheFullname(){
-                    Engine.editName(name: valuesCell.textfieldName.text!){ status in
-                        if status == .Success && self.shouldEditMyProfile == false{
-                            self.tableViewMyProfile.reloadDataSection(0, animate: false)
-                        }
-                    }
-                }
-                if valuesCell.shouldNewImage == true{
-                    Engine.editPhoto(photo: valuesCell.imageViewPhoto.image!){ status in
-                        if status == .Success{
-                            self.tableViewMyProfile.reloadDataSection(0, animate: false)
-                        }
-                    }
-                }
-            default: break
-            }
             shouldEditMyProfile = false
         }
     }
@@ -1266,7 +1073,7 @@ extension Profile: SectionTitleCellDelegate{
 extension Profile: GroupCellDelegate{
     func buttonActionTapped(cell: GroupCell) {
         if cell.indexPath != nil{
-            performSegueWithIdentifier("ChatSegue", sender: cell)
+            performSegueWithIdentifier("ChatSegue", sender: cell.indexPath.row)
         }
     }
 }

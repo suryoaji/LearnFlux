@@ -124,7 +124,7 @@ class Event: NSObject {
     func getParticipant(dict: Dictionary<String, AnyObject>)->(Participant){
         let user = getUser(dict["user"] as! Dictionary<String, AnyObject>)
         let rsvp = dict["rsvp"] as! Int
-        if user.userId! == Engine.clientData.cacheSelfId(){
+        if user.userId == Engine.clientData.cacheMe()!["id"] as? Int{
             self.setPropertyStatus(rsvp)
         }
         return (user: user, rsvp: rsvp)
