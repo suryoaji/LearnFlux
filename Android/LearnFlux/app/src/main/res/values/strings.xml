@@ -84,9 +84,9 @@
     <string name="BASE_URL">http://lfapp.learnflux.net/</string>
     <string name="URL_LOGIN">oauth/v2/token</string>
     <string name="client_id">
-        57453e293a603f8c168b4567_5gj7ywf0ocsoosw0sc8sgsgk8gckkc80o8co8gg00o08g88c4o
+       580db5c83a603f82528b4567_ahqk6r8gni8088ock80wkkok4wk0ooc8g4s0kkg880soow4k8
     </string>
-    <string name="client_secret">2hwdia2smbk00sko0wokowcwokswc0k448gsk0okwswcsgcw0g</string>
+    <string name="client_secret">5d13jtr20js4wcw0488888ck0k0c0sk0kos8c08wo8wsgog8ss</string>
     <string name="URL_VERSION">v1/</string>
     <string name="URL_ME">me</string>
     <string name="URL_FRIEND">me/friend</string>

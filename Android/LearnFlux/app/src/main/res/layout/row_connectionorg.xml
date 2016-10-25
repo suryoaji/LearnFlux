@@ -5,22 +5,23 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_gravity="center"
         android:layout_marginBottom="4dp"
         android:background="@drawable/relative_border"
-        android:layout_width="330dp"
+        android:layout_width="360dp"
         android:layout_height="51dp">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/imageOrgConnection"
             android:layout_margin="5dp"
             android:src="@drawable/nus_logo"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
             android:layout_height="40dp" />
         <LinearLayout
-            android:layout_gravity="center"
+            android:layout_gravity="center" android:gravity=""
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/titleOrgConnection"
@@ -38,7 +39,10 @@
 
         <ImageView
             android:src="@drawable/bubble_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:layout_height="20dp"/>
         </LinearLayout>
 </LinearLayout>

@@ -1,27 +1,24 @@
 package com.idesolusiasia.learnflux;
 
 import android.app.Activity;
-import android.app.Dialog;
+import android.app.Service;
+import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.provider.SyncStateContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ScrollingView;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,61 +28,55 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
-import com.android.volley.NoConnectionError;
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
 import com.idesolusiasia.learnflux.adapter.MyProfileAdapter;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
-import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.User;
-import com.idesolusiasia.learnflux.util.AppHelper;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
+import com.idesolusiasia.learnflux.util.Template;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class MyProfileActivity extends BaseActivity implements View.OnClickListener {
-	String twoHyphens = "--";
-	String lineEnd = "\r\n";
-	String boundary = "apiclient-" + System.currentTimeMillis();
-	String mimeType = "multipart/form-data;boundary=" + boundary;
-	byte[] multipartBody;
 	ViewPager mViewPager;
 	ConnectionFragmentAdapter rAdapter;
 	ImageLoader imageLoader = VolleySingleton.getInstance(MyProfileActivity.this).getImageLoader();
@@ -93,10 +84,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	RecyclerView ConnectionMyProfile;
 	TextView interest1,interest2, txtParent, txtParentDesc;
 	LinearLayout tabIndividual, tabGroups, tabOrganization, tabContact;
-	private static final int PICK_IMAGE_REQUEST = 1;
 	View indicatorIndividual, indicatorGroups, indicatorOrganization, indicatorContact;
 	MyProfileAdapter rcAdapter; NetworkImageView parent; CircularNetworkImageView child;
-	public Contact contact =null;
 	public Bitmap bitmap; public String encodedImage;
 	private ImageView changeImage;
 	TextView affilatedOrganizationButtonMore;
@@ -108,6 +97,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	ArrayList<Group> Org = new ArrayList<Group>();
 	static final int ITEMS = 4;
 	Point p;
+	public int PICK_IMAGE =100;
+	com.idesolusiasia.learnflux.Service service;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +114,10 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		visible=true;
 		visible2=true;
 
+		HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+		interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+		OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+		service = new Retrofit.Builder().baseUrl("http://lfapp.learnflux.net/v1/").client(client).build().create(com.idesolusiasia.learnflux.Service.class);
 
 		//My profile and connection action bar
 		final ScrollView scroll1 = (ScrollView) findViewById(R.id.linear1);
@@ -260,18 +255,20 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 						Engine.editProfileName(getApplicationContext(), "", editextName.getText().toString().trim(), "",  new RequestTemplate.ServiceCallback() {
 							@Override
 							public void execute(JSONObject obj) {
-								Toast.makeText(getApplicationContext(), "Successfully change name", Toast.LENGTH_SHORT).show();
 								finish();
 								startActivity(getIntent());
 							}
 						});
-						saveButton();
+
 					}
 				});
 			}
 		});
 		TextView textNotif = (TextView)findViewById(R.id.textView10);
-		//Edit Profile
+
+
+
+		//Edit Profile UPLOADING AN IMAGE
 		changeImage = (ImageView)findViewById(R.id.profileImageChange);
 		changeImage.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -279,7 +276,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 				Intent intent = new Intent();
 				intent.setType("image/*");
 				intent.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE_REQUEST);
+				startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE);
 			}
 		});
 
@@ -603,42 +600,101 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			}
 		});
 	}
-	public static String getPath(final Context context, final Uri uri) {
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 
-		final boolean isKitKat = Build.VERSION.SDK_INT >=
-				Build.VERSION_CODES.KITKAT;
-		Log.i("URI",uri+"");
-		String result = uri+"";
-		// DocumentProvider
-		//  if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-		if (isKitKat && (result.contains("media.documents"))) {
+		if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
 
-			String[] ary = result.split("/");
-			int length = ary.length;
-			String imgary = ary[length-1];
-			final String[] dat = imgary.split("%3A");
+			Uri selectedImage = data.getData();
+			String path = getRealPathFromUri(selectedImage);
+			File file = new File(path);
+			/*String[] filePathColumn = {MediaStore.Images.Media.DATA};
+			android.database.Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+			if (cursor == null)
+				return;
 
-			final String docId = dat[1];
-			final String type = dat[0];
+			cursor.moveToFirst();
 
-			Uri contentUri = null;
-			if ("image".equals(type)) {
-				contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-			} else if ("video".equals(type)) {
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			String filePath = cursor.getString(columnIndex);
+			cursor.close();*/
 
-			} else if ("audio".equals(type)) {
-			}
+//			File file = new File(filePath);
 
-			final String selection = "_id=?";
-			final String[] selectionArgs = new String[] {
-					dat[1]
-			};
 
-			return getDataColumn(context, contentUri, selection, selectionArgs);
+			RequestBody reqFile = RequestBody.create(MediaType.parse("application/image"), file);
+			MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
+			String token = "Bearer " + User.getUser().getAccess_token();
+            Log.d("THIS", data.getData().getPath());
+
+			retrofit2.Call<okhttp3.ResponseBody> req = service.putImage(token ,body);
+			req.enqueue(new Callback<ResponseBody>() {
+				@Override
+				public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+							Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+				}
+
+				@Override
+				public void onFailure(Call<ResponseBody> call, Throwable t) {
+					t.printStackTrace();
+				}
+			});
 		}
-		else
-		if ("content".equalsIgnoreCase(uri.getScheme())) {
-			return getDataColumn(context, uri, null, null);
+	}
+	public String getRealPathFromUri(final Uri uri) {
+		// DocumentProvider
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(getApplicationContext(), uri)) {
+			// ExternalStorageProvider
+			if (isExternalStorageDocument(uri)) {
+				final String docId = DocumentsContract.getDocumentId(uri);
+				final String[] split = docId.split(":");
+				final String type = split[0];
+
+				if ("primary".equalsIgnoreCase(type)) {
+					return Environment.getExternalStorageDirectory() + "/" + split[1];
+				}
+			}
+			// DownloadsProvider
+			else if (isDownloadsDocument(uri)) {
+
+				final String id = DocumentsContract.getDocumentId(uri);
+				final Uri contentUri = ContentUris.withAppendedId(
+						Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+				return getDataColumn(getApplicationContext(), contentUri, null, null);
+			}
+			// MediaProvider
+			else if (isMediaDocument(uri)) {
+				final String docId = DocumentsContract.getDocumentId(uri);
+				final String[] split = docId.split(":");
+				final String type = split[0];
+
+				Uri contentUri = null;
+				if ("image".equals(type)) {
+					contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+				} else if ("video".equals(type)) {
+					contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+				} else if ("audio".equals(type)) {
+					contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+				}
+
+				final String selection = "_id=?";
+				final String[] selectionArgs = new String[]{
+						split[1]
+				};
+
+				return getDataColumn(getApplicationContext(), contentUri, selection, selectionArgs);
+			}
+		}
+		// MediaStore (and general)
+		else if ("content".equalsIgnoreCase(uri.getScheme())) {
+
+			// Return the remote address
+			if (isGooglePhotosUri(uri))
+				return uri.getLastPathSegment();
+
+			return getDataColumn(getApplicationContext(), uri, null, null);
 		}
 		// File
 		else if ("file".equalsIgnoreCase(uri.getScheme())) {
@@ -648,8 +704,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		return null;
 	}
 
-	public static String getDataColumn(Context context, Uri uri, String selection,
-									   String[] selectionArgs) {
+	private String getDataColumn(Context context, Uri uri, String selection,
+								 String[] selectionArgs) {
 
 		Cursor cursor = null;
 		final String column = "_data";
@@ -661,8 +717,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
 					null);
 			if (cursor != null && cursor.moveToFirst()) {
-				final int column_index = cursor.getColumnIndexOrThrow(column);
-				return cursor.getString(column_index);
+				final int index = cursor.getColumnIndexOrThrow(column);
+				return cursor.getString(index);
 			}
 		} finally {
 			if (cursor != null)
@@ -670,127 +726,21 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		}
 		return null;
 	}
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-			Uri filePath = data.getData();
-			try {
-				//Getting the Bitmap from Gallery
-				bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
 
-				try {
-					String realPath = getPath(this, filePath);
-					ExifInterface exif = new ExifInterface(realPath);
-					Log.d("EXIF", "Path: " + filePath.getPath());
-					int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-					Log.d("EXIF", "Exif: " + orientation);
-					Matrix matrix = new Matrix();
-					if (orientation == 6) {
-						matrix.postRotate(90);
-					} else if (orientation == 3) {
-						matrix.postRotate(180);
-					} else if (orientation == 8) {
-						matrix.postRotate(270);
-					}
-					bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true); // rotating bitmap
-				} catch (Exception e) {
-
-				}
-			changeImage.setImageBitmap(bitmap);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			finish();
-		}
+	private boolean isExternalStorageDocument(Uri uri) {
+		return "com.android.externalstorage.documents".equals(uri.getAuthority());
 	}
-	public byte[] getStringImage(Bitmap bmp){
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		//bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-		changeImage.buildDrawingCache();
-		Bitmap bm = changeImage.getDrawingCache();
-		bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-		byte[] b = baos.toByteArray();
-		encodedImage = Base64.encodeToString(b , Base64.DEFAULT);
-		return b;
+
+	private boolean isDownloadsDocument(Uri uri) {
+		return "com.android.providers.downloads.documents".equals(uri.getAuthority());
 	}
-	private void buildPart(DataOutputStream dataOutputStream, byte[] fileData, String fileName) throws IOException {
-		dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
 
-		dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"photo\"; filename=\""
-				+ fileName + "\"" + lineEnd);
-		dataOutputStream.writeBytes("Content-Type: image/png" + lineEnd);
-		dataOutputStream.writeBytes(lineEnd);
-
-
-		ByteArrayInputStream fileInputStream = new ByteArrayInputStream(fileData);
-		int bytesAvailable = fileInputStream.available();
-
-		int maxBufferSize = 1024 * 1024;
-		int bufferSize = Math.min(bytesAvailable, maxBufferSize);
-		byte[] buffer = new byte[bufferSize];
-
-		// read file and write it into form...
-		int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-		while (bytesRead > 0) {
-			dataOutputStream.write(buffer, 0, bufferSize);
-			bytesAvailable = fileInputStream.available();
-			bufferSize = Math.min(bytesAvailable, maxBufferSize);
-			bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-		}
-
-		dataOutputStream.writeBytes(lineEnd);
-
+	private boolean isMediaDocument(Uri uri) {
+		return "com.android.providers.media.documents".equals(uri.getAuthority());
 	}
-	void saveButton(){
-		final byte[] fileData1= getStringImage(bitmap);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(bos);
-		try {
-			// the first file
-			buildPart(dos, fileData1,"");
-			// the second file
-			// send multipart form data necesssary after file data
-			dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-			// pass to multipart body
-			multipartBody = bos.toByteArray();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		String urls = "http://lfapp.learnflux.net/v1/me/image?key=profile/79";
-		VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.PUT, urls, new Response.Listener<NetworkResponse>() {
-			@Override
-			public void onResponse(NetworkResponse response) {
-				Toast.makeText(getApplicationContext(), "Upload successfully!", Toast.LENGTH_SHORT).show();
-				Log.i("result", "onResponse: "+ response.toString());
-				Intent a = getIntent();
-				startActivity(a);
-			}
-		}, new Response.ErrorListener() {
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				Toast.makeText(getApplicationContext(), "Upload failed!\r\n" + error.toString(), Toast.LENGTH_SHORT).show();
-			}
-		}){
-			@Override
-			public Map<String,String> getHeaders() throws AuthFailureError {
-				HashMap<String, String> params = new HashMap<String, String>();
-				params.put("Content-Type","application/image");
-				params.put("Authorization", "Bearer " + User.getUser().getAccess_token());
-				return params;
-			}
-			@Override
-			public Map<String, DataPart> getByteData(){
-				Map<String, DataPart> params = new HashMap<>();
-				params.put("avatar", new DataPart("file_avatar.jpg", fileData1));
-				Log.i("file", "getByteData: " + multipartBody);
-				return params;
-			}
 
-
-		};
-		VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+	private boolean isGooglePhotosUri(Uri uri) {
+		return "com.google.android.apps.photos.content".equals(uri.getAuthority());
 	}
+
 }
