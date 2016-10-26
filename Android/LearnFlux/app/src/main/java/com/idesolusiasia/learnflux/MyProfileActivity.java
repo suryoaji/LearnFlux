@@ -1,16 +1,13 @@
 package com.idesolusiasia.learnflux;
 
 import android.app.Activity;
-import android.app.Service;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Point;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -23,8 +20,6 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,16 +29,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
 import com.idesolusiasia.learnflux.adapter.MyProfileAdapter;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
@@ -52,29 +48,14 @@ import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
-import com.idesolusiasia.learnflux.util.Template;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.util.ArrayList;
-
-import java.io.File;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
 
 public class MyProfileActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
@@ -86,9 +67,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	LinearLayout tabIndividual, tabGroups, tabOrganization, tabContact;
 	View indicatorIndividual, indicatorGroups, indicatorOrganization, indicatorContact;
 	MyProfileAdapter rcAdapter; NetworkImageView parent; CircularNetworkImageView child;
-	public Bitmap bitmap; public String encodedImage;
 	private ImageView changeImage;
-	TextView affilatedOrganizationButtonMore;
+	TextView affilatedOrganizationButtonMore , from, work;
 	LinearLayout showAllOrganization;
 	RecyclerView affilatedOrganizationRecycler;
 	boolean visible;
@@ -98,13 +78,14 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	static final int ITEMS = 4;
 	Point p;
 	public int PICK_IMAGE =100;
-	com.idesolusiasia.learnflux.Service service;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_base);
 		super.onCreateDrawer(savedInstanceState);
+
+		AndroidNetworking.initialize(getApplicationContext()); // initialize library
 
 		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
@@ -113,12 +94,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		parentLayout.addView(childLayout);
 		visible=true;
 		visible2=true;
-
-		HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-		interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-		OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-		service = new Retrofit.Builder().baseUrl("http://lfapp.learnflux.net/v1/").client(client).build().create(com.idesolusiasia.learnflux.Service.class);
-
 		//My profile and connection action bar
 		final ScrollView scroll1 = (ScrollView) findViewById(R.id.linear1);
 		final LinearLayout linear2 = (LinearLayout) findViewById(R.id.linear2);
@@ -249,10 +224,13 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 				scroll3.setVisibility(View.VISIBLE);
 				scroll3.bringToFront();
 				final EditText editextName = (EditText)findViewById(R.id.editTextName);
+				final EditText From = (EditText)findViewById(R.id.edittextFrom);
+				final EditText Work = (EditText)findViewById(R.id.editTextWork);
 				save.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						Engine.editProfileName(getApplicationContext(), "", editextName.getText().toString().trim(), "",  new RequestTemplate.ServiceCallback() {
+						Engine.editProfileName(getApplicationContext(), "", editextName.getText().toString().trim(),
+								From.getText().toString().trim(),Work.getText().toString().trim(),"",  new RequestTemplate.ServiceCallback() {
 							@Override
 							public void execute(JSONObject obj) {
 								finish();
@@ -274,9 +252,9 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent();
-				intent.setType("image/*");
+				intent.setType("image");
 				intent.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE);
+				startActivityForResult(intent, PICK_IMAGE);
 			}
 		});
 
@@ -284,6 +262,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		// Set User My Profile details Data inside the box
 		initializeUser();
 		getUserStatus();
+		work = (TextView)findViewById(R.id.work);
+		from = (TextView)findViewById(R.id.fromText);
 		parent = (NetworkImageView)findViewById(R.id.imageeees);
 		child  = (CircularNetworkImageView)findViewById(R.id.imagesChild);
 		String prof = User.getUser().getProfile_picture();
@@ -556,7 +536,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					JSONArray interest = data.getJSONArray("interests");
 					for(int j=0;j<interest.length();j++){
 						interest1.setText(interest.getString(0));
-						interest2.setText(interest.getString(1));
 					}
 				}catch (JSONException e){
 					e.printStackTrace();
@@ -592,7 +571,11 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					JSONObject data = obj.getJSONObject("data");
 					String firstname = data.getString("first_name");
 					String lastname = data.getString("last_name");
+					String works = data.getString("work");
+					String froms = data.getString("location");
 					txtParent.setText(firstname+ " " + lastname);
+					work.setText(works);
+					from.setText(froms);
 					User.getUser().setUsername(firstname+lastname);
 				}catch (JSONException e){
 					e.printStackTrace();
@@ -608,38 +591,33 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 			Uri selectedImage = data.getData();
 			String path = getRealPathFromUri(selectedImage);
+			changeImage.setImageBitmap(BitmapFactory.decodeFile(path));
 			File file = new File(path);
-			/*String[] filePathColumn = {MediaStore.Images.Media.DATA};
-			android.database.Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-			if (cursor == null)
-				return;
-
-			cursor.moveToFirst();
-
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			String filePath = cursor.getString(columnIndex);
-			cursor.close();*/
-
-//			File file = new File(filePath);
-
-
-			RequestBody reqFile = RequestBody.create(MediaType.parse("application/image"), file);
-			MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
-			String token = "Bearer " + User.getUser().getAccess_token();
-            Log.d("THIS", data.getData().getPath());
-
-			retrofit2.Call<okhttp3.ResponseBody> req = service.putImage(token ,body);
-			req.enqueue(new Callback<ResponseBody>() {
-				@Override
-				public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+			String a = "http://lfapp.learnflux.net/v1/me/image?key=profile/1";
+			AndroidNetworking.put(a)
+					.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
+					.addFileBody(file)
+					.setTag("uploadTest")
+					.setPriority(Priority.HIGH)
+					.build()
+					.setUploadProgressListener(new UploadProgressListener() {
+						@Override
+						public void onProgress(long bytesUploaded, long totalBytes) {
+							// do anything with progress
+						}
+					})
+					.getAsJSONObject(new JSONObjectRequestListener() {
+						@Override
+						public void onResponse(JSONObject response) {
+							// do anything with response
 							Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-				}
+						}
 
-				@Override
-				public void onFailure(Call<ResponseBody> call, Throwable t) {
-					t.printStackTrace();
-				}
-			});
+						@Override
+						public void onError(ANError error) {
+							// handle error
+						}
+					});
 		}
 	}
 	public String getRealPathFromUri(final Uri uri) {

@@ -784,7 +784,9 @@ public class Engine {
 			},null);
 		}
 	}
-	public static void editProfileName(final Context context, final String lastname, final String firstname, final String token, final RequestTemplate.ServiceCallback callback){
+	public static void editProfileName(final Context context, final String lastname, final String firstname,
+									   final String from, final String work, final String token,
+									   final RequestTemplate.ServiceCallback callback){
 		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME);
 
 		JSONObject params = new JSONObject();
@@ -799,7 +801,7 @@ public class Engine {
 			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					editProfileName(context, lastname, firstname, token, callback);
+					editProfileName(context, lastname, firstname, from, work, token, callback);
 				}
 			});
 		}else{

@@ -32,7 +32,7 @@
             android:background="@drawable/relative_border"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="200dp">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -67,15 +67,27 @@
                     android:hint="Name" android:textSize="12sp" android:layout_marginLeft="5dp"
                     android:background="#EEEEEE" android:layout_marginTop="5dp"
                     android:layout_width="match_parent" android:layout_marginRight="30dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp" android:layout_weight="0.2"
                     android:id="@+id/editTextName" />
 
                 <EditText
                     android:hint="Roles (example, Parent, ACS Teacher, Engineer)" android:textSize="12sp"
                     android:background="#EEEEEE" android:layout_marginRight="30dp" android:layout_marginLeft="5dp"
                     android:layout_width="match_parent" android:layout_marginTop="5dp" android:gravity="top"
-                    android:layout_height="match_parent" android:layout_marginBottom="5dp" />
+                    android:layout_height="0dp" android:layout_weight="0.6" android:layout_marginBottom="5dp" />
 
+                <EditText
+                    android:hint="From (Example: United Kingdom)" android:textSize="12sp" android:layout_marginLeft="5dp"
+                    android:background="#EEEEEE" android:layout_marginTop="5dp"
+                    android:layout_width="match_parent" android:layout_marginRight="30dp"
+                    android:layout_height="0dp" android:layout_weight="0.2"
+                    android:id="@+id/edittextFrom" />
+                <EditText
+                    android:hint="Work" android:textSize="12sp" android:layout_marginLeft="5dp"
+                    android:background="#EEEEEE" android:layout_marginTop="5dp"
+                    android:layout_width="match_parent" android:layout_marginRight="30dp"
+                    android:layout_height="0dp" android:layout_weight="0.2"
+                    android:id="@+id/editTextWork" />
             </LinearLayout>
 
         </LinearLayout>

@@ -233,14 +233,16 @@
                         android:textColor="@color/colorPrimaryDark" android:textStyle="italic"
                         android:visibility="gone"/>
                     <TextView
+                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="5dp"
+                        android:id="@+id/fromText"
                         android:textSize="13sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:text="From: Singapore"/>
                     <TextView
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="5dp" android:id="@+id/work"
                         android:textSize="13sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
