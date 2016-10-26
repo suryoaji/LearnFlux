@@ -9,6 +9,7 @@ import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.MessageEvent;
 import com.idesolusiasia.learnflux.entity.MessagePoll;
+import com.idesolusiasia.learnflux.entity.Notification;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.Poll;
 import com.idesolusiasia.learnflux.entity.Thread;
@@ -51,6 +52,9 @@ public class Converter {
 	}
 	public static Group convertOrganizations(JSONObject obj)throws  JSONException {
 		return gson.fromJson(obj.toString(), Group.class);
+	}
+	public static Notification convertNotification(JSONObject obj) throws JSONException{
+		return gson.fromJson(obj.toString(),Notification.class);
 	}
 
 	public static MessageEvent convertMessageEvent(JSONObject obj)throws  JSONException{

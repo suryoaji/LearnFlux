@@ -61,33 +61,34 @@
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_weight="0.9"
+                android:padding="5dp"
                 android:layout_height="match_parent">
 
                 <EditText
                     android:hint="Name" android:textSize="12sp" android:layout_marginLeft="5dp"
-                    android:background="#EEEEEE" android:layout_marginTop="5dp"
+                    android:background="#EEEEEE" android:paddingLeft="10dp"
                     android:layout_width="match_parent" android:layout_marginRight="30dp"
                     android:layout_height="0dp" android:layout_weight="0.2"
-                    android:id="@+id/editTextName" />
+                    android:id="@+id/editTextName" android:inputType="textCapSentences" />
 
                 <EditText
                     android:hint="Roles (example, Parent, ACS Teacher, Engineer)" android:textSize="12sp"
                     android:background="#EEEEEE" android:layout_marginRight="30dp" android:layout_marginLeft="5dp"
                     android:layout_width="match_parent" android:layout_marginTop="5dp" android:gravity="top"
-                    android:layout_height="0dp" android:layout_weight="0.6" android:layout_marginBottom="5dp" />
+                    android:layout_height="0dp" android:paddingLeft="10dp" android:layout_weight="0.6" android:layout_marginBottom="5dp" />
 
                 <EditText
                     android:hint="From (Example: United Kingdom)" android:textSize="12sp" android:layout_marginLeft="5dp"
                     android:background="#EEEEEE" android:layout_marginTop="5dp"
                     android:layout_width="match_parent" android:layout_marginRight="30dp"
-                    android:layout_height="0dp" android:layout_weight="0.2"
-                    android:id="@+id/edittextFrom" />
+                    android:layout_height="0dp" android:layout_weight="0.2"  android:paddingLeft="10dp"
+                    android:id="@+id/edittextFrom" android:inputType="textCapSentences" />
                 <EditText
                     android:hint="Work" android:textSize="12sp" android:layout_marginLeft="5dp"
                     android:background="#EEEEEE" android:layout_marginTop="5dp"
                     android:layout_width="match_parent" android:layout_marginRight="30dp"
-                    android:layout_height="0dp" android:layout_weight="0.2"
-                    android:id="@+id/editTextWork" />
+                    android:layout_height="0dp" android:layout_weight="0.2"  android:paddingLeft="10dp"
+                    android:id="@+id/editTextWork" android:inputType="textCapSentences" />
             </LinearLayout>
 
         </LinearLayout>
@@ -154,7 +155,7 @@
                     android:layout_height="match_parent">
                     <EditText
                         android:hint="Search" android:textSize="12sp" android:layout_marginLeft="5dp"
-                        android:background="#EEEEEE" android:layout_marginTop="5dp"
+                        android:background="#EEEEEE" android:layout_marginTop="5dp" android:id="@+id/searchInterest"
                         android:layout_width="match_parent" android:layout_marginRight="30dp"
                         android:layout_height="wrap_content" android:padding="3dp" />
                     <FrameLayout

@@ -785,7 +785,7 @@ public class Engine {
 		}
 	}
 	public static void editProfileName(final Context context, final String lastname, final String firstname,
-									   final String from, final String work, final String token,
+									   final String location, final String work, final String token,
 									   final RequestTemplate.ServiceCallback callback){
 		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME);
 
@@ -793,6 +793,8 @@ public class Engine {
 		try {
 			params.put("lastname", lastname);
 			params.put("firstname", firstname);
+			params.put("location", location);
+			params.put("work", work);
 			params.put("token", token);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -801,7 +803,7 @@ public class Engine {
 			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					editProfileName(context, lastname, firstname, from, work, token, callback);
+					editProfileName(context, lastname, firstname, location, work, token, callback);
 				}
 			});
 		}else{
@@ -810,6 +812,28 @@ public class Engine {
 				public void execute(JSONObject obj) {
 					if(obj!=null){
 						Log.i("PUT NAME", "execute" + obj);
+					}if(callback!=null){
+						callback.execute(obj);
+					}
+				}
+			},null);
+		}
+	}
+	public static void getNotification(final Context context, final RequestTemplate.ServiceCallback callback){
+		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+"notifications";
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					getNotification(context, callback);
+				}
+			});
+		}else{
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if(obj!=null){
+						Log.i("get", "execute: "+obj);
 					}if(callback!=null){
 						callback.execute(obj);
 					}

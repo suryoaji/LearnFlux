@@ -42,8 +42,10 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
 import com.idesolusiasia.learnflux.adapter.MyProfileAdapter;
+import com.idesolusiasia.learnflux.adapter.NotificationAdapter;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.Notification;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
@@ -75,9 +77,13 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	boolean visible2;
 	ArrayList<Group> arrOrg = new ArrayList<Group>();
 	ArrayList<Group> Org = new ArrayList<Group>();
+	ArrayList<Notification> notif= new ArrayList<>();
 	static final int ITEMS = 4;
 	Point p;
+	File file;
 	public int PICK_IMAGE =100;
+	NotificationAdapter notifAdapter;
+	RecyclerView notifRecycler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +190,24 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					includedLayout2.bringToFront();
 					includedLayout.setVisibility(View.GONE);
 					txtNotification2.setVisibility(View.GONE);
+					notifRecycler = (RecyclerView)findViewById(R.id.recycleNotification);
+					notif = new ArrayList<Notification>();
+					Engine.getNotification(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+						@Override
+						public void execute(JSONObject obj) {
+							try{
+								JSONArray data = obj.getJSONArray("data");
+								for(int it=0;it<data.length();it++){
+									Notification notifications = Converter.convertNotification(data.getJSONObject(it));
+									notif.add(notifications);
+								}
+								notifAdapter = new NotificationAdapter(getApplicationContext(),notif);
+								notifRecycler.setAdapter(notifAdapter);
+							}catch (JSONException e){
+								e.printStackTrace();
+							}
+						}
+					});
 					visible2=false;
 					visible=true;
 				}else if(!visible2){
@@ -237,6 +261,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 								startActivity(getIntent());
 							}
 						});
+						saveButton();
 
 					}
 				});
@@ -252,9 +277,9 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent();
-				intent.setType("image");
+				intent.setType("image/*");
 				intent.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(intent, PICK_IMAGE);
+				startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE);
 			}
 		});
 
@@ -290,6 +315,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 				tvSeeMore.setVisibility(View.GONE);
 			}
 		});
+
+
 		//dialog children
 		final ImageView children1 = (ImageView)findViewById(R.id.kid1);
 		children1.setOnClickListener(new View.OnClickListener() {
@@ -307,10 +334,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			}
 
 		});
-
-
-
-
 		//Affilited Organization
 		affilatedOrganizationRecycler = (RecyclerView)findViewById(R.id.organizationRecycler);
 		showAllOrganization = (LinearLayout)findViewById(R.id.layoutShowAll);
@@ -572,10 +595,10 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					String firstname = data.getString("first_name");
 					String lastname = data.getString("last_name");
 					String works = data.getString("work");
-					String froms = data.getString("location");
+					String location = data.getString("location");
 					txtParent.setText(firstname+ " " + lastname);
-					work.setText(works);
-					from.setText(froms);
+					work.setText("From: " + location);
+					from.setText("Work: " + works);
 					User.getUser().setUsername(firstname+lastname);
 				}catch (JSONException e){
 					e.printStackTrace();
@@ -592,32 +615,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			Uri selectedImage = data.getData();
 			String path = getRealPathFromUri(selectedImage);
 			changeImage.setImageBitmap(BitmapFactory.decodeFile(path));
-			File file = new File(path);
-			String a = "http://lfapp.learnflux.net/v1/me/image?key=profile/1";
-			AndroidNetworking.put(a)
-					.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
-					.addFileBody(file)
-					.setTag("uploadTest")
-					.setPriority(Priority.HIGH)
-					.build()
-					.setUploadProgressListener(new UploadProgressListener() {
-						@Override
-						public void onProgress(long bytesUploaded, long totalBytes) {
-							// do anything with progress
-						}
-					})
-					.getAsJSONObject(new JSONObjectRequestListener() {
-						@Override
-						public void onResponse(JSONObject response) {
-							// do anything with response
-							Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-						}
-
-						@Override
-						public void onError(ANError error) {
-							// handle error
-						}
-					});
+			file = new File(path);
 		}
 	}
 	public String getRealPathFromUri(final Uri uri) {
@@ -719,6 +717,34 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 	private boolean isGooglePhotosUri(Uri uri) {
 		return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+	}
+	void saveButton(){
+		String a = "http://lfapp.learnflux.net/v1/me/image?key=profile/47";
+		AndroidNetworking.put(a)
+				.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
+				.addFileBody(file)
+				.setTag("uploadTest")
+				.setPriority(Priority.HIGH)
+				.build()
+				.setUploadProgressListener(new UploadProgressListener() {
+					@Override
+					public void onProgress(long bytesUploaded, long totalBytes) {
+						// do anything with progress
+					}
+				})
+				.getAsJSONObject(new JSONObjectRequestListener() {
+					@Override
+					public void onResponse(JSONObject response) {
+						// do anything with response
+						Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onError(ANError error) {
+						// handle error
+						//Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+					}
+				});
 	}
 
 }
