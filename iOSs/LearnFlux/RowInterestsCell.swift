@@ -1,0 +1,63 @@
+//
+//  RowInterestsCell.swift
+//  LearnFlux
+//
+//  Created by ISA on 9/29/16.
+//  Copyright © 2016 Martin Darma Kusuma Tjandra. All rights reserved.
+//
+
+import UIKit
+
+class RowInterestsCell: UITableViewCell {
+
+    @IBOutlet weak var imageViewPhoto: UIImageView!
+    @IBOutlet weak var label: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+    
+    func customInit(titles: [String], indexPath: NSIndexPath){
+        if indexPath.row == 1 || indexPath.row == titles.count + 2{
+            cleanSubview()
+        }else{
+            normalSubview()
+            let row = indexPath.row - 2
+            if row < titles.count{
+                label.text = titles[row]
+            }
+            switch row {
+            case 0:
+                imageViewPhoto.image = UIImage(named: "interest1.png")
+            case 1:
+                imageViewPhoto.image = UIImage(named: "interest2.png")
+            case 2:
+                imageViewPhoto.image = UIImage(named: "interest3.png")
+            default:
+                imageViewPhoto.image = UIImage(named: "photo-container.png")
+            }
+        }
+    }
+    
+    func normalSubview(){
+        for subview in contentView.subviews{
+            subview.hidden = false
+        }
+        self.frame.size.height = 30.0
+    }
+    
+    func cleanSubview(){
+        for subview in contentView.subviews{
+            subview.hidden = true
+        }
+        self.frame.size.height = 15.0
+    }
+
+    override func setSelected(selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}

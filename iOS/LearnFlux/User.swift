@@ -19,6 +19,7 @@ class User {
     var photo: UIImage?
     var email: String?
     var mutualFriend: Int?
+    var friends: [Int]?
     
     init (userId: Int?, type: String?, link: String?) {
         self.userId = userId;
@@ -37,6 +38,28 @@ class User {
         if let s = data["last_name"] as? String{ self.lastName = s }
         
         self.mutualFriend = Int(arc4random_uniform(25))
+        updateFromCacheMe()
+    }
+    
+    func updateFromCacheMe(){
+        guard let cacheFriend = (Engine.clientData.cacheSelfFriends().filter({ $0[keyCacheMe.id] as! Int == self.userId! })).first else{
+            return
+        }
+        self.lastName = cacheFriend["last_name"] as? String
+        self.email = cacheFriend["email"] as? String
+        self.friends = arrFriends(cacheFriend["friends"])
+    }
+    
+    func arrFriends(friends: AnyObject?) -> Array<Int>{
+        guard let friends = friends else{
+            return []
+        }
+        if let friends = friends as? Dictionary<String, Dictionary<String, AnyObject>>{
+            return friends.map({ $0.1["id"] as! Int })
+        }else if let friends = friends as? Array<Dictionary<String, AnyObject>>{
+            return friends.map({ $0["id"] as! Int })
+        }
+        return []
     }
     
     func loadImage(){

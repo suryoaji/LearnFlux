@@ -1,0 +1,6 @@
+framework module Pods_LearnFlux {
+  umbrella header "Pods-LearnFlux-umbrella.h"
+
+  export *
+  module * { export * }
+}

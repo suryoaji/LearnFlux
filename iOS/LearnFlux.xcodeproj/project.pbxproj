@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		40B3A2FBD9310401C66AC253 /* Pods_LearnFlux.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222F237C51212D49AB1979F9 /* Pods_LearnFlux.framework */; };
+		11DC80789DB872A42A607AA3 /* Pods_LearnFlux.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C51C13A3ECADE90A4AF031C /* Pods_LearnFlux.framework */; };
 		4A368BD61D66A0D500E38942 /* NavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A368BD51D66A0D500E38942 /* NavController.swift */; };
 		4A382AC91D9CCD5D00E12BFE /* SectionTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A382AC81D9CCD5D00E12BFE /* SectionTitleCell.swift */; };
 		4A382ACB1D9CD18A00E12BFE /* RowProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A382ACA1D9CD18A00E12BFE /* RowProfileCell.swift */; };
@@ -43,6 +43,7 @@
 		4A5105FB1DA200900026F302 /* InterestGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5105FA1DA200900026F302 /* InterestGroups.swift */; };
 		4A5106001DA24B310026F302 /* IGGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5105FF1DA24B310026F302 /* IGGroupCell.swift */; };
 		4A5106021DA24FA40026F302 /* IGSuggestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5106011DA24FA40026F302 /* IGSuggestCell.swift */; };
+		4A52B9FD1DB75AC600C54302 /* RowEditProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A52B9FC1DB75AC600C54302 /* RowEditProfileCell.swift */; };
 		4A5A14F91DA5E3AD00024FE3 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5A14F81DA5E3AD00024FE3 /* NotificationView.swift */; };
 		4A5A15171DA6226700024FE3 /* company4.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A5A150E1DA6226700024FE3 /* company4.png */; };
 		4A5A15181DA6226700024FE3 /* male11.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A5A150F1DA6226700024FE3 /* male11.png */; };
@@ -451,12 +452,10 @@
 		5BFF797F1CCF0BC400B50896 /* DatePickerDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF797E1CCF0BC400B50896 /* DatePickerDialog.swift */; };
 		5BFFFDB71CD8958B0099AB3F /* SweetAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFFFDB61CD8958B0099AB3F /* SweetAlert.swift */; };
 		5BFFFDB91CD8AB740099AB3F /* CommonUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFFFDB81CD8AB740099AB3F /* CommonUtility.swift */; };
-		C8B350FF8941792370B334F2 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9376CFD1C1CCB93E6369171A /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		222F237C51212D49AB1979F9 /* Pods_LearnFlux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LearnFlux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		1437403AF4E91373F27D4ADE /* Pods-LearnFlux.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LearnFlux.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LearnFlux/Pods-LearnFlux.debug.xcconfig"; sourceTree = "<group>"; };
 		4A368BD51D66A0D500E38942 /* NavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavController.swift; sourceTree = "<group>"; };
 		4A382AC81D9CCD5D00E12BFE /* SectionTitleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionTitleCell.swift; sourceTree = "<group>"; };
 		4A382ACA1D9CD18A00E12BFE /* RowProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RowProfileCell.swift; sourceTree = "<group>"; };
@@ -492,6 +491,7 @@
 		4A5105FA1DA200900026F302 /* InterestGroups.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterestGroups.swift; sourceTree = "<group>"; };
 		4A5105FF1DA24B310026F302 /* IGGroupCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IGGroupCell.swift; sourceTree = "<group>"; };
 		4A5106011DA24FA40026F302 /* IGSuggestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IGSuggestCell.swift; sourceTree = "<group>"; };
+		4A52B9FC1DB75AC600C54302 /* RowEditProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RowEditProfileCell.swift; sourceTree = "<group>"; };
 		4A5A14F81DA5E3AD00024FE3 /* NotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		4A5A150E1DA6226700024FE3 /* company4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company4.png; sourceTree = "<group>"; };
 		4A5A150F1DA6226700024FE3 /* male11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = male11.png; sourceTree = "<group>"; };
@@ -930,8 +930,9 @@
 		5BFF797E1CCF0BC400B50896 /* DatePickerDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerDialog.swift; sourceTree = "<group>"; };
 		5BFFFDB61CD8958B0099AB3F /* SweetAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SweetAlert.swift; sourceTree = "<group>"; };
 		5BFFFDB81CD8AB740099AB3F /* CommonUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommonUtility.swift; path = Library/CommonUtility.swift; sourceTree = "<group>"; };
+		6A9F0A8463BF8514D354D12E /* Pods-LearnFlux.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LearnFlux.release.xcconfig"; path = "Pods/Target Support Files/Pods-LearnFlux/Pods-LearnFlux.release.xcconfig"; sourceTree = "<group>"; };
+		6C51C13A3ECADE90A4AF031C /* Pods_LearnFlux.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LearnFlux.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9376CFD1C1CCB93E6369171A /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B500899EAA747E11ACABC428 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -939,8 +940,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40B3A2FBD9310401C66AC253 /* Pods_LearnFlux.framework in Frameworks */,
-				C8B350FF8941792370B334F2 /* Pods.framework in Frameworks */,
+				11DC80789DB872A42A607AA3 /* Pods_LearnFlux.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -995,6 +995,7 @@
 			children = (
 				4A382AC81D9CCD5D00E12BFE /* SectionTitleCell.swift */,
 				4A382ACA1D9CD18A00E12BFE /* RowProfileCell.swift */,
+				4A52B9FC1DB75AC600C54302 /* RowEditProfileCell.swift */,
 				4A382ACE1D9CD71100E12BFE /* RowInterestsCell.swift */,
 				4A382AD01D9CE77E00E12BFE /* RowHighlightsCell.swift */,
 			);
@@ -1018,15 +1019,6 @@
 				4A5106011DA24FA40026F302 /* IGSuggestCell.swift */,
 			);
 			name = "Interest Groups";
-			sourceTree = "<group>";
-		};
-		58639674DA4D98FBBE69512E /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B500899EAA747E11ACABC428 /* Pods.debug.xcconfig */,
-				488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		5B04A23B1CBCE01200FA5CCA /* Images Mockup */ = {
@@ -1084,8 +1076,8 @@
 			children = (
 				5B09CEB11CBB4A330042C70B /* LearnFlux */,
 				5B09CEB01CBB4A330042C70B /* Products */,
-				58639674DA4D98FBBE69512E /* Pods */,
 				88926D3F72F0978DEF45DAAC /* Frameworks */,
+				D705AA82E6A5934B1C1AF2F1 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1609,9 +1601,18 @@
 			children = (
 				5BFF797E1CCF0BC400B50896 /* DatePickerDialog.swift */,
 				9376CFD1C1CCB93E6369171A /* Pods.framework */,
-				222F237C51212D49AB1979F9 /* Pods_LearnFlux.framework */,
+				6C51C13A3ECADE90A4AF031C /* Pods_LearnFlux.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D705AA82E6A5934B1C1AF2F1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1437403AF4E91373F27D4ADE /* Pods-LearnFlux.debug.xcconfig */,
+				6A9F0A8463BF8514D354D12E /* Pods-LearnFlux.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1621,12 +1622,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5B09CEC41CBB4A330042C70B /* Build configuration list for PBXNativeTarget "LearnFlux" */;
 			buildPhases = (
-				D58C6E425C07B879B0493BE4 /* Check Pods Manifest.lock */,
+				EB84672BA0301CA836783336 /* [CP] Check Pods Manifest.lock */,
 				5B09CEAB1CBB4A330042C70B /* Sources */,
 				5B09CEAC1CBB4A330042C70B /* Frameworks */,
 				5B09CEAD1CBB4A330042C70B /* Resources */,
-				33D72130CD6B9A7E9EBDBFD6 /* Embed Pods Frameworks */,
-				9E4F88E785EAAD9CF46FCDFC /* Copy Pods Resources */,
+				41237B1083348ADE7C82BCE6 /* [CP] Embed Pods Frameworks */,
+				38D5A2B6F0C856098F31B231 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2043,49 +2044,49 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		33D72130CD6B9A7E9EBDBFD6 /* Embed Pods Frameworks */ = {
+		38D5A2B6F0C856098F31B231 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LearnFlux/Pods-LearnFlux-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9E4F88E785EAAD9CF46FCDFC /* Copy Pods Resources */ = {
+		41237B1083348ADE7C82BCE6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LearnFlux/Pods-LearnFlux-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D58C6E425C07B879B0493BE4 /* Check Pods Manifest.lock */ = {
+		EB84672BA0301CA836783336 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2099,6 +2100,7 @@
 				5B09CEB51CBB4A330042C70B /* Login.swift in Sources */,
 				5BE7BBB11CD1DE2500BDFCE1 /* AttachPoll.swift in Sources */,
 				5B98B59B1CC8DB190070AE97 /* ChatFlow.swift in Sources */,
+				4A52B9FD1DB75AC600C54302 /* RowEditProfileCell.swift in Sources */,
 				5B6DECBC1D016BA000E16650 /* Url.swift in Sources */,
 				4A5FF51C1D700198009818E4 /* PollChart.swift in Sources */,
 				5B0AC9A01D110A4D00594E4C /* Org.swift in Sources */,
@@ -2287,7 +2289,7 @@
 		};
 		5B09CEC51CBB4A330042C70B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B500899EAA747E11ACABC428 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 1437403AF4E91373F27D4ADE /* Pods-LearnFlux.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -2306,7 +2308,7 @@
 		};
 		5B09CEC61CBB4A330042C70B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 488AC7E4D0AE8235630B6C94 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 6A9F0A8463BF8514D354D12E /* Pods-LearnFlux.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
