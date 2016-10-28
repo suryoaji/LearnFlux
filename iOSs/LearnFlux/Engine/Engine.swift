@@ -213,9 +213,13 @@ class Engine : NSObject {
                 print("Error")
                 print("Status Code: \(response.response!.statusCode)")
                 print("JSON: \(json)")
-                Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later." + printErrorCode((response.response?.statusCode)!)) {
-                    dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, json); } } );
-                };
+                if let viewController = viewController{
+                    Util.showMessageInViewController(viewController, title: "Error", message: "Sorry, there's an error occured while carrying out your request. Please try again later." + printErrorCode((response.response?.statusCode)!)) {
+                        dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (restat, json); } } );
+                    };
+                }else{
+                    if callback != nil { callback!(restat, json) }
+                }
                 break;
             }
         }
@@ -260,7 +264,7 @@ class Engine : NSObject {
                 
             }
         }
-        urlReq.URL = NSURL(string: newUrl)!
+        urlReq.URL = NSURL(string: newUrl.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!)!
         urlReq.cachePolicy = .UseProtocolCachePolicy
         urlReq.timeoutInterval = 10.0
         urlReq.HTTPMethod = "\(method)"
@@ -420,6 +424,16 @@ class Engine : NSObject {
         }
     }
     
+    static func getNotifications(viewController: UIViewController? = nil, callback: ((Array<Dictionary<String, AnyObject>>) -> Void)? = nil){
+        makeRequestAlamofire(viewController, url: Url.notifications, param: nil){status, JSON in
+            if status == .Success && !(JSON!["data"] as! Array<Dictionary<String, AnyObject>>).isEmpty{
+                let arrNotifications = JSON!["data"] as! Array<Dictionary<String, AnyObject>>
+                clientData.updateNotifications(arrNotifications)
+            }
+            if callback != nil { callback!(clientData.cacheNotifications().reverse()) }
+        }
+    }
+    
     static func getChildsOfAllOrganizations(viewController: UIViewController? = nil, callback: ((Array<Group>?) -> Void)? = nil){
         let organizationHaveChild = clientData.getGroups(.Organisation)!.filter({ $0.child != nil && !$0.child!.isEmpty })
         let unorderedChilds = organizationHaveChild.map({ $0.child! })
@@ -457,9 +471,18 @@ class Engine : NSObject {
     }
     
     static func getRoleOfGroup(group: Group) -> Role?{
-        let arr = group.participants!.filter({ $0.user!.userId! == clientData.cacheSelfId() })
-        if let participant = arr.first where participant.role!.type.lowercaseString != "user"{
-            return participant.role
+        guard let participants = group.participants else{
+            return nil
+        }
+        let arr = participants.filter({ $0.user!.userId! == clientData.cacheSelfId() })
+        guard let participant = arr.first else{
+            return nil
+        }
+        guard let role = participant.role else{
+            return nil
+        }
+        if role.type.lowercaseString != "user"{
+            return role
         }
         return nil
     }
@@ -595,14 +618,25 @@ class Engine : NSObject {
         return arrSuggestFriends
     }
     
-    static func requestSearch(viewController: UIViewController? = nil, keySearch: String, callback: JSONreturn? = nil){
+    static func requestSearch(viewController: UIViewController? = nil, keySearch: String, callback: (([User], [Group]) -> Void)? = nil){
+        Alamofire.Manager.sharedInstance.session.getAllTasksWithCompletionHandler(){arrTask in
+            for each in arrTask{
+                each.cancel()
+            }
+        }
         makeRequestAlamofire(viewController, url: Url.search(keySearch), param: nil){status, JSON in
-//            print(status, JSON)
+            if let dataJSON = JSON!["data"] as? Dictionary<String, AnyObject> where status == .Success{
+                let arrGroups = dataJSON["groups"] as! Array<Dictionary<String, AnyObject>>
+                let arrUsers = dataJSON["users"] as! Array<Dictionary<String, AnyObject>>
+                if callback != nil { callback!(arrUsers.map({ User(dict: $0)}), arrGroups.map({ Group(dict: $0) })) }
+            }else{
+                if callback != nil { callback!([], []) }
+            }
         }
+    }
+    
+    static func requestJoinGroup(viewController: UIViewController? = nil, keySearch: String, callback: ((RequestStatusType) -> Void)? = nil){
         
-        Alamofire.Manager.sharedInstance.session.getAllTasksWithCompletionHandler { arrTask in
-            
-        }
     }
     
     static func editMe(viewController: UIViewController? = nil, name: String?, from: String?, work: String?, callback: (RequestStatusType -> Void)? = nil){

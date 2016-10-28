@@ -20,6 +20,7 @@ class User {
     var email: String?
     var mutualFriend: Int?
     var friends: [Int]?
+    var interests: [String]?
     
     init (userId: Int?, type: String?, link: String?) {
         self.userId = userId;
@@ -42,12 +43,17 @@ class User {
     }
     
     func updateFromCacheMe(){
-        guard let cacheFriend = (Engine.clientData.cacheSelfFriends().filter({ $0[keyCacheMe.id] as! Int == self.userId! })).first else{
-            return
+        if let cacheFriend = (Engine.clientData.cacheSelfFriends().filter({ $0[keyCacheMe.id] as! Int == self.userId! })).first{
+            self.lastName = cacheFriend["last_name"] as? String
+            self.email = cacheFriend["email"] as? String
+            self.friends = arrFriends(cacheFriend["friends"])
+            self.interests = cacheFriend["interests"] as? Array<String>
+        }else if let cacheChildren = (Engine.clientData.cacheSelfChildrens().filter({ $0[keyCacheMe.id] as! Int == self.userId! })).first{
+            self.lastName = cacheChildren["last_name"] as? String
+            self.email = cacheChildren["email"] as? String
+            self.friends = arrFriends(cacheChildren["friends"])
+            self.interests = cacheChildren["interests"] as? Array<String>
         }
-        self.lastName = cacheFriend["last_name"] as? String
-        self.email = cacheFriend["email"] as? String
-        self.friends = arrFriends(cacheFriend["friends"])
     }
     
     func arrFriends(friends: AnyObject?) -> Array<Int>{

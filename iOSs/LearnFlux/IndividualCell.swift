@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum IndividualCellType{
+    case Friend
+    case NotFriend
+}
+
 protocol IndividualCellDelegate: class {
     func buttonChatTapped(cell: IndividualCell)
 }
@@ -15,16 +20,21 @@ protocol IndividualCellDelegate: class {
 class IndividualCell: UITableViewCell {
     weak var delegate : IndividualCellDelegate?
     var indexPath: NSIndexPath!
+    var type: IndividualCellType!
     var dummySides = ["Arts and Craft Teacher", "Associate Engineer", "Physician"]
     
     @IBOutlet weak var imageViewPhoto: UIImageView!
     @IBOutlet weak var labelName: UILabel!
     @IBOutlet weak var labelSide: UILabel!
-    @IBOutlet weak var buttonChat: UIButton!
+    @IBOutlet weak var buttonAction: UIButton!
     
-    @IBAction func buttonChatTapped(sender: UIButton) {
+    @IBAction func buttonActionTapped(sender: UIButton) {
         if let delegate = delegate{
-            delegate.buttonChatTapped(self)
+            if type != nil && type! == .Friend{
+                delegate.buttonChatTapped(self)
+            }else if type != nil && type! == .NotFriend{
+                
+            }
         }
     }
     
@@ -46,8 +56,15 @@ class IndividualCell: UITableViewCell {
         imageViewPhoto.image = UIImage(named: contact["photo"]!)
     }
     
-    func setValues(contact: User, indexPath: NSIndexPath){
+    func setValues(contact: User, indexPath: NSIndexPath, type: IndividualCellType = .Friend){
         self.indexPath = indexPath
+        self.type = type
+        if contact.userId! == Engine.clientData.cacheSelfId(){
+            buttonAction.hidden = true
+        }else{
+            buttonAction.hidden = false
+        }
+        buttonAction.setImage(self.type == .Friend ? UIImage(named: "message-bubble") : UIImage(named: "add-friend"), forState: .Normal)
         if let lastname = contact.lastName{
             labelName.text = "\(contact.firstName!) \(lastname)".capitalizedString
         }else{

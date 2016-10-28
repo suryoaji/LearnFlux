@@ -54,6 +54,7 @@ class Data : NSObject {
         static let Threads = "threads"
         static let LastSync = "lastSync"
         static let Me = "me"
+        static let Notification = "notifs"
     }
     
     private let isProduction = false
@@ -418,6 +419,23 @@ class Data : NSObject {
         }
         print("Data : *Cache Me is nil")
         return nil
+    }
+    
+    func cacheNotifications() -> Array<Dictionary<String, AnyObject>>{
+        if let cacheNotifications = self.defaults.valueForKey(cacheName.Notification){
+            return cacheNotifications as! Array<Dictionary<String, AnyObject>>
+        }
+        return []
+    }
+    
+    func saveNotifications(notifs: Array<Dictionary<String, AnyObject>>){
+        defaults.setValue(notifs, forKey: cacheName.Notification)
+    }
+    
+    func updateNotifications(appendNotifs: Array<Dictionary<String, AnyObject>>){
+        var cache = cacheNotifications()
+        cache += appendNotifs
+        saveNotifications(cache)
     }
     
     func updateMe(me: Dictionary<String, AnyObject>){

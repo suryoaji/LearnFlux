@@ -26,6 +26,7 @@ struct Url{
     static let connections = me + "/friend"
     static let uploadImageMe = me + "/image"
     static let availableInterests = base + "/v1/interests"
+    static let notifications = base + "/v1/notifications"
     
     static func search(value: String) -> String{
         return base + "/v1/search/\(value)"
