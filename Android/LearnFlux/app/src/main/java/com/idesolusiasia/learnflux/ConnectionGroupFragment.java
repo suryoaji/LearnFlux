@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class ConnectionGroupFragment  extends Fragment {
     ConnectionFragmentAdapter rcAdapter;
     RecyclerView recyclerView;
+    TextView empty;
     ArrayList<Group> arrOrg = new ArrayList<Group>();
     public static ConnectionGroupFragment newInstance() {
         ConnectionGroupFragment fragment = new ConnectionGroupFragment();
@@ -46,6 +48,7 @@ public class ConnectionGroupFragment  extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_connectiongroup, container, false);
+        empty = (TextView)v.findViewById(R.id.empty_view);
         recyclerView = (RecyclerView)v.findViewById(R.id.recyclerFragmentConnectionOrg);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -67,11 +70,11 @@ public class ConnectionGroupFragment  extends Fragment {
                     }
                     if(arrOrg.isEmpty()){
                         recyclerView.setVisibility(View.GONE);
-                        //emptyView.setVisibility(View.VISIBLE);
+                        empty.setVisibility(View.VISIBLE);
                     }else {
                         rcAdapter = new ConnectionFragmentAdapter(getContext(), arrOrg);
                         recyclerView.setAdapter(rcAdapter);
-                        //emptyView.setVisibility(View.GONE);
+                        empty.setVisibility(View.GONE);
                     }
                 }catch (JSONException e){
                     e.printStackTrace();

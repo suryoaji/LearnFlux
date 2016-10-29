@@ -38,7 +38,7 @@
                 android:hint="@string/prompt_username"
                 android:inputType="text"
                 android:maxLines="1"
-                android:singleLine="true" android:text="Fransesco"/>
+                android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 

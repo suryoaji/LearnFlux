@@ -61,11 +61,13 @@ public class Participant {
 		this.type = type;
 	}
 
-	public String getLink() {
-		return link;
+	@Override
+	public String toString() {
+		return super.toString();
 	}
 
 	public void setLink(String link) {
 		this.link = link;
 	}
+
 }

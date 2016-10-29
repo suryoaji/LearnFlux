@@ -20,10 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/imageChildrenDetail"
             android:layout_margin="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/kid1"
             android:layout_width="50dp"
             android:layout_height="50dp" />
 
@@ -33,9 +32,9 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Nicholas Cheong" android:layout_marginTop="15dp"
+                android:text="" android:layout_marginTop="15dp"
                 android:textSize="14sp" android:textStyle="bold"
-                android:layout_width="wrap_content"
+                android:layout_width="wrap_content" android:id="@+id/nameOfChild"
                 android:layout_height="wrap_content" />
             <TextView
                 android:text="Student" android:layout_marginTop="2dp"

@@ -16,6 +16,8 @@ import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -198,6 +200,18 @@ public class Functions {
 			}
 		}
 		return false;
+	}
+
+	public static List<Object> sortingContact(List<Object> array){
+		Collections.sort(array,
+				new Comparator<Object>()
+				{
+					public int compare(Object f1, Object f2)
+					{
+						return f1.toString().compareTo(f2.toString());
+					}
+				});
+		return array;
 	}
 
 }

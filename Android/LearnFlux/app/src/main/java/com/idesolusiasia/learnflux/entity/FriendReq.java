@@ -1,21 +1,22 @@
 package com.idesolusiasia.learnflux.entity;
 
-import java.util.List;
-
 /**
- * Created by Ide Solusi Asia on 10/18/2016.
+ * Created by Ide Solusi Asia on 10/27/2016.
  */
 
-public class Contact {
+public class FriendReq {
 
     /**
-     * id : 79
-     * email : totti@ymail.com
+     * id : 40
+     * username : marvel14
+     * email : marvel14@agent.com
      * type : user
-     * link : /user/79
-     * first_name : Totti
-     * last_name : Fransesco
-     * profile_picture : profile/79
+     * link : /user/40
+     * first_name : Spider
+     * last_name : Man
+     * profile_picture : profile/40
+     * location : Timor Timor
+     * work : Lautan Terdalam
      */
 
     private int id;
@@ -26,11 +27,6 @@ public class Contact {
     private String first_name;
     private String last_name;
     private String profile_picture;
-//    private List<Contact>friends;
-//    private List<Contact>friend_requested;
-    private List<Contact>friend_request;
-    private List<Contact> children;
-    //private List<Contact> parents;
     private String location;
     private String work;
 
@@ -98,44 +94,6 @@ public class Contact {
         this.profile_picture = profile_picture;
     }
 
-  /*  public List<Contact> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<Contact> friends) {
-        this.friends = friends;
-    }
-
-    public List<Contact> getFriend_requested() {
-        return friend_requested;
-    }
-
-    public void setFriend_requested(List<Contact> friend_requested) {
-        this.friend_requested = friend_requested;
-    }
-*/
-    public List<Contact> getFriend_request() {
-        return friend_request;
-    }
-
-    public void setFriend_request(List<Contact> friend_request) {
-        this.friend_request = friend_request;
-    }
-    public List<Contact> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Contact> children) {
-        this.children = children;
-    }
-
-/*    public List<Contact> getParents() {
-        return parents;
-    }
-
-    public void setParents(List<Contact> parents) {
-        this.parents = parents;
-    }*/
     public String getLocation() {
         return location;
     }
@@ -150,10 +108,5 @@ public class Contact {
 
     public void setWork(String work) {
         this.work = work;
-    }
-
-    @Override
-    public String toString() {
-        return first_name;
     }
 }

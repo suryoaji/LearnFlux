@@ -119,4 +119,8 @@ public class Group {
         this.access = access;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

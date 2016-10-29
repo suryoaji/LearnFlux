@@ -1,39 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent" android:padding="2dp"
-    android:layout_height="wrap_content" android:background="@drawable/border_black">
-
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:background="#E0E0E0"
+        android:text="People you may know"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:weightSum="1">
         <com.android.volley.toolbox.NetworkImageView
             android:layout_weight="0.1"
             android:src="@mipmap/photos_icon"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:id="@+id/dialogImagee" />
+            android:id="@+id/circularView" />
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_weight="0.2"
+            android:layout_weight="0.5"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/titleDialog"
-                android:text="Justin Young"
+                android:id="@+id/tv_alphabet"
+                android:text="Lee Chong Kin"
                 android:textStyle="bold"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="7dp"
                 android:textColor="#000"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
             <TextView
                 android:layout_marginLeft="10dp"
-                android:text="6 mutual friend"
+                android:text="3 mutual friend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -42,19 +51,18 @@
             android:layout_width="0dp"
             android:layout_weight="0.1"
             android:layout_height="25dp"
-            android:id="@+id/acceptRequest"
+            android:id="@+id/imageContact4"
             android:layout_marginTop="9dp"/>
 
         <Button
-            android:textAllCaps="false"
             android:background="@drawable/button_bordergreen"
+            android:textAllCaps="false"
             android:layout_width="0dp"
             android:layout_height="25dp"
             android:layout_marginTop="9dp"
             android:text="cancel"
             android:layout_marginRight="10dp"
-            android:layout_weight="0.1"
+            android:layout_weight="0.3"
             android:textColor="#FFFFFF" />
-    </LinearLayout>
-
+        </LinearLayout>
 </LinearLayout>

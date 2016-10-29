@@ -40,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 	void inputChecking(){
 		boolean pass = true;
-		if (tvUsername.getText().toString().isEmpty()){
+		if (tvUsername.getText().toString().isEmpty() || tvUsername.getText().length()<5){
 			pass=false;
 			tvUsername.requestFocus();
 			tvUsername.setError(getString(R.string.error_field_required));

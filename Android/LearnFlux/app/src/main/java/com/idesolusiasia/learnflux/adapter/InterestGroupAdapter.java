@@ -10,12 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.ChattingActivity;
 import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ import java.util.List;
 public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdapter.OrgTileHolder> {
     List<Group> organizations;
     private Context context;
-
+    ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
 
     public InterestGroupAdapter(Context context, ArrayList<Group> orgs) {
         this.organizations = orgs;
@@ -42,8 +44,10 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
     @Override
     public void onBindViewHolder(OrgTileHolder holder, final int position) {
         final Group org= organizations.get(position);
+        final String url = "http://lfapp.learnflux.net/v1/image?key="+org.getImage();
         holder.tvName.setText(org.getName());
         holder.ivLogo.setDefaultImageResId(R.drawable.organization);
+        holder.ivLogo.setImageUrl(url, imageLoader);
         holder.tvImageMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,7 +106,6 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
                 @Override
                 public void onClick(View view) {
                     final int pos = getAdapterPosition();
-                    Toast.makeText(view.getContext(), tvName.getText() + " clicked", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(view.getContext(), GroupDetailActivity.class);
                     i.putExtra("id", organizations.get(pos).getId());
                     i.putExtra("title",organizations.get(pos).getName());

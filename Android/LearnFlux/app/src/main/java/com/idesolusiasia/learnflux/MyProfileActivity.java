@@ -1,13 +1,16 @@
 package com.idesolusiasia.learnflux;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -20,6 +23,10 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,54 +43,78 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.cache.LruCache;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
+import com.idesolusiasia.learnflux.adapter.FriendRequest;
+import com.idesolusiasia.learnflux.adapter.IndividualFragmentAdapter;
 import com.idesolusiasia.learnflux.adapter.MyProfileAdapter;
 import com.idesolusiasia.learnflux.adapter.NotificationAdapter;
+import com.idesolusiasia.learnflux.adapter.SearchAdapter;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
+import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Notification;
+import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.User;
+import com.idesolusiasia.learnflux.entity.friends;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MyProfileActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
+	EditText searchBar;
 	ConnectionFragmentAdapter rAdapter;
 	ImageLoader imageLoader = VolleySingleton.getInstance(MyProfileActivity.this).getImageLoader();
 	FragmentAdapter mAdap;
+	SearchAdapter id;
 	RecyclerView ConnectionMyProfile;
 	TextView interest1,interest2, txtParent, txtParentDesc;
 	LinearLayout tabIndividual, tabGroups, tabOrganization, tabContact;
 	View indicatorIndividual, indicatorGroups, indicatorOrganization, indicatorContact;
-	MyProfileAdapter rcAdapter; NetworkImageView parent; CircularNetworkImageView child;
+	MyProfileAdapter rcAdapter;
+	NetworkImageView parent;
+	CircularNetworkImageView child;
 	private ImageView changeImage;
 	TextView affilatedOrganizationButtonMore , from, work;
 	LinearLayout showAllOrganization;
 	RecyclerView affilatedOrganizationRecycler;
-	boolean visible;
+	ArrayList<friends>f;
+	String visible;
 	boolean visible2;
+	ArrayList<Participant> participant;
+	List<Object> searchObject;
 	ArrayList<Group> arrOrg = new ArrayList<Group>();
 	ArrayList<Group> Org = new ArrayList<Group>();
 	ArrayList<Notification> notif= new ArrayList<>();
 	static final int ITEMS = 4;
 	Point p;
+	public RecyclerView searchRecycler;
 	File file;
 	public int PICK_IMAGE =100;
 	NotificationAdapter notifAdapter;
-	RecyclerView notifRecycler;
+	FriendRequest frAdapt;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +124,25 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 		AndroidNetworking.initialize(getApplicationContext()); // initialize library
 
-		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
+		final FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View childLayout = layoutInflater.inflate(
 				R.layout.activity_my_profile, null);
 		parentLayout.addView(childLayout);
-		visible=true;
+		visible="none";
 		visible2=true;
+
+		OkHttpClient client = new OkHttpClient.Builder()
+				.addInterceptor(new Interceptor() {
+					@Override
+					public Response intercept(Chain chain) throws IOException {
+						Request newRequest = chain.request().newBuilder()
+								.addHeader("Authentication", "Bearer "+ User.getUser().getAccess_token())
+								.build();
+						return chain.proceed(newRequest);
+					}
+				})
+				.build();
 		//My profile and connection action bar
 		final ScrollView scroll1 = (ScrollView) findViewById(R.id.linear1);
 		final LinearLayout linear2 = (LinearLayout) findViewById(R.id.linear2);
@@ -112,7 +155,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		final View line2 = (View) findViewById(R.id.line2);
 		ImageButton connectionNotif = (ImageButton)findViewById(R.id.friendsNotif);
 		ImageButton userNotif = (ImageButton)findViewById(R.id.menotif);
-		ImageButton search = (ImageButton)findViewById(R.id.searchBar);
+		final ImageButton search = (ImageButton)findViewById(R.id.searchBar);
 		final ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
 		scroll3.setVisibility(View.GONE);
 		myProfileTab.setOnClickListener(new View.OnClickListener() {
@@ -146,52 +189,84 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 
 		//Friend Request Notification and All Notification
+
 		final View includedLayout = findViewById(R.id.mixLayout);
 		final View includedLayout2 = findViewById(R.id.mixLayout2);
 		final TextView txtNotification1 = (TextView)findViewById(R.id.textNotif1);
 		final TextView txtNotification2 = (TextView)findViewById(R.id.textNotif2);
+
 		connectionNotif.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(visible || !visible2) {
+
+				if(visible.equalsIgnoreCase("none")||visible.equalsIgnoreCase("friend")) {
 					includedLayout.setVisibility(View.VISIBLE);
+					includedLayout2.setVisibility(View.GONE);
 					includedLayout.bringToFront();
-					RecyclerView rcViewFriend = (RecyclerView)findViewById(R.id.recyclerFriendNotif);
-					LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+					final RecyclerView rcViewFriend = (RecyclerView)findViewById(R.id.recyclerFriendNotif);
+					LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 					rcViewFriend.setLayoutManager(linearLayoutManager);
-					/*Engine.getMeWithRequest(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+
+					final List<Object> requestObjList= new ArrayList<Object>();
+					final List<Contact> contactReq = new ArrayList<Contact>();
+					final List<friends> mutualFriendReq = new ArrayList<friends>();
+
+
+					Engine.getMeWithRequest(getApplicationContext(), new RequestTemplate.ServiceCallback() {
 						@Override
 						public void execute(JSONObject obj) {
 							try {
 								JSONObject data = obj.getJSONObject("data");
+								Contact c = Converter.convertContact(data);
 								JSONArray array = data.getJSONArray("friend_request");
-								for(int i=0;i<array.length();i++){
-									contact = Converter.convertContact(array.getJSONObject(i));
+								for(int l=0;l<array.length();l++){
+									JSONObject ap = array.getJSONObject(l);
+									Contact ctReq = Converter.convertContact(ap);
+									contactReq.add(ctReq);
+
+									JSONArray friendArray = ap.getJSONArray("friends");
+									for(int first=0;first<friendArray.length();first++){
+										JSONObject friends1 = friendArray.getJSONObject(first);
+										friends f = Converter.convertFriends(friends1);
+										mutualFriendReq.add(f);
+									}
+
 								}
+
+								requestObjList.addAll(contactReq);
+								requestObjList.addAll(mutualFriendReq);
+
+								frAdapt = new FriendRequest(requestObjList);
+								rcViewFriend.setAdapter(frAdapt);
+								rcViewFriend.refreshDrawableState();
+
 							}catch (JSONException e){
 								e.printStackTrace();
 							}
+
 						}
-					});*/
+					});
 					txtNotification1.setVisibility(View.GONE);
-					visible=false;
-					visible2=true;
-				}else if(!visible){
+					visible="notif";
+				}else{
 					includedLayout.setVisibility(View.GONE);
-					visible=true;
+					includedLayout2.setVisibility(View.GONE);
+					visible="none";
 				}
 			}
 		});
 		userNotif.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(visible2 || !visible){
+				if(visible.equalsIgnoreCase("none")|| visible.equalsIgnoreCase("notif")){
+					notif = new ArrayList<>();
 					includedLayout2.setVisibility(View.VISIBLE);
 					includedLayout2.bringToFront();
 					includedLayout.setVisibility(View.GONE);
 					txtNotification2.setVisibility(View.GONE);
-					notifRecycler = (RecyclerView)findViewById(R.id.recycleNotification);
-					notif = new ArrayList<Notification>();
+					final RecyclerView recyclerNotif = (RecyclerView) findViewById(R.id.recycleNotification);
+					LinearLayoutManager SecondLinear = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
+					recyclerNotif.setLayoutManager(SecondLinear);
 					Engine.getNotification(getApplicationContext(), new RequestTemplate.ServiceCallback() {
 						@Override
 						public void execute(JSONObject obj) {
@@ -202,17 +277,18 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 									notif.add(notifications);
 								}
 								notifAdapter = new NotificationAdapter(getApplicationContext(),notif);
-								notifRecycler.setAdapter(notifAdapter);
+								recyclerNotif.setAdapter(notifAdapter);
 							}catch (JSONException e){
 								e.printStackTrace();
 							}
 						}
 					});
 					visible2=false;
-					visible=true;
-				}else if(!visible2){
+					visible="friend";
+				}else{
+					includedLayout.setVisibility(View.GONE);
 					includedLayout2.setVisibility(View.GONE);
-					visible2=true;
+					visible="none";
 				}
 			}
 		});
@@ -220,13 +296,24 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		//Layout3 search action bar
 		final LinearLayout linearTabBar = (LinearLayout)findViewById(R.id.LinearTabBar);
 		final View includedLayout3 = (LinearLayout) findViewById(R.id.mixLayout3);
+		final ImageView enterSearh = (ImageView)findViewById(R.id.enterYourPreference);
+		searchBar = (EditText)findViewById(R.id.searchID);
 		final ImageView back = (ImageView)findViewById(R.id.imageBack);
+		searchRecycler = (RecyclerView)findViewById(R.id.recyclerViewSearch);
+		LinearLayoutManager linearManagerSearch = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,false);
+		searchRecycler.setLayoutManager(linearManagerSearch);
 
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				linearTabBar.setVisibility(View.GONE);
 				includedLayout3.setVisibility(View.VISIBLE);
+				enterSearh.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+					 searchValue();
+					}
+				});
 			}
 		});
 		back.setOnClickListener(new View.OnClickListener() {
@@ -291,10 +378,11 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		from = (TextView)findViewById(R.id.fromText);
 		parent = (NetworkImageView)findViewById(R.id.imageeees);
 		child  = (CircularNetworkImageView)findViewById(R.id.imagesChild);
-		String prof = User.getUser().getProfile_picture();
 		String url = getString(R.string.BASE_URL)+getString(R.string.URL_VERSION)+"image?key=";
+		String prof = User.getUser().getProfile_picture();
+		String ch = User.getUser().getChildren();
 		parent.setImageUrl(url+prof,imageLoader);
-		child.setImageUrl(url+prof, imageLoader);
+		child.setImageUrl(url+ch, imageLoader);
 		txtParentDesc = (TextView)findViewById(R.id.txtParentDesc);
 		txtParent = (TextView)findViewById(R.id.txtParentTitle);
 		final TextView tvSeeMore = (TextView)findViewById(R.id.tvSeeMore);
@@ -397,6 +485,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		LinearLayoutManager ConnectionLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 		ConnectionMyProfile.setLayoutManager(ConnectionLayout);
 		initConnection();
+
 	}
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
@@ -414,14 +503,15 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		p.y = location[1];
 	}
 	private void showPopup(final Activity context, Point p) {
+		ImageLoader imag = VolleySingleton.getInstance(context).getImageLoader();
 		int popupWidth = 600;
-		int popupHeight = 700;
+		int popupHeight = 800;
 
 		// Inflate the popup_layout.xml
 		LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.popup);
 		LayoutInflater layoutInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View layout = layoutInflater.inflate(R.layout.dialog_mychildren, viewGroup);
+		final View layout = layoutInflater.inflate(R.layout.dialog_mychildren, viewGroup);
 
 		// Creating the PopupWindow
 		final PopupWindow popup = new PopupWindow(context);
@@ -437,6 +527,30 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 		// Displaying the popup at the specified location, + offsets.
 		popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
+		Engine.getMeWithRequest(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				String get;
+				try {
+					JSONObject data = obj.getJSONObject("data");
+					contact = Converter.convertContact(data);
+					JSONArray child = data.getJSONArray("children");
+					for(int i=0;i<child.length();i++) {
+						get = contact.getChildren().get(i).getProfile_picture();
+						NetworkImageView childrenImage= (NetworkImageView)layout.findViewById(R.id.imageChildrenDetail);
+						TextView childName = (TextView)layout.findViewById(R.id.nameOfChild);
+						childName.setText(contact.getChildren().get(i).getFirst_name());
+						String urls = getString(R.string.BASE_URL)+getString(R.string.URL_VERSION)+"image?key=";
+						String childs = get;
+						childrenImage.setImageUrl(urls+childs, imageLoader);
+					}
+
+				}catch (JSONException e){
+					e.printStackTrace();
+				}
+
+			}
+		});
 
 	}
 	void initConnection(){
@@ -592,14 +706,15 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			public void execute(JSONObject obj) {
 				try{
 					JSONObject data = obj.getJSONObject("data");
+					String username = data.getString("username");
 					String firstname = data.getString("first_name");
 					String lastname = data.getString("last_name");
+					txtParent.setText(username);
 					String works = data.getString("work");
 					String location = data.getString("location");
-					txtParent.setText(firstname+ " " + lastname);
 					work.setText("From: " + location);
 					from.setText("Work: " + works);
-					User.getUser().setUsername(firstname+lastname);
+					User.getUser().setUsername(username);
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
@@ -719,7 +834,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		return "com.google.android.apps.photos.content".equals(uri.getAuthority());
 	}
 	void saveButton(){
-		String a = "http://lfapp.learnflux.net/v1/me/image?key=profile/47";
+		String a = "http://lfapp.learnflux.net/v1/me/image?key="+User.getUser().getProfile_picture();
 		AndroidNetworking.put(a)
 				.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
 				.addFileBody(file)
@@ -746,5 +861,51 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					}
 				});
 	}
+	public void searchValue(){
+		participant= new ArrayList<>();
+		searchObject = new ArrayList<>();
+		Engine.getSearchValue(getApplicationContext(), searchBar.getText().toString().trim(),
+				new RequestTemplate.ServiceCallback() {
+					@Override
+					public void execute(JSONObject obj) {
+						try{
+							JSONObject data = obj.getJSONObject("data");
+							JSONArray user = data.getJSONArray("users");
+							if(user!=null){
+								for(int i=0;i<user.length();i++){
+									Participant p = Converter.convertPeople(user.getJSONObject(i));
+									searchObject.add(p);
+								}
+							}
+							JSONArray group = data.getJSONArray("groups");
+							if(group!=null){
+								for(int i=0;i<group.length();i++){
+									Group g = Converter.convertGroup(group.getJSONObject(i));
+									searchObject.add(g);
+								}
+							}
 
+							searchObject = Functions.sortingContact(searchObject);
+							id=new SearchAdapter(searchObject);
+							searchRecycler.setAdapter(id);
+							searchRecycler.refreshDrawableState();
+
+
+
+						}catch (JSONException e){
+							e.printStackTrace();
+						}
+					}
+				});
+	}
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+
+		//first clear the recycler view so items are not populated twice
+		if(id != null) {
+			id.clearData();
+		}
+
+	}
 }

@@ -30,7 +30,7 @@
             <item
                 android:id="@+id/nav_internet_groups"
                 android:icon="@drawable/icon_interestgroup"
-                android:title="Internet Groups"/>
+                android:title="Interest Groups"/>
         </menu>
     </item>
     <group

@@ -3,16 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent" android:padding="2dp"
     android:layout_height="match_parent" android:background="@drawable/border_black">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_marginLeft="238dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_arrowup"
-            android:layout_width="wrap_content"
-            android:layout_height="12dp"
-            android:id="@+id/imageView21" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -48,7 +38,6 @@
                 android:id="@+id/notifFrom" />
         </LinearLayout>
     </LinearLayout>
-    </FrameLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

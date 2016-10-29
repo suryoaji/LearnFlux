@@ -238,10 +238,16 @@
                             android:layout_height="wrap_content" android:layout_marginBottom="5dp" />
                         <ImageView
                             android:layout_marginLeft="70dp"
-                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="10dp"
                             android:src="@drawable/right_arrow"
                             android:layout_width="30dp"
                             android:layout_height="14dp"/>
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_width="100dp"
+                            android:layout_marginLeft="150dp"
+                            android:layout_height="200dp">
+
+                        </android.support.v7.widget.RecyclerView>
                     </FrameLayout>
                 </LinearLayout>
             </LinearLayout>

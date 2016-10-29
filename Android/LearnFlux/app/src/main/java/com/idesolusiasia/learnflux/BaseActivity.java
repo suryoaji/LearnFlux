@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.gson.Gson;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.User;
@@ -27,8 +29,13 @@ import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class BaseActivity extends AppCompatActivity
@@ -37,6 +44,7 @@ public class BaseActivity extends AppCompatActivity
 	Toolbar toolbar;
 	NavigationView navigationView;
 	SharedPreferences sharedPref;
+	public Contact contact = null;
 
 	protected void onCreateDrawer(Bundle savedInstanceState) {
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -60,9 +68,13 @@ public class BaseActivity extends AppCompatActivity
 					public void execute(JSONObject obj) {
 						try{
 							JSONObject data = obj.getJSONObject("data");
-							Contact contact = Converter.convertContact(data);
+							contact = Converter.convertContact(data);
+							JSONArray child = data.getJSONArray("children");
+							for(int i=0;i<child.length();i++) {
+								User.getUser().setChildren(contact.getChildren().get(i).getProfile_picture());
+							}
 							String url = "http://lfapp.learnflux.net/v1/image?key=profile/"+contact.getId();
-							tvName.setText(contact.getFirst_name()+" " + contact.getLast_name());
+							tvName.setText(contact.getUsername());
 							tvEmail.setText(contact.getEmail());
 							ivDrawerPic.setImageUrl(url, imageLoader);
 						}catch (JSONException e){
@@ -120,7 +132,11 @@ public class BaseActivity extends AppCompatActivity
 			i.putExtra("chatroom", "chat");
 			//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
-		}else if (id == R.id.nav_logout){
+		}else if(id == R.id.nav_internet_groups){
+			Intent i= new Intent(BaseActivity.this, InterestGroup.class);
+			startActivity(i);
+		}
+		else if (id == R.id.nav_logout){
 			Functions.logout(getApplicationContext());
 
 		}

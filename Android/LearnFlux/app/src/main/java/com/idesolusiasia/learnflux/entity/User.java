@@ -16,6 +16,7 @@ public class User {
 	private String username;
 	private String profile_picture;
 	private List<User>friend_request;
+	private String children;
 	private String interests;
 
 	private User(){
@@ -26,6 +27,7 @@ public class User {
 		password="";
 		username="";
 		profile_picture="";
+		children="";
 		interests="";
 		ID=0;
 	}
@@ -114,6 +116,14 @@ public class User {
 
 	public void setInterests(String interests) {
 		this.interests = interests;
+	}
+
+	public String getChildren() {
+		return children;
+	}
+
+	public void setChildren(String children) {
+		this.children = children;
 	}
 
 }

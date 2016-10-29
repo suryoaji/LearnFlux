@@ -109,6 +109,7 @@ public class Engine {
 					Log.i("response_ME", obj.toString());
 					try {
 						JSONObject data = obj.getJSONObject("data");
+						User.getUser().setUsername(data.getString("username"));
 						User.getUser().setID(data.getInt("id"));
 						User.getUser().setEmail(data.getString("email"));
 						User.getUser().setProfile_picture(data.getString("profile_picture"));
@@ -826,6 +827,74 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					getNotification(context, callback);
+				}
+			});
+		}else{
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if(obj!=null){
+						Log.i("get", "execute: "+obj);
+					}if(callback!=null){
+						callback.execute(obj);
+					}
+				}
+			},null);
+		}
+	}
+	public static void getUserFriend(final Context context, final int id,  final RequestTemplate.ServiceCallback callback){
+		String url= context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+"user/"+String.valueOf(id)+"/friend";
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					reLogin(context, callback);
+				}
+			});
+		}else{
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if(obj!=null){
+						Log.i("get", "execute: "+obj);
+					}if(callback!=null){
+						callback.execute(obj);
+					}
+				}
+			},null);
+		}
+	}
+	public static void getSearchValue(final Context context, final String firstname, final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+"search/"+firstname;
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					reLogin(context,callback);
+				}
+			});
+		}else{
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if(obj!=null){
+						Log.i("get", "execute: "+obj);
+					}if(callback!=null){
+						callback.execute(obj);
+					}
+				}
+			},null);
+		}
+	}
+	public static void joinGroup(final Context context, final String groupID,
+								 final String type, final RequestTemplate.ServiceCallback callback){
+		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_GROUP)+"/"+groupID+"/"+"connect"+"/"+type;
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					reLogin(context,callback);
 				}
 			});
 		}else{

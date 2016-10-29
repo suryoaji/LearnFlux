@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.IndividualFragmentAdapter;
 import com.idesolusiasia.learnflux.entity.Participant;
@@ -17,6 +18,7 @@ import com.idesolusiasia.learnflux.util.RequestTemplate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 public class IndividualFragment extends Fragment {
     IndividualFragmentAdapter Individualadap; ArrayList<Participant> p= new ArrayList<Participant>();
     RecyclerView individualRecycler;
+    TextView noData;
     public static IndividualFragment newInstance() {
         IndividualFragment fragment = new IndividualFragment();
         return fragment;
@@ -47,6 +50,7 @@ public class IndividualFragment extends Fragment {
         View v= inflater.inflate(R.layout.fragment_individual, container, false);
         //set recyclerView for Individual connection
         individualRecycler = (RecyclerView)v.findViewById(R.id.recyclerIndividual);
+        noData = (TextView)v.findViewById(R.id.empty_view);
         LinearLayoutManager linearVerticalIndividual = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
         individualRecycler.setLayoutManager(linearVerticalIndividual);
         initIndividual();
@@ -62,6 +66,13 @@ public class IndividualFragment extends Fragment {
                     for (int i=0;i<datas.length();i++){
                         Participant participant = Converter.convertPeople(datas.getJSONObject(i));
                         p.add(participant);
+                    }
+                    if(p.isEmpty()){
+                        individualRecycler.setVisibility(View.GONE);
+                        noData.setVisibility(View.VISIBLE);
+                    }else {
+                        individualRecycler.setVisibility(View.VISIBLE);
+                        noData.setVisibility(View.GONE);
                         Individualadap = new IndividualFragmentAdapter(getContext(), p);
                         individualRecycler.setAdapter(Individualadap);
                     }

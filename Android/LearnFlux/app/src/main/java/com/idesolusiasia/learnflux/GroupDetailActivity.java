@@ -69,8 +69,6 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		parentLayout.addView(childLayout);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.hide();
 		id = getIntent().getStringExtra("id");
 		type = getIntent().getStringExtra("type");
 		Log.i("IDS", "onCreate: " +id);

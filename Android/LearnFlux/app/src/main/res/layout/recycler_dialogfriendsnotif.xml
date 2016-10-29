@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" android:background="@drawable/border_black">
+    <FrameLayout
+        android:background="#E0E0E0"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:layout_marginLeft="175dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_arrowup"
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:id="@+id/imageView21" />
+
+        <TextView
+            android:text="Connection"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/textView35" />
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerFriendNotif"

@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity{
 	    String password = sharedPref.getString("password","");
 	    if ((!username.equals(""))||(!TextUtils.isEmpty(username))){
 		    User.getUser().setPassword(password);
+            User.getUser().setUsername(username);
 		    Engine.login(this, username, password, new RequestTemplate.ServiceCallback() {
 			    @Override
 			    public void execute(JSONObject obj) {

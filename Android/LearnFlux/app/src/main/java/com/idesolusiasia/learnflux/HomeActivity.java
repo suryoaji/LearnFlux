@@ -20,17 +20,10 @@ public class HomeActivity extends BaseActivity {
 		super.onCreateDrawer(savedInstanceState);
 
 		ImageView ivInterest  = (ImageView)findViewById(R.id.ivInterest);
-		/*ivInterest.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent a = new Intent(HomeActivity.this, InterestGroup.class);
-				startActivity(a);
-			}
-		});*/
 		ivInterest.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent a = new Intent(HomeActivity.this, NewInterestGroup.class);
+				Intent a = new Intent(HomeActivity.this, InterestGroup.class);
 				startActivity(a);
 			}
 		});

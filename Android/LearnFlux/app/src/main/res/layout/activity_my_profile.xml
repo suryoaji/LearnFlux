@@ -22,7 +22,7 @@
         android:layout_height="247dp"
         android:layout_marginTop="51dp"
         android:layout_marginRight="10dp"
-        layout="@layout/dialog_notifme"
+        layout="@layout/recycler_notification"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -37,7 +37,7 @@
             android:visibility="gone"
             android:id="@+id/mixLayout3"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             layout="@layout/search_bar" />
         <LinearLayout
             android:id="@+id/LinearTabBar"
@@ -101,11 +101,10 @@
                 </View>
             </LinearLayout>
 
-                <FrameLayout
+                <FrameLayout android:layout_marginLeft="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent">
                 <ImageButton
-                    android:layout_marginLeft="60dp"
                     android:src="@drawable/ic_peoples"
                     android:background="@android:color/transparent"
                     android:layout_width="30dp"
@@ -115,7 +114,7 @@
                         android:text="4" android:maxLines="2"
                         android:background="@drawable/round_background_green"
                         android:textColor="#FFF" android:gravity="center"
-                        android:layout_marginLeft="82dp"
+                        android:layout_marginLeft="12dp"
                         android:layout_marginTop="23dp"
                         android:layout_width="15dp" android:id="@+id/textNotif1"
                         android:layout_height="wrap_content" />

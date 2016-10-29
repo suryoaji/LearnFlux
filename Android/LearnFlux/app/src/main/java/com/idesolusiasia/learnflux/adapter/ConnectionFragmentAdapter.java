@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.ChattingActivity;
+import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.OrgProfileActivity;
 import com.idesolusiasia.learnflux.R;
@@ -71,6 +72,8 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
                     final int pos = getAdapterPosition();
                     Intent i = new Intent(view.getContext() , OrgProfileActivity.class);
                     i.putExtra("id", organizations.get(pos).getId());
+                    i.putExtra("title",organizations.get(pos).getName());
+                    i.putExtra("type", organizations.get(pos).getType());
                     view.getContext().startActivity(i);
                 }
             });

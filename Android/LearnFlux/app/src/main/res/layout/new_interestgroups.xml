@@ -3,36 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:background="#106571"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-            <TextView
-                android:id="@+id/myProfileTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#8bc34a"
-                android:padding="5dp"
-                android:textSize="16sp"
-                android:text="My Profile"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp" />
 
-        <ImageButton
-            android:layout_marginLeft="200dp"
-            android:src="@drawable/ic_search"
-            android:background="@android:color/transparent"
-            android:layout_width="32dp"
-            android:layout_height="50dp" />
-        <ImageButton
-            android:src="@drawable/ic_add"
-            android:background="@android:color/transparent"
-            android:layout_width="30dp"
-            android:layout_height="50dp"
-            android:id="@+id/imageButton2" />
-    </LinearLayout>
+
     <LinearLayout
         android:padding="5dp"
         android:orientation="horizontal"
@@ -54,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/networkImage"
                 android:src="@drawable/company1"
                 android:layout_marginTop="10dp"
@@ -82,6 +54,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" android:layout_marginTop="5dp"
                 android:layout_below="@+id/tvName">
+
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content" android:layout_weight="1">
@@ -110,6 +83,7 @@
                         android:layout_below="@+id/imageView4"
                         android:layout_centerHorizontal="true" android:gravity="center_vertical|center_horizontal"/>
                 </RelativeLayout>
+
                 <RelativeLayout android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1">
                     <ImageView android:layout_width="30dp" android:layout_height="30dp"
@@ -161,252 +135,7 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <RelativeLayout
-            android:background="@drawable/relative_border"
-            android:layout_margin="5dp"
-            android:padding="2dp"
-            android:layout_weight="0.5"
-            android:layout_width="0dp"
-            android:layout_height="200dp">
-
-            <ImageView
-                android:src="@drawable/ic_star"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <ImageView
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:id="@+id/networkImage2"
-                android:src="@drawable/company1"
-                android:layout_width="120dp"
-                android:scaleType="centerCrop"
-                android:layout_height="80dp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:fontFamily="sans-serif-light" android:text="Environmental Science"
-                android:id="@+id/tvName2" android:layout_gravity="center_horizontal"
-                android:textColor="#000000" android:gravity="center_vertical|center_horizontal"
-                android:layout_below="@+id/networkImage2"
-                android:layout_marginTop="5dp" android:ellipsize="end" android:maxLines="2"
-                android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-                android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-                android:background="#e0e0e0" android:minLines="2" android:layout_marginBottom="5dp" />
-            <LinearLayout
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" android:layout_marginTop="5dp"
-                android:layout_below="@+id/tvName2">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content" android:layout_weight="1">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:id="@+id/imageView2" android:src="@drawable/icon_message"
-                        android:layout_centerHorizontal="true" android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"/>
-                    <TextView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:text="5"
-                        android:id="@+id/tvCountMessage2"
-                        android:background="@drawable/round_background_green" android:gravity="center_vertical|center_horizontal"
-                        android:textSize="10sp" android:layout_above="@+id/textView2"
-                        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-                        android:visibility="gone" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Message" android:id="@+id/textView2"
-                        android:layout_gravity="center_horizontal" android:textSize="10sp"
-                        android:layout_below="@+id/imageView2"
-                        android:layout_centerHorizontal="true" android:gravity="center_vertical|center_horizontal"/>
-                </RelativeLayout>
-
-                <RelativeLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                    <ImageView android:layout_width="30dp" android:layout_height="30dp"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:id="@+id/imageView3" android:src="@drawable/icon_events"
-                        android:layout_centerHorizontal="true" android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"/>
-                    <TextView android:layout_width="20dp" android:layout_height="20dp"
-                        android:text="5"
-                        android:id="@+id/tvCountEvent3"
-                        android:background="@drawable/round_background_green"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:textSize="10sp"
-                        android:layout_above="@+id/textView3" android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:visibility="gone" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Events" android:id="@+id/textView3"
-                        android:textSize="10sp"
-                        android:layout_weight="1" android:layout_gravity="center_horizontal"
-                        android:layout_below="@+id/imageView3"
-                        android:layout_centerHorizontal="true" android:gravity="center_vertical|center_horizontal"/>
-                </RelativeLayout>
-                <RelativeLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                    d<ImageView android:layout_width="30dp" android:layout_height="30dp"
-                    android:id="@+id/imageView99" android:src="@drawable/icon_activities"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:layout_centerHorizontal="true" android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"/>
-                    <TextView android:layout_width="20dp" android:layout_height="20dp"
-                        android:text="5"
-                        android:id="@+id/tvCountActivities4" android:background="@drawable/round_background_green"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:textSize="10sp"
-                        android:layout_above="@+id/textView4" android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:visibility="gone" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Activities" android:id="@+id/textView4" android:textSize="10sp"
-                        android:layout_weight="1" android:layout_gravity="center_horizontal"
-                        android:layout_below="@+id/imageView99"
-                        android:layout_centerHorizontal="true" android:gravity="center_vertical|center_horizontal"/>
-                </RelativeLayout>
-            </LinearLayout>
-        </RelativeLayout>
-
-    </LinearLayout>
-    <Button
-        android:background="#8bc34a"
-        android:textColor="#FFFFFF"
-        android:text="See all"
-        android:layout_width="match_parent"
-        android:layout_height="40dp" />
-    <TextView
-        android:layout_marginTop="5dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:text="Interest Groups you might interested"
-        android:textColor="#000"
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
-        android:padding="10dp"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="180dp">
-
-        <RelativeLayout
-            android:background="@drawable/relative_border"
-            android:layout_weight="0.5"
-            android:layout_width="match_parent"
-            android:layout_height="0dp">
-
-            <ImageView
-                android:id="@+id/networkImageBottom"
-                android:src="@drawable/company2"
-                android:scaleType="fitCenter"
-                android:layout_margin="10dp"
-                android:layout_width="60dp"
-                android:layout_height="100dp" />
-
-            <TextView
-                android:textColor="#8bc34a"
-                android:text="The National Association for the Educational of Young Children"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:id="@+id/textView33"
-                android:layout_below="@+id/titleBottom"
-                android:layout_toRightOf="@+id/networkImageBottom"
-                android:layout_toEndOf="@+id/networkImageBottom" />
-
-            <TextView
-                android:textColor="#8bc34a"
-                android:text="370 Members" android:textSize="12sp"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView"
-                android:layout_below="@+id/textView33"
-                android:layout_toRightOf="@+id/networkImageBottom"
-                android:layout_toEndOf="@+id/networkImageBottom" />
-
-            <TextView
-                android:id="@+id/titleBottom"  android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#000000"
-                android:text="Early Childhood Education" android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/networkImageBottom"
-                android:layout_toEndOf="@+id/networkImageBottom" />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_marginTop="2dp"
-            android:background="@drawable/relative_border"
-            android:layout_weight="0.5"
-            android:layout_width="match_parent"
-            android:layout_height="0dp">
-
-            <ImageView
-                android:id="@+id/networkImageBottom2"
-                android:src="@drawable/company3"
-                android:scaleType="fitCenter"
-                android:layout_margin="10dp"
-                android:layout_width="60dp"
-                android:layout_height="100dp" />
-
-            <TextView
-                android:textColor="#8bc34a"
-                android:text="The National Association for the Educational of Young Children"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:id="@+id/textView34"
-                android:layout_below="@+id/titleBottom2"
-                android:layout_toRightOf="@+id/networkImageBottom2"
-                android:layout_toEndOf="@+id/networkImageBottom2" />
-
-            <TextView
-                android:textColor="#8bc34a"
-                android:text="370 Members" android:textSize="12sp"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView5"
-                android:layout_below="@+id/textView34"
-                android:layout_toRightOf="@+id/networkImageBottom2"
-                android:layout_toEndOf="@+id/networkImageBottom2" />
-
-            <TextView
-                android:id="@+id/titleBottom2"  android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#000000"
-                android:text="Early Childhood Education" android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/networkImageBottom2"
-                android:layout_toEndOf="@+id/networkImageBottom2" />
-        </RelativeLayout>
-
     </LinearLayout>
 
-    <Button
-        android:background="#8bc34a"
-        android:textColor="#FFFFFF"
-        android:text="See all"
-        android:layout_width="match_parent"
-        android:layout_height="40dp" />
+
 </LinearLayout>

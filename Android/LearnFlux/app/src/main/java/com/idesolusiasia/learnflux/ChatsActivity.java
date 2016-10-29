@@ -100,9 +100,11 @@ public class ChatsActivity extends BaseActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		if (mViewPager.getCurrentItem()==0 || mViewPager.getCurrentItem()==2){
+		if (mViewPager.getCurrentItem()==0){
+			getMenuInflater().inflate(R.menu.group_chat, menu);
+		}else if(mViewPager.getCurrentItem()==2){
 			getMenuInflater().inflate(R.menu.interest_menu_creategroup, menu);
-		}else {
+		} else{
 			getMenuInflater().inflate(R.menu.org_newgroup, menu);
 		}
 		return super.onPrepareOptionsMenu(menu);

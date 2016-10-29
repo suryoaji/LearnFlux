@@ -1,19 +1,27 @@
 package com.idesolusiasia.learnflux.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.idesolusiasia.learnflux.MyProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Participant;
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +62,14 @@ public class IndividualFragmentAdapter extends RecyclerView.Adapter<IndividualFr
 
     public class OrgTileHolder extends RecyclerView.ViewHolder {
         CircularNetworkImageView circularImage; TextView individualName, individualDesc;
-
+        ImageView add;
         public OrgTileHolder(View itemView) {
             super(itemView);
             circularImage = (CircularNetworkImageView)itemView.findViewById(R.id.circularImage);
             individualName = (TextView)itemView.findViewById(R.id.individualName);
             individualDesc = (TextView)itemView.findViewById(R.id.txt1Desc);
+            add = (ImageView)itemView.findViewById(R.id.imageadd);
         }
     }
+
 }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class InterestGroup extends BaseActivity{
     public Participant participant=null;
     private GridLayoutManager lLayout;
     InterestGroupAdapter rcAdapter;
+    ImageView add;
     TextView emptyView;
     RecyclerView recyclerView;
     AddGroupAdapter adap;
@@ -64,6 +66,13 @@ public class InterestGroup extends BaseActivity{
         parentLayout.addView(childLayout);
         recyclerView = (RecyclerView)findViewById(R.id.recycler_group_interest);
         emptyView = (TextView) findViewById(R.id.empty_view);
+        add = (ImageView)findViewById(R.id.imageButtonAdd);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addInterestNewGroup();
+            }
+        });
         lLayout = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(lLayout);
@@ -98,7 +107,7 @@ public class InterestGroup extends BaseActivity{
             }
         });
     }
-    @Override
+ /*   @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.interest_menu_creategroup, menu);
@@ -117,7 +126,7 @@ public class InterestGroup extends BaseActivity{
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
     public void addInterestNewGroup(){
         final Dialog dialog = new Dialog(InterestGroup.this);
         dialog.setTitle("Add new Group");

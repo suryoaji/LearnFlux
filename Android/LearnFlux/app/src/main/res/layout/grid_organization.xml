@@ -60,34 +60,39 @@
                       android:layout_below="@+id/imageView4"
                       android:layout_centerHorizontal="true" android:gravity="center_vertical|center_horizontal"/>
         </RelativeLayout>
-        <RelativeLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1">
-            <ImageView android:layout_width="45dp" android:layout_height="45dp"
-                       android:foreground="?attr/selectableItemBackground"
-                       android:clickable="true"
-                       android:id="@+id/imageView5" android:src="@drawable/icon_events"
-                       android:layout_centerHorizontal="true" android:layout_marginTop="10dp"
-                       android:layout_marginBottom="5dp"/>
-            <TextView android:layout_width="20dp" android:layout_height="20dp"
-                      android:text="5"
-                      android:id="@+id/tvCountEvent"
-                      android:background="@drawable/round_background_green"
-                      android:gravity="center_vertical|center_horizontal"
-                      android:textSize="10sp"
-                      android:layout_above="@+id/textView9" android:layout_alignParentRight="true"
-                      android:layout_alignParentEnd="true"
-                      android:visibility="gone" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:id="@+id/imageView5" android:src="@drawable/icon_events"
+                android:background="@drawable/round_background_green"
+                android:layout_centerHorizontal="true" android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"/>
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="Events"
+                android:id="@+id/tvCountEvent"
+                android:layout_above="@+id/textView9"
+                android:background="@drawable/round_background_green" android:gravity="center_vertical|center_horizontal"
+                android:textSize="10sp"
+                android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+                android:visibility="gone" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:textAppearance="?android:attr/textAppearanceSmall"
-                      android:text="Events" android:id="@+id/textView9"
-                      android:textSize="10sp"
-                      android:layout_weight="1" android:layout_gravity="center_horizontal"
-                      android:layout_below="@+id/imageView5"
-                      android:layout_centerHorizontal="true" android:gravity="center_vertical|center_horizontal"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Events" android:id="@+id/textView9"
+                android:layout_below="@+id/imageView5"
+                android:layout_gravity="center_horizontal" android:textSize="10sp"
+                android:layout_centerHorizontal="true" android:gravity="center_vertical|center_horizontal"/>
         </RelativeLayout>
         <RelativeLayout android:layout_width="0dp" android:layout_height="wrap_content"
                         android:layout_weight="1">
-            d<ImageView android:layout_width="45dp" android:layout_height="45dp"
+            <ImageView android:layout_width="45dp" android:layout_height="45dp"
                        android:id="@+id/imageView8" android:src="@drawable/icon_activities"
                        android:foreground="?attr/selectableItemBackground"
                        android:clickable="true"

@@ -3,9 +3,11 @@ package com.idesolusiasia.learnflux.util;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.idesolusiasia.learnflux.adapter.FriendRequest;
 import com.idesolusiasia.learnflux.entity.AllContact;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Event;
+import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.MessageEvent;
 import com.idesolusiasia.learnflux.entity.MessagePoll;
@@ -14,6 +16,7 @@ import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.Poll;
 import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
+import com.idesolusiasia.learnflux.entity.friends;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +50,12 @@ public class Converter {
 	public static Contact convertContact(JSONObject obj)throws JSONException{
 		return gson.fromJson(obj.toString(), Contact.class);
 	}
+	public static FriendReq convertFriendRequest(JSONObject obj)throws JSONException{
+		return gson.fromJson(obj.toString(), FriendReq.class);
+	}
+	public static Contact convertChildren(JSONObject obj)throws JSONException{
+		return gson.fromJson(obj.toString(), Contact.class);
+	}
 	public static Participant convertPeople(JSONObject obj)throws JSONException{
 		return gson.fromJson(obj.toString(),Participant.class);
 	}
@@ -78,5 +87,8 @@ public class Converter {
 	}
 	public static AllContact convertAllContact(JSONObject obj)throws  JSONException{
 		return gson.fromJson(obj.toString(), AllContact.class);
+	}
+	public static friends convertFriends(JSONObject obj)throws  JSONException{
+		return gson.fromJson(obj.toString(), friends.class);
 	}
 }
