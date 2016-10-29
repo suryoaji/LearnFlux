@@ -627,7 +627,8 @@ class Engine : NSObject {
         makeRequestAlamofire(viewController, url: Url.search(keySearch), param: nil){status, JSON in
             if let dataJSON = JSON!["data"] as? Dictionary<String, AnyObject> where status == .Success{
                 let arrGroups = dataJSON["groups"] as! Array<Dictionary<String, AnyObject>>
-                let arrUsers = dataJSON["users"] as! Array<Dictionary<String, AnyObject>>
+                let arrUsers = clientData.arrayFromDict(dataJSON["users"]!)
+                
                 if callback != nil { callback!(arrUsers.map({ User(dict: $0)}), arrGroups.map({ Group(dict: $0) })) }
             }else{
                 if callback != nil { callback!([], []) }
