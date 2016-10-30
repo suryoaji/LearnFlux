@@ -34,7 +34,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     @IBOutlet weak var labelFriendRequest: UILabel!
     @IBOutlet weak var textfieldSearch: UITextField!
     var originalSizeConnectionTableView: CGRect = CGRectZero
-    var searchResult = (users: [User](), groups: [Group]()){
+    var searchResult = (users: [User](), organizations: [Group](), groups: [Group]()){
         didSet{
             getImageSearchResult(&searchResult)
             tableViewSearchResult.reloadData()
@@ -44,13 +44,21 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     var conImageResult : Array<(id: String, image: UIImage)> = []
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Load Image when search
-    func getImageSearchResult(inout result: (users: [User], groups:[Group])){
+    func getImageSearchResult(inout result: (users: [User], organizations: [Group], groups:[Group])){
         var users = result.users
         var groups = result.groups
+        var organizations = result.organizations
         for i in 0..<users.count{
             if users[i].photo == nil{
                 if let index = conImageResult.indexOf({ $0.id == String(users[i].userId!) }){
                     users[i].photo = conImageResult[index].image
+                }
+            }
+        }
+        for i in 0..<organizations.count{
+            if organizations[i].image == nil{
+                if let index = conImageResult.indexOf({ $0.id == String(organizations[i].id) }){
+                    organizations[i].image = conImageResult[index].image
                 }
             }
         }
@@ -63,15 +71,31 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         }
     }
     
-    func loadImageResult(result: (users: [User], groups: [Group])){
+    func loadImageResult(result: (users: [User], organizations: [Group], groups: [Group])){
         let users = result.users
         let groups = result.groups
+        let organizations = result.organizations
         for i in 0..<users.count{
             if users[i].photo == nil{
                 Engine.getImageIndividual(self, id: String(users[i].userId!)){ image in
                     if let image = image{
                         self.conImageResult.append((id: String(users[i].userId!), image: image))
-                        self.tableViewSearchResult.reloadRowsAtIndexPaths([NSIndexPath(forRow: i + 1, inSection: 0)], withRowAnimation: .None)
+                        if self.searchResult.users.count > i{
+                            self.tableViewSearchResult.reloadRowsAtIndexPaths([NSIndexPath(forRow: i + 1, inSection: 0)], withRowAnimation: .None)
+                        }
+                    }
+                }
+            }
+        }
+        for i in 0..<organizations.count{
+            if organizations[i].image == nil{
+                Engine.getImageGroup(group: organizations[i]){image in
+                    if let image = image{
+                        self.conImageResult.append((id: organizations[i].id, image: image))
+                        if self.searchResult.organizations.count > i{
+                            self.tableViewSearchResult.reloadRowsAtIndexPaths([NSIndexPath(forRow: i + 1, inSection: 1)], withRowAnimation: .None)
+                        }
+                        
                     }
                 }
             }
@@ -81,7 +105,10 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                 Engine.getImageGroup(group: groups[i]){image in
                     if let image = image{
                         self.conImageResult.append((id: groups[i].id, image: image))
-                        self.tableViewSearchResult.reloadRowsAtIndexPaths([NSIndexPath(forRow: i + 1, inSection: 1)], withRowAnimation: .None)
+                        if self.searchResult.groups.count > i{
+                            self.tableViewSearchResult.reloadRowsAtIndexPaths([NSIndexPath(forRow: i + 1, inSection: 2)], withRowAnimation: .None)
+                        }
+                        
                     }
                 }
             }
@@ -367,7 +394,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         case tableViewConnectionUpper:
             return indicatorAccConnection == 3 ? allContacts.count : 1
         case tableViewSearchResult:
-            return 2
+            return 3
         default:
             return 1
         }
@@ -501,7 +528,8 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                 viewResultSearch.hidden = false
                 Engine.requestSearch(keySearch: textfieldSearch.text!){ data in
                     var users = data.0
-                    var groups = data.1
+                    var organizations = data.1
+                    var groups = data.2
                     for i in 0..<users.count{
                         if let index = self.clientData.getMyConnection()!.indexOf({ $0.userId! == users[i].userId! }){
                             users[i] = self.clientData.getMyConnection()![index]
@@ -510,11 +538,16 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                     for i in 0..<groups.count{
                         if let index = self.groups.indexOf({ $0.id == groups[i].id }){
                             groups[i] = self.groups[index]
-                        }else if let index = self.clientData.getGroups()!.indexOf({ $0.id == groups[i].id }){
+                        }else if let index = self.clientData.getGroups(.Group)!.indexOf({ $0.id == groups[i].id }){
                             groups[i] = self.clientData.getGroups()![index]
                         }
                     }
-                    self.searchResult = (users: users, groups: groups)
+                    for i in 0..<organizations.count{
+                        if let index = self.clientData.getGroups(.Organisation)!.indexOf({ $0.id == organizations[i].id }){
+                            organizations[i] = self.clientData.getGroups(.Organisation)![index]
+                        }
+                    }
+                    self.searchResult = (users: users, organizations: organizations, groups: groups)
                 }
             }else{
                 viewResultSearch.hidden = true
@@ -638,6 +671,8 @@ extension Profile{
         case 0:
             return searchResult.users.isEmpty ? 0 : searchResult.users.count + 1
         case 1:
+            return searchResult.organizations.isEmpty ? 0 : searchResult.organizations.count + 1
+        case 2:
             return searchResult.groups.isEmpty ? 0 : searchResult.groups.count + 1
         default: return 0
         }
@@ -710,7 +745,7 @@ extension Profile{
         case 0:
             return friendRequests.isEmpty ? 0 : friendRequests.count + 1
         case 1:
-            return suggestFriendConnections.count + 1
+            return suggestFriendConnections.isEmpty ? 0 : suggestFriendConnections.count + 1
         default:
             return 0
         }
@@ -739,7 +774,7 @@ extension Profile{
     
     func cellForRowTableViewSearchResult(indexPath: NSIndexPath) -> UITableViewCell{
         var cell = UITableViewCell()
-        let titleHeader = ["Users", "Groups"]
+        let titleHeader = ["Users", "Organizations", "Groups"]
         if indexPath.row == 0{
             cell = tableViewFriendRequest.dequeueReusableCellWithIdentifier("Header")!
             let labelHeader = cell.viewWithTag(1) as! UILabel
@@ -758,12 +793,22 @@ extension Profile{
                 cell = individualCell
             case 1:
                 let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
+                let group = searchResult.organizations[indexPath.row - 1]
+                organizationCell.delegate = self
+                if let index = clientData.getGroups(.Organisation)!.indexOf({ $0.id == group.id }){
+                    organizationCell.setValues(clientData.getGroups(.Organisation)![index], indexPath : indexPath, type: .Mine, forSearch: true)
+                }else{
+                    organizationCell.setValues(searchResult.organizations[indexPath.row - 1], indexPath: indexPath, type: .NotMine, forSearch: true)
+                }
+                cell = organizationCell
+            case 2:
+                let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
                 let group = searchResult.groups[indexPath.row - 1]
                 organizationCell.delegate = self
                 if let index = self.groups.indexOf({ $0.id == group.id }){
                     organizationCell.setValues(self.groups[index], indexPath : indexPath, type: .Mine, forSearch: true)
-                }else if let index = clientData.getGroups()!.indexOf({ $0.id == group.id }){
-                    organizationCell.setValues(clientData.getGroups()![index], indexPath : indexPath, type: .Mine, forSearch: true)
+                }else if let index = clientData.getGroups(.Group)!.indexOf({ $0.id == group.id }){
+                    organizationCell.setValues(clientData.getGroups(.Group)![index], indexPath : indexPath, type: .Mine, forSearch: true)
                 }else{
                     organizationCell.setValues(searchResult.groups[indexPath.row - 1], indexPath: indexPath, type: .NotMine, forSearch: true)
                 }

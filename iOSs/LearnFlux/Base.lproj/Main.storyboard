@@ -58,7 +58,7 @@
                                 <rect key="frame" x="20" y="239" width="280" height="159"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="marvel11" borderStyle="line" placeholder="username" textAlignment="natural" minimumFontSize="17" id="QdX-hT-lxz" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
+                                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="marvel21" borderStyle="line" placeholder="username" textAlignment="natural" minimumFontSize="17" id="QdX-hT-lxz" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
                                         <rect key="frame" x="20" y="9" width="240" height="50"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -72,7 +72,7 @@
                                         <rect key="frame" x="20" y="72" width="240" height="50"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                                         <connections>
                                             <action selector="beginEdit:" destination="BYZ-38-t0r" eventType="editingDidBegin" id="qpO-jd-Cce"/>
                                             <outlet property="delegate" destination="BYZ-38-t0r" id="pgd-5U-PCl"/>
@@ -493,7 +493,7 @@
                                 <rect key="frame" x="20" y="180" width="280" height="263"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="tester01@lf.net" borderStyle="line" placeholder="enter your email" textAlignment="natural" minimumFontSize="17" id="23S-GI-spm" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
+                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="marvel22@lf.net" borderStyle="line" placeholder="enter your email" textAlignment="natural" minimumFontSize="17" id="23S-GI-spm" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
                                         <rect key="frame" x="20" y="58" width="240" height="40"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -503,7 +503,7 @@
                                             <outlet property="delegate" destination="1Az-67-Jej" id="0I7-wf-Iso"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="test01" borderStyle="line" placeholder="choose a username" textAlignment="natural" minimumFontSize="17" id="dAJ-t8-5Ek" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
+                                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="marvel22" borderStyle="line" placeholder="choose a username" textAlignment="natural" minimumFontSize="17" id="dAJ-t8-5Ek" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
                                         <rect key="frame" x="20" y="5" width="240" height="40"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -513,7 +513,7 @@
                                             <outlet property="delegate" destination="1Az-67-Jej" id="emC-nE-yJD"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="testtest" borderStyle="line" placeholder="type your password" textAlignment="natural" minimumFontSize="17" id="AvE-f2-idr" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
+                                    <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="captainamerica" borderStyle="line" placeholder="type your password" textAlignment="natural" minimumFontSize="17" id="AvE-f2-idr" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
                                         <rect key="frame" x="20" y="164" width="240" height="40"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -523,7 +523,7 @@
                                             <outlet property="delegate" destination="1Az-67-Jej" id="ooT-zl-6Gq"/>
                                         </connections>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="testtest" borderStyle="line" placeholder="retype your password" textAlignment="natural" minimumFontSize="17" id="ehs-Gn-0UT" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
+                                    <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="captainamerica" borderStyle="line" placeholder="retype your password" textAlignment="natural" minimumFontSize="17" id="ehs-Gn-0UT" customClass="OSTextfieldR" customModule="LearnFlux" customModuleProvider="target">
                                         <rect key="frame" x="20" y="217" width="240" height="40"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>

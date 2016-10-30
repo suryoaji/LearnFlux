@@ -264,7 +264,7 @@ class Engine : NSObject {
                 
             }
         }
-        urlReq.URL = NSURL(string: newUrl.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!)!
+        urlReq.URL = NSURL(string: newUrl.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!)!
         urlReq.cachePolicy = .UseProtocolCachePolicy
         urlReq.timeoutInterval = 10.0
         urlReq.HTTPMethod = "\(method)"
@@ -618,7 +618,7 @@ class Engine : NSObject {
         return arrSuggestFriends
     }
     
-    static func requestSearch(viewController: UIViewController? = nil, keySearch: String, callback: (([User], [Group]) -> Void)? = nil){
+    static func requestSearch(viewController: UIViewController? = nil, keySearch: String, callback: (([User], [Group], [Group]) -> Void)? = nil){
         Alamofire.Manager.sharedInstance.session.getAllTasksWithCompletionHandler(){arrTask in
             for each in arrTask{
                 each.cancel()
@@ -626,12 +626,13 @@ class Engine : NSObject {
         }
         makeRequestAlamofire(viewController, url: Url.search(keySearch), param: nil){status, JSON in
             if let dataJSON = JSON!["data"] as? Dictionary<String, AnyObject> where status == .Success{
-                let arrGroups = dataJSON["groups"] as! Array<Dictionary<String, AnyObject>>
+                let arrRawGroups = dataJSON["groups"] as! Array<Dictionary<String, AnyObject>>
+                let arrOrganizations = arrRawGroups.filter({ $0["type"] as! String == "organization" })
+                let arrGroups = arrRawGroups.filter({ $0["type"] as! String != "organization" })
                 let arrUsers = clientData.arrayFromDict(dataJSON["users"]!)
-                
-                if callback != nil { callback!(arrUsers.map({ User(dict: $0)}), arrGroups.map({ Group(dict: $0) })) }
+                if callback != nil { callback!(arrUsers.map({ User(dict: $0)}), arrOrganizations.map({ Group(dict: $0) }), arrGroups.map({ Group(dict: $0) })) }
             }else{
-                if callback != nil { callback!([], []) }
+                if callback != nil { callback!([], [], []) }
             }
         }
     }
