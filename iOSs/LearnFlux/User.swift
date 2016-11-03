@@ -12,47 +12,46 @@ class User {
     
     var userId : Int?
     var type : String?
-    var link : String?
+    var selfLink : String?
+    var friendsLink : String?
     var firstName: String?
     var lastName: String?
     var picture: String?
     var photo: UIImage?
     var email: String?
-    var mutualFriend: Int?
+    var mutualFriend: [Int]?
     var friends: [Int]?
     var interests: [String]?
     
-    init (userId: Int?, type: String?, link: String?) {
-        self.userId = userId;
-        self.type = type;
-        self.link = link;
-    }
-    
     init (dict : AnyObject?)  {
         guard let data = dict else { return }
-        if let s = data["id"] as? Int { self.userId = s }
-        if let s = data["type"] as? String { self.type = s }
-        if let s = data["link"] as? String { self.link = s }
-        if let s = data["first_name"] as? String { self.firstName = s }
-        if let s = data["profile_picture"] as? String{ self.picture = s; loadImage() }
-        if let s = data["email"] as? String{ self.email = s }
-        if let s = data["last_name"] as? String{ self.lastName = s }
-        
-        self.mutualFriend = Int(arc4random_uniform(25))
-        updateFromCacheMe()
-    }
-    
-    func updateFromCacheMe(){
-        if let cacheFriend = (Engine.clientData.cacheSelfFriends().filter({ $0[keyCacheMe.id] as! Int == self.userId! })).first{
-            self.lastName = cacheFriend["last_name"] as? String
-            self.email = cacheFriend["email"] as? String
-            self.friends = arrFriends(cacheFriend["friends"])
-            self.interests = cacheFriend["interests"] as? Array<String>
-        }else if let cacheChildren = (Engine.clientData.cacheSelfChildrens().filter({ $0[keyCacheMe.id] as! Int == self.userId! })).first{
-            self.lastName = cacheChildren["last_name"] as? String
-            self.email = cacheChildren["email"] as? String
-            self.friends = arrFriends(cacheChildren["friends"])
-            self.interests = cacheChildren["interests"] as? Array<String>
+        if let s = data[keyCacheMe.id] as? Int { self.userId = s }
+        if let s = data[keyCacheMe.type] as? String { self.type = s }
+        if let s = data[keyCacheMe.firstName] as? String { self.firstName = s }
+        if let s = data[keyCacheMe.email] as? String{ self.email = s }
+        if let s = data[keyCacheMe.lastName] as? String{ self.lastName = s }
+        if let s = data[keyCacheMe.interests] as? Array<String>{ self.interests = s }
+        if let s = data[keyCacheMe.links] as? Dictionary<String, AnyObject>{
+            if let selfLinks = s["self"]{
+                if let selfLink = selfLinks["href"] as? String{
+                    self.selfLink = updateLinks(selfLink)
+                }
+            }
+            if let friendsLinks = s[keyCacheMe.friends]{
+                if let friendsLink = friendsLinks["href"] as? String{
+                    self.friendsLink = updateLinks(friendsLink)
+                }
+            }
+            if let photoLinks = s[keyCacheMe.linkPhoto]{
+                if let photoLink = photoLinks["href"] as? String{
+                    self.picture = updateLinks(photoLink); loadImage()
+                }
+            }
+        }
+        if let s = data[keyCacheMe.mutualFriends]{
+            self.mutualFriend = arrFriends(s)
+        }else{
+            self.mutualFriend = Array(count: Int(arc4random_uniform(25)), repeatedValue: -1)
         }
     }
     
@@ -72,14 +71,38 @@ class User {
         guard let friends = friends else{
             return (mine: [], notMine: [])
         }
-        let myFriends = Engine.clientData.getMyConnection()!.map({ $0.userId! })
+        let myFriends = Engine.clientData.getMyConnection().friends.map({ $0.userId! })
         return (mine: Array(Set(friends).intersect(Set(myFriends))), notMine: Array(Set(friends).subtract(Set(myFriends))))
     }
     
     func loadImage(){
-        Engine.getImageIndividual(id: String(self.userId!)){ image in
-            self.photo = image
-            self.picture = nil
+        if let id = self.userId{
+            if id != Engine.clientData.cacheSelfId(){
+                if let link = self.picture{
+                    Engine.getImageIndividual(urlIndividual: link){image in
+                        self.photo = image
+                        self.picture = nil
+                    }
+                }
+            }else{
+                self.photo = Engine.clientData.photo
+                self.picture = nil
+            }
+        }
+    }
+    
+    func loadDetail(){
+        guard self.userId != nil else{
+            print("cannot load friends \(self.firstName!) detail, caused by userId is nil")
+            return
+        }
+        Engine.requestUserDetail(idUser: self.userId!){ status, JSON in
+            if status == .Success && JSON != nil{
+                let data = JSON as! Dictionary<String, AnyObject>
+                if let s = data[keyCacheMe.mutualFriends]{
+                    self.mutualFriend = self.arrFriends(s)
+                }
+            }
         }
     }
     
@@ -96,6 +119,13 @@ class User {
     static func convertFromDict (dict : AnyObject?) -> User? {
         guard let data = dict as? dictType else { return nil; }
         return User(dict: data);
+    }
+    
+    func updateLinks(href: String) -> String{
+        var href = href
+        href = href.stringByReplacingOccurrencesOfString("/api", withString: "")
+        href = href.stringByReplacingOccurrencesOfString("?id=", withString: "?key=")
+        return href
     }
     
 }

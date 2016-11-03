@@ -160,7 +160,9 @@ class Engine : NSObject {
         let urlReq = self.createURLRequest(url, method: method, param: param, requestType: .UploadImage)
         Alamofire.upload(method, urlReq.URLString, headers: urlReq.allHTTPHeaderFields, data: imageData).responseJSON{ response in
             handleResponseOfAlamofire(viewController, method: method, urlReq: urlReq, response: response, param: param, requestType: .None, callback: callback)
-        }
+        }/*.progress { (bytesRead, totalBytesRead, totalBytesExpectedToRead) in
+            print(bytesRead, totalBytesRead, totalBytesExpectedToRead)
+        }*/
     }
     
     static func handleResponseOfAlamofire(viewController: UIViewController?, method: Alamofire.Method, urlReq: NSURLRequest, response: Response<AnyObject, NSError>, param: Dictionary<String, AnyObject>?, requestType: RequestType, callback: JSONreturn?){
@@ -210,7 +212,7 @@ class Engine : NSObject {
                 }
                 break;
             default:
-                print("Error")
+                print("Error \(urlReq.URLString)")
                 print("Status Code: \(response.response!.statusCode)")
                 print("JSON: \(json)")
                 if let viewController = viewController{
@@ -222,6 +224,8 @@ class Engine : NSObject {
                 }
                 break;
             }
+        }else{
+            if callback != nil{ callback!(.ServerError, nil) }
         }
     }
     
@@ -297,10 +301,23 @@ class Engine : NSObject {
     
     static func me(viewController: UIViewController? = nil, callback: JSONreturn? = nil) {
         makeRequestAlamofire(viewController, url: Url.me, param: nil) { status, JSON in
-            if (JSON != nil) {
-                if (JSON!.valueForKey("data") != nil) {
-                    clientData.saveMe(JSON!.valueForKey("data")!)
+            guard status == .Success else{
+                if (callback != nil) { callback! (status, JSON); }
+                return
+            }
+            if var dataJSON = JSON as? Dictionary<String, AnyObject>{
+                var dataLinks = dataJSON[keyCacheMe.links] as! Dictionary<String, AnyObject>
+                for each in dataLinks{
+                    var data = dataLinks[each.0] as! Dictionary<String, AnyObject>
+                    if var dataHref = data["href"] as? String{
+                        dataHref = dataHref.stringByReplacingOccurrencesOfString("/api", withString: "")
+                        dataHref = dataHref.stringByReplacingOccurrencesOfString("?id=", withString: "?key=")
+                        data["href"] = dataHref
+                        dataLinks[each.0] = data
+                    }
                 }
+                dataJSON[keyCacheMe.links] = dataLinks
+                clientData.saveMe(dataJSON)
             }
             if (callback != nil) { callback! (status, JSON); }
         }
@@ -357,14 +374,20 @@ class Engine : NSObject {
     }
     
     static func getConnection(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
-        makeRequestAlamofire(viewController, url: Url.connections, param: nil){ status, dataJSON in
-            if let rawJSON = dataJSON{
-                let json = JSON(rawJSON).dictionaryObject
-                if let data = json?["data"]{
-                    let arrData = data as! Array<Dictionary<String, AnyObject>>
-                    clientData.setMyConnections(arrData)
-                }
+        makeRequestAlamofire(viewController, url: clientData.cacheLinkFriends() != nil ? Url.getBaseUrl() + clientData.cacheLinkFriends()! : Url.connections, param: nil){ status, dataJSON in
+            guard let rawJSON = dataJSON where status == .Success else{
+                if callback != nil { callback!(status, dataJSON) }
+                return
             }
+            guard let json = JSON(rawJSON).dictionaryObject else{
+                if callback != nil { callback!(status, dataJSON) }
+                return
+            }
+            let arrFriends = json[keyCacheFriends.friends] as! Array<Dictionary<String, AnyObject>>
+            let arrPendingFriends = json[keyCacheFriends.pending] as! Array<Dictionary<String, AnyObject>>
+            let arrRequestedFriends = (json[keyCacheFriends.request] as! Array<Dictionary<String, AnyObject>>)
+            clientData.setMyConnections(arrFriends, arrPendingFriends, arrRequestedFriends)
+            
             if callback != nil{ callback!(status, dataJSON) }
         }
     }
@@ -413,14 +436,23 @@ class Engine : NSObject {
     }
     
     static func getImageSelf(viewController: UIViewController? = nil, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
-        getImageIndividual(id: String(clientData.cacheSelfId()), callback: callback)
+        if let linkImage = clientData.cacheLinkPhoto(){
+            getImageIndividual(viewController, urlIndividual: linkImage, fromCache: false, callback: callback)
+        }
     }
-    static func getImageIndividual(viewController: UIViewController? = nil, id: String, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
-        let urlString = Url.getImage(.Me, id: id)
+    
+    static func getImageIndividual(viewController: UIViewController? = nil, urlIndividual: String?, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
+        guard let link = urlIndividual else{
+            if callback != nil { callback!(nil) }
+            return
+        }
+        let urlString = Url.getBaseUrl() + link
         if fromCache  && ImageCache.defaultCache.isImageCachedForKey(urlString).cached{
             fetchCacheImage(urlString, callback: callback)
         }else{
-            requestImage(urlString, shouldCacheData: true, callback: callback)
+            requestImage(urlString, shouldCacheData: true){ image in
+                if callback != nil{ callback!(image) }
+            }
         }
     }
     
@@ -435,17 +467,17 @@ class Engine : NSObject {
     }
     
     static func getChildsOfAllOrganizations(viewController: UIViewController? = nil, callback: ((Array<Group>?) -> Void)? = nil){
-        let organizationHaveChild = clientData.getGroups(.Organisation)!.filter({ $0.child != nil && !$0.child!.isEmpty })
+        let organizationHaveChild = clientData.getGroups(.Organisation).filter({ $0.child != nil && !$0.child!.isEmpty })
         let unorderedChilds = organizationHaveChild.map({ $0.child! })
         let childs = unorderedChilds.reduce([Group](), combine: { $0 + $1 })
         if callback != nil { callback!(childs) }
     }
     
     static func getPhotoOfConnection(indexPath: NSIndexPath, callback: (Bool -> Void)?){
-        if clientData.getMyConnection()![indexPath.row].photo == nil{
-            Engine.getImageIndividual(id: String(clientData.getMyConnection()![indexPath.row].userId!)){ image in
+        if clientData.getMyConnection().friends[indexPath.row].photo == nil{
+            Engine.getImageIndividual(urlIndividual: clientData.getMyConnection().friends[indexPath.row].picture){image in
                 if image != nil{
-                    self.clientData.getMyConnection()![indexPath.row].photo = image
+                    self.clientData.getMyConnection().friends[indexPath.row].photo = image
                     if callback != nil { callback!(true) }
                 }
             }
@@ -454,7 +486,7 @@ class Engine : NSObject {
     
     static func getSelfRoles(callback: (String? -> Void)?){
         if callback != nil{
-            let flatted = clientData.getGroups(.Organisation)!.flatMap { group -> [String] in
+            let flatted = clientData.getGroups(.Organisation).flatMap { group -> [String] in
                 let participantFlated = group.participants!.map({ participant -> String in
                     var string = ""
                     if let userId = participant.user?.userId where userId == clientData.cacheSelfId(){
@@ -474,7 +506,7 @@ class Engine : NSObject {
         guard let participants = group.participants else{
             return nil
         }
-        let arr = participants.filter({ $0.user!.userId! == clientData.cacheSelfId() })
+        let arr = participants.filter({ $0.user!.userId != nil && $0.user!.userId! == clientData.cacheSelfId() })
         guard let participant = arr.first else{
             return nil
         }
@@ -490,13 +522,11 @@ class Engine : NSObject {
     static func getAvailableInterests(viewController: UIViewController? = nil, callback: (([String]?)->Void)? = nil) {
         makeRequestAlamofire(viewController, url: Url.availableInterests, param: nil){ status, dataJSON in
             if status == .Success{
-                guard let objectInterests = dataJSON!["data"] else{
+                guard let arrInterests = dataJSON as? Array<String> else{
                     if callback != nil { callback!(nil) }
                     return
                 }
-                if let arrInterests = objectInterests as? Array<String> where callback != nil{
-                    callback!(arrInterests)
-                }
+                if callback != nil { callback!(arrInterests) }
             }
         }
     }
@@ -504,15 +534,11 @@ class Engine : NSObject {
     static func getAllContacts(callback: (Array<Dictionary<String, String>> -> Void)){
         var allContacts = Array<Dictionary<String, String>>()
         Engine.getChildsOfAllOrganizations(){ groups in
-            if let individualContacts = clientData.getMyConnection(){
-                allContacts += individualContacts.map({ ["type" : "individual", "id" : "\($0.userId!)", "name" : $0.firstName!] })
-            }
+            allContacts += clientData.getMyConnection().friends.map({ ["type" : "individual", "id" : "\($0.userId!)", "name" : $0.firstName!] })
             if let groups = groups{
                 allContacts += groups.map({ ["type" : "group", "id" : "\($0.id)", "name" : $0.name] })
             }
-            if let organizations = clientData.getGroups(.Organisation){
-                allContacts += organizations.map({ ["type" : "organization", "id" : "\($0.id)", "name" : $0.name] })
-            }
+            allContacts += clientData.getGroups(.Organisation).map({ ["type" : "organization", "id" : "\($0.id)", "name" : $0.name] })
             allContacts.sortInPlace({ $0["name"] < $1["name"] })
             callback(allContacts)
         }
@@ -532,46 +558,47 @@ class Engine : NSObject {
         return allContacts
     }
     
-    static func getFriendRequests(viewController: UIViewController? = nil, callback: ((Array<User>?)->Void)? = nil){
-        me(viewController){status, JSON in
-            if status == .Success && !clientData.cacheSelfFriendRequest().isEmpty{
-                var newArrFriendRequests = reduceArrJSON(clientData.cacheSelfFriendRequest(), indicator: "id")
-                removeFriendRequestByConnection(&newArrFriendRequests)
-                let friendRequests = newArrFriendRequests.map({User(dict: $0)})
-                if callback != nil { callback!(friendRequests) }
-            }else{
-                if callback != nil { callback!([]) }
-            }
-        }
-    }
+//    static func getFriendRequests(viewController: UIViewController? = nil, callback: ((Array<User>?)->Void)? = nil){
+//        me(viewController){status, JSON in
+//            if status == .Success && !clientData.cacheSelfFriendRequest().isEmpty{
+//                var newArrFriendRequests = reduceArrJSON(clientData.cacheSelfFriendRequest(), indicator: "id")
+//                removeFriendRequestByConnection(&newArrFriendRequests)
+//                let friendRequests = newArrFriendRequests.map({User(dict: $0)})
+//                if callback != nil { callback!(friendRequests) }
+//            }else{
+//                if callback != nil { callback!([]) }
+//            }
+//        }
+//    }
     
-    static func getFriendRequesteds() -> Array<User>?{
-        if !clientData.cacheSelfFriendRequested().isEmpty{
-            var newArrFriendRequesteds = reduceArrJSON(clientData.cacheSelfFriendRequested(), indicator: "id")
-            removeFriendRequestByConnection(&newArrFriendRequesteds)
-            let friendRequests = newArrFriendRequesteds.map({User(dict: $0)})
-            return friendRequests
-        }
-        return nil
-    }
+//    static func getFriendRequesteds() -> Array<User>?{
+//        if !clientData.cacheSelfFriendRequested().isEmpty{
+//            var newArrFriendRequesteds = reduceArrJSON(clientData.cacheSelfFriendRequested(), indicator: "id")
+//            removeFriendRequestByConnection(&newArrFriendRequesteds)
+//            let friendRequests = newArrFriendRequesteds.map({User(dict: $0)})
+//            return friendRequests
+//        }
+//        return nil
+//    }
     
     static func addFriend(viewController: UIViewController? = nil, user: User, callback: (RequestStatusType -> Void)? = nil){
-        makeRequestAlamofire(viewController, url: Url.addConnection(user.userId!), param: nil){ status, JSON in
+        makeRequestAlamofire(viewController, method: .PATCH, url: Url.addConnection(user.userId!), param: nil){ status, JSON in
             if status == .Success{
                 clientData.addToConnection(user)
+                if let index = clientData.getMyConnection().pending.indexOf({ $0.userId! == user.userId! }){
+                    self.clientData.removePendingFriends(index)
+                }
             }
             if callback != nil { callback!(status) }
         }
     }
     
-    static func requestFriend(viewController: UIViewController? = nil, userId: Int, callback: (RequestStatusType -> Void)? = nil){
-        makeRequestAlamofire(viewController, url: Url.addConnection(userId), param: nil){status, JSON in
+    static func requestFriend(viewController: UIViewController? = nil, user: User, callback: (RequestStatusType -> Void)? = nil){
+        makeRequestAlamofire(viewController, method: .PATCH, url: Url.addConnection(user.userId!), param: nil){status, JSON in
             if status == .Success{
-                makeRequestAlamofire(viewController, url: Url.getUserDetail(userId), param: nil){status, JSON in
-                    if let dataJSON = JSON!["data"] as? Dictionary<String, AnyObject> where status == .Success{
-                        var arrFriendRequested = clientData.cacheSelfFriendRequested()
-                        arrFriendRequested.append(dataJSON)
-                        clientData.updateMe([keyCacheMe.friendRequested : arrFriendRequested])
+                makeRequestAlamofire(viewController, url: Url.getUserDetail(user.userId!), param: nil){status, JSON in
+                    if status == .Success{
+                        clientData.addToRequestedConnection(user)
                     }
                     if callback != nil{ callback!(status) }
                 }
@@ -579,44 +606,39 @@ class Engine : NSObject {
         }
     }
     
-    static func getChildrens(){
-        let rawArrChildren = clientData.cacheSelfChildrens()
-        clientData.setMyChildrens(rawArrChildren.isEmpty ? [] : rawArrChildren.map({ User(dict: $0)}))
-    }
-    
     //perlu diganti
-    static func getSuggestFriends() -> Array<Dictionary<String, AnyObject>>{
-        var listIdFriendRequested = Set(clientData.cacheSelfFriendRequested().map({ $0[keyCacheMe.id] as! Int }))
-        let listIdFriendRequest = Set(clientData.cacheSelfFriendRequest().map({ $0[keyCacheMe.id] as! Int }))
-        let listIdFriends = clientData.getMyConnection()!.map({ $0.userId! })
-        listIdFriendRequested.unionInPlace(listIdFriendRequest)
-        listIdFriendRequested.subtractInPlace(listIdFriends)
-        
-        var arrSuggestFriends = Array<Dictionary<String, AnyObject>>()
-        for each in clientData.cacheSelfFriends(){
-            let newFriends = clientData.arrayFromDict(each[keyCacheMe.friends]!)
-            for eachNew in newFriends{
-                if !clientData.getMyConnection()!.contains({ $0.userId! == eachNew[keyCacheMe.id] as! Int }){
-                    if !listIdFriendRequested.contains({ $0 == eachNew["id"] as! Int }){
-                        let key = eachNew[keyCacheMe.id] as! Int
-                        if let index = arrSuggestFriends.indexOf({ $0[keyCacheMe.id] != nil && $0[keyCacheMe.id] as! Int == key }){
-                            var lastParam = arrSuggestFriends[index]
-                            var conParam = lastParam["friends"] as! Array<Int>
-                            conParam.append(each[keyCacheMe.id] as! Int)
-                            lastParam["friends"] = conParam
-                            arrSuggestFriends[index] = lastParam
-                        }else{
-                            let param : Dictionary<String, AnyObject> = ["id" : key, "name"  : "\(eachNew[keyCacheMe.firstName]!) \(eachNew[keyCacheMe.lastName]!)",
-                                                                         "friends" : [each[keyCacheMe.id]!]]
-                            arrSuggestFriends.append(param)
-                        }
-                    }
-                }
-            }
-        }
-        arrSuggestFriends.sortInPlace({ ($0["friends"]! as! Array<Int>).count > ($1["friends"]! as! Array<Int>).count })
-        return arrSuggestFriends
-    }
+//    static func getSuggestFriends() -> Array<Dictionary<String, AnyObject>>{
+//        var listIdFriendRequested = Set(clientData.cacheSelfFriendRequested().map({ $0[keyCacheMe.id] as! Int }))
+//        let listIdFriendRequest = Set(clientData.cacheSelfFriendRequest().map({ $0[keyCacheMe.id] as! Int }))
+//        let listIdFriends = clientData.getMyConnection()!.map({ $0.userId! })
+//        listIdFriendRequested.unionInPlace(listIdFriendRequest)
+//        listIdFriendRequested.subtractInPlace(listIdFriends)
+//        
+//        var arrSuggestFriends = Array<Dictionary<String, AnyObject>>()
+//        for each in clientData.cacheSelfFriends(){
+//            let newFriends = clientData.arrayFromDict(each[keyCacheMe.friends]!)
+//            for eachNew in newFriends{
+//                if !clientData.getMyConnection()!.contains({ $0.userId! == eachNew[keyCacheMe.id] as! Int }){
+//                    if !listIdFriendRequested.contains({ $0 == eachNew["id"] as! Int }){
+//                        let key = eachNew[keyCacheMe.id] as! Int
+//                        if let index = arrSuggestFriends.indexOf({ $0[keyCacheMe.id] != nil && $0[keyCacheMe.id] as! Int == key }){
+//                            var lastParam = arrSuggestFriends[index]
+//                            var conParam = lastParam["friends"] as! Array<Int>
+//                            conParam.append(each[keyCacheMe.id] as! Int)
+//                            lastParam["friends"] = conParam
+//                            arrSuggestFriends[index] = lastParam
+//                        }else{
+//                            let param : Dictionary<String, AnyObject> = ["id" : key, "name"  : "\(eachNew[keyCacheMe.firstName]!) \(eachNew[keyCacheMe.lastName]!)",
+//                                                                         "friends" : [each[keyCacheMe.id]!]]
+//                            arrSuggestFriends.append(param)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        arrSuggestFriends.sortInPlace({ ($0["friends"]! as! Array<Int>).count > ($1["friends"]! as! Array<Int>).count })
+//        return arrSuggestFriends
+//    }
     
     static func requestSearch(viewController: UIViewController? = nil, keySearch: String, callback: (([User], [Group], [Group]) -> Void)? = nil){
         Alamofire.Manager.sharedInstance.session.getAllTasksWithCompletionHandler(){arrTask in
@@ -625,20 +647,30 @@ class Engine : NSObject {
             }
         }
         makeRequestAlamofire(viewController, url: Url.search(keySearch), param: nil){status, JSON in
-            if let dataJSON = JSON!["data"] as? Dictionary<String, AnyObject> where status == .Success{
-                let arrRawGroups = dataJSON["groups"] as! Array<Dictionary<String, AnyObject>>
-                let arrOrganizations = arrRawGroups.filter({ $0["type"] as! String == "organization" })
-                let arrGroups = arrRawGroups.filter({ $0["type"] as! String != "organization" })
-                let arrUsers = clientData.arrayFromDict(dataJSON["users"]!)
-                if callback != nil { callback!(arrUsers.map({ User(dict: $0)}), arrOrganizations.map({ Group(dict: $0) }), arrGroups.map({ Group(dict: $0) })) }
-            }else{
+            guard let dataJSON = JSON as? Dictionary<String, AnyObject> where status == .Success else{
                 if callback != nil { callback!([], [], []) }
+                return
             }
+            let arrRawGroups = dataJSON["groups"] as! Array<Dictionary<String, AnyObject>>
+            let arrOrganizations = arrRawGroups.filter({ $0["type"] as! String == "organization" })
+            let arrGroups = arrRawGroups.filter({ $0["type"] as! String != "organization" })
+            let arrUsers = clientData.arrayFromDict(dataJSON["users"]!)
+            if callback != nil { callback!(arrUsers.map({ User(dict: $0)}), arrOrganizations.map({ Group(dict: $0) }), arrGroups.map({ Group(dict: $0) })) }
         }
     }
     
-    static func requestJoinGroup(viewController: UIViewController? = nil, keySearch: String, callback: ((RequestStatusType) -> Void)? = nil){
-        
+    static func requestJoinGroup(viewController: UIViewController? = nil, idGroup: String, callback: ((RequestStatusType) -> Void)? = nil){
+        makeRequestAlamofire(viewController, url: Url.connectGroup(idGroup, type: ConnectGroupType.join), param: nil){ status, JSON in
+            print(status, JSON)
+            if status == .Success{
+                
+            }
+            if callback != nil { callback!(status) }
+        }
+    }
+    
+    static func requestUserDetail(viewController: UIViewController? = nil, idUser: Int, callback: JSONreturn? = nil){
+        makeRequestAlamofire(viewController, url: Url.userDetail(idUser), param: nil, callback: callback)
     }
     
     static func editMe(viewController: UIViewController? = nil, name: String?, from: String?, work: String?, callback: (RequestStatusType -> Void)? = nil){
@@ -658,7 +690,7 @@ class Engine : NSObject {
             param[keyCacheMe.work] = work
         }
         if !param.isEmpty{
-            makeRequestAlamofire(viewController, method: .PUT, url: Url.me, param: param){ status, JSON in
+            makeRequestAlamofire(viewController, method: .PUT, url: Url.editMe, param: param){ status, JSON in
                 if status == .Success{
                     clientData.updateMe(param)
                 }
@@ -676,19 +708,28 @@ class Engine : NSObject {
         }
     }
     
+    static func editInterests(viewController: UIViewController? = nil, interests: Array<String>, callback: (RequestStatusType -> Void)? = nil){
+        makeRequestAlamofire(viewController, method: .PUT, url: Url.editMe, param: ["interest": interests]){ status, JSON in
+            if status == .Success{
+                clientData.updateMe(["interests" : interests])
+            }
+            if callback != nil{ callback!(status) }
+        }
+    }
+    
     static func editGroupPhoto(viewController: UIViewController? = nil, idGroup: String, photo: UIImage, callback: (RequestStatusType -> Void)? = nil){
         makeUploadAlamofire(viewController, method: .PUT, url:Url.uploadImageGroup(idGroup: idGroup), image: photo, param: nil){ status, JSON in
             if callback != nil{ callback!(status) }
         }
     }
     
-    static func removeFriendRequestByConnection(inout arrFriendRequests: arrType){
-        for connection in clientData.getMyConnection()!{
-            if let index = arrFriendRequests.indexOf({ $0["id"] as! Int == connection.userId! }){
-                arrFriendRequests.removeAtIndex(index)
-            }
-        }
-    }
+//    static func removeFriendRequestByConnection(inout arrFriendRequests: arrType){
+//        for connection in clientData.getMyConnection()!{
+//            if let index = arrFriendRequests.indexOf({ $0["id"] as! Int == connection.userId! }){
+//                arrFriendRequests.removeAtIndex(index)
+//            }
+//        }
+//    }
     
     static func reduceArrJSON(arr: Array<Dictionary<String, AnyObject>>, indicator: String) -> Array<Dictionary<String, AnyObject>>{
         var newArr = Array<Dictionary<String, AnyObject>>()
@@ -740,7 +781,7 @@ class Engine : NSObject {
         makeRequestAlamofire(viewController, method: .POST, url: Url.messages, param: ["participants" : userId]){ status, JSON in
             if let threadDict = getDictData(JSON) where status == .Success && JSON != nil{
                 let thread : Thread? = clientData.getThread(threadDict)
-                    if callback != nil { callback!(status, thread) }
+                if callback != nil { callback!(status, thread) }
             }
         }
     }
@@ -758,9 +799,12 @@ class Engine : NSObject {
         makeRequestAlamofire(viewController, url: url, param: nil){ status, dataJSON in
             let data = self.getDictData(dataJSON)
             let group = Group(dict: data)
-            let index = clientData.getGroups()!.indexOf({ $0.id == group.id })!
-            clientData.getGroups()![index].update(group)
-            if callback != nil { callback!(status, clientData.getGroups()![index]) }
+            if let index = clientData.getGroups().indexOf({ $0.id == group.id }){
+                clientData.getGroups()[index].update(group)
+                if callback != nil { callback!(status, clientData.getGroups()[index]) }
+            }else{
+                if callback != nil { callback!(status, group) }
+            }
         }
     }
     

@@ -91,7 +91,7 @@ class Login: UIViewController, UITextFieldDelegate {
                         Util.stopIndicator(self.view)
                         return
                     }
-                    guard let dataJSON = Engine.getDictData(JSON! as! dictType)else {
+                    guard let dataJSON = JSON as? dictType else{
                         Util.stopIndicator(self.view)
                         return
                     }
@@ -114,8 +114,7 @@ class Login: UIViewController, UITextFieldDelegate {
                             }
                         }
                         Engine.getConnection()
-                        
-                        Engine.getChildrens()
+                        Engine.clientData.setMyChildrens()
                     }else{
                         Util.stopIndicator(self.view)
                         Util.showMessageInViewController(self, title: "Our apologies.", message: "We sincerely apologize for the inconvenience. Our server is currently in maintenance, but will return shortly. Thank you for your patience", buttonOKTitle: "OK", callback: nil)

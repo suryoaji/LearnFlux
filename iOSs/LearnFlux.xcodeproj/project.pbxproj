@@ -23,6 +23,7 @@
 		4A3899951DAF85A9008F3D7F /* mosaic-settings.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4A38998D1DAF85A9008F3D7F /* mosaic-settings.jpg */; };
 		4A39C4821D51CACF00146489 /* chatTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A39C4811D51CACF00146489 /* chatTabBarController.swift */; };
 		4A39C73D1D501F4400F89A66 /* ExJSQMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A39C73C1D501F4400F89A66 /* ExJSQMessagesViewController.swift */; };
+		4A3FEA271DCB266B0026DB31 /* GroupRequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3FEA261DCB266B0026DB31 /* GroupRequestCell.swift */; };
 		4A47F2D01D9DFB5D00225FB6 /* individual-85.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A47F2CD1D9DFB5D00225FB6 /* individual-85.png */; };
 		4A47F2D11D9DFB5D00225FB6 /* contacts-80.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A47F2CE1D9DFB5D00225FB6 /* contacts-80.png */; };
 		4A47F2D21D9DFB5D00225FB6 /* organizations-85.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A47F2CF1D9DFB5D00225FB6 /* organizations-85.png */; };
@@ -470,6 +471,7 @@
 		4A38998D1DAF85A9008F3D7F /* mosaic-settings.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "mosaic-settings.jpg"; sourceTree = "<group>"; };
 		4A39C4811D51CACF00146489 /* chatTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = chatTabBarController.swift; sourceTree = "<group>"; };
 		4A39C73C1D501F4400F89A66 /* ExJSQMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExJSQMessagesViewController.swift; sourceTree = "<group>"; };
+		4A3FEA261DCB266B0026DB31 /* GroupRequestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupRequestCell.swift; sourceTree = "<group>"; };
 		4A47F2CD1D9DFB5D00225FB6 /* individual-85.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "individual-85.png"; sourceTree = "<group>"; };
 		4A47F2CE1D9DFB5D00225FB6 /* contacts-80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contacts-80.png"; sourceTree = "<group>"; };
 		4A47F2CF1D9DFB5D00225FB6 /* organizations-85.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "organizations-85.png"; sourceTree = "<group>"; };
@@ -954,6 +956,7 @@
 				4A5105F31DA1E8F40026F302 /* Connection */,
 				4A5A14F81DA5E3AD00024FE3 /* NotificationView.swift */,
 				4A4949A21DA747D0008F5FDE /* FriendRequestCell.swift */,
+				4A3FEA261DCB266B0026DB31 /* GroupRequestCell.swift */,
 				4A4949A41DA74BD6008F5FDE /* NotificationCell.swift */,
 			);
 			name = Profile;
@@ -2115,6 +2118,7 @@
 				5B3742641CC0CBAD00AF2897 /* UIView+RoundedRect.m in Sources */,
 				4A4949A51DA74BD6008F5FDE /* NotificationCell.swift in Sources */,
 				4A368BD61D66A0D500E38942 /* NavController.swift in Sources */,
+				4A3FEA271DCB266B0026DB31 /* GroupRequestCell.swift in Sources */,
 				5B3742741CC0CBAD00AF2897 /* UITextField+HeightToFit.m in Sources */,
 				5B04A2361CBCDEE000FA5CCA /* Connections.swift in Sources */,
 				4A5A14F91DA5E3AD00024FE3 /* NotificationView.swift in Sources */,

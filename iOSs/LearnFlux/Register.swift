@@ -1,4 +1,4 @@
-//
+ //
 //  Register.swift
 //  LearnFlux
 //
@@ -54,20 +54,20 @@ class Register : UIViewController {
         }
         Engine.register(self, username: username, firstName: firstName, lastName: lastName, email: email, password: password, passwordConfirm: confirm) { status, JSON in
             if (status == .CustomError) {
-                let errors = JSON!["errors"] as! Dictionary<String, AnyObject>
-                if let messages = errors["messages"] where (messages as? Array<String>) != nil{
-                    if let message = (messages as! Array<String>).first{
-                        if message.lowercaseString.containsString("password"){
-                            self.popError(message, inView: self.tfPassword)
+                if (status == .CustomError) {
+                    let errors = (JSON!["errors"] as! Array<Dictionary<String, AnyObject>>).first!
+                    if let message = errors["details"] as? String{
+                        if message.lowercaseString.containsString("username"){
+                            self.popError(message, inView: self.tfUsername)
                         }else if message.lowercaseString.containsString("email"){
                             self.popError(message, inView: self.tfEmail)
-                        }else if message.lowercaseString.containsString("username"){
-                            self.popError(message, inView: self.tfUsername)
+                        }else if message.lowercaseString.containsString("password"){
+                            self.popError(message, inView: self.tfPassword)
                         }else{
                             self.popError(message, inView: self.btnSubmit)
                         }
+                        return
                     }
-                    return
                 }
             }
             else if (status == .Success) {
