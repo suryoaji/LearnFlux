@@ -5,67 +5,78 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
+
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="0dp" android:layout_weight="0.5"
+                android:layout_height="130dp"
                 android:id="@+id/ivCalendar" android:foreground="?attr/selectableItemBackground"
                 android:layout_margin="3dp" android:src="@drawable/mosaic_calendar"
-                android:scaleType="centerCrop" android:clickable="true"
-                android:layout_height="150dp"/>
+                android:scaleType="centerCrop" android:clickable="true"/>
             <ImageView
-                android:layout_width="match_parent"
-                android:id="@+id/ivChat" android:foreground="?attr/selectableItemBackground"
-                android:layout_margin="3dp" android:src="@drawable/mosaic_chat"
-                android:scaleType="centerCrop" android:clickable="true"
-                android:layout_height="150dp"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:id="@+id/ivFavourite" android:foreground="?attr/selectableItemBackground"
-                android:layout_margin="3dp" android:src="@drawable/mosaic_favourite"
-                android:scaleType="centerCrop" android:clickable="true"
-                android:layout_height="150dp"/>
-            <ImageView android:layout_width="match_parent"
-                       android:id="@+id/ivInterest"
-                       android:foreground="?attr/selectableItemBackground" android:layout_margin="3dp"
-                       android:src="@drawable/mosaic_interestgroup" android:scaleType="centerCrop"
-                       android:clickable="true" android:layout_height="150dp"/>
-
+                android:layout_width="0dp" android:layout_weight="0.5"
+                android:layout_height="130dp"
+                android:id="@+id/ivGallery"  android:foreground="?attr/selectableItemBackground"
+                android:layout_margin="3dp" android:src="@drawable/mosaic_dashboard"
+                android:scaleType="centerCrop" android:clickable="true"/>
         </LinearLayout>
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <ImageView
-                android:layout_width="match_parent"
-                android:id="@+id/ivGallery" android:foreground="?attr/selectableItemBackground"
-                android:layout_margin="3dp" android:src="@drawable/mosaic_gallery"
-                android:scaleType="centerCrop" android:clickable="true"
-                android:layout_height="150dp"/>
+                android:layout_width="0dp" android:layout_weight="0.5"
+                android:layout_height="130dp"
+                android:id="@+id/ivChat" android:foreground="?attr/selectableItemBackground"
+                android:layout_margin="3dp" android:src="@drawable/mosaic_chat"
+                android:scaleType="centerCrop" android:clickable="true"/>
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="0dp" android:layout_weight="0.5"
+                android:layout_height="130dp"
                 android:id="@+id/ivPolls"
                 android:foreground="?attr/selectableItemBackground" android:layout_margin="3dp"
-                android:scaleType="centerCrop" android:src="@drawable/mosaic_polls"
-                android:clickable="true" android:layout_height="150dp"/>
-            <ImageView android:layout_width="match_parent"
-                       android:id="@+id/ivattendance"
-                       android:foreground="?attr/selectableItemBackground" android:layout_margin="3dp"
-                       android:scaleType="centerCrop" android:src="@drawable/mosaic_attendance"
-                       android:clickable="true" android:layout_height="150dp"/>
-            <ImageView android:layout_width="match_parent"
-                       android:id="@+id/ivSettings"
-                       android:foreground="?attr/selectableItemBackground" android:layout_margin="3dp"
-                       android:src="@drawable/mosaic_settings" android:scaleType="centerCrop"
-                       android:clickable="true" android:layout_height="150dp"/>
-
+                android:scaleType="centerCrop" android:src="@drawable/mosaic_poll"
+                android:clickable="true"/>
         </LinearLayout>
-
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView android:layout_width="0dp"      android:layout_height="130dp"
+                android:id="@+id/ivattendance" android:layout_weight="0.5"
+                android:foreground="?attr/selectableItemBackground" android:layout_margin="3dp"
+                android:scaleType="centerCrop" android:src="@drawable/mosaic_favorite"
+                android:clickable="true"/>
+            <ImageView
+                android:layout_width="0dp" android:layout_weight="0.5"
+                android:layout_height="130dp"
+                android:id="@+id/ivFavourite" android:foreground="?attr/selectableItemBackground"
+                android:layout_margin="3dp" android:src="@drawable/mosaic_attandance"
+                android:scaleType="centerCrop" android:clickable="true"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView android:layout_width="0dp"      android:layout_height="130dp"
+                android:id="@+id/ivInterest" android:layout_weight="0.5"
+                android:foreground="?attr/selectableItemBackground" android:layout_margin="3dp"
+                android:src="@drawable/mosaic_interestgroup" android:scaleType="centerCrop"
+                android:clickable="true"/>
+            <ImageView android:layout_width="0dp" android:layout_height="130dp"
+                android:id="@+id/ivSettings" android:layout_weight="0.5"
+                android:foreground="?attr/selectableItemBackground" android:layout_margin="3dp"
+                android:src="@drawable/mosaic_settings" android:scaleType="centerCrop"
+                android:clickable="true"/>
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>
