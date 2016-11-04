@@ -56,7 +56,7 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
 
     @Override
     public int getItemCount() {
-        return 1;
+        return organizations.size();
     }
 
     public class OrgTileHolder extends RecyclerView.ViewHolder {
