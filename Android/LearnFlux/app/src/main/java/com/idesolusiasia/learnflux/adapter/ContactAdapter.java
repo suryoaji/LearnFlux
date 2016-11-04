@@ -109,17 +109,17 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                    vh1.getcircular().setImageUrl(url+contact.getId(),imageLoader);
                    vh1.getAddF().setOnClickListener(new View.OnClickListener() {
                        @Override
-                       public void onClick(View v) {
+                       public void onClick(final View v) {
                            int []ids = new int[]{contact.getId()};
                            Engine.createThread(v.getContext(), ids, contact.getFirst_name() ,new RequestTemplate.ServiceCallback() {
                                @Override
                                public void execute(JSONObject obj) {
                                    try {
                                        String id = obj.getJSONObject("data").getString("id");
-                                       Intent i = new Intent(context, ChattingActivity.class);
+                                       Intent i = new Intent(v.getContext(), ChattingActivity.class);
                                        i.putExtra("idThread", id);
                                        i.putExtra("name", contact.getFirst_name());
-                                       context.startActivity(i);
+                                       v.getContext().startActivity(i);
                                    }catch (JSONException e){
                                        e.printStackTrace();
                                    }
@@ -139,13 +139,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                    vh2.getAdd().setOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
-                           Intent l = new Intent(context, GroupDetailActivity.class);
+                           Intent l = new Intent(v.getContext(), GroupDetailActivity.class);
                            l.putExtra("clickOrganization","Profile");
                            l.putExtra("id", group.getId());
                            l.putExtra("title",group.getName());
                            l.putExtra("type", group.getType());
                            l.putExtra("color", Functions.generateRandomPastelColor());
-                           context.startActivity(l);
+                           v.getContext().startActivity(l);
                        }
                    });
                }
@@ -244,16 +244,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                public void setLabel1(TextView label1) {
                    this.label1 = label1;
-               }
-           }
-           public void clearData() {
-               int size = this.theContact.size();
-               if (size > 0) {
-                   for (int i = 0; i < size; i++) {
-                       this.theContact.remove(0);
-                   }
-
-                   this.notifyItemRangeRemoved(0, size);
                }
            }
 }

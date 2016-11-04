@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
         <ImageView
             android:layout_weight="0.3"
-            android:src="@mipmap/photos_icon"
+            android:src="@drawable/user_profile"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:id="@+id/dialogImage10" />
@@ -30,7 +30,7 @@
                 android:layout_marginTop="10dp" />
 
             <TextView
-                android:text="43 minutes ago"
+                android:text="-"
                 android:textColor="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             android:layout_marginRight="10dp"
             android:id="@+id/addNotification"
             android:layout_gravity="center"
-            android:src="@drawable/add_people"
+            android:src="@drawable/add_friend"
             android:layout_width="40dp"
             android:layout_height="40dp" />
     </LinearLayout>

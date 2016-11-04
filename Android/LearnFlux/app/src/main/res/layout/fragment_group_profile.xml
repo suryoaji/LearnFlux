@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/add_people"
+            app:srcCompat="@drawable/add_group"
             android:layout_above="@+id/view2"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"

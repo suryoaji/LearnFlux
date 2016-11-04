@@ -111,14 +111,5 @@ public class ContactFragment extends Fragment {
         rcView.setAdapter(sc);
         rcView.refreshDrawableState();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(sc !=null){
-            sc.clearData();
-        }
-    }
-
 }
 

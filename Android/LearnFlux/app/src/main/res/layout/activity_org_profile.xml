@@ -224,7 +224,7 @@
 
     <ImageView
         android:background="@android:color/transparent"
-        android:src="@drawable/add_people"
+        android:src="@drawable/add_group"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:id="@+id/addPeople"
