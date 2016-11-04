@@ -39,7 +39,7 @@
         </LinearLayout>
 
         <ImageView
-            android:src="@drawable/add_group"
+            android:src="@drawable/add_friend"
             android:id="@+id/imageadd"
             android:layout_gravity="center_vertical"
             android:layout_width="0dp"

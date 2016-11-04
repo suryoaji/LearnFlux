@@ -46,7 +46,7 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
 
     @Override
     public void onBindViewHolder(OrgTileHolder holder, int position) {
-        final Group org= organizations.get(0);
+        final Group org= organizations.get(position);
         String url = "http://lfapp.learnflux.net/v1/image?key="+org.getImage();
         holder.image.setImageUrl(url, imageLoader);
         holder.txt1.setText(org.getName());
@@ -56,7 +56,7 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
 
     @Override
     public int getItemCount() {
-        return organizations.size();
+        return 1;
     }
 
     public class OrgTileHolder extends RecyclerView.ViewHolder {

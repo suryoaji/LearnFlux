@@ -62,27 +62,7 @@ public class IndividualFragmentAdapter extends RecyclerView.Adapter<IndividualFr
         }else{
             holder.circularImage.setDefaultImageResId(R.drawable.user_profile);
         }
-
-        holder.add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                int []ids = new int[]{c.getId()};
-                Engine.createThread(view.getContext(), ids, c.getFirst_name() ,new RequestTemplate.ServiceCallback() {
-                    @Override
-                    public void execute(JSONObject obj) {
-                        try {
-                            String id = obj.getJSONObject("data").getString("id");
-                            Intent i = new Intent(view.getContext(), ChattingActivity.class);
-                            i.putExtra("idThread", id);
-                            i.putExtra("name", c.getFirst_name());
-                            context.startActivity(i);
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        });
+        holder.add.setVisibility(View.GONE);
     }
 
     @Override
@@ -99,6 +79,27 @@ public class IndividualFragmentAdapter extends RecyclerView.Adapter<IndividualFr
             individualName = (TextView)itemView.findViewById(R.id.individualName);
             individualDesc = (TextView)itemView.findViewById(R.id.txt1Desc);
             add = (ImageView)itemView.findViewById(R.id.imageadd);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    final int pos = getAdapterPosition();
+                    int []ids = new int[]{Friends.get(pos).getId()};
+                Engine.createThread(v.getContext(), ids, Friends.get(pos).getFirst_name() ,new RequestTemplate.ServiceCallback() {
+                    @Override
+                    public void execute(JSONObject obj) {
+                        try {
+                            String id = obj.getJSONObject("data").getString("id");
+                            Intent i = new Intent(context, ChattingActivity.class);
+                            i.putExtra("idThread", id);
+                            i.putExtra("name", Friends.get(pos).getFirst_name());
+                            context.startActivity(i);
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                }
+            });
         }
     }
 
