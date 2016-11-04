@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.idesolusiasia.learnflux.adapter.ContactAdapter;
 import com.idesolusiasia.learnflux.adapter.SearchAdapter;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
@@ -36,7 +37,7 @@ import java.util.List;
 public class ContactFragment extends Fragment {
     RecyclerViewFastScroller fastScroller; RecyclerView rcView;
     TextView empty;
-    private List<Object> theContact; SearchAdapter sc;
+    private List<Object> theContact; ContactAdapter sc;
     public static ContactFragment newInstance() {
         ContactFragment fragment = new ContactFragment();
         return fragment;
@@ -106,7 +107,7 @@ public class ContactFragment extends Fragment {
 
     }
     private void bindDataToAdapter(){
-        sc = new SearchAdapter(theContact);
+        sc = new ContactAdapter(theContact);
         rcView.setAdapter(sc);
         rcView.refreshDrawableState();
     }

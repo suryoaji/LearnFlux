@@ -1,19 +1,30 @@
 package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.idesolusiasia.learnflux.ChattingActivity;
+import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.Functions;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 
@@ -92,19 +103,51 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
            }
            private void configureViewHolder1(ViewHolder1 vh1, int position) {
                String url="http://lfapp.learnflux.net/v1/image?key=";
-               Contact contact = (Contact) theContact.get(position);
+               final Contact contact = (Contact) theContact.get(position);
                if (contact != null) {
                    vh1.gettitle().setText("Name: " + contact.getFirst_name());
-                  // vh1.getcircular().setImageUrl(url+contact.getProfile_picture(),imageLoader);
+                   vh1.getcircular().setImageUrl(url+contact.getId(),imageLoader);
+                   vh1.getAddF().setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           int []ids = new int[]{contact.getId()};
+                           Engine.createThread(v.getContext(), ids, contact.getFirst_name() ,new RequestTemplate.ServiceCallback() {
+                               @Override
+                               public void execute(JSONObject obj) {
+                                   try {
+                                       String id = obj.getJSONObject("data").getString("id");
+                                       Intent i = new Intent(context, ChattingActivity.class);
+                                       i.putExtra("idThread", id);
+                                       i.putExtra("name", contact.getFirst_name());
+                                       context.startActivity(i);
+                                   }catch (JSONException e){
+                                       e.printStackTrace();
+                                   }
+                               }
+                           });
+                       }
+                   });
                }
            }
 
            private void configureViewHolder2(ViewHolder2 vh2, int position) {
                String url="http://lfapp.learnflux.net/v1/image?key=";
-                Group group =(Group)theContact.get(position);
+               final Group group =(Group)theContact.get(position);
                if(group !=null){
                    vh2.gettitle2().setText(group.getName());
                    vh2.getcircular2().setImageUrl(url+group.getImage(), imageLoader);
+                   vh2.getAdd().setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           Intent l = new Intent(context, GroupDetailActivity.class);
+                           l.putExtra("clickOrganization","Profile");
+                           l.putExtra("id", group.getId());
+                           l.putExtra("title",group.getName());
+                           l.putExtra("type", group.getType());
+                           l.putExtra("color", Functions.generateRandomPastelColor());
+                           context.startActivity(l);
+                       }
+                   });
                }
            }
 
@@ -120,12 +163,23 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }*/
     private class ViewHolder1 extends RecyclerView.ViewHolder {
         TextView title; CircularNetworkImageView circular;
-        public ViewHolder1(View itemView) {
-            super(itemView);
-            title = (TextView)itemView.findViewById(R.id.individualName);
-            circular = (CircularNetworkImageView)itemView.findViewById(R.id.circularImage);
+      ImageView addF;
+      public ViewHolder1(View itemView) {
+          super(itemView);
+          title = (TextView)itemView.findViewById(R.id.individualName);
+          circular = (CircularNetworkImageView)itemView.findViewById(R.id.circularImage);
+          addF = (ImageView)itemView.findViewById(R.id.imageadd);
 
-        }
+      }
+      public ImageView getAddF() {
+          return addF;
+      }
+
+      public void setAddF(ImageView addF) {
+          this.addF = addF;
+      }
+
+
       public TextView gettitle() {
           return title;
       }
@@ -143,11 +197,22 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
     private class ViewHolder2 extends RecyclerView.ViewHolder{
         TextView title2; NetworkImageView circular2;
+        ImageView add;
+
         public ViewHolder2(View itemView) {
             super(itemView);
             title2 = (TextView)itemView.findViewById(R.id.titleOrgConnection);
             circular2 = (NetworkImageView)itemView.findViewById(R.id.imageOrgConnection);
+            add = (ImageView)itemView.findViewById(R.id.joinGroup);
         }
+        public ImageView getAdd() {
+            return add;
+        }
+
+        public void setAdd(ImageView add) {
+            this.add = add;
+        }
+
         public TextView gettitle2() {
             return title2;
         }
@@ -179,6 +244,16 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                public void setLabel1(TextView label1) {
                    this.label1 = label1;
+               }
+           }
+           public void clearData() {
+               int size = this.theContact.size();
+               if (size > 0) {
+                   for (int i = 0; i < size; i++) {
+                       this.theContact.remove(0);
+                   }
+
+                   this.notifyItemRangeRemoved(0, size);
                }
            }
 }

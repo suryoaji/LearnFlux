@@ -721,8 +721,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 						collectionOfStrings.add(nameofGroup);
 						for(String string : collectionOfStrings) {
 							sb.append("Admin"+ " of " + string);
-							sb.append(", ");
-							txtParentDesc.setText(sb.length() > 0 ? sb.substring(0, sb.length() - 1): "");
+							sb.append(",");
+							txtParentDesc.setText(sb.length() > 0 ? sb.substring(0, sb.length() - 1): " ");
 						}
 
 					}
