@@ -1,12 +1,15 @@
 package com.idesolusiasia.learnflux;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.GroupsGridRecyclerViewAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
@@ -22,6 +25,7 @@ public class GroupProfileFragment extends Fragment {
 	public String id;
 	public Group group = null;
 	TextView description;
+	ImageView ivAdd;
 	public static GroupProfileFragment newInstance() {
 		GroupProfileFragment fragment = new GroupProfileFragment();
 		return fragment;
@@ -44,6 +48,20 @@ public class GroupProfileFragment extends Fragment {
 		id= getActivity().getIntent().getStringExtra("id");
 		getProfile();
 		description = (TextView)v.findViewById(R.id.textView39);
+		ivAdd = (ImageView)v.findViewById(R.id.ivAdd);
+		ivAdd.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Engine.joinGroup(getContext(), id, "join", new RequestTemplate.ServiceCallback() {
+					@Override
+					public void execute(JSONObject obj) {
+						Toast.makeText(getContext(),"Successfull joining",Toast.LENGTH_SHORT).show();
+						Intent i= new Intent(getContext(), MyProfileActivity.class);
+						startActivity(i);
+					}
+				});
+			}
+		});
 		return v;
 	}
 	public void getProfile()

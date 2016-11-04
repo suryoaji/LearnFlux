@@ -18,11 +18,13 @@ import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Participant;
-import com.idesolusiasia.learnflux.entity.friends;
+import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -43,7 +45,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        if(search.get(position) instanceof Participant){
+        if(search.get(position) instanceof Contact){
             return USER;
         }else if(search.get(position)instanceof Group){
             return GROUP;
@@ -69,11 +71,10 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        String url = "http://lfapp.learnflux.net/v1/image?key=";
         switch (holder.getItemViewType()){
             case USER:
                 viewUser vh1 = (viewUser) holder;
-                configureViewHolder1(vh1, (Participant) search.get(position));
+                configureViewHolder1(vh1, (Contact) search.get(position));
                 break;
             case GROUP:
                 viewGroup vh2 = (viewGroup)holder;
@@ -174,22 +175,26 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.txt2 = txt2;
         }
     }
-    private void configureViewHolder1(viewUser v1, final Participant p){
-        String url="http://lfapp.learnflux.net/v1/image?key=";
+    private void configureViewHolder1(viewUser v1, final Contact p){
+        String url = "http://lfapp.learnflux.net/v1/image?key=profile/";
         if(p!=null){
-            v1.getIndividualName().setText(p.getFirstName());
-            v1.getCircularImage().setImageUrl(url+p.getPhoto(), imageLoader);
+            v1.getIndividualName().setText(p.getFirst_name());
+            v1.getCircularImage().setImageUrl(url+p.getId(), imageLoader);
             v1.getAdd().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    Engine.getUserFriend(view.getContext(), p.getId(), new RequestTemplate.ServiceCallback() {
-                        @Override
-                        public void execute(JSONObject obj) {
-                            Toast.makeText(view.getContext(), "Successfull adding a friend", Toast.LENGTH_SHORT).show();
-                            search.remove(p);
-                            notifyDataSetChanged();
-                        }
-                    });
+                    if (User.getUser().getID() == p.getId()) {
+                        Functions.showAlert(view.getContext(), "Message", "You cannot add yourself");
+                    } else {
+                        Engine.getUserFriend(view.getContext(), p.getId(), new RequestTemplate.ServiceCallback() {
+                            @Override
+                            public void execute(JSONObject obj) {
+                                Toast.makeText(view.getContext(), "Successfull adding a friend", Toast.LENGTH_SHORT).show();
+                                search.remove(p);
+                                notifyDataSetChanged();
+                            }
+                        });
+                    }
                 }
             });
         }

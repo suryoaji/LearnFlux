@@ -11,15 +11,9 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
-import com.idesolusiasia.learnflux.entity.AllContact;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
-import com.viethoa.RecyclerViewFastScroller;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -101,7 +95,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                Contact contact = (Contact) theContact.get(position);
                if (contact != null) {
                    vh1.gettitle().setText("Name: " + contact.getFirst_name());
-                   vh1.getcircular().setImageUrl(url+contact.getProfile_picture(),imageLoader);
+                  // vh1.getcircular().setImageUrl(url+contact.getProfile_picture(),imageLoader);
                }
            }
 

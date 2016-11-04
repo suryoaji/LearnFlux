@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -14,25 +15,26 @@
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
             android:src="@drawable/ic_arrowgreen"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp" />
         <EditText
-            android:hint="Search..."
+            android:hint="Search"
+            android:maxWidth="130dp"
             android:id="@+id/searchID"
             android:layout_marginLeft="10dp"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1" android:inputType="text"
+            android:layout_width="270dp"
             android:layout_height="wrap_content" />
         <ImageView
             android:id="@+id/enterYourPreference"
             android:layout_gravity="center"
-            android:layout_marginLeft="200dp"
             android:src="@drawable/ic_search_green"
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="30dp" />
     </LinearLayout>
 
-        <View
+    <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#8bc34a"/>

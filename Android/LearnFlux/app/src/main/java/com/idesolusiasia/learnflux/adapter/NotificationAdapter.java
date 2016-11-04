@@ -1,14 +1,22 @@
 package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.idesolusiasia.learnflux.MyProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Notification;
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +47,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             final Notification n = mNotification.get(position);
             holder.message.setText(n.getMessage());
             holder.from.setText(n.getRef());
+            holder.addNotif.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    Engine.joinGroup(view.getContext(), n.getRef(), "join", new RequestTemplate.ServiceCallback() {
+                        @Override
+                        public void execute(JSONObject obj) {
+                            Toast.makeText(view.getContext(),"Successfull",Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(view.getContext(), MyProfileActivity.class);
+                            view.getContext().startActivity(i);
+                        }
+                    });
+                }
+            });
     }
 
     @Override
@@ -49,10 +70,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public class OrgTileHolder extends RecyclerView.ViewHolder {
         TextView message, from;
+        ImageView addNotif;
         public OrgTileHolder(View itemView) {
             super(itemView);
             message = (TextView)itemView.findViewById(R.id.notifMessage);
             from = (TextView)itemView.findViewById(R.id.notifFrom);
+            addNotif = (ImageView)itemView.findViewById(R.id.addNotification);
         }
     }
 }

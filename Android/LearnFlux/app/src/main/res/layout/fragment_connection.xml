@@ -12,3 +12,4 @@
     app:layoutManager="LinearLayoutManager"
     android:choiceMode="multipleChoiceModal"
     tools:context="com.idesolusiasia.learnflux.ConnectionFragment"/>
+

@@ -42,11 +42,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="235dp"
+        android:layout_height="245dp"
         android:id="@+id/recycler_group_interest"
-        android:layout_margin="15dp"
-        android:clipToPadding="false"
-        android:padding="@dimen/item_offset">
+        android:layout_margin="10dp"
+        android:clipToPadding="false">
         </android.support.v7.widget.RecyclerView>
     <TextView
         android:id="@+id/empty_view"
@@ -56,6 +55,7 @@
         android:visibility="gone"
         android:text="no data available" />
     <Button
+        android:layout_marginTop="10dp"
         android:background="#8bc34a"
         android:textColor="#FFFFFF"
         android:text="See all"
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
-        android:padding="10dp"
+        android:padding="8dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="180dp">
@@ -104,16 +104,6 @@
                 android:layout_toEndOf="@+id/networkImageBottom" />
 
             <TextView
-                android:textColor="#8bc34a"
-                android:text="370 Members" android:textSize="12sp"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView"
-                android:layout_below="@+id/textView33"
-                android:layout_toRightOf="@+id/networkImageBottom"
-                android:layout_toEndOf="@+id/networkImageBottom" />
-
-            <TextView
                 android:id="@+id/titleBottom"  android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="#000000"
                 android:text="Early Childhood Education" android:textStyle="bold"
@@ -122,7 +112,18 @@
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/networkImageBottom"
                 android:layout_toEndOf="@+id/networkImageBottom" />
+
+            <TextView
+                android:textColor="#8bc34a"
+                android:text="370 Members" android:textSize="12sp"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:layout_below="@+id/textView33"
+                android:layout_toRightOf="@+id/networkImageBottom"
+                android:layout_toEndOf="@+id/networkImageBottom" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_marginTop="2dp"
             android:background="@drawable/relative_border"
@@ -137,17 +138,6 @@
                 android:layout_margin="10dp"
                 android:layout_width="60dp"
                 android:layout_height="100dp" />
-
-            <TextView
-                android:textColor="#8bc34a"
-                android:text="The National Association for the Educational of Young Children"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:id="@+id/textView34"
-                android:layout_below="@+id/titleBottom2"
-                android:layout_toRightOf="@+id/networkImageBottom2"
-                android:layout_toEndOf="@+id/networkImageBottom2" />
 
             <TextView
                 android:textColor="#8bc34a"
@@ -166,6 +156,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/networkImageBottom2"
+                android:layout_toEndOf="@+id/networkImageBottom2" />
+
+            <TextView
+                android:textColor="#8bc34a"
+                android:text="The National Association for the Educational of Young Children"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:id="@+id/textView34"
+                android:layout_below="@+id/titleBottom2"
                 android:layout_toRightOf="@+id/networkImageBottom2"
                 android:layout_toEndOf="@+id/networkImageBottom2" />
         </RelativeLayout>

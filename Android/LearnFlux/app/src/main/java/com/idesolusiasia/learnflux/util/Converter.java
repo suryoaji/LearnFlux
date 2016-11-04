@@ -3,11 +3,10 @@ package com.idesolusiasia.learnflux.util;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.idesolusiasia.learnflux.adapter.FriendRequest;
-import com.idesolusiasia.learnflux.entity.AllContact;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.FriendReq;
+import com.idesolusiasia.learnflux.entity.Friends;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.MessageEvent;
 import com.idesolusiasia.learnflux.entity.MessagePoll;
@@ -15,8 +14,6 @@ import com.idesolusiasia.learnflux.entity.Notification;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.Poll;
 import com.idesolusiasia.learnflux.entity.Thread;
-import com.idesolusiasia.learnflux.entity.User;
-import com.idesolusiasia.learnflux.entity.friends;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +24,7 @@ import org.json.JSONObject;
  */
 public class Converter {
 	static Gson gson=new Gson();
+
 	public static Thread convertThread(JSONObject obj)throws JSONException{
 		Log.i("cnvertThread", obj.toString());
 		Thread t = gson.fromJson(obj.toString(), Thread.class);
@@ -48,7 +46,10 @@ public class Converter {
 		return t;
 	}
 	public static Contact convertContact(JSONObject obj)throws JSONException{
-		return gson.fromJson(obj.toString(), Contact.class);
+		return gson.fromJson(obj.toString(),Contact.class);
+	}
+	public static Contact.Links convertLink(JSONObject obj)throws JSONException{
+		return gson.fromJson(obj.toString(), Contact.Links.class);
 	}
 	public static FriendReq convertFriendRequest(JSONObject obj)throws JSONException{
 		return gson.fromJson(obj.toString(), FriendReq.class);
@@ -85,10 +86,7 @@ public class Converter {
 	public static Poll convertPoll(JSONObject obj)throws  JSONException{
 		return gson.fromJson(obj.toString(), Poll.class);
 	}
-	public static AllContact convertAllContact(JSONObject obj)throws  JSONException{
-		return gson.fromJson(obj.toString(), AllContact.class);
-	}
-	public static friends convertFriends(JSONObject obj)throws  JSONException{
-		return gson.fromJson(obj.toString(), friends.class);
+	public static Friends convertFriends(JSONObject obj)throws  JSONException{
+		return gson.fromJson(obj.toString(), Friends.class);
 	}
 }

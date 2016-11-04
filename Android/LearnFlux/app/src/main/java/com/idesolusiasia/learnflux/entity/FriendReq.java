@@ -1,5 +1,7 @@
 package com.idesolusiasia.learnflux.entity;
 
+import java.util.List;
+
 /**
  * Created by Ide Solusi Asia on 10/27/2016.
  */
@@ -7,51 +9,29 @@ package com.idesolusiasia.learnflux.entity;
 public class FriendReq {
 
     /**
-     * id : 40
-     * username : marvel14
-     * email : marvel14@agent.com
      * type : user
-     * link : /user/40
-     * first_name : Spider
-     * last_name : Man
-     * profile_picture : profile/40
-     * location : Timor Timor
-     * work : Lautan Terdalam
+     * id : 2
+     * first_name : Cak
+     * last_name : Lontong
+     * location : Indonesia
+     * work : Lautan Terdalam Antartika
+     * _links : {"self":{"href":"/v1/api/user/2"},"profile_picture":{"href":"/v1/image?id=profile/2"}}
      */
 
-    private int id;
-    private String username;
-    private String email;
     private String type;
-    private String link;
+    private int id;
     private String first_name;
     private String last_name;
-    private String profile_picture;
     private String location;
     private String work;
+    private boolean isSelected=false;
+    private LinksBean _links;
+    private List<FriendReq> pending;
+    private List<FriendReq> requested;
+    public boolean box;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public FriendReq(boolean _box){
+        box = _box;
     }
 
     public String getType() {
@@ -62,12 +42,12 @@ public class FriendReq {
         this.type = type;
     }
 
-    public String getLink() {
-        return link;
+    public int getId() {
+        return id;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFirst_name() {
@@ -86,14 +66,6 @@ public class FriendReq {
         this.last_name = last_name;
     }
 
-    public String getProfile_picture() {
-        return profile_picture;
-    }
-
-    public void setProfile_picture(String profile_picture) {
-        this.profile_picture = profile_picture;
-    }
-
     public String getLocation() {
         return location;
     }
@@ -108,5 +80,89 @@ public class FriendReq {
 
     public void setWork(String work) {
         this.work = work;
+    }
+
+    public LinksBean get_links() {
+        return _links;
+    }
+
+    public void set_links(LinksBean _links) {
+        this._links = _links;
+    }
+
+    public List<FriendReq> getPending() {
+        return pending;
+    }
+
+    public void setPending(List<FriendReq> pending) {
+        this.pending = pending;
+    }
+
+    public List<FriendReq> getRequested() {
+        return requested;
+    }
+
+    public void setRequested(List<FriendReq> requested) {
+        this.requested = requested;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+    public static class LinksBean {
+        /**
+         * href : /v1/api/user/2
+         */
+
+        private SelfBean self;
+        /**
+         * href : /v1/image?id=profile/2
+         */
+
+        private ProfilePictureBean profile_picture;
+
+        public SelfBean getSelf() {
+            return self;
+        }
+
+        public void setSelf(SelfBean self) {
+            this.self = self;
+        }
+
+        public ProfilePictureBean getProfile_picture() {
+            return profile_picture;
+        }
+
+        public void setProfile_picture(ProfilePictureBean profile_picture) {
+            this.profile_picture = profile_picture;
+        }
+
+        public static class SelfBean {
+            private String href;
+
+            public String getHref() {
+                return href;
+            }
+
+            public void setHref(String href) {
+                this.href = href;
+            }
+        }
+
+        public static class ProfilePictureBean {
+            private String href;
+
+            public String getHref() {
+                return href;
+            }
+
+            public void setHref(String href) {
+                this.href = href;
+            }
+        }
     }
 }

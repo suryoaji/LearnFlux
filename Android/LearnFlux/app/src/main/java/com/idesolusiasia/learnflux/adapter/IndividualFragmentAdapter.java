@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,17 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.idesolusiasia.learnflux.ChattingActivity;
 import com.idesolusiasia.learnflux.MyProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
+import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,13 +35,13 @@ import java.util.List;
  */
 
 public class IndividualFragmentAdapter extends RecyclerView.Adapter<IndividualFragmentAdapter.OrgTileHolder> {
-    public List<Participant> participants;
+    public List<Contact> Friends;
     private Context context;
     ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
 
-    public IndividualFragmentAdapter(Context mContext, ArrayList<Participant> participant)
+    public IndividualFragmentAdapter(Context mContext, ArrayList<Contact> mFriends)
     {
-        this.participants=participant;
+        this.Friends=mFriends;
         this.context=mContext;
     }
     @Override
@@ -49,15 +53,41 @@ public class IndividualFragmentAdapter extends RecyclerView.Adapter<IndividualFr
 
     @Override
     public void onBindViewHolder(OrgTileHolder holder, int position) {
-        final Participant p= participants.get(position);
-        holder.individualName.setText(p.getFirstName());
-        final String url = "http://lfapp.learnflux.net/v1/image?key="+p.getPhoto();
-        holder.circularImage.setImageUrl(url,imageLoader);
+        final Contact c= Friends.get(position);
+        holder.individualName.setText(c.getFirst_name());
+        if(c.get_links().getProfile_picture()!=null) {
+            String getProfile = c.get_links().getProfile_picture().getHref();
+            final String url = "http://lfapp.learnflux.net" + getProfile;
+            holder.circularImage.setImageUrl(url, imageLoader);
+        }else{
+            holder.circularImage.setDefaultImageResId(R.drawable.user_profile);
+        }
+
+        holder.add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                int []ids = new int[]{c.getId()};
+                Engine.createThread(view.getContext(), ids, c.getFirst_name() ,new RequestTemplate.ServiceCallback() {
+                    @Override
+                    public void execute(JSONObject obj) {
+                        try {
+                            String id = obj.getJSONObject("data").getString("id");
+                            Intent i = new Intent(view.getContext(), ChattingActivity.class);
+                            i.putExtra("idThread", id);
+                            i.putExtra("name", c.getFirst_name());
+                            context.startActivity(i);
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return participants.size();
+        return Friends.size();
     }
 
     public class OrgTileHolder extends RecyclerView.ViewHolder {

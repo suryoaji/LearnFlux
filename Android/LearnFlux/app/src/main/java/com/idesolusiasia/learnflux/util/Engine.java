@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.idesolusiasia.learnflux.LoginActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
+import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
@@ -108,12 +109,10 @@ public class Engine {
 				public void execute(JSONObject obj) {
 					Log.i("response_ME", obj.toString());
 					try {
-						JSONObject data = obj.getJSONObject("data");
-						User.getUser().setUsername(data.getString("username"));
-						User.getUser().setID(data.getInt("id"));
-						User.getUser().setEmail(data.getString("email"));
-						User.getUser().setProfile_picture(data.getString("profile_picture"));
-						User.getUser().setInterests(data.getString("interests"));
+						Contact c = Converter.convertContact(obj);
+						User.getUser().setUsername(c.getFirst_name()+" "+c.getLast_name());
+						User.getUser().setID(c.getId());
+						User.getUser().setEmail(c.getEmail());
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -122,10 +121,15 @@ public class Engine {
 		}
 
 	}
-	public static void getMeWithRequest(final Context context, final RequestTemplate.ServiceCallback callback){
-		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME);
+	public static void getMeWithRequest(final Context context, final String query, final RequestTemplate.ServiceCallback callback){
+		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_ME)+"/"+query;
 		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			reLogin(context, null);
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					getMeWithRequest(context,query,callback);
+				}
+			});
 		}else{
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
@@ -314,14 +318,25 @@ public class Engine {
 			public void execute(JSONObject error) {
 				if (error!=null){
 					try {
-						JSONArray messages = error.getJSONObject("errors").getJSONArray("messages");
-						if (messages.toString().contains("have successfully registered")){
+						//JSONArray messages = error.getJSONObject("errors").getJSONArray("messages");
+						JSONArray errors = error.getJSONArray("errors");
+						for(int i=0;i<errors.length();i++){
+							JSONObject objs = errors.getJSONObject(i);
+							String details = objs.getString("details");
+							if(details.contains("Your password")){
+								Functions.showAlert(context,"Errors", "Your password must have at least 8 characters");
+							}else{
+								Functions.showAlert(context, "Errors", details);
+							}
+
+						}
+						/*if (messages.toString().contains("have successfully registered")){
 							Intent i = new Intent(context,LoginActivity.class);
 							i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
 							context.startActivity(i);
 						}else{
-							Functions.showAlert(context,"Errors",messages.toString());
-						}
+							Functions.showAlert(context,"Errors",errors.toString());
+						}*/
 
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -689,7 +704,12 @@ public class Engine {
 					if(error!=null){
 						try{
 							JSONArray errors = error.getJSONArray("errors");
-							Functions.showAlert(context,"errors", errors.toString());
+							for(int i=0;i<errors.length();i++){
+								JSONObject err = errors.getJSONObject(i);
+								String details = err.getString("details");
+								Functions.showAlert(context,"errors", details);
+							}
+
 						}catch (JSONException e){
 							e.printStackTrace();
 						}
@@ -842,27 +862,52 @@ public class Engine {
 			},null);
 		}
 	}
-	public static void getUserFriend(final Context context, final int id,  final RequestTemplate.ServiceCallback callback){
+	public static void getUserFriend(final Context context, final int id,
+									 final RequestTemplate.ServiceCallback callback){
 		String url= context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+"user/"+String.valueOf(id)+"/friend";
 		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
 			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					reLogin(context, callback);
+					getUserFriend(context, id, callback);
 				}
 			});
 		}else{
-			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+			RequestTemplate.PATCHJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					if(obj!=null){
-						Log.i("get", "execute: "+obj);
-					}if(callback!=null){
+					if (obj != null) {
+						Log.i("get", "execute: " + obj);
+					}
+					if (callback != null) {
 						callback.execute(obj);
 					}
 				}
-			},null);
-		}
+			}, new RequestTemplate.ErrorCallback() {
+				@Override
+				public void execute(JSONObject error) {
+					if (error!=null){
+						try {
+							//JSONArray messages = error.getJSONObject("errors").getJSONArray("messages");
+							JSONArray errors = error.getJSONArray("errors");
+							for (int i = 0; i < errors.length(); i++) {
+								JSONObject objs = errors.getJSONObject(i);
+								String details = objs.getString("details");
+								if (details.contains("Your password")) {
+									Functions.showAlert(context, "Errors", "Your password must have at least 8 characters");
+								} else {
+									Functions.showAlert(context, "Errors", details);
+								}
+
+							}
+						}catch (JSONException e) {
+							e.printStackTrace();
+
+						}
+					}
+				}
+			});
+			}
 	}
 	public static void getSearchValue(final Context context, final String firstname, final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+"search/"+firstname;
@@ -894,7 +939,7 @@ public class Engine {
 			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					reLogin(context,callback);
+					joinGroup(context,groupID, type,callback);
 				}
 			});
 		}else{
@@ -904,6 +949,37 @@ public class Engine {
 					if(obj!=null){
 						Log.i("get", "execute: "+obj);
 					}if(callback!=null){
+						callback.execute(obj);
+					}
+				}
+			},null);
+		}
+	}
+	public static void putGroupByAdmin(final Context context, final String groupID, final RequestTemplate.ServiceCallback callback){
+		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
+				context.getString(R.string.URL_GROUP)+"/"+groupID;
+		JSONObject params = new JSONObject();
+		try {
+			params.put("groupID", groupID);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		Log.i("changeRSVPStatus", params.toString());
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					putGroupByAdmin(context,groupID,callback);
+				}
+			});
+		}else{
+			RequestTemplate.PUTJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if (obj!=null){
+						Log.i("put notification", obj.toString());
+					}
+					if (callback!=null){
 						callback.execute(obj);
 					}
 				}

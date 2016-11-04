@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.IndividualFragmentAdapter;
+import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
  */
 
 public class IndividualFragment extends Fragment {
-    IndividualFragmentAdapter Individualadap; ArrayList<Participant> p= new ArrayList<Participant>();
+    IndividualFragmentAdapter Individualadap; ArrayList<Contact> ct= new ArrayList<Contact>();
     RecyclerView individualRecycler;
     TextView noData;
     public static IndividualFragment newInstance() {
@@ -57,23 +58,23 @@ public class IndividualFragment extends Fragment {
         return v;
     }
     void initIndividual(){
-        p = new ArrayList<>();
-        Engine.getMyFriend(getContext(), new RequestTemplate.ServiceCallback() {
+        ct = new ArrayList<>();
+        Engine.getMeWithRequest(getContext(),"friends", new RequestTemplate.ServiceCallback() {
             @Override
             public void execute(JSONObject obj) {
                 try {
-                    JSONArray datas = obj.getJSONArray("data");
-                    for (int i=0;i<datas.length();i++){
-                        Participant participant = Converter.convertPeople(datas.getJSONObject(i));
-                        p.add(participant);
+                    JSONArray friends = obj.getJSONArray("friends");
+                    for (int i=0;i<friends.length();i++){
+                        Contact c = Converter.convertContact(friends.getJSONObject(i));
+                        ct.add(c);
                     }
-                    if(p.isEmpty()){
+                    if(ct.isEmpty()){
                         individualRecycler.setVisibility(View.GONE);
                         noData.setVisibility(View.VISIBLE);
                     }else {
                         individualRecycler.setVisibility(View.VISIBLE);
                         noData.setVisibility(View.GONE);
-                        Individualadap = new IndividualFragmentAdapter(getContext(), p);
+                        Individualadap = new IndividualFragmentAdapter(getContext(), ct);
                         individualRecycler.setAdapter(Individualadap);
                     }
                 } catch (JSONException e) {

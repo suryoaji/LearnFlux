@@ -3,40 +3,47 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/relative_border">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:background="@drawable/relative_border"
+        android:layout_width="328dp"
+        android:layout_height="50dp">
 
         <com.idesolusiasia.learnflux.component.CircularNetworkImageView
             android:id="@+id/circularImage"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_width="40dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
             android:layout_height="40dp" />
-        <TextView
-            android:id="@+id/individualName" android:textStyle="bold" android:textColor="#000"
-            android:layout_marginTop="8dp"  android:layout_marginLeft="10dp"
-            android:text="Alice Whitmans"
-            android:layout_toRightOf="@id/circularImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView android:id="@+id/txt1Desc" android:textColor="#8bc34a"
-            android:textSize="12sp" android:layout_marginLeft="10dp"
-            android:text="Artis and Crafts Teacher" android:layout_below="@+id/individualName"
-            android:layout_toRightOf="@id/circularImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/individualName"
+                android:text="LASALLE COLLEGE OF THE ARTS"
+                android:textColor="#000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txt1Desc"
+                android:text="arts and craft teacher"
+                android:textColor="#8bc34a" android:textSize="12sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <ImageView
-            android:src="@drawable/ic_person_pin_black_24dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/imageadd" />
-    </RelativeLayout>
+            android:src="@drawable/add_group"
+            android:id="@+id/imageadd"
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:layout_height="20dp"/>
+    </LinearLayout>
 </LinearLayout>

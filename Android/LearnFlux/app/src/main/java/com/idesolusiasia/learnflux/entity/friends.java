@@ -4,7 +4,7 @@ package com.idesolusiasia.learnflux.entity;
  * Created by Ide Solusi Asia on 10/28/2016.
  */
 
-public class friends {
+public class Friends {
     public String username;
     public String profile_picture;
 

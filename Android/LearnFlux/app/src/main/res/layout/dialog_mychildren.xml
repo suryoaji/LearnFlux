@@ -32,33 +32,33 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="" android:layout_marginTop="15dp"
+                android:text="" android:layout_marginTop="15dp" android:textColor="#000"
                 android:textSize="14sp" android:textStyle="bold"
                 android:layout_width="wrap_content" android:id="@+id/nameOfChild"
                 android:layout_height="wrap_content" />
             <TextView
-                android:text="Student" android:layout_marginTop="2dp"
+                android:text="-" android:layout_marginTop="2dp"
                 android:textSize="12sp" android:textStyle="bold"
-                android:layout_width="wrap_content"
+                android:layout_width="wrap_content" android:textColor="#000"
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 
     <TextView
-        android:layout_marginLeft="15dp"
-        android:text="Age: 9" android:layout_marginTop="2dp"
+        android:layout_marginLeft="15dp" android:textColor="#000"
+        android:text="-" android:layout_marginTop="2dp"
         android:textSize="12sp" android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
-        android:layout_marginLeft="15dp"
-        android:text="School: White Sand Primary School" android:layout_marginTop="2dp"
+        android:layout_marginLeft="15dp" android:textColor="#000"
+        android:text="-" android:layout_marginTop="2dp"
         android:textSize="12sp" android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
-        android:layout_marginLeft="15dp"
-        android:text="Class: P3 Blue" android:layout_marginTop="2dp"
+        android:layout_marginLeft="15dp" android:textColor="#000"
+        android:text="-" android:layout_marginTop="2dp"
         android:textSize="12sp" android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

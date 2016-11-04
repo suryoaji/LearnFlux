@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Participant;
 
 import java.util.ArrayList;
@@ -23,11 +24,11 @@ import java.util.List;
  * Created by Ide Solusi Asia on 8/19/2016.
  */
 public class AddGroupAdapter extends BaseAdapter{
-    List<Participant> participants;
+    List<FriendReq> participants;
     private Context ctx;
     LayoutInflater inflater;
 
-    public AddGroupAdapter(Context context, ArrayList<Participant> participant){
+    public AddGroupAdapter(Context context, ArrayList<FriendReq> participant){
         ctx = context;
         participants = participant;
         inflater = (LayoutInflater) ctx
@@ -54,20 +55,20 @@ public class AddGroupAdapter extends BaseAdapter{
         if(view==null){
             view = inflater.inflate(R.layout.row_layout,parent,false);
         }
-        Participant p = getParticipant(position);
-        ((TextView) view.findViewById(R.id.tvVersionName)).setText(p.getFirstName());
+        FriendReq p = getParticipant(position);
+        ((TextView) view.findViewById(R.id.tvVersionName)).setText(p.getFirst_name());
         CheckBox cbBuy = (CheckBox) view.findViewById(R.id.checkBox1);
         cbBuy.setOnCheckedChangeListener(myCheckChangList);
         cbBuy.setTag(position);
         cbBuy.setChecked(p.box);
         return view;
     }
-    Participant getParticipant(int position) {
-        return ((Participant) getItem(position));
+    FriendReq getParticipant(int position) {
+        return ((FriendReq) getItem(position));
     }
-    public ArrayList<Participant> getBox() {
-        ArrayList<Participant> box = new ArrayList<Participant>();
-        for (Participant p : participants) {
+    public ArrayList<FriendReq> getBox() {
+        ArrayList<FriendReq> box = new ArrayList<FriendReq>();
+        for (FriendReq p : participants) {
             if (p.box)
                 box.add(p);
         }

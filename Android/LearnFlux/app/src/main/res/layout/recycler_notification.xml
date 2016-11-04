@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent" android:background="@drawable/border_black"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@drawable/border_notification"
     android:layout_height="match_parent">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <ImageView
-        android:layout_marginLeft="200dp"
+        android:layout_marginLeft="240dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_arrowup"
         android:layout_width="wrap_content"
         android:layout_height="12dp"
         android:id="@+id/imageView21" />
+    </FrameLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleNotification"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
-    </FrameLayout>
+    <TextView
+        android:id="@+id/empty_notification"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No Notification" />
+
 </LinearLayout>

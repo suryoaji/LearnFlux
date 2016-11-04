@@ -16,11 +16,6 @@ public class Participant {
 	private String photo="";
 	private String type;
 	private String link;
-	public boolean box;
-
-	public Participant(boolean _box){
-		box = _box;
-	}
 
 	public int getId() {
 		return id;

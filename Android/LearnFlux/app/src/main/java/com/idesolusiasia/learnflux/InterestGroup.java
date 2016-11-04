@@ -1,10 +1,13 @@
 package com.idesolusiasia.learnflux;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -20,12 +23,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
+import com.idesolusiasia.learnflux.adapter.CreateGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.InterestGroupAdapter;
+import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 
@@ -140,7 +146,8 @@ public class InterestGroup extends BaseActivity{
             public void onClick(View view) {
                name = groupName.getText().toString().trim();
                desc = groupDesc.getText().toString().trim();
-               OpenDialog2();
+                OpenDialog2();
+               // openRecycler();
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -163,9 +170,8 @@ public class InterestGroup extends BaseActivity{
             @Override
             public void onClick(View view) {
                 List<Integer> a = new ArrayList<>();
-                for (Participant p : adap.getBox()) {
+                for (FriendReq p : adap.getBox()) {
                     if (p.box) {
-
                         a.add(p.getId());
                     }
                 }
@@ -173,16 +179,16 @@ public class InterestGroup extends BaseActivity{
                 for(int i=0; i<a.size();i++){
                     ids[i]=a.get(i).intValue();
                 }
-                Engine.createGroup(getApplicationContext(), ids, name, desc, null,
-                        "group", new RequestTemplate.ServiceCallback() {
-                            @Override
-                            public void execute(JSONObject obj) {
-                                Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
-                                dial.dismiss();
-                                finish();
-                                startActivity(getIntent());
-                            }
-                        });
+                    Engine.createGroup(getApplicationContext(), ids, name, desc, null,
+                            "group", new RequestTemplate.ServiceCallback() {
+                                @Override
+                                public void execute(JSONObject obj) {
+                                    Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
+                                    dial.dismiss();
+                                    finish();
+                                    startActivity(getIntent());
+                                }
+                            });
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -191,23 +197,26 @@ public class InterestGroup extends BaseActivity{
                 dial.dismiss();
             }
         });
-		Engine.getMyFriend(getApplicationContext(), new RequestTemplate.ServiceCallback() {
-			@Override
-			public void execute(JSONObject obj) {
-				try {
-					JSONArray datas = obj.getJSONArray("data");
-					ArrayList<Participant> p = new ArrayList<Participant>();
-					for (int i=0;i<datas.length();i++){
-						Participant participant = Converter.convertPeople(datas.getJSONObject(i));
-						if (participant.getId()!= User.getUser().getID()){
-							p.add(participant);
-						}
-					}
-
-					if (p.size()>=0){
-						adap = new AddGroupAdapter(getApplicationContext(), p);
-						listcontent.setAdapter(adap);
-					}
+        Engine.getMeWithRequest(getApplicationContext(),"friends", new RequestTemplate.ServiceCallback() {
+            @Override
+            public void execute(JSONObject obj) {
+                try {
+                    JSONArray array = obj.getJSONArray("friends");
+                    ArrayList<FriendReq>contactReq = new ArrayList<>();
+                    for(int i=0;i<array.length();i++){
+                        JSONObject ap = array.getJSONObject(i);
+                        FriendReq frQ = Converter.convertFriendRequest(ap);
+                        contactReq.add(frQ);
+                    }
+                    if(contactReq.size()>0){
+                        adap = new AddGroupAdapter(getApplicationContext(),contactReq);
+                        listcontent.setAdapter(adap);
+                    }else if(contactReq.size()==0){
+                        Toast.makeText(getApplicationContext(),"You need to have friends", Toast.LENGTH_LONG).show();
+                        finish();
+                        Intent i = getIntent();
+                        startActivity(i);
+                    }
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -216,4 +225,33 @@ public class InterestGroup extends BaseActivity{
 		});
 		dial.show();
 	}
+/*    void openRecycler(){
+        final Dialog dial = new Dialog(InterestGroup.this);
+        dial.setTitle("Add participant");
+        dial.setContentView(R.layout.activity_choosing_create_group);
+
+        final RecyclerView createRecycler  = (RecyclerView) dial.findViewById(R.id.recycler_create);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(dial.getContext(), LinearLayoutManager.VERTICAL,false);
+        createRecycler.setLayoutManager(layoutManager);
+        createRecycler.setItemAnimator(new DefaultItemAnimator());
+        final ArrayList<FriendReq>friendList = new ArrayList<FriendReq>();
+        Engine.getMeWithRequest(dial.getContext(), "friends", new RequestTemplate.ServiceCallback() {
+            @Override
+            public void execute(JSONObject obj) {
+                 try{
+                    JSONArray friend = obj.getJSONArray("friends");
+                     for(int i=0;i<friend.length();i++){
+                         JSONObject n = friend.getJSONObject(i);
+                         FriendReq friends = Converter.convertFriendRequest(n);
+                         friendList.add(friends);
+                     }
+                     CreateGroupAdapter cAdapter = new CreateGroupAdapter(dial.getContext(),friendList);
+                     createRecycler.setAdapter(cAdapter);
+                 }catch (JSONException e){
+                     e.printStackTrace();
+                 }
+                    }
+                });
+
+    }*/
 }

@@ -282,7 +282,7 @@ public class DataSource {
 		return p;
 	}
 	private Participant cursorToParticipant(Cursor cursor) {
-		Participant p = new Participant(true);
+		Participant p = new Participant();
 		p.setId(Integer.parseInt(cursor.getString(0)));
 		p.setFirstName(cursor.getString(1));
 		p.setPhoto(cursor.getString(2));

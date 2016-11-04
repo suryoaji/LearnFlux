@@ -7,39 +7,47 @@ import java.util.List;
  */
 
 public class Contact {
-
-    /**
-     * id : 79
-     * email : totti@ymail.com
-     * type : user
-     * link : /user/79
-     * first_name : Totti
-     * last_name : Fransesco
-     * profile_picture : profile/79
-     */
-
     private int id;
     private String username;
-    private String email;
     private String type;
-    private String link;
+    private String email;
     private String first_name;
     private String last_name;
-    private String profile_picture;
-//    private List<Contact>friends;
-//    private List<Contact>friend_requested;
-    private List<Contact>friend_request;
-    private List<Contact> children;
-    //private List<Contact> parents;
+    private String[] interests;
     private String location;
     private String work;
+    private Links _links;
+    private Embedded _embedded;
 
-    public int getId() {
-        return id;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+    public String[] getInterests() {
+        return interests;
+    }
+
+    public void setInterests(String[] interests) {
+        this.interests = interests;
+    }
+
+    public Links get_links() {
+        return _links;
+    }
+
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 
     public String getUsername() {
@@ -50,14 +58,6 @@ public class Contact {
         this.username = username;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getType() {
         return type;
     }
@@ -66,82 +66,36 @@ public class Contact {
         this.type = type;
     }
 
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public String getFirst_name() {
-        return first_name;
-    }
-
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
-    public String getProfile_picture() {
-        return profile_picture;
-    }
-
-    public void setProfile_picture(String profile_picture) {
-        this.profile_picture = profile_picture;
-    }
-
-  /*  public List<Contact> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<Contact> friends) {
-        this.friends = friends;
-    }
-
-    public List<Contact> getFriend_requested() {
-        return friend_requested;
-    }
-
-    public void setFriend_requested(List<Contact> friend_requested) {
-        this.friend_requested = friend_requested;
-    }
-*/
-    public List<Contact> getFriend_request() {
-        return friend_request;
-    }
-
-    public void setFriend_request(List<Contact> friend_request) {
-        this.friend_request = friend_request;
-    }
-    public List<Contact> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Contact> children) {
-        this.children = children;
-    }
-
-/*    public List<Contact> getParents() {
-        return parents;
-    }
-
-    public void setParents(List<Contact> parents) {
-        this.parents = parents;
-    }*/
     public String getLocation() {
         return location;
     }
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Embedded get_embedded() {
+        return _embedded;
+    }
+
+    public void set_embedded(Embedded _embedded) {
+        this._embedded = _embedded;
     }
 
     public String getWork() {
@@ -152,8 +106,92 @@ public class Contact {
         this.work = work;
     }
 
-    @Override
-    public String toString() {
-        return first_name;
+    public class Links {
+        public Links(){
+
+        }
+        private Self self;
+        private profilePicture profile_picture;
+        private Links.Frnd friends;
+
+
+        public profilePicture getProfile_picture() {
+            return profile_picture;
+        }
+
+        public void setProfile_picture(profilePicture profile_picture) {
+            this.profile_picture = profile_picture;
+        }
+
+        public Frnd getFriend() {
+            return friends;
+        }
+
+        public void setFriend(Frnd friends) {
+            this.friends = friends;
+        }
+
+        public Self getSelf() {
+            return self;
+        }
+
+        public void setSelf(Self self) {
+            this.self = self;
+        }
+
+        public class Self{
+            public Self(){
+
+            }
+            private String href;
+            public String getHref() {
+                return href;
+            }
+
+            public void setHref(String href) {
+                this.href = href;
+            }
+
+        }
+        public class profilePicture{
+            public profilePicture(){
+
+            }
+            private String href;
+            public String getHref() {
+                return href;
+            }
+
+            public void setHref(String href) {
+                this.href = href;
+            }
+        }
+        public class Frnd{
+            public Frnd(){
+
+            }
+            private String href;
+            public String getHref() {
+                return href;
+            }
+
+            public void setHref(String href) {
+                this.href = href;
+            }
+        }
+
+    }
+    private class Embedded {
+        private List<Contact> children;
+        public List<Contact> getChildren() {
+            return children;
+        }
+
+        public void setChildren(List<Contact> children) {
+            this.children = children;
+        }
+
+
+
     }
 }

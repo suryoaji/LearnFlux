@@ -1,7 +1,6 @@
 package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,22 +11,16 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.idesolusiasia.learnflux.MyProfileActivity;
 import com.idesolusiasia.learnflux.R;
-import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.FriendReq;
-import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.User;
-import com.idesolusiasia.learnflux.entity.friends;
+import com.idesolusiasia.learnflux.entity.Friends;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,9 +39,9 @@ public class FriendRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
     @Override
     public int getItemViewType(int position) {
-        if (theFriend.get(position) instanceof Contact) {
+        if (theFriend.get(position) instanceof FriendReq) {
             return CONTACT;
-        } else if (theFriend.get(position) instanceof friends) {
+        } else if (theFriend.get(position) instanceof Friends) {
             return FRIENDS;
         }
         return -1;
@@ -184,17 +177,17 @@ public class FriendRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         //   vh.getLabel().setText((CharSequence) theContact.get(position));
     }
     private void configureViewHolder1(viewHolder1 v1, final int position){
-        String url="http://lfapp.learnflux.net/v1/image?key=";
-        final Contact contact = (Contact)theFriend.get(position);
-        if(contact==null){
+        String url = "http://lfapp.learnflux.net/v1/image?key=profile/";
+        final FriendReq Pending = (FriendReq)theFriend.get(position);
+        if(Pending==null){
             v1.getTitleDialog().setText("No new friend request");
         }else{
-            v1.getTitleDialog().setText(contact.getFirst_name());
-            v1.getNetworkImage().setImageUrl(url+contact.getProfile_picture(), imageLoader);
+            v1.getTitleDialog().setText(Pending.getFirst_name());
+            v1.getNetworkImage().setImageUrl(url+Pending.getId(), imageLoader);
             v1.acceptReq.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    Engine.getUserFriend(view.getContext(), contact.getId(), new RequestTemplate.ServiceCallback() {
+                    Engine.getUserFriend(view.getContext(), Pending.getId(), new RequestTemplate.ServiceCallback() {
                         @Override
                         public void execute(JSONObject obj) {
                             Toast.makeText(view.getContext(), "Succesfull adding a friend", Toast.LENGTH_SHORT).show();
@@ -208,7 +201,7 @@ public class FriendRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
     private void configureViewHolder2(viewHolder22 v22, int position){
         String url="http://lfapp.learnflux.net/v1/image?key=";
-        friends friend = (friends) theFriend.get(position);
+        Friends friend = (Friends) theFriend.get(position);
         if(friend!=null){
            v22.getTvalphabet().setText(friend.getUsername());
             v22.getCircularView().setImageUrl(url+friend.getProfile_picture(),imageLoader);

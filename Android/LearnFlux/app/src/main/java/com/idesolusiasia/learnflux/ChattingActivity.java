@@ -282,11 +282,10 @@ public class ChattingActivity extends BaseActivity {
 	void initChatBubble(){
 		//read from local database, compare with now shown adapter
 		thread = DatabaseFunction.getThreadDetail(getApplicationContext(),idThread);
-		if (thread.getParticipants().size()==2){
+		/*if (thread.getParticipants().size()==2){
 			attachmentLayout.setVisibility(View.GONE);
 			ivAttachment.setVisibility(View.GONE);
-		}
-
+		}*/
 		if (thread.getGroup()==null){
 			attachmentLayout.setVisibility(View.GONE);
 			ivAttachment.setVisibility(View.GONE);

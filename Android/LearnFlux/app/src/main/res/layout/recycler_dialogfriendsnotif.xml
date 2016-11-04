@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@drawable/border_black">
+    android:layout_height="match_parent" android:background="@drawable/border_notification">
     <FrameLayout
+        android:layout_margin="2dp"
         android:background="#E0E0E0"
         android:layout_width="match_parent"
         android:layout_height="40dp">
 
         <ImageView
-            android:layout_marginLeft="175dp"
+            android:layout_marginLeft="205dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_arrowup"
             android:layout_width="wrap_content"
@@ -20,16 +21,35 @@
             android:textStyle="bold"
             android:gravity="center_vertical"
             android:textAppearance="?android:textAppearanceSmall"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="30dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/textView35" />
     </FrameLayout>
-
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerFriendNotif"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:progressBarStyle"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
+    <TextView
+        android:id="@+id/empty_friend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No Friend Request" />
+    </FrameLayout>
 
 </LinearLayout>

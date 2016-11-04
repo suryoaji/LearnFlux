@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
+import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
@@ -204,7 +205,7 @@ public class ChatsActivity extends BaseActivity {
 			@Override
 			public void onClick(View view) {
 				List<Integer> a = new ArrayList<>();
-				for (Participant p : adap.getBox()) {
+				for (FriendReq p : adap.getBox()) {
 					if (p.box) {
 
 						a.add(p.getId());
@@ -234,22 +235,25 @@ public class ChatsActivity extends BaseActivity {
 				dial.dismiss();
 			}
 		});
-		Engine.getMyFriend(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+		Engine.getMeWithRequest(getApplicationContext(),"friends", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try {
-					JSONArray datas = obj.getJSONArray("data");
-					ArrayList<Participant> p = new ArrayList<Participant>();
-					for (int i=0;i<datas.length();i++){
-						Participant participant = Converter.convertPeople(datas.getJSONObject(i));
-						if (participant.getId()!= User.getUser().getID()){
-							p.add(participant);
-						}
+					JSONArray array = obj.getJSONArray("friends");
+					ArrayList<FriendReq>contactReq = new ArrayList<>();
+					for(int i=0;i<array.length();i++){
+						JSONObject ap = array.getJSONObject(i);
+						FriendReq frQ = Converter.convertFriendRequest(ap);
+						contactReq.add(frQ);
 					}
-
-					if (p.size()>=0){
-						adap = new AddGroupAdapter(getApplicationContext(), p);
+					if(contactReq.size()>0){
+						adap = new AddGroupAdapter(getApplicationContext(),contactReq);
 						listcontent.setAdapter(adap);
+					}else if(contactReq.size()==0){
+						Toast.makeText(getApplicationContext(),"You need to have friends", Toast.LENGTH_LONG).show();
+						finish();
+						Intent i = getIntent();
+						startActivity(i);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();

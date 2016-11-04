@@ -44,7 +44,6 @@ public class BaseActivity extends AppCompatActivity
 	Toolbar toolbar;
 	NavigationView navigationView;
 	SharedPreferences sharedPref;
-	public Contact contact = null;
 
 	protected void onCreateDrawer(Bundle savedInstanceState) {
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -63,18 +62,15 @@ public class BaseActivity extends AppCompatActivity
 				final NetworkImageView ivDrawerPic = (NetworkImageView)drawerView.findViewById(R.id.ivDrawerPic);
 				ivDrawerPic.setDefaultImageResId(R.drawable.user_profile);
 				final ImageLoader imageLoader = VolleySingleton.getInstance(getApplicationContext()).getImageLoader();
-				Engine.getMeWithRequest(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+				Engine.getMeWithRequest(getApplicationContext(), "details",  new RequestTemplate.ServiceCallback() {
 					@Override
 					public void execute(JSONObject obj) {
 						try{
-							JSONObject data = obj.getJSONObject("data");
-							contact = Converter.convertContact(data);
-							JSONArray child = data.getJSONArray("children");
-							for(int i=0;i<child.length();i++) {
-								User.getUser().setChildren(contact.getChildren().get(i).getProfile_picture());
-							}
+							Contact contact= Converter.convertContact(obj);
 							String url = "http://lfapp.learnflux.net/v1/image?key=profile/"+contact.getId();
-							tvName.setText(contact.getUsername());
+							User.getUser().setProfile_picture(url);
+							User.getUser().setID(contact.getId());
+							tvName.setText(contact.getFirst_name()+" "+ contact.getLast_name());
 							tvEmail.setText(contact.getEmail());
 							ivDrawerPic.setImageUrl(url, imageLoader);
 						}catch (JSONException e){

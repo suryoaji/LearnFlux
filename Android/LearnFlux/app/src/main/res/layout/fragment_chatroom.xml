@@ -15,5 +15,5 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="You have no conversation"
-        android:id="@+id/empty" android:layout_gravity="center_horizontal"/>
+        android:id="@+id/empty" android:layout_gravity="center"/>
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.idesolusiasia.learnflux;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -86,6 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
 				@Override
 				public void execute(JSONObject obj) {
 					Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+					i.putExtra("username", tvUsername.getText().toString().trim());
 					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
 					startActivity(i);
 				}

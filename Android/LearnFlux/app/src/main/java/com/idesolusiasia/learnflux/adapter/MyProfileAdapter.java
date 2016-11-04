@@ -47,6 +47,7 @@ public class MyProfileAdapter extends RecyclerView.Adapter<MyProfileAdapter.OrgT
     List<Group> organizations;
     private Context context;
     ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
+
     public MyProfileAdapter(Context context, ArrayList<Group> orgs){
         this.organizations = orgs;
         this.context= context;

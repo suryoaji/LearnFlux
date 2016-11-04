@@ -18,6 +18,7 @@ import com.idesolusiasia.learnflux.OrgProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
 
     @Override
     public void onBindViewHolder(OrgTileHolder holder, int position) {
-        final Group org= organizations.get(position);
+        final Group org= organizations.get(0);
         String url = "http://lfapp.learnflux.net/v1/image?key="+org.getImage();
         holder.image.setImageUrl(url, imageLoader);
         holder.txt1.setText(org.getName());
@@ -70,11 +71,13 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
                 @Override
                 public void onClick(View view) {
                     final int pos = getAdapterPosition();
-                    Intent i = new Intent(view.getContext() , OrgProfileActivity.class);
-                    i.putExtra("id", organizations.get(pos).getId());
-                    i.putExtra("title",organizations.get(pos).getName());
-                    i.putExtra("type", organizations.get(pos).getType());
-                    view.getContext().startActivity(i);
+                    Intent l = new Intent(context, GroupDetailActivity.class);
+                    l.putExtra("clickOrganization","Profile");
+                    l.putExtra("id", organizations.get(pos).getId());
+                    l.putExtra("title",organizations.get(pos).getName());
+                    l.putExtra("type", organizations.get(pos).getType());
+                    l.putExtra("color", Functions.generateRandomPastelColor());
+                    context.startActivity(l);
                 }
             });
         }

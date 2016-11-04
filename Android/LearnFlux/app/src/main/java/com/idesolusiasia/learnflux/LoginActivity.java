@@ -21,12 +21,14 @@ public class LoginActivity extends AppCompatActivity{
     private View mLoginFormView;
 	TextView tvRegister;
 	SharedPreferences sharedPref;
+    private SharedPreferences.Editor loginPrefsEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        String name = getIntent().getStringExtra("username");
 	    sharedPref = getApplicationContext().getSharedPreferences("com.idesolusiasia.learnflux",MODE_PRIVATE);
 	    String username = sharedPref.getString("username","");
 	    String password = sharedPref.getString("password","");
@@ -46,6 +48,7 @@ public class LoginActivity extends AppCompatActivity{
 
         etUsername = (EditText) findViewById(R.id.username);
         etPassword = (EditText) findViewById(R.id.password);
+        etUsername.setText(name);
 
         TextView mEmailSignInButton = (TextView) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -79,7 +82,6 @@ public class LoginActivity extends AppCompatActivity{
 
         boolean cancel = false;
         View focusView = null;
-
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             etPassword.setError(getString(R.string.error_invalid_password));
@@ -101,14 +103,12 @@ public class LoginActivity extends AppCompatActivity{
 	        Engine.login(this, username, password, new RequestTemplate.ServiceCallback() {
 		        @Override
 		        public void execute(JSONObject obj) {
-
 			        SharedPreferences.Editor editor = sharedPref.edit();
 			        editor.putString("username",username);
 			        editor.putString("password",password);
 			        editor.commit();
 			        User.getUser().setUsername(username);
 			        User.getUser().setPassword(password);
-
 			        Engine.getMe(LoginActivity.this);
 			        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
 			        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
