@@ -15,19 +15,18 @@
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <TextView
-            android:id="@+id/myProfileTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#8bc34a"
             android:padding="5dp"
             android:textSize="16sp"
-            android:text="My Profile"
+            android:text="Interest groups"
             android:textStyle="bold"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp" />
 
         <ImageButton
-            android:layout_marginLeft="200dp"
+            android:layout_marginLeft="160dp"
             android:src="@drawable/ic_search"
             android:background="@android:color/transparent"
             android:layout_width="32dp"

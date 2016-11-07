@@ -141,6 +141,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                        public void onClick(View v) {
                            Intent l = new Intent(v.getContext(), GroupDetailActivity.class);
                            l.putExtra("clickOrganization","Profile");
+                           l.putExtra("plusButton","hide");
                            l.putExtra("id", group.getId());
                            l.putExtra("title",group.getName());
                            l.putExtra("type", group.getType());

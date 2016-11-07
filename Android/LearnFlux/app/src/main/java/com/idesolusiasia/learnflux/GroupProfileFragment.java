@@ -45,23 +45,29 @@ public class GroupProfileFragment extends Fragment {
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v= inflater.inflate(R.layout.fragment_group_profile, container, false);
-		id= getActivity().getIntent().getStringExtra("id");
-		getProfile();
-		description = (TextView)v.findViewById(R.id.textView39);
 		ivAdd = (ImageView)v.findViewById(R.id.ivAdd);
-		ivAdd.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Engine.joinGroup(getContext(), id, "join", new RequestTemplate.ServiceCallback() {
-					@Override
-					public void execute(JSONObject obj) {
-						Toast.makeText(getContext(),"Successfull joining",Toast.LENGTH_SHORT).show();
-						Intent i= new Intent(getContext(), MyProfileActivity.class);
-						startActivity(i);
-					}
-				});
-			}
-		});
+		description = (TextView)v.findViewById(R.id.textView39);
+		id= getActivity().getIntent().getStringExtra("id");
+		final String name = getActivity().getIntent().getStringExtra("title");
+		String joinButton = getActivity().getIntent().getStringExtra("plusButton");
+		if(joinButton.equalsIgnoreCase("hide")){
+			ivAdd.setVisibility(View.GONE);
+		}else if(joinButton.equalsIgnoreCase("show")) {
+			ivAdd.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					Engine.joinGroup(getContext(), id, "join", new RequestTemplate.ServiceCallback() {
+						@Override
+						public void execute(JSONObject obj) {
+							Toast.makeText(getContext(),"Request to connect to "+ name +" sent" ,Toast.LENGTH_SHORT).show();
+							Intent i= new Intent(getContext(), InterestGroup.class);
+							startActivity(i);
+						}
+					});
+				}
+			});
+		}
+		getProfile();
 		return v;
 	}
 	public void getProfile()

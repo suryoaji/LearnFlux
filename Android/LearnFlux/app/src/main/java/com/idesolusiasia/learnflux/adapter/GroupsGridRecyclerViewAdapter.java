@@ -2,10 +2,8 @@ package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +71,7 @@ public class GroupsGridRecyclerViewAdapter extends RecyclerView.Adapter<GroupsGr
 					Toast.makeText(view.getContext(), tvGroupName.getText() + " clicked", Toast.LENGTH_SHORT).show();
 					Intent i = new Intent(view.getContext(), GroupDetailActivity.class);
 					i.putExtra("id", groups.get(pos).getId());
+					i.putExtra("plusButton", "hide");
 					i.putExtra("title", groups.get(pos).getName());
 					i.putExtra("type", groups.get(pos).getType());
 					i.putExtra("color",Colors.get(pos));

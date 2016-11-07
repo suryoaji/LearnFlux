@@ -6,17 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.idesolusiasia.learnflux.ChattingActivity;
 import com.idesolusiasia.learnflux.GroupDetailActivity;
-import com.idesolusiasia.learnflux.OrgDetailActivity;
-import com.idesolusiasia.learnflux.OrgProfileActivity;
 import com.idesolusiasia.learnflux.R;
-import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
@@ -73,6 +68,7 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
                     final int pos = getAdapterPosition();
                     Intent l = new Intent(context, GroupDetailActivity.class);
                     l.putExtra("clickOrganization","Profile");
+                    l.putExtra("plusButton","hide");
                     l.putExtra("id", organizations.get(pos).getId());
                     l.putExtra("title",organizations.get(pos).getName());
                     l.putExtra("type", organizations.get(pos).getType());

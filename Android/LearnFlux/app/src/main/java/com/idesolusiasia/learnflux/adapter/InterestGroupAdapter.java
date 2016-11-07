@@ -107,6 +107,7 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
                 public void onClick(View view) {
                     final int pos = getAdapterPosition();
                     Intent i = new Intent(view.getContext(), GroupDetailActivity.class);
+                    i.putExtra("plusButton", "hide");
                     i.putExtra("id", organizations.get(pos).getId());
                     i.putExtra("title",organizations.get(pos).getName());
                     i.putExtra("type", organizations.get(pos).getType());

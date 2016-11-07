@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.OrgProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
@@ -97,6 +98,25 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             individualName = (TextView)itemView.findViewById(R.id.individualName);
             individualDesc = (TextView)itemView.findViewById(R.id.txt1Desc);
             add = (ImageView)itemView.findViewById(R.id.imageadd);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    int pos = getAdapterPosition();
+                    final Contact ct= (Contact)search.get(pos);
+                    if (User.getUser().getID() == ct.getId()) {
+                        Functions.showAlert(v.getContext(), "Message", "You cannot add yourself");
+                    } else {
+                        Engine.getUserFriend(v.getContext(), ct.getId(), new RequestTemplate.ServiceCallback() {
+                            @Override
+                            public void execute(JSONObject obj) {
+                                Toast.makeText(v.getContext(), "Successfully adding a friend", Toast.LENGTH_SHORT).show();
+                                search.remove(ct);
+                                notifyDataSetChanged();
+                            }
+                        });
+                    }
+                }
+            });
         }
         public CircularNetworkImageView getCircularImage() {
             return circularImage;
@@ -141,6 +161,20 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             txt1 = (TextView)itemView.findViewById(R.id.titleOrgConnection);
             txt2 = (TextView)itemView.findViewById(R.id.StatusOrgConnection);
             joinGrp = (ImageView)itemView.findViewById(R.id.joinGroup);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    Group gr = (Group)search.get(pos);
+                    Intent i = new Intent(v.getContext() , GroupDetailActivity.class);
+                    i.putExtra("id", gr.getId());
+                    i.putExtra("plusButton","show");
+                    i.putExtra("clickOrganization", "Default");
+                    i.putExtra("title",gr.getName());
+                    i.putExtra("type", gr.getType());
+                    v.getContext().startActivity(i);
+                }
+            });
         }
         public ImageView getJoinGrp() {
             return joinGrp;
@@ -180,23 +214,6 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(p!=null){
             v1.getIndividualName().setText(p.getFirst_name());
             v1.getCircularImage().setImageUrl(url+p.getId(), imageLoader);
-            v1.getAdd().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    if (User.getUser().getID() == p.getId()) {
-                        Functions.showAlert(view.getContext(), "Message", "You cannot add yourself");
-                    } else {
-                        Engine.getUserFriend(view.getContext(), p.getId(), new RequestTemplate.ServiceCallback() {
-                            @Override
-                            public void execute(JSONObject obj) {
-                                Toast.makeText(view.getContext(), "Successfull adding a friend", Toast.LENGTH_SHORT).show();
-                                search.remove(p);
-                                notifyDataSetChanged();
-                            }
-                        });
-                    }
-                }
-            });
         }
     }
     private void configureViewHolder2(viewGroup v22, final Group g){
@@ -204,25 +221,6 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(g!=null){
             v22.getTxt1().setText(g.getName());
             v22.getImage().setImageUrl(url+g.getImage(),imageLoader);
-            v22.getJoinGrp().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    Intent i = new Intent(view.getContext() , OrgProfileActivity.class);
-                    i.putExtra("id", g.getId());
-                    i.putExtra("title",g.getName());
-                    i.putExtra("type", g.getType());
-                    view.getContext().startActivity(i);
-                   /* Engine.joinGroup(view.getContext(), g.getId(), g.getType(), new RequestTemplate.ServiceCallback() {
-                        @Override
-                        public void execute(JSONObject obj) {
-                            Toast.makeText(view.getContext(),"Successfull request to join a group", Toast.LENGTH_SHORT).show();
-                            search.remove(g);
-                            notifyDataSetChanged();
-                        }
-                    });*/
-
-                }
-            });
         }
     }
     public void clearData() {
