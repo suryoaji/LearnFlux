@@ -415,6 +415,7 @@ public class ChatBubbleAdapter extends ArrayAdapter<Message> implements Filterab
 			}
 		});
 
+
 		btnOK.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

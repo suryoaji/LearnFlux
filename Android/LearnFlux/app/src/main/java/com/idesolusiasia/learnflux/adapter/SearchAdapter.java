@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.GroupDetailActivity;
+import com.idesolusiasia.learnflux.MyProfileActivity;
 import com.idesolusiasia.learnflux.OrgProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
@@ -103,18 +104,10 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 public void onClick(final View v) {
                     int pos = getAdapterPosition();
                     final Contact ct= (Contact)search.get(pos);
-                    if (User.getUser().getID() == ct.getId()) {
-                        Functions.showAlert(v.getContext(), "Message", "You cannot add yourself");
-                    } else {
-                        Engine.getUserFriend(v.getContext(), ct.getId(), new RequestTemplate.ServiceCallback() {
-                            @Override
-                            public void execute(JSONObject obj) {
-                                Toast.makeText(v.getContext(), "Successfully adding a friend", Toast.LENGTH_SHORT).show();
-                                search.remove(ct);
-                                notifyDataSetChanged();
-                            }
-                        });
-                    }
+                    Intent i = new Intent (v.getContext(), MyProfileActivity.class);
+                    i.putExtra("id", ct.getId());
+                    i.putExtra("from", "fromSearch");
+                    v.getContext().startActivity(i);
                 }
             });
         }

@@ -220,12 +220,12 @@ public class ChattingActivity extends BaseActivity {
 		toolbar.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//Toast.makeText(getApplicationContext(), "Toolbar title clicked", Toast.LENGTH_SHORT).show();
 				if (thread.getGroup()!=null){
 					if (thread.getGroup().getType().equalsIgnoreCase("group")){
 						Intent i = new Intent(v.getContext(),GroupDetailActivity.class);
 						i.putExtra("id",thread.getGroup().getId());
 						i.putExtra("title", thread.getTitle());
+						i.putExtra("plusButton", "hide");
 						v.getContext().startActivity(i);
 
 					}else if (thread.getGroup().getType().equalsIgnoreCase("organization")){
@@ -233,6 +233,7 @@ public class ChattingActivity extends BaseActivity {
 						i.putExtra("id",thread.getGroup().getId());
 						i.putExtra("title", thread.getTitle());
 						i.putExtra("clickOrganization", "Default");
+						i.putExtra("plusButton","hide");
 						v.getContext().startActivity(i);
 
 					}

@@ -322,7 +322,7 @@ public class DataSource {
 	public void createPoll(Poll p){
 		ContentValues values= new ContentValues();
 		values.put(DatabaseHelper.COLUMN_POLL_ID,p.getId());
-		values.put(DatabaseHelper.COLUMN_POLL_TITLE,p.getTitle());
+		values.put(DatabaseHelper.COLUMN_POLL_TITLE,p.getQuestion());
 		db.insert(DatabaseHelper.TABLE_POLL,null,values);
 	}
 

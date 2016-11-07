@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -36,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -143,7 +145,35 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		final ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
 		final View includedLayout = findViewById(R.id.mixLayout);
 		final View includedLayout2 = findViewById(R.id.mixLayout2);
+		final ImageView addProfile= (ImageView) findViewById(R.id.addProfile);
 		scroll3.setVisibility(View.GONE);
+
+		final int profID = getIntent().getIntExtra("id",0);
+		String profFrom = getIntent().getStringExtra("from");
+
+		if(profFrom.contains("baseActivity")){
+			addProfile.setVisibility(View.GONE);
+			connectionTab.setVisibility(View.VISIBLE);
+		}else if(profFrom.contains("fromSearch")){
+			addProfile.setVisibility(View.VISIBLE);
+			connectionTab.setVisibility(View.INVISIBLE);
+			addProfile.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(final View v) {
+					if(User.getUser().getID()== profID){
+						Functions.showAlert(v.getContext(), "Message", "You cannot add yourself");
+					} else {
+						Engine.getUserFriend(v.getContext(), profID, new RequestTemplate.ServiceCallback() {
+							@Override
+							public void execute(JSONObject obj) {
+								Toast.makeText(v.getContext(), "Successfully adding a friend", Toast.LENGTH_SHORT).show();
+							}
+						});
+					}
+					}
+			});
+		}
+
 		myProfileTab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

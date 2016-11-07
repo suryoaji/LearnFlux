@@ -986,4 +986,29 @@ public class Engine {
 			},null);
 		}
 	}
+	public static void queryWithUserId(final Context context, final String userID, final String query,
+									   final RequestTemplate.ServiceCallback callback){
+		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)
+				     + "user/"+ userID + "/" + query;
+
+		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
+			reLogin(context, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					queryWithUserId(context,userID,query,callback);
+				}
+			});
+		}else {
+			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
+				@Override
+				public void execute(JSONObject obj) {
+					if(obj!=null){
+						Log.i("get", "execute: "+obj);
+					}if(callback!=null){
+						callback.execute(obj);
+					}
+				}
+			},null);
+		}
+	}
 }
