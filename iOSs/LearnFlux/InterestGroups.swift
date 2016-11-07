@@ -73,8 +73,8 @@ class InterestGroups: UIViewController {
                         let dataJSON = Engine.getDictData(JSON!)!
                         Engine.editGroupPhoto(idGroup: dataJSON["id"]! as! String, photo: result!["img"]! as! UIImage){status in
                             if status == .Success{
-                                let indexGroup = self.clientData.getGroups()!.indexOf({ $0.id == dataJSON["id"]! as! String })!
-                                self.clientData.getGroups()![indexGroup].image = result!["img"] as? UIImage
+                                let indexGroup = self.clientData.getGroups().indexOf({ $0.id == dataJSON["id"]! as! String })!
+                                self.clientData.getGroups()[indexGroup].image = result!["img"] as? UIImage
                                 self.collectionViewGroups.reloadData()
                             }
                         }
@@ -115,13 +115,13 @@ extension InterestGroups: UITableViewDataSource, UITableViewDelegate{
 // - MARK Collection View
 extension InterestGroups: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        return clientData.getFilteredGroup(.ByInterestGroup).count
+        return clientData.getGroups(.InterestGroup).count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! IGGroupCell
         cell.delegate = self
-        cell.setValues(indexPath, group: clientData.getFilteredGroup(.ByInterestGroup)[indexPath.row])
+        cell.setValues(indexPath, group: clientData.getGroups(.InterestGroup)[indexPath.row])
         return cell
     }
     
@@ -139,11 +139,11 @@ extension InterestGroups{
     func mockUp(){
         setAccNavBar()
         
-        if clientData.getFilteredGroup(.ByInterestGroup).isEmpty{
+        if clientData.getGroups(.InterestGroup).isEmpty{
             imageViewNoGroup.hidden = false
         }else{
             imageViewNoGroup.hidden = true
-            if clientData.getFilteredGroup(.ByInterestGroup).count > MAX_INTEREST_GROUP_SHOWN{
+            if clientData.getGroups(.InterestGroup).count > MAX_INTEREST_GROUP_SHOWN{
                 buttonSeeAllInterestGroup.backgroundColor = LFColor.green
                 buttonSeeAllInterestGroup.enabled = true
             }else{
@@ -189,12 +189,12 @@ extension InterestGroups{
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "ChatSegue"{
             let chatController = segue.destinationViewController as! ChatFlow
-            let indexThread = clientData.getMyThreads()!.indexOf({ $0.id == clientData.getFilteredGroup(.ByInterestGroup)[sender as! Int].thread!.id })!
+            let indexThread = clientData.getMyThreads()!.indexOf({ $0.id == clientData.getGroups(.InterestGroup)[sender as! Int].thread!.id })!
             chatController.initChat(indexThread, idThread: clientData.getMyThreads()![indexThread].id, from: .OpenChat)
         }else if segue.identifier == "GroupSegue"{
             let groupController = segue.destinationViewController as! GroupDetails
             let sender = tupleSenderForGroupSegue(sender!)
-            groupController.initFromCall(clientData.getFilteredGroup(.ByInterestGroup)[sender.0.row], indexTab: sender.1)
+            groupController.initFromCall(clientData.getGroups(.InterestGroup)[sender.0.row], indexTab: sender.1)
         }else if segue.identifier == "NewGroups"{
             createNewInterestGroup()
         }

@@ -12,6 +12,11 @@ import UIKit
     func buttonActionTapped(cell: GroupCell)
 }
 
+enum GroupCellType{
+    case Mine
+    case NotMine
+}
+
 class GroupCell: UITableViewCell {
     
     weak var delegate : GroupCellDelegate?
@@ -20,6 +25,8 @@ class GroupCell: UITableViewCell {
     @IBOutlet weak var labelName: UILabel!
     @IBOutlet weak var labelSide: UILabel!
     var groupType: GroupType!
+    var forSearch: Bool!
+    var type : GroupCellType!
     
     var photos = ["male01.png", "male02.png", "male03.png", "male04.png", "male05.png", "male06.png", "male07.png", "male08.png", "male09.png", "male10.png", "male11.png", "male12.png", "female01.png", "female02.png", "female03.png", "female04.png", "female05.png", "female06.png", "female07.png", "kid1.png", "kid2.png", "kid3.png"]
     var indexPath : NSIndexPath!
@@ -41,6 +48,7 @@ class GroupCell: UITableViewCell {
         self.contentView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
         containerPhoto.layer.cornerRadius = self.frame.height == 44 ? (UIScreen.mainScreen().bounds.height / 568 * containerPhoto.frame.width) / 2 : containerPhoto.frame.width / 2
         groupType = .Group
+        type = .Mine
         randomPhotos()
     }
     
@@ -59,12 +67,13 @@ class GroupCell: UITableViewCell {
         self.groupType = groupType
     }
     
-    func setValues(indexPath: NSIndexPath, group: Group, type: Int = 0, groupType: GroupType = .Group){
+    func setValues(indexPath: NSIndexPath, group: Group, type: Int = 0, groupType: GroupType = .Group, forSearch: Bool = false){
         labelName.text = group.name
         labelSide.text = Engine.getRoleOfGroup(group)?.name.lowercaseString ?? "member"
-        if type == 1 { buttonAction.setImage(UIImage(named: "add-group"), forState: .Normal) }
+        if type == 1 { buttonAction.setImage(UIImage(named: "add-group"), forState: .Normal); self.type = .NotMine }
         self.indexPath = indexPath
         self.groupType = groupType
+        self.forSearch = forSearch
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

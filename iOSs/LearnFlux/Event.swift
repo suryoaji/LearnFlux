@@ -34,8 +34,7 @@ class Event: NSObject {
         self.title = title
         self.id = id
         self.time = time
-//        self.by = (id: "", type: "", link: "")
-        self.by = User(userId: 0, type: "", link: "")
+        self.by = User(dict: [keyCacheMe.id : 0, keyCacheMe.type : ""])
         self.location = location
         self.details = details
         self.participants = []
@@ -105,7 +104,7 @@ class Event: NSObject {
     }
     
     func getByFromDict(dict: Dictionary<String, AnyObject>)->(User){
-        return User(userId: dict["id"] as? Int, type: dict["type"] as? String, link: dict["link"] as? String)
+        return User(dict: dict)
     }
     
     func getThreadFromDict(dict: Dictionary<String, AnyObject>)->(EventThread){
@@ -131,7 +130,7 @@ class Event: NSObject {
     }
     
     func getUser(dict: Dictionary<String, AnyObject>) -> (User){
-        return User(userId: dict["id"] as? Int, type: String(dict["type"]!), link: String(dict["link"]!))
+        return User(dict: dict)
     }
     
     static func convertToEvent(dict: Dictionary<String, AnyObject>) -> (Event?){

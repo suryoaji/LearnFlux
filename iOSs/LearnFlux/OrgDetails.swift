@@ -78,7 +78,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     }
     
     func getOrgDetail() -> (Group?){
-        let filteredOrg = Engine.clientData.getGroups(.Organisation)!.filter({ $0.id == self.orgId })
+        let filteredOrg = Engine.clientData.getGroups(.Organisation).filter({ $0.id == self.orgId })
         if !filteredOrg.isEmpty{
             return filteredOrg.first!
         }

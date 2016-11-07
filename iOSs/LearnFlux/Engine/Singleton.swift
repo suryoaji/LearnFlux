@@ -26,14 +26,23 @@ struct keyCacheMe{
     static let id = "id"
     static let email = "email"
     static let interests = "interests"
-    static let friends = "friends"
-    static let friendRequest = "friend_request"
-    static let friendRequested = "friend_requested"
     static let from = "location"
     static let work = "work"
     static let editFirstname = "firstname"
     static let editLastname = "lastname"
     static let children = "children"
+    static let links = "_links"
+    static let embedded = "_embedded"
+    static let friends = "friends"
+    static let type = "type"
+    static let linkPhoto = "profile_picture"
+    static let mutualFriends = "mutual"
+}
+
+struct keyCacheFriends{
+    static let friends = "friends"
+    static let pending = "pending"
+    static let request = "requested"
 }
 
 typealias EventsByIdGroup = (id: String, events: [Event])
@@ -55,6 +64,7 @@ class Data : NSObject {
         static let LastSync = "lastSync"
         static let Me = "me"
         static let Notification = "notifs"
+        static let Friends = "friend"
     }
     
     private let isProduction = false
@@ -69,7 +79,11 @@ class Data : NSObject {
     
     var newMessageCreated : String! = "";
     
-    private var childrens: [User]?
+    private var pendingConnections : [User] = []
+    
+    private var requestedConnections : [User] = []
+    
+    private var childrens : [User] = []
     
     private var connection: [User]?{
         didSet{
@@ -125,12 +139,43 @@ class Data : NSObject {
         }
     }
     
-    func getMyConnection() -> ([User]?){
-        return self.connection
+    func getMyConnection() -> (friends: [User], pending: [User], requested: [User]){
+        return (friends: self.connection!, pending: self.pendingConnections, requested: self.requestedConnections)
     }
     
-    func setMyConnections(arr: Array<Dictionary<String, AnyObject>>){
-        self.connection = makeConnectionsArr(arr)
+    func setMyConnections(arrFriends: Array<Dictionary<String, AnyObject>>, _ arrPendingFriends: Array<Dictionary<String, AnyObject>>, _ arrRequestedFriends: Array<Dictionary<String, AnyObject>>){
+        self.connection = makeConnectionsArr(arrFriends)
+        self.pendingConnections = makeConnectionsArr(arrPendingFriends)
+        
+        if !arrRequestedFriends.isEmpty{
+            let arrFilteredRequestedFriends = arrRequestedFriends.filter({ dict -> Bool in
+                if dict["id"] as! Int == cacheSelfId(){
+                    return false
+                }
+                if arrFriends.contains({ ($0["id"] as! Int) == dict["id"] as! Int }){
+                    return false
+                }
+                return true
+            })
+            let arrFiltered = arrFilteredRequestedFriends.reduce(Array<Dictionary<String, AnyObject>>(), combine: { a, b in
+                if a.contains({ $0["id"] as! Int == b["id"] as! Int }){
+                    return a
+                }else{
+                    return a + [b]
+                }
+            })
+            self.requestedConnections = makeConnectionsArr(arrFiltered)
+        }else{
+            self.requestedConnections = []
+        }
+        
+        loadAllPendingFriendsDetail()
+    }
+    
+    func loadAllPendingFriendsDetail(){
+        for each in self.pendingConnections{
+            each.loadDetail()
+        }
     }
     
     func addToConnection(user: User){
@@ -141,9 +186,22 @@ class Data : NSObject {
         }
     }
     
+    func addToRequestedConnection(user: User){
+        if !self.requestedConnections.contains({ $0.userId == user.userId }){
+            self.requestedConnections.append(user)
+        }
+    }
+    
+    func removePendingFriends(index: Int){
+        self.pendingConnections.removeAtIndex(index)
+    }
+    
     func makeConnectionsArr(rawArr: Array<Dictionary<String, AnyObject>>) -> ([User]){
         var tempUsers : [User] = []
         for dicUser in rawArr{
+            if dicUser["id"] as! Int == cacheSelfId(){
+                continue
+            }
             let user = User(dict: dicUser)
             tempUsers.append(user)
         }
@@ -200,20 +258,6 @@ class Data : NSObject {
         let index = groups!.indexOf({ $0.id == group.id })!
         groups!.removeAtIndex(index)
         groups!.insert(group, atIndex: index)
-    }
-    
-    func getFilteredGroup(filterBy: FilterGroupType) -> ([Group]){
-        let filteredGroups = getGroups()?.filter({ $0.type == "group" })
-        if filteredGroups != nil{
-            var newFilteredGroups : [Group] = []
-            for group in filteredGroups! where getMyThreads() != nil{
-                if !(getMyThreads()!.filter({ $0.id == group.thread?.id })).isEmpty{
-                    newFilteredGroups.append(group)
-                }
-            }
-            return newFilteredGroups
-        }
-        return []
     }
     
     func addNewGroup(dict: Dictionary<String, AnyObject>){
@@ -308,12 +352,12 @@ class Data : NSObject {
         self.setThreads(conCache)
     }
     
-    func setMyChildrens(childrens: [User]){
-        self.childrens = childrens
+    func setMyChildrens(){
+        self.childrens = cacheEmbeddedChildrens().map({ User(dict: $0) })
     }
     
     func getMyChildrens() -> [User]{
-        return self.childrens ?? []
+        return self.childrens
     }
     
     func saveThread(threads: Array<Dictionary<String, AnyObject>>){
@@ -329,19 +373,34 @@ class Data : NSObject {
     }
     
     func getThread(dict: Dictionary<String, AnyObject>) -> (Thread)?{
-        guard let id = dict["id"] where (id as? String) != nil else{
+        guard let id = dict["id"] as? String else{
             return nil
         }
-        let sId = id as! String
+        guard var participants = dict["participants"] as? Array<Dictionary<String, AnyObject>> else{
+            return nil
+        }
+        
+        for i in 0..<participants.count{
+            if participants[i][keyCacheMe.id] == nil{
+                if (participants[i][keyCacheMe.firstName] as! String).lowercaseString == cacheSelfFirstname().lowercaseString{
+                    participants[i]["id"] = cacheSelfId()
+                }else if let index = connection!.indexOf({ $0.firstName?.lowercaseString == (participants[i][keyCacheMe.firstName] as! String).lowercaseString}){
+                    participants[i]["id"] = connection![index].userId
+                }
+            }
+        }
+        var newDict = dict
+        newDict["participants"] = participants
+        
         if self.threads != nil{
-            let thread = self.threads!.filter({ $0.id == sId })
+            let thread = self.threads!.filter({ $0.id == id })
             if thread.isEmpty{
-                addThread(dict)
+                addThread(newDict)
             }
         }else{
-            addThread(dict)
+            addThread(newDict)
         }
-        return self.threads!.filter({ $0.id == sId }).first!
+        return self.threads!.filter({ $0.id == id }).first!
     }
     
     func getMyEvents()->[Event]?{
@@ -367,19 +426,17 @@ class Data : NSObject {
         self.groups = Group.convertFromArr(arr);
     }
     
-    func getGroups(filter: GroupType = .All) -> ([Group]?){
-        var filtered : [Group]? = [Group]();
-        if (filter == .All) {
-            if let data = groups { filtered = data; }
+    func getGroups(filter: GroupType = .All) -> ([Group]){
+        switch filter {
+        case .All:
+            return self.groups != nil ? self.groups! : []
+        case .Organisation:
+            return self.groups != nil ? self.groups!.filter({ $0.type.lowercaseString == "organization" }) : []
+        case .InterestGroup:
+            return self.groups != nil ? self.groups!.filter({ $0.type.lowercaseString == "group" }) : []
+        default:
+            return []
         }
-        else {
-            guard let data = groups else { return nil; }
-            for el in data {
-                if (filter == .Organisation && el.type == "organization") { filtered!.append (el); }
-                if (filter == .InterestGroup && el.type == "group") { filtered!.append (el); }
-            }
-        }
-        return filtered;
     }
     
     func setCurrentOrg(arr: arrType) {
@@ -453,12 +510,8 @@ class Data : NSObject {
         saveMe(cache)
     }
     
-    func cacheSelfChildrens() -> Array<Dictionary<String, AnyObject>>{
-        return cacheMe()![keyCacheMe.children] != nil ? cacheMe()![keyCacheMe.children] as! Array<Dictionary<String, AnyObject>> : []
-    }
-    
-    func cacheSelfFriends() -> Array<Dictionary<String, AnyObject>>{
-        return cacheMe()![keyCacheMe.friends] != nil ? cacheMe()![keyCacheMe.friends] as! Array<Dictionary<String, AnyObject>> : []
+    func cacheSelfFirstname() -> String{
+        return cacheMe()![keyCacheMe.firstName] as! String
     }
     
     func cacheFullname() -> String{
@@ -485,12 +538,42 @@ class Data : NSObject {
         return cacheMe()![keyCacheMe.from] != nil ? cacheMe()![keyCacheMe.from] as! String : ""
     }
     
-    func cacheSelfFriendRequest() -> Array<Dictionary<String, AnyObject>>{
-        return arrayFromDict(cacheMe()![keyCacheMe.friendRequest]!)
+    func cacheLinks() -> Dictionary<String, AnyObject>{
+        return cacheMe()![keyCacheMe.links] != nil ? cacheMe()![keyCacheMe.links] as! Dictionary<String, AnyObject> : [:]
     }
     
-    func cacheSelfFriendRequested() -> Array<Dictionary<String, AnyObject>>{
-        return arrayFromDict(cacheMe()![keyCacheMe.friendRequested]!)
+    func cacheLinkFriends() -> String?{
+        guard !cacheLinks().isEmpty else{
+            return nil
+        }
+        guard let linksFriend = cacheLinks()[keyCacheMe.friends] as? Dictionary<String, AnyObject> else{
+            return nil
+        }
+        return linksFriend["href"] != nil ? linksFriend["href"] as? String : nil
+    }
+    
+    func cacheLinkPhoto() -> String?{
+        guard !cacheLinks().isEmpty else{
+            return nil
+        }
+        guard let linksPhoto = cacheLinks()[keyCacheMe.linkPhoto] as? Dictionary<String, AnyObject> else{
+            return nil
+        }
+        return linksPhoto["href"] != nil ? linksPhoto["href"] as? String : nil
+    }
+    
+    func cacheEmbedded() -> Dictionary<String, AnyObject>{
+        return cacheMe()![keyCacheMe.embedded] != nil ? cacheMe()![keyCacheMe.embedded] as! Dictionary<String, AnyObject> : [:]
+    }
+    
+    func cacheEmbeddedChildrens() -> Array<Dictionary<String, AnyObject>>{
+        guard !cacheEmbedded().isEmpty else{
+            return []
+        }
+        guard let arrChildrens = cacheEmbedded()["children"] as? Array<Dictionary<String, AnyObject>> else{
+            return []
+        }
+        return arrChildrens
     }
     
     func arrayFromDict(dict: AnyObject) -> Array<Dictionary<String, AnyObject>>{
@@ -505,6 +588,10 @@ class Data : NSObject {
     
     func saveMe(me: AnyObject){
         defaults.setValue(me, forKey: cacheName.Me)
+    }
+    
+    func saveFriends(friends: AnyObject){
+        defaults.setValue(friends, forKey: cacheName.Friends)
     }
     
     func clearCacheThreads(){

@@ -47,8 +47,8 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
                     let dataJSON = Engine.getDictData(JSON!)!
                     Engine.editGroupPhoto(idGroup: dataJSON["id"]! as! String, photo: result!["img"]! as! UIImage){status in
                         if status == .Success{
-                            let indexGroup = self.clientData.getGroups()!.indexOf({ $0.id == dataJSON["id"]! as! String })!
-                            self.clientData.getGroups()![indexGroup].image = result!["img"] as? UIImage
+                            let indexGroup = self.clientData.getGroups().indexOf({ $0.id == dataJSON["id"]! as! String })!
+                            self.clientData.getGroups()[indexGroup].image = result!["img"] as? UIImage
                             self.cv.reloadData()
                         }
                     }

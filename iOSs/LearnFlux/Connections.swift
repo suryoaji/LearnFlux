@@ -24,9 +24,7 @@ class Connections : UITableViewController {
         item.action = #selector(self.revealMenu);
         item.target = self;
         
-        if let connection = clientData.getMyConnection(){
-            selectedConnect = Array(count: connection.count, repeatedValue: false)
-        }
+        selectedConnect = Array(count: clientData.getMyConnection().friends.count, repeatedValue: false)
         
         self.tabBarController?.title = "Connections";
         let flow = Flow.sharedInstance;
@@ -55,10 +53,8 @@ class Connections : UITableViewController {
     }
     
     @IBAction func updateConnection(){
-        if let connection = clientData.getMyConnection(){
-            self.selectedConnect = Array(count: connection.count, repeatedValue: false)
-            self.tableView.reloadData()
-        }
+        self.selectedConnect = Array(count: clientData.getMyConnection().friends.count, repeatedValue: false)
+        self.tableView.reloadData()
     }
     
     lazy var flowDirection : String! = "";
@@ -76,8 +72,8 @@ class Connections : UITableViewController {
     func buttonDoneTapped(sender: UIBarButtonItem) {
         var userId : Array<Int> = [];
         for i in 0..<selectedConnect.count {
-            if selectedConnect[i] && clientData.getMyConnection() != nil {
-                let el = clientData.getMyConnection()![i]
+            if selectedConnect[i] && !clientData.getMyConnection().friends.isEmpty {
+                let el = clientData.getMyConnection().friends[i]
                 userId.append(el.userId!)
             }
         }
@@ -102,10 +98,7 @@ class Connections : UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (section) {
         case 1:
-            if let count = clientData.getMyConnection()?.count{
-                return count
-            }
-            return 0
+            return clientData.getMyConnection().friends.count
         default: return 0
         }
     }
@@ -118,7 +111,7 @@ class Connections : UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("1-0")!;
         cell.setSeparatorType(CellSeparatorFull);
         let lbl = cell.viewWithTag(1) as! UILabel;
-        let user = clientData.getMyConnection()![indexPath.row]
+        let user = clientData.getMyConnection().friends[indexPath.row]
         var name = "\(user.userId!)"
         name += user.lastName != nil ? " \(user.firstName!) \(user.lastName!)".capitalizedString : " \(user.firstName)"
         lbl.text = name
@@ -143,7 +136,7 @@ class Connections : UITableViewController {
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None);
             buttonDoneShouldEnable()
         }else{
-            let user = clientData.getMyConnection()![indexPath.row]
+            let user = clientData.getMyConnection().friends[indexPath.row]
             var arrUserId = Array<Int>();
             arrUserId.append(user.userId!)
             Engine.createPrivateThread(userId: arrUserId){ status, thread in

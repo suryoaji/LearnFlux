@@ -270,8 +270,10 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
             for x in conArr{
                 if x == i.user?.userId{ continue loopCheck }
             }
-            if i.user!.userId! == clientData.cacheSelfId() {
-                continue loopCheck
+            if let userId = i.user!.userId{
+                if userId == clientData.cacheSelfId(){
+                    continue loopCheck
+                }
             }
             conArr.append((i.user?.userId)!)
         }
