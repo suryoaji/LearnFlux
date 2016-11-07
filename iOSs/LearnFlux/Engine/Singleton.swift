@@ -209,9 +209,11 @@ class Data : NSObject {
     }
     
     func updateSpecificEventsByIdGroup(idGroup : String, events: [Event]?){
-        let indexSpecificEvents = specificEvents.indexOf({ $0.id == idGroup })
-        var conSpecificEvents = specificEvents[indexSpecificEvents!]
-        specificEvents.removeAtIndex(indexSpecificEvents!)
+        guard let indexSpecificEvents = specificEvents.indexOf({ $0.id == idGroup }) else{
+            return
+        }
+        var conSpecificEvents = specificEvents[indexSpecificEvents]
+        specificEvents.removeAtIndex(indexSpecificEvents)
         if let events = events{
             for event in events{
                 if let indexEvent = conSpecificEvents.events.indexOf({ $0.id == event.id }){
@@ -222,7 +224,7 @@ class Data : NSObject {
                 }
             }
         }
-        self.specificEvents.insert(conSpecificEvents, atIndex: indexSpecificEvents!)
+        self.specificEvents.insert(conSpecificEvents, atIndex: indexSpecificEvents)
     }
     
     func getSpecificEventsByIdGroup(idGroup: String) -> [Event]?{

@@ -327,6 +327,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     func getNewMessages(timer: NSTimer){
         Engine.getNewMessages(self, indexpath: clientData.getMyThreads()![rowIndexPathFromThread].normalIndex, lastSync: timer.userInfo!["lastSync"] as! Double){status, newMessage, lastSync in
+            print(status, newMessage, lastSync)
             if let conNewMessage = newMessage{
                 func filterNewMessage(con: Array<Thread.ThreadMessage>) -> Array<Thread.ThreadMessage>{
                     var message : Array<Thread.ThreadMessage> = []
@@ -688,24 +689,30 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         if let idGroup = self.idGroup{
             Engine.createEvent(event, idGroup: idGroup)
             setAttachmentPanelVisible(false, animated: false);
+        }else{
+            Util.showMessageInViewController(self, title: "Ops", message: "sorry, for now events and poll cannot be send caused events and polls only for group")
         }
     }
     
     func sendSelectedPollData(poll: Dictionary<String, AnyObject>) {
-        Engine.createPoll(poll){ status, JSON in
-            if status == .Success{
-                if let rawJSON = JSON where ((rawJSON as? Dictionary<String, AnyObject>) != nil){
-                    guard let rawJSON = JSON else{
-                        return
-                    }
-                    guard let paramResponse = (rawJSON as! Dictionary<String, AnyObject>)["data"] else{
-                        return
-                    }
-                    Engine.sendPollToMessage(paramResponse as! Dictionary<String, AnyObject>, idThread: self.clientData.getMyThreads()![self.rowIndexPathFromThread].id){ status, JSON in
-                        
+        if self.idGroup != nil{
+            Engine.createPoll(poll){ status, JSON in
+                if status == .Success{
+                    if let rawJSON = JSON where ((rawJSON as? Dictionary<String, AnyObject>) != nil){
+                        guard let rawJSON = JSON else{
+                            return
+                        }
+                        guard let paramResponse = (rawJSON as! Dictionary<String, AnyObject>)["data"] else{
+                            return
+                        }
+                        Engine.sendPollToMessage(paramResponse as! Dictionary<String, AnyObject>, idThread: self.clientData.getMyThreads()![self.rowIndexPathFromThread].id){ status, JSON in
+                            
+                        }
                     }
                 }
             }
+        }else{
+            Util.showMessageInViewController(self, title: "Ops", message: "sorry, for now events and poll cannot be send caused events and polls only for group")
         }
         setAttachmentPanelVisible(false, animated: false);
     }
