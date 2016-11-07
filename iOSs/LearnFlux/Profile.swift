@@ -49,8 +49,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         var groups = result.groups
         var organizations = result.organizations
         for i in 0..<users.count{
-            if users[i].photo == nil && users[i].picture != nil{
-                users[i].userId = Int(users[i].picture!.componentsSeparatedByString("/").last!)
+            if users[i].photo == nil{
                 if let index = conImageResult.indexOf({ $0.id == String(users[i].userId!) }){
                     users[i].photo = conImageResult[index].image
                 }
@@ -77,12 +76,11 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         let groups = result.groups
         let organizations = result.organizations
         for i in 0..<users.count{
-            if users[i].photo == nil && users[i].userId != nil{
-                Engine.getImageIndividual(self, urlIndividual: users[i].picture){image in
+            if users[i].photo == nil{
+                Engine.getImageIndividual(self, id: String(users[i].userId!)){ image in
                     if let image = image{
                         self.conImageResult.append((id: String(users[i].userId!), image: image))
                         if self.searchResult.users.count > i{
-                            self.searchResult.users[i].photo = image
                             self.tableViewSearchResult.reloadRowsAtIndexPaths([NSIndexPath(forRow: i + 1, inSection: 0)], withRowAnimation: .None)
                         }
                     }
@@ -160,13 +158,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         }
     }
     
-    @IBAction func buttonSaveListInterest(sender: UIButton) {
-        if let holdView = (self.view.subviews.filter({ $0.tag == 12311 })).first{
-            holdView.removeFromSuperview()
-        }
-        viewEditInterest.hidden = true
-    }
-    
     @IBAction func buttonSeeAllUpperTapped(sender: UIButton) {
         if indicatorAccConnection == 2{
             shouldSeeAllUpper = !shouldSeeAllUpper
@@ -182,13 +173,13 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     func activeAccConnection() -> (lower: Int, upper: Int){
         switch indicatorAccConnection {
         case 0:
-            return (lower: suggestContacts.count, upper: clientData.getMyConnection().friends.count ?? 0)
+            return (lower: suggestContacts.count, upper: clientData.getMyConnection()?.count ?? 0)
         case 1:
             let groups = clientData.getGroups(.InterestGroup)
-            return(lower: suggestGroups.count, upper: groups.count)
+            return(lower: suggestGroups.count, upper: groups!.count)
         case 2:
             let organizations = clientData.getGroups(.Organisation)
-            return(lower: suggestOrganizations.count, upper: organizations.count)
+            return(lower: suggestOrganizations.count, upper: organizations!.count)
         case 3:
             return(lower: 0, upper: allContacts.count)
         default:
@@ -202,7 +193,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     }
     
     let sectionTitle = ["", "My Children", "Affiliated organizations", "Interests", "Connections"]
-    let friendRequestSectionTitle = ["Connections", "Groups", "People you may know"]
+    let friendRequestSectionTitle = ["Connections", "People you may know"]
     var roles = ""
     
     let titleAddAccConnection = ["+ add contact", "+ add group", "+ add organizations", "+ add contacts"]
@@ -245,13 +236,23 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     
     var allContacts : Dictionary<String, Array<Dictionary<String, String>>> = [:]
     var allContactsSectionIndex = Array<String>()
-    var requestedGroups = [Group]()
     
-//    var suggestFriendConnections = Array<Dictionary<String, AnyObject>>(){
-//        didSet{
-//            tableViewFriendRequest.reloadData()
-//        }
-//    }
+    var friendRequests = [User](){
+        didSet{
+            labelFriendRequest.text = "\(friendRequests.count)"
+            labelFriendRequest.hidden = friendRequests.count > 0 ? false : true
+            tableViewFriendRequest.reloadData()
+            
+            if indicatorHeader == 1 && (indicatorAccConnection == 0 || indicatorAccConnection == 3){
+                tableViewConnectionUpper.reloadData()
+            }
+        }
+    }
+    var suggestFriendConnections = Array<Dictionary<String, AnyObject>>(){
+        didSet{
+            tableViewFriendRequest.reloadData()
+        }
+    }
     
     let notifications = [["name"      : "Child Development Club",
                           "photo"     : "company4.png",
@@ -318,6 +319,11 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                 self.interests = interests
             }
         }
+        Engine.getFriendRequests(){ friends in
+            if let friends = friends{
+                self.friendRequests = friends
+            }
+        }
         Engine.getChildsOfAllOrganizations(){ groups in
             if let groups = groups{
                 self.groups = groups
@@ -335,38 +341,24 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         }
         
         //loadSuggestFriend
-//        self.suggestFriendConnections = Engine.getSuggestFriends()
-//        let maxCount = self.suggestFriendConnections.count > 5 ? 5 : self.suggestFriendConnections.count
-//        for i in 0..<maxCount{
-//            if self.suggestFriendConnections[i]["photo"] == nil{
-//                Engine.getImageIndividual(id: String(self.suggestFriendConnections[i]["id"] as! Int)){ image in
-//                    if let image = image{
-//                        self.suggestFriendConnections[i]["photo"] = image
-//                        self.tableViewFriendRequest.reloadRowsAtIndexPaths([NSIndexPath(forRow: i + 1, inSection: 1)], withRowAnimation: .None)
-//                    }else{
-//                        self.suggestFriendConnections[i]["photo"] = UIImage(named: "photo-container.png")
-//                    }
-//                }
-//            }
-//        }
+        self.suggestFriendConnections = Engine.getSuggestFriends()
+        let maxCount = self.suggestFriendConnections.count > 5 ? 5 : self.suggestFriendConnections.count
+        for i in 0..<maxCount{
+            if self.suggestFriendConnections[i]["photo"] == nil{
+                Engine.getImageIndividual(id: String(self.suggestFriendConnections[i]["id"] as! Int)){ image in
+                    if let image = image{
+                        self.suggestFriendConnections[i]["photo"] = image
+                        self.tableViewFriendRequest.reloadRowsAtIndexPaths([NSIndexPath(forRow: i + 1, inSection: 1)], withRowAnimation: .None)
+                    }else{
+                        self.suggestFriendConnections[i]["photo"] = UIImage(named: "photo-container.png")
+                    }
+                }
+            }
+        }
         ////////////
         
         Engine.getNotifications(self){ notifs in
             print(notifs)
-            let arrIdGroups = notifs.reduce([String](), combine: { (a, b) in
-                if (b["type"] as! String).lowercaseString == "group"{
-                    return a + [b["ref"] as! String]
-                }else{
-                    return a
-                }
-            })
-            for each in arrIdGroups{
-                Engine.getGroupInfo(groupId: each){status, group in
-                    if status == .Success && group != nil{
-                        self.requestedGroups.append(group!)
-                    }
-                }
-            }
         }
     }
     
@@ -396,7 +388,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         case tableViewMyProfile:
             return sectionTitle.count
         case tableViewFriendRequest:
-            return 3
+            return 2
         case tableViewListInterests:
             return 2
         case tableViewConnectionUpper:
@@ -539,24 +531,20 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                     var organizations = data.1
                     var groups = data.2
                     for i in 0..<users.count{
-                        if users[i].userId != nil{
-                            if let index = self.clientData.getMyConnection().friends.indexOf({ $0.userId! == users[i].userId! }){
-                                users[i] = self.clientData.getMyConnection().friends[index]
-                            }
-                        }else{
-                            
+                        if let index = self.clientData.getMyConnection()!.indexOf({ $0.userId! == users[i].userId! }){
+                            users[i] = self.clientData.getMyConnection()![index]
                         }
                     }
                     for i in 0..<groups.count{
                         if let index = self.groups.indexOf({ $0.id == groups[i].id }){
                             groups[i] = self.groups[index]
-                        }else if let index = self.clientData.getGroups(.Group).indexOf({ $0.id == groups[i].id }){
-                            groups[i] = self.clientData.getGroups()[index]
+                        }else if let index = self.clientData.getGroups(.Group)!.indexOf({ $0.id == groups[i].id }){
+                            groups[i] = self.clientData.getGroups()![index]
                         }
                     }
                     for i in 0..<organizations.count{
-                        if let index = self.clientData.getGroups(.Organisation).indexOf({ $0.id == organizations[i].id }){
-                            organizations[i] = self.clientData.getGroups(.Organisation)[index]
+                        if let index = self.clientData.getGroups(.Organisation)!.indexOf({ $0.id == organizations[i].id }){
+                            organizations[i] = self.clientData.getGroups(.Organisation)![index]
                         }
                     }
                     self.searchResult = (users: users, organizations: organizations, groups: groups)
@@ -640,9 +628,9 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     
     func getConnectionsMyProfileData() -> Array<ConnectionType>{
         var types = Array<ConnectionType>()
-        if !clientData.getMyConnection().friends.isEmpty{ types.append(.Individual) }
-        if !clientData.getGroups(.Organisation).isEmpty{ types.append(.Organization) }
-        if !clientData.getGroups(.InterestGroup).isEmpty{ types.append(.InterestGroup) }
+        if !clientData.getMyConnection()!.isEmpty{ types.append(.Individual) }
+        if !clientData.getGroups(.Organisation)!.isEmpty{ types.append(.Organization) }
+        if !clientData.getFilteredGroup(.ByInterestGroup).isEmpty{ types.append(.InterestGroup) }
         if !groups.isEmpty{ types.append(.Group) }
         return types
     }
@@ -725,16 +713,21 @@ extension Profile{
     func numberOfRowTableViewConnectionUpper(section: Int) -> Int{
         switch indicatorAccConnection {
         case 0:
-            return clientData.getMyConnection().friends.count >= 3 ? 3 : clientData.getMyConnection().friends.count
+            if clientData.getMyConnection() != nil{
+                return clientData.getMyConnection()!.count >= 3 ? 3 : clientData.getMyConnection()!.count
+            }
         case 1:
             return groups.count >= 3 ? 3 : groups.count
         case 2:
-            return clientData.getGroups(.Organisation).count
+            if let organizations = clientData.getGroups(.Organisation){
+                return organizations.count
+            }
         case 3:
             return allContacts[allContactsSectionIndex[section]]!.count
         default:
             return 0
         }
+        return 0
     }
     
     func numberOfRowTableViewMyProfile(section: Int) -> Int{
@@ -750,12 +743,9 @@ extension Profile{
     func numberOfRowTableViewFriendRequest(section: Int) -> Int{
         switch section {
         case 0:
-            return clientData.getMyConnection().pending.isEmpty ? 0 : clientData.getMyConnection().pending.count + 1
+            return friendRequests.isEmpty ? 0 : friendRequests.count + 1
         case 1:
-            return requestedGroups.isEmpty ? 0 : requestedGroups.count + 1
-        case 2:
-            return 0
-//            return suggestFriendConnections.isEmpty ? 0 : suggestFriendConnections.count + 1
+            return suggestFriendConnections.isEmpty ? 0 : suggestFriendConnections.count + 1
         default:
             return 0
         }
@@ -794,43 +784,35 @@ extension Profile{
             case 0:
                 let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
                 let user = searchResult.users[indexPath.row - 1]
-                
-                if user.userId != nil{
-                    if let index = clientData.getMyConnection().friends.indexOf({ $0.userId! == user.userId! }){
-                        individualCell.setValues(clientData.getMyConnection().friends[index], indexPath: indexPath, type: .Friend, forSearch: true)
-                    }else if clientData.getMyConnection().requested.contains({ $0.userId! == searchResult.users[indexPath.row - 1].userId! }){
-                        individualCell.setValues(searchResult.users[indexPath.row - 1], indexPath: indexPath, type: .Pending, forSearch: true)
-                    }else{
-                        individualCell.setValues(searchResult.users[indexPath.row - 1], indexPath: indexPath, type: .NotFriend, forSearch: true)
-                    }
+                if let index = clientData.getMyConnection()!.indexOf({ $0.userId! == user.userId! }){
+                    individualCell.setValues(clientData.getMyConnection()![index], indexPath: indexPath, type: .Friend)
                 }else{
-                    individualCell.setValues(searchResult.users[indexPath.row - 1], indexPath: indexPath, type: .NotFriend, forSearch: true)
+                    individualCell.setValues(searchResult.users[indexPath.row - 1], indexPath: indexPath, type: .NotFriend)
                 }
-                
                 individualCell.delegate = self
                 cell = individualCell
             case 1:
                 let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
                 let group = searchResult.organizations[indexPath.row - 1]
                 organizationCell.delegate = self
-                if let index = clientData.getGroups(.Organisation).indexOf({ $0.id == group.id }){
-                    organizationCell.setValues(clientData.getGroups(.Organisation)[index], indexPath : indexPath, type: .Mine, forSearch: true)
+                if let index = clientData.getGroups(.Organisation)!.indexOf({ $0.id == group.id }){
+                    organizationCell.setValues(clientData.getGroups(.Organisation)![index], indexPath : indexPath, type: .Mine, forSearch: true)
                 }else{
                     organizationCell.setValues(searchResult.organizations[indexPath.row - 1], indexPath: indexPath, type: .NotMine, forSearch: true)
                 }
                 cell = organizationCell
             case 2:
-                let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
+                let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
                 let group = searchResult.groups[indexPath.row - 1]
-                groupCell.delegate = self
+                organizationCell.delegate = self
                 if let index = self.groups.indexOf({ $0.id == group.id }){
-                    groupCell.setValues(indexPath, group: self.groups[index], forSearch: true)
-                }else if let index = clientData.getGroups(.Group).indexOf({ $0.id == group.id }){
-                    groupCell.setValues(indexPath, group: clientData.getGroups(.Group)[index], forSearch: true)
+                    organizationCell.setValues(self.groups[index], indexPath : indexPath, type: .Mine, forSearch: true)
+                }else if let index = clientData.getGroups(.Group)!.indexOf({ $0.id == group.id }){
+                    organizationCell.setValues(clientData.getGroups(.Group)![index], indexPath : indexPath, type: .Mine, forSearch: true)
                 }else{
-                    groupCell.setValues(indexPath, group: group, type: 1, forSearch: true)
+                    organizationCell.setValues(searchResult.groups[indexPath.row - 1], indexPath: indexPath, type: .NotMine, forSearch: true)
                 }
-                cell = groupCell
+                cell = organizationCell
             default: break
             }
         }
@@ -873,7 +855,7 @@ extension Profile{
                     break
                 }
             case 2:
-                if !clientData.getGroups(.Organisation).isEmpty{
+                if !clientData.getGroups(.Organisation)!.isEmpty{
                     let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
                     headerCell.customInit(sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: "+ edit profile")
                     headerCell.delegate = self
@@ -928,7 +910,7 @@ extension Profile{
                     break
                 }
             case 2:
-                if !clientData.getGroups(.Organisation).isEmpty{
+                if !clientData.getGroups(.Organisation)!.isEmpty{
                     let organizationCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("2")!
                     let collectionView = organizationCell.viewWithTag(1) as! UICollectionView
                     let number = organizationCell.viewWithTag(2) as! UILabel
@@ -938,9 +920,9 @@ extension Profile{
                         containerButtonNumber.hidden = true
                         collectionView.frame.size.width = organizationCell.frame.width
                     }else{
-                        containerButtonNumber.hidden = clientData.getGroups(.Organisation).count > 3 ? false : true
+                        containerButtonNumber.hidden = clientData.getGroups(.Organisation)!.count > 3 ? false : true
                         number.layer.cornerRadius = number.bounds.size.width / 2
-                        number.text = "\(clientData.getGroups(.Organisation).count - 3)"
+                        number.text = "\(clientData.getGroups(.Organisation)!.count - 3)"
                         button.enabled = true
                         button.addTarget(self, action: #selector(showOrganizations), forControlEvents: .TouchUpInside)
                     }
@@ -1065,7 +1047,7 @@ extension Profile{
         switch indicatorAccConnection {
         case 0:
             let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
-            individualCell.setValues(clientData.getMyConnection().friends[indexPath.row], indexPath: indexPath)
+            individualCell.setValues(clientData.getMyConnection()![indexPath.row], indexPath: indexPath)
             individualCell.delegate = self
             Engine.getPhotoOfConnection(indexPath){ success in
                 if success{
@@ -1081,17 +1063,17 @@ extension Profile{
         case 2:
             let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
             let organizations = clientData.getGroups(.Organisation)
-            organizationCell.setValues(organizations[indexPath.row], indexPath: indexPath)
+            organizationCell.setValues(organizations![indexPath.row], indexPath: indexPath)
             cell = organizationCell
         case 3:
             var contacts = allContacts[allContactsSectionIndex[indexPath.section]]!
             switch contacts[indexPath.row]["type"]! {
             case "individual":
                 let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
-                let index = clientData.getMyConnection().friends.indexOf({ $0.userId! == Int(contacts[indexPath.row]["id"]!)! })
-                individualCell.setValues(clientData.getMyConnection().friends[index!], indexPath: NSIndexPath(forRow: index!, inSection: 0))
+                let index = clientData.getMyConnection()!.indexOf({ $0.userId! == Int(contacts[indexPath.row]["id"]!)! })
+                individualCell.setValues(clientData.getMyConnection()![index!], indexPath: NSIndexPath(forRow: index!, inSection: 0))
                 individualCell.delegate = self
-                if clientData.getMyConnection().friends[index!].photo == nil{
+                if clientData.getMyConnection()![index!].photo == nil{
                     Engine.getPhotoOfConnection(NSIndexPath(forRow: index!, inSection: 0)){ success in
                         if success{
                             self.tableViewConnectionUpper.reloadRowsAtIndexPaths([NSIndexPath(forRow: index!, inSection: 0)], withRowAnimation: .None)
@@ -1108,7 +1090,7 @@ extension Profile{
                 cell = groupCell
             case "organization":
                 let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
-                let organizations = clientData.getGroups(.Organisation)
+                let organizations = clientData.getGroups(.Organisation)!
                 let index = organizations.indexOf({ $0.id == contacts[indexPath.row]["id"] })
                 organizationCell.setValues(organizations[index!], indexPath: indexPath)
                 cell = organizationCell
@@ -1125,9 +1107,9 @@ extension Profile{
         switch rowTypes[indexPath.row] {
         case .Individual:
             let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
-            individualCell.setValues(clientData.getMyConnection().friends[0], indexPath: NSIndexPath(forRow: 0, inSection: 0))
+            individualCell.setValues(clientData.getMyConnection()![0], indexPath: NSIndexPath(forRow: 0, inSection: 0))
             individualCell.delegate = self
-            if clientData.getMyConnection().friends[0].photo == nil{
+            if clientData.getMyConnection()![0].photo == nil{
                 Engine.getPhotoOfConnection(NSIndexPath(forRow: 0, inSection: 0)){ success in
                     if success{
                         self.tableViewConnectionUpper.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
@@ -1137,13 +1119,13 @@ extension Profile{
             cell = individualCell
         case .Organization:
             let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
-            let organizations = clientData.getGroups(.Organisation)
+            let organizations = clientData.getGroups(.Organisation)!
             organizationCell.setValues(organizations[0], indexPath: NSIndexPath(forRow: 0, inSection: 0))
             cell = organizationCell
         case .InterestGroup:
             let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
             groupCell.delegate = self
-            groupCell.setValues(NSIndexPath(forRow: 0, inSection: 0), group: clientData.getGroups(.InterestGroup)[0], groupType: .InterestGroup)
+            groupCell.setValues(NSIndexPath(forRow: 0, inSection: 0), group: clientData.getFilteredGroup(.ByInterestGroup)[0], groupType: .InterestGroup)
             cell = groupCell
         case .Group:
             let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
@@ -1182,27 +1164,18 @@ extension Profile{
             let labelHeader = cell.viewWithTag(1) as! UILabel
             labelHeader.text = friendRequestSectionTitle[indexPath.section]
         default:
+            let friendRequestCell = tableViewFriendRequest.dequeueReusableCellWithIdentifier("Cell") as! FriendRequestCell
+            friendRequestCell.delegate = self
             switch indexPath.section {
             case 0:
-                let friendRequestCell = tableViewFriendRequest.dequeueReusableCellWithIdentifier("Cell") as! FriendRequestCell
-                let friend = clientData.getMyConnection().pending[indexPath.row - 1]
-                friendRequestCell.delegate = self
+                let friend = friendRequests[indexPath.row - 1]
                 friendRequestCell.setValues(friend, indexPath: indexPath)
-                cell = friendRequestCell
             case 1:
-                let groupRequestCell = tableViewFriendRequest.dequeueReusableCellWithIdentifier("Group") as! GroupRequestCell
-                let requestedGroup = requestedGroups[indexPath.row - 1]
-                groupRequestCell.delegate = self
-                groupRequestCell.setValues(requestedGroup, indexPath: indexPath)
-                cell = groupRequestCell
-            case 2:
-//                let friendDict = suggestFriendConnections[indexPath.row - 1]
-//                friendRequestCell.setValues(friendDict, indexPath: indexPath)
-//                cell = friendRequestCell
-                break
+                let friendDict = suggestFriendConnections[indexPath.row - 1]
+                friendRequestCell.setValues(friendDict, indexPath: indexPath)
             default: break
             }
-            
+            cell = friendRequestCell
         }
         return cell
     }
@@ -1235,7 +1208,7 @@ extension Profile{
                 let cell = tableViewConnectionUpper.cellForRowAtIndexPath(indexPath) as! GroupCell
                 self.performSegueWithIdentifier("GroupSegue", sender: cell)
             case "organization":
-                let index = clientData.getGroups(.Organisation).indexOf({ $0.id == contacts[indexPath.row]["id"]! })
+                let index = clientData.getGroups(.Organisation)!.indexOf({ $0.id == contacts[indexPath.row]["id"]! })
                 self.performSegueWithIdentifier("OrgSegue", sender: index!)
             default: break
             }
@@ -1289,10 +1262,12 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         switch collectionView.tag {
         case 1:
-            if shouldShowOrganizations{
-                return clientData.getGroups(.Organisation).count
-            }else{
-                return clientData.getGroups(.Organisation).count > 3 ? 3 : clientData.getGroups(.Organisation).count
+            if let count = clientData.getGroups(.Organisation)?.count{
+                if shouldShowOrganizations{
+                    return count
+                }else{
+                    return count > 3 ? 3 : count
+                }
             }
         case 2:
             return clientData.getMyChildrens().count > 3 ? 4 : clientData.getMyChildrens().count
@@ -1300,6 +1275,7 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
             return 1
         default: return 0
         }
+        return 0
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
@@ -1308,7 +1284,7 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
         case 1:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
             let imageViewPhoto = cell.viewWithTag(1) as! UIImageView
-            imageViewPhoto.image = clientData.getGroups(.Organisation)[indexPath.row].image ?? UIImage(named: "company1.png")
+            imageViewPhoto.image = clientData.getGroups(.Organisation)![indexPath.row].image ?? UIImage(named: "company1.png")
         case 2:
             if indexPath.row == 3{
                 cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddMore", forIndexPath: indexPath)
@@ -1399,9 +1375,6 @@ extension Profile{
         viewChildrenProfileNotification.dinamicCustomInit()
         
         viewResultSearch.customInit(self, viewIndicator: viewSearch, type: .SearchHeader)
-        
-        labelFriendRequest.text = "\(clientData.getMyConnection().pending.count)"
-        labelFriendRequest.hidden = clientData.getMyConnection().pending.count > 0 ? false : true
         
     }
     
@@ -1546,7 +1519,6 @@ extension Profile{
         holdView.backgroundColor = UIColor.clearColor()
         let gesture = UITapGestureRecognizer(target: self, action: #selector(holdViewTapped))
         holdView.addGestureRecognizer(gesture)
-        holdView.tag = 12311
         self.view.addSubview(holdView)
         switch sender.tag {
         case 1:
@@ -1584,13 +1556,13 @@ extension Profile{
         if segue.identifier == "OrgSegue"{
             let orgDetailController = segue.destinationViewController as! OrgDetails
             var group = Group(type: "", id: "", name: "")
-            group = clientData.getGroups(.Organisation)[sender as! Int]
+            group = clientData.getGroups(.Organisation)![sender as! Int]
             orgDetailController.initView(group.id, orgTitle: group.name, indexTab: 0)
         }else if segue.identifier == "GroupSegue"{
             let groupDetailController = segue.destinationViewController as! GroupDetails
             let sender = sender! as! GroupCell
             if sender.groupType! == .InterestGroup{
-                groupDetailController.initFromCall(clientData.getGroups(.InterestGroup)[sender.indexPath.row])
+                groupDetailController.initFromCall(clientData.getFilteredGroup(.ByInterestGroup)[sender.indexPath.row])
             }else if sender.groupType! == .Group{
                 groupDetailController.initFromCall(groups[sender.indexPath.row])
             }
@@ -1598,7 +1570,7 @@ extension Profile{
             let chatController = segue.destinationViewController as! ChatFlow
             var indexThread = 0
             if let sender = sender as? GroupCell{
-                let group = sender.groupType! == .InterestGroup ? clientData.getGroups(.InterestGroup).first! : groups[sender.indexPath.row]
+                let group = sender.groupType! == .InterestGroup ? clientData.getFilteredGroup(.ByInterestGroup).first! : groups[sender.indexPath.row]
                 indexThread = clientData.getMyThreads()!.indexOf({ $0.id == group.threadId! })!
             }else if let sender = sender as? Thread{
                 indexThread = clientData.getMyThreads()!.indexOf({ $0.id == sender.id })!
@@ -1635,15 +1607,6 @@ extension Profile: SectionTitleCellDelegate{
                         self.tableViewMyProfile.reloadDataSection(0, animate: false)
                     }
                 }
-            case 3:
-                if Set(clientData.cacheSelfInterests()) != listInterestChecked{
-                    Engine.editInterests(self, interests: Array(listInterestChecked)){ status in
-                        if status == .Success{
-                            self.tableViewMyProfile.reloadDataSection(3, animate: false)
-                        }
-                    }
-                }
-                listInterestChecked = []
             default: break
             }
             shouldEditMyProfile = false
@@ -1654,15 +1617,8 @@ extension Profile: SectionTitleCellDelegate{
 // - MARK: GroupCell My Profile Delegate
 extension Profile: GroupCellDelegate{
     func buttonActionTapped(cell: GroupCell) {
-        if cell.forSearch!{
-            if cell.type! == .NotMine{
-                let group = searchResult.groups[cell.indexPath.row - 1]
-                print(group.name)
-            }
-        }else{
-            if cell.indexPath != nil{
-                performSegueWithIdentifier("ChatSegue", sender: cell)
-            }
+        if cell.indexPath != nil{
+            performSegueWithIdentifier("ChatSegue", sender: cell)
         }
     }
 }
@@ -1680,40 +1636,22 @@ extension Profile: FriendRequestCellDelegate{
     func buttonAcceptTapped(cell: FriendRequestCell) {
         switch cell.indexPath.section {
         case 0:
-            Engine.addFriend(user: clientData.getMyConnection().pending[cell.indexPath.row - 1]){ status in
+            Engine.addFriend(user: friendRequests[cell.indexPath.row - 1]){ status in
                 if status == .Success{
-                    if self.indicatorHeader == 1 && (self.indicatorAccConnection == 0 || self.indicatorAccConnection == 3){
+                    self.friendRequests.removeAtIndex(cell.indexPath.row - 1)
+                    if self.indicatorAccConnection == 0{
                         self.tableViewConnectionUpper.reloadData()
                     }
-                    self.tableViewFriendRequest.reloadData()
-                    self.labelFriendRequest.text = "\(self.clientData.getMyConnection().pending.count)"
-                    self.labelFriendRequest.hidden = self.clientData.getMyConnection().pending.count > 0 ? false : true
                 }
             }
         case 1:
-            print("requestSuggestFriends sedang mati")
-//            Engine.requestFriend(userId: suggestFriendConnections[cell.indexPath.row - 1]["id"] as! Int){status in
-//                if status == .Success{
-//                    self.suggestFriendConnections.removeAtIndex(cell.indexPath.row - 1)
-//                }
-//            }
+            Engine.requestFriend(userId: suggestFriendConnections[cell.indexPath.row - 1]["id"] as! Int){status in
+                if status == .Success{
+                    self.suggestFriendConnections.removeAtIndex(cell.indexPath.row - 1)
+                }
+            }
             break
         default: break
-        }
-    }
-}
-
-// - MARK: GroupRequestCell My Profile Delegate
-extension Profile: GroupRequestCellDelegate{
-    func buttonAcceptTappedGroupRequestCell(cell: GroupRequestCell) {
-        let group = requestedGroups[cell.indexPath.row - 1]
-        Engine.requestJoinGroup(idGroup: group.id){status in
-            self.requestedGroups.removeAtIndex(cell.indexPath.row - 1)
-            var notifs = self.clientData.cacheNotifications()
-            if let index = notifs.indexOf({ $0["ref"] as! String == group.id }){
-                notifs.removeAtIndex(index)
-                self.clientData.saveNotifications(notifs)
-            }
         }
     }
 }
@@ -1721,30 +1659,10 @@ extension Profile: GroupRequestCellDelegate{
 // - MARK IndividualCell My Profile Delegate
 extension Profile: IndividualCellDelegate{
     func buttonChatTapped(cell: IndividualCell) {
-        if !cell.forSearch{
-            let user = clientData.getMyConnection().friends[cell.indexPath.row]
-            Engine.createPrivateThread(userId: [user.userId!]){ status, thread in
-                if let thread = thread where status == .Success{
-                    self.performSegueWithIdentifier("ChatSegue", sender: thread)
-                }
-            }
-        }else{
-            let user = searchResult.users[cell.indexPath.row - 1]
-            print(user.firstName, user.userId)
-        }
-    }
-    
-    func individualCellButtonAddTapped(cell: IndividualCell) {
-        if cell.forSearch!{
-            let user = searchResult.users[cell.indexPath.row - 1]
-            if user.userId != nil{
-                Engine.requestFriend(user: user){status in
-                    if status == .Success{
-                        if self.searchResult.users.count > cell.indexPath.row - 1{
-                            self.tableViewSearchResult.reloadRowsAtIndexPaths([cell.indexPath], withRowAnimation: .None)
-                        }
-                    }
-                }
+        let user = clientData.getMyConnection()![cell.indexPath.row]
+        Engine.createPrivateThread(userId: [user.userId!]){ status, thread in
+            if let thread = thread where status == .Success{
+                self.performSegueWithIdentifier("ChatSegue", sender: thread)
             }
         }
     }
@@ -1754,10 +1672,11 @@ extension Profile: IndividualCellDelegate{
 extension Profile: OrganizationCellDelegate{
     func buttonAddTapped(cell: OrganizationCell) {
         if cell.forSearch!{
-            let organization = searchResult.organizations[cell.indexPath.row - 1]
-            Engine.requestJoinGroup(idGroup: organization.id){status in
-                print("have successfully send request to \(organization.name) with id: \(organization.id)")
-            }
+            let group = searchResult.groups[cell.indexPath.row - 1]
+            
+            print(group.name)
+        }else{
+            
         }
     }
 }

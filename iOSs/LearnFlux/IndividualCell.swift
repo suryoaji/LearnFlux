@@ -11,18 +11,15 @@ import UIKit
 enum IndividualCellType{
     case Friend
     case NotFriend
-    case Pending
 }
 
 protocol IndividualCellDelegate: class {
     func buttonChatTapped(cell: IndividualCell)
-    func individualCellButtonAddTapped(cell: IndividualCell)
 }
 
 class IndividualCell: UITableViewCell {
     weak var delegate : IndividualCellDelegate?
     var indexPath: NSIndexPath!
-    var forSearch : Bool!
     var type: IndividualCellType!
     var dummySides = ["Arts and Craft Teacher", "Associate Engineer", "Physician"]
     
@@ -36,7 +33,7 @@ class IndividualCell: UITableViewCell {
             if type != nil && type! == .Friend{
                 delegate.buttonChatTapped(self)
             }else if type != nil && type! == .NotFriend{
-                delegate.individualCellButtonAddTapped(self)
+                
             }
         }
     }
@@ -59,16 +56,11 @@ class IndividualCell: UITableViewCell {
         imageViewPhoto.image = UIImage(named: contact["photo"]!)
     }
     
-    func setValues(contact: User, indexPath: NSIndexPath, type: IndividualCellType = .Friend, forSearch: Bool = false){
+    func setValues(contact: User, indexPath: NSIndexPath, type: IndividualCellType = .Friend){
         self.indexPath = indexPath
-        self.forSearch = forSearch
         self.type = type
-        if contact.userId != nil{
-            if contact.userId! == Engine.clientData.cacheSelfId() || type == .Pending{
-                buttonAction.hidden = true
-            }else{
-                buttonAction.hidden = false
-            }
+        if contact.userId! == Engine.clientData.cacheSelfId(){
+            buttonAction.hidden = true
         }else{
             buttonAction.hidden = false
         }

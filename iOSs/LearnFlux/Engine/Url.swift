@@ -13,35 +13,20 @@ enum GetImageType{
     case Group
 }
 
-struct ConnectGroupType{
-    static let join = "join"
-    static let follow = "follow"
-    static let unfollow = "unfollow"
-}
-
 struct Url{
     private static let base = "http://lfapp.learnflux.net"
     
     static let token = base + "/oauth/v2/token"
-    static let me = base + "/v1/me/details"
-    static let editMe = base + "/v1/me"
+    static let me = base + "/v1/me"
     static let messages = base + "/v1/messages"
     static let register = base + "/register"
     static let events = base + "/v1/events"
     static let groups = base + "/v1/groups"
     static let poll = base + "/v1/poll"
-    static let connections = base + "/v1/me/friends"
-    static let uploadImageMe = base + "/v1/me/image"
+    static let connections = me + "/friend"
+    static let uploadImageMe = me + "/image"
     static let availableInterests = base + "/v1/interests"
     static let notifications = base + "/v1/notifications"
-    
-    static func userDetail(idUser: Int) -> String{
-        return base + "/v1/user/\(idUser)/details"
-    }
-    
-    static func connectGroup(idGroup: String, type: String) -> String{
-        return groups + "/\(idGroup)/connect/\(type)"
-    }
     
     static func search(value: String) -> String{
         return base + "/v1/search/\(value)"
@@ -73,9 +58,5 @@ struct Url{
             typeString = "group"
         }
         return imageUrlString + "?key=\(typeString)/\(id)"
-    }
-    
-    static func getBaseUrl() -> String{
-        return base
     }
 }

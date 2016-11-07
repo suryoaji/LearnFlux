@@ -54,7 +54,7 @@ class FriendRequestCell: UITableViewCell {
         self.id = friend.userId!
         labelId.text = "\(self.id)"
         labelName.text = friend.lastName == nil ? (friend.firstName!).capitalizedString : (friend.firstName! + " " + friend.lastName!).capitalizedString
-        labelFriends.text = friend.mutualFriend != nil && friend.mutualFriend!.count != 0 ? "\(friend.mutualFriend!.count) mutual friends" : ""
+        labelFriends.text = friend.mutualFriend != nil && friend.mutualFriend! != 0 ? "\(friend.mutualFriend!) mutual friends" : ""
         buttonCancel.setTitle(indexPath.section == 0 ? "cancel" : "remove", forState: .Normal)
         imageViewPhoto.image = friend.photo ?? UIImage(named: "photo-container.png")
     }

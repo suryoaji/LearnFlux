@@ -83,7 +83,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     }
     
     @IBAction func getGroup(notification : NSNotification){
-        self.groups = clientData.getGroups(.InterestGroup)
+        self.groups = clientData.getFilteredGroup(.ByInterestGroup)
         cv.reloadData()
     }
     
@@ -174,7 +174,9 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
             guard let userIds = result!["userIds"] as? [Int] else { print ("FLOW: userIds not found"); return; }
             Engine.createGroupChat(self, name: title, description: desc, userId: userIds) { status, JSON in
                 if status == .Success && JSON != nil{
-                    self.groups = self.clientData.getGroups().filter({ $0.type == "group" })
+                    if let groups = self.clientData.getGroups(){
+                        self.groups = groups.filter({ $0.type == "group" })
+                    }
                     let dataJSON = JSON!["data"] as! Dictionary<String, AnyObject>
                     let vc = Util.getViewControllerID("GroupDetails") as! GroupDetails;
                     let group = Group(dict: dataJSON);

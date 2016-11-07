@@ -61,11 +61,9 @@ class Group{
     }
     
     func loadImage(){
-        if self.imageString != nil && !self.imageString!.isEmpty{
-            Engine.getImageGroup(group: self){ image in
-                self.image = image
-                self.imageString = nil
-            }
+        Engine.getImageGroup(group: self){ image in
+            self.image = image
+            self.imageString = nil
         }
     }
     

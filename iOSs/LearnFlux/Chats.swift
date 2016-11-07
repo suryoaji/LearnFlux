@@ -80,8 +80,8 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         pp.image = UIImage(named: self.image[indexPath.row % 10])
         
         if let idGroup = clientData.idGroupByIdThread(clientData.getMyThreads()![indexPath.row].id){
-            if let index = clientData.getGroups().indexOf({ $0.id == idGroup }){
-                if let image = clientData.getGroups()[index].image{
+            if let index = clientData.getGroups()!.indexOf({ $0.id == idGroup }){
+                if let image = clientData.getGroups()![index].image{
                     pp.image = image
                 }
             }
@@ -319,10 +319,11 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     func setThreadLastMessage(row: Int) -> (String){
         var threadLastMessage = ""
         if let myThreads = clientData.getMyThreads(){
-            
-            let group = clientData.getGroups().filter({ $0.thread != nil && $0.thread!.id == myThreads[row].id })
-            if !group.isEmpty && group.first!.description != nil{
-                threadLastMessage = group.first!.description!
+            if let myGroups = clientData.getGroups(){
+                let group = myGroups.filter({ $0.thread != nil && $0.thread!.id == myThreads[row].id })
+                if !group.isEmpty && group.first!.description != nil{
+                    threadLastMessage = group.first!.description!
+                }
             }
             if myThreads[row].messages != nil && !myThreads[row].messages!.isEmpty{
                 threadLastMessage = myThreads[row].messages!.last!.message.text
