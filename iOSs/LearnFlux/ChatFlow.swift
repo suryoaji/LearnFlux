@@ -215,7 +215,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         btnPoll.frame = CGRectMake((scrWidth + spacing) / 2, spacing, (scrWidth - spacing) / 2 - spacing, 44);
         container.height = spacing * 2 + btnEvent.height;
         container.y = scrHeight;
-        self.lastTimestampToRequestNewMessage = NSDate().timeIntervalSince1970
     }
     
     func setAttachmentNPulldownPanelPosition(){
@@ -254,9 +253,13 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     @IBAction func backButtonTapped(sender: UIBarButtonItem) {
         let messages = clientData.getMyThreads()![rowIndexPathFromThread].messages
-        let countParticipants = clientData.getMyThreads()![rowIndexPathFromThread].participants.count
-        if countParticipants == 2 && (messages == nil || messages!.isEmpty) {
-            Engine.removeThread(threadId: self.chatId){ status, JSON in
+        let participants = clientData.getMyThreads()![rowIndexPathFromThread].participants
+        let titleMessage = self.title!.lowercaseString
+        
+        if participants.count == 2 && (messages == nil || messages!.isEmpty){
+            let theParticipant = participants.filter({ $0.user!.userId! != clientData.cacheSelfId() }).first!
+            if titleMessage.containsString(theParticipant.user!.firstName!.lowercaseString){
+                Engine.removeThread(threadId: self.chatId){status, JSON in }
             }
         }
         self.navigationController?.popViewControllerAnimated(true)
@@ -325,8 +328,14 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
     }
     
-    func getNewMessages(timer: NSTimer){
-        Engine.getNewMessages(self, indexpath: clientData.getMyThreads()![rowIndexPathFromThread].normalIndex, lastSync: timer.userInfo!["lastSync"] as! Double){status, newMessage, lastSync in
+    func getNewMessages(timer: NSTimer?){
+        var lastSync = -1.0
+        if let userInfo = timer?.userInfo{
+            lastSync = userInfo["lastSync"] as! Double
+        }else{
+            lastSync = NSDate().timeIntervalSince1970
+        }
+        Engine.getNewMessages(self, indexpath: clientData.getMyThreads()![rowIndexPathFromThread].normalIndex, lastSync: lastSync){status, newMessage, lastSync in
             print(status, newMessage, lastSync)
             if let conNewMessage = newMessage{
                 func filterNewMessage(con: Array<Thread.ThreadMessage>) -> Array<Thread.ThreadMessage>{
@@ -385,13 +394,15 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        callGetNewMessages(self.lastTimestampToRequestNewMessage)
+        getNewMessages(nil)
         self.setObserver()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(true)
-        timer.invalidate()
+        if timer != nil{
+            timer.invalidate()
+        }
         self.removeAllObserver()
     }
     

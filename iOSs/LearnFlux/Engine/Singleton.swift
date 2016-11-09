@@ -273,16 +273,22 @@ class Data : NSObject {
     }
     
     func idGroupByIdThread(idThread: String)->(String?){
-        if let groups = groups{
-            for each in groups{
-                if each.threadId != nil{
-                    if each.threadId! == idThread{
-                        return each.id
-                    }
-                }
-            }
+        guard var groups = groups where !groups.isEmpty else{
+            return nil
         }
-        return nil
+        groups = groups.reduce([Group](), combine: { (a, b) in
+            if let childs = b.child{
+                return a + [b] + childs
+            }else{
+                return a + [b]
+            }
+        })
+        
+        if let group = groups.filter({ $0.thread != nil && $0.thread!.id == idThread }).first{
+            return group.id
+        }else{
+            return nil
+        }
     }
     
     func saveAllThreads(arr: Array<Dictionary<String, AnyObject>>, lastSync: String){

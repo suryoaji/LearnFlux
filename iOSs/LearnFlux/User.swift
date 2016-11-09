@@ -22,6 +22,8 @@ class User {
     var mutualFriend: [Int]?
     var friends: [Int]?
     var interests: [String]?
+    var location: String?
+    var work: String?
     
     init (dict : AnyObject?)  {
         guard let data = dict else { return }
@@ -31,6 +33,8 @@ class User {
         if let s = data[keyCacheMe.email] as? String{ self.email = s }
         if let s = data[keyCacheMe.lastName] as? String{ self.lastName = s }
         if let s = data[keyCacheMe.interests] as? Array<String>{ self.interests = s }
+        if let s = data[keyCacheMe.from] as? String { self.location = s }
+        if let s = data[keyCacheMe.work] as? String { self.work = s }
         if let s = data[keyCacheMe.links] as? Dictionary<String, AnyObject>{
             if let selfLinks = s["self"]{
                 if let selfLink = selfLinks["href"] as? String{

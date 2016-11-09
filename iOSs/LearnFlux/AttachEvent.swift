@@ -166,8 +166,8 @@ class AttachEvent : UITableViewController, UITextFieldDelegate {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
         if (indexPath.section == 1) {
             switch (indexPath.row) {
-            case 1: beginDateEdit(nil); break;
-            case 2: beginTimeEdit(nil); break;
+            case 1: beginDateEdit(nil)
+            case 2: beginTimeEdit(nil)
             default:
                 break;
             }
@@ -192,14 +192,14 @@ class AttachEvent : UITableViewController, UITextFieldDelegate {
     
     @IBAction func beginDateEdit (sender: AnyObject?) {
         self.e_globalResignFirstResponderRec(self.view)
-        DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Date) { (date) -> Void in
+        DatePickerDialog().show("Select Date", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Date) { date in
             self.chosenDate = date;
         }
     }
     
     @IBAction func beginTimeEdit (sender: AnyObject?) {
         self.e_globalResignFirstResponderRec(self.view)
-        DatePickerDialog().show("Select Time", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Time) { (date) -> Void in
+        DatePickerDialog().show("Select Time", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Time) { date in
             self.chosenTime = date;
         }
     }

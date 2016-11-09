@@ -918,18 +918,22 @@ class Engine : NSObject {
     static func getNewMessages(viewController: UIViewController? = nil, indexpath: Int, lastSync: Double, callback: ((status: RequestStatusType, newMessage: [Thread.ThreadMessage]?, lastSync: Double)->Void)? = nil) {
         let param = ["lastSync" : String(lastSync)]
         makeRequestAlamofire(viewController, method: .GET, url: Url.messages, param: param) { status, rawJSON in
-            if (rawJSON != nil) {
-                if (rawJSON!.valueForKey("data") != nil) {
-                    let threads = rawJSON!.valueForKey("data")! as! Array<Dictionary<String, AnyObject>>
-                    if let rawMessages = threads[indexpath]["messages"]{
-                        let messages = rawMessages as! Array<Dictionary<String, AnyObject>>
-                        if let result = Thread.getMessagesFromArr(messages){
-                            if (callback != nil) { callback! (status: status, newMessage: result, lastSync: rawJSON!["lastSync"]! as! Double) }
-                            return
-                        }
-                    }
+            if status == .Success, let rawJSON = rawJSON as? Dictionary<String, AnyObject>{
+                guard let threadsData = rawJSON["data"] as? Array<Dictionary<String, AnyObject>> else{
+                    if callback != nil{ callback!(status: status, newMessage: nil, lastSync: 0) }
+                    return
                 }
-                if (callback != nil) { callback! (status: status, newMessage: nil, lastSync: rawJSON!["lastSync"]! as! Double) }
+                if let rawMessages = threadsData[indexpath]["messages"]{
+                    let messages = rawMessages as! Array<Dictionary<String, AnyObject>>
+                    if let result = Thread.getMessagesFromArr(messages){
+                        if (callback != nil) { callback! (status: status, newMessage: result, lastSync: rawJSON["lastSync"] as! Double) }
+                        return
+                    }
+                }else{
+                    if callback != nil{ callback!(status: status, newMessage: nil, lastSync: rawJSON["lastSync"] as! Double) }
+                }
+            }else{
+                if callback != nil{ callback!(status: status, newMessage: nil, lastSync: 0) }
             }
         }
     }

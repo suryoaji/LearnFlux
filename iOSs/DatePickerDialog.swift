@@ -34,7 +34,6 @@ class DatePickerDialog: UIView {
     /* Overrides */
     init() {
         super.init(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height))
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.deviceOrientationDidChange), name: UIDeviceOrientationDidChangeNotification, object: nil)
     }
     
@@ -99,8 +98,8 @@ class DatePickerDialog: UIView {
         }
         
         self.frame = CGRectMake(0, 0, self.frame.width, self.frame.size.height)
-        UIApplication.sharedApplication().windows.first!.addSubview(self)
-        
+//        UIApplication.sharedApplication().windows.first!.addSubview(self)
+        (UIApplication.sharedApplication().delegate as! AppDelegate).window!.addSubview(self)
         /* Anim */
         UIView.animateWithDuration(
             0.2,

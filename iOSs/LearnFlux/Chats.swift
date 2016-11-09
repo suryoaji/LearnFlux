@@ -21,7 +21,6 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var viewMenu : UIView!;
     @IBOutlet weak var viewConfirmDelete: UIView!
     var idsThreadWillDeleted : Array<String> = []
-    var image = ["group01", "group02", "group03", "group04", "group05", "male04", "female01", "male01", "female02", "male02"]
     var timer : NSTimer!
     
     override func viewDidLoad() {
@@ -77,13 +76,40 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         let selectedThread = clientData.getMyThreads()![indexPath.row]
         threadName.text = Engine.generateThreadName(selectedThread);
         let pp = cell.viewWithTag(10) as! UIImageView;
-        pp.image = UIImage(named: self.image[indexPath.row % 10])
+        pp.image = nil
+        pp.backgroundColor = UIColor.clearColor()
         
-        if let idGroup = clientData.idGroupByIdThread(clientData.getMyThreads()![indexPath.row].id){
-            if let index = clientData.getGroups().indexOf({ $0.id == idGroup }){
-                if let image = clientData.getGroups()[index].image{
-                    pp.image = image
+        for each in clientData.getMyConnection().friends{
+            if threadName.text!.containsString(each.firstName!){
+                if let photo = each.photo{
+                    pp.image = photo
+                    pp.backgroundColor = UIColor.whiteColor()
                 }
+                break
+            }
+        }
+        if let idGroup = clientData.idGroupByIdThread(clientData.getMyThreads()![indexPath.row].id){
+            let index = clientData.getGroups().indexOf({ a in
+                if let childs = a.child{
+                    if childs.filter({ $0.id == idGroup }).first != nil{
+                        return true
+                    }
+                }
+                if a.id == idGroup{ return true }
+                return false
+            })
+            
+            if index != nil{
+                if let image = clientData.getGroups()[index!].image{
+                    pp.image = image
+                    pp.backgroundColor = UIColor.whiteColor()
+                }else{
+                    pp.image = UIImage(named: "company1.png")
+                    pp.backgroundColor = UIColor.whiteColor()
+                }
+            }else{
+                pp.image = UIImage(named: "company1.png")
+                pp.backgroundColor = UIColor.whiteColor()
             }
         }
         

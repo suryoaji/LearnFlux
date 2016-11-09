@@ -8,7 +8,41 @@
 
 import Foundation
 
+enum ProfileType{
+    case Public
+    case Private
+    case Mine
+    func data(id: Int) -> User?{
+        switch self {
+        case .Public:
+            return Engine.clientData.getMyConnection().friends.filter({ $0.userId! == id }).first
+        case .Mine:
+            return User(dict: Engine.clientData.cacheMe())
+        default:
+            return nil
+        }
+    }
+    var sectionTitle : Array<String>{
+        switch self{
+        case Mine:
+            return ["", "My Children", "Affiliated organizations", "Interests", "Connections"]
+        default:
+            return ["", "Children", "Affiliated organizations", "Interests", "Connections"]
+        }
+    }
+    var headerTitle: Array<String>{
+        switch self {
+        case .Mine:
+            return ["My Profile", "Connection"]
+        default:
+            return ["Profile", ""]
+        }
+    }
+}
+
 class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
+    var type : ProfileType = .Mine
+    var profileId: Int!
     var clientData = Engine.clientData
     @IBOutlet weak var buttonHeaderMyProfile: UIButton!
     @IBOutlet weak var buttonHeaderConnection: UIButton!
@@ -201,7 +235,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         return (activeAccConnections.upper > 3 ? false : true, activeAccConnections.lower > 3 ? false : true)
     }
     
-    let sectionTitle = ["", "My Children", "Affiliated organizations", "Interests", "Connections"]
     let friendRequestSectionTitle = ["Connections", "Groups", "People you may know"]
     var roles = ""
     
@@ -370,6 +403,15 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         }
     }
     
+    func initViewController(type: ProfileType = .Mine, id: Int){
+        self.type = type
+        if type == .Mine{
+            profileId = clientData.cacheSelfId()
+        }else{
+            profileId = id
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadDataForScreen()
@@ -394,7 +436,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         switch tableView {
         case tableViewMyProfile:
-            return sectionTitle.count
+            return type.sectionTitle.count
         case tableViewFriendRequest:
             return 3
         case tableViewListInterests:
@@ -605,6 +647,10 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     @IBOutlet weak var viewSearch: UIView!
     @IBOutlet weak var viewChildrenProfileNotification: NotificationView!
     @IBOutlet weak var viewResultSearch: NotificationView!
+    @IBOutlet weak var viewFriendRequestHeader: UIView!
+    @IBOutlet weak var viewNotificationHeader: UIView!
+    @IBOutlet weak var buttonSearchHeader: UIButton!
+    
     
     var interests = [String](){
         didSet{
@@ -740,8 +786,11 @@ extension Profile{
     func numberOfRowTableViewMyProfile(section: Int) -> Int{
         switch section {
         case 3:
-            let interests = clientData.cacheSelfInterests()
-            return shouldEditMyProfile ? 2 : interests.count + 3
+            var count = 0
+            if let interests = type.data(profileId)!.interests{
+                count = interests.count
+            }
+            return shouldEditMyProfile ? 2 : count + 3
         default:
             return 2
         }
@@ -875,14 +924,14 @@ extension Profile{
             case 2:
                 if !clientData.getGroups(.Organisation).isEmpty{
                     let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
-                    headerCell.customInit(sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: "+ edit profile")
+                    headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: type == .Mine ? "+ edit profile" : "")
                     headerCell.delegate = self
                     return headerCell
                 }else{
                     break
                 }
             case 3:
-                if !clientData.cacheSelfInterests().isEmpty{
+                if let interests = type.data(profileId)!.interests where !interests.isEmpty{
                     fallthrough
                 }else{
                     break
@@ -895,7 +944,7 @@ extension Profile{
                 }
             default:
                 let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
-                headerCell.customInit(sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: "+ edit profile")
+                headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: type == .Mine ? "+ edit profile" : "")
                 headerCell.delegate = self
                 return headerCell
             }
@@ -904,12 +953,24 @@ extension Profile{
             case 0:
                 let profileCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("1") as! RowProfileCell
                 profileCell.delegate = self
-                let values = ["photo" : clientData.photo,
+                var values = Dictionary<String, AnyObject>()
+                if type == .Mine{
+                    values = ["photo" : clientData.photo,
                               "id"    : clientData.cacheSelfId(),
                               "name"  : clientData.cacheFullname(),
                               "roles" : self.roles,
                               "from"  : clientData.cacheSelfFrom(),
                               "work"  : clientData.cacheSelfWork()]
+                }else{
+                    if let data = type.data(profileId){
+                        values = ["photo" : data.photo ?? UIImage(named: "photo-container.png")!,
+                                  "id"    : data.userId!,
+                                  "name"  : "\(data.firstName!) \(data.lastName ?? "")",
+                                  "roles" : "",
+                                  "from"  : data.location ?? "",
+                                  "work"  : data.work ?? ""]
+                    }
+                }
                 profileCell.setValues(values, scale: self.view.frame.width / profileCell.frame.width, stateMore: shouldMoreLabelRoles)
                 if conditionPhotoEdited{
                     Util.showIndicatorDarkOverlay(profileCell.imageViewPhoto)
@@ -950,12 +1011,12 @@ extension Profile{
                     break
                 }
             case 3:
-                if clientData.cacheSelfInterests().isEmpty{
-                    break
-                }else{
+                if let interests = type.data(profileId)!.interests where !interests.isEmpty{
                     let interestCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("3") as! RowInterestsCell
-                    interestCell.customInit(clientData.cacheSelfInterests(), indexPath: indexPath)
+                    interestCell.customInit(interests, indexPath: indexPath)
                     return interestCell
+                }else{
+                    break
                 }
             case 4:
                 if getConnectionsMyProfileData().isEmpty{
@@ -979,7 +1040,7 @@ extension Profile{
     func cellForRowTableViewMyProfileEdit(indexPath: NSIndexPath) -> UITableViewCell{
         if indexPath.row == 0{
             let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
-            headerCell.customInit(sectionTitle[indexPath.section], indexPath: indexPath, icon: "save", titleEdit: "save")
+            headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, icon: "save", titleEdit: "save")
             headerCell.delegate = self
             return headerCell
         }else{
@@ -1220,7 +1281,9 @@ extension Profile{
     func didSelectRowTableViewConnectionUpper(indexPath: NSIndexPath){
         switch indicatorAccConnection {
         case 0:
-            break
+            let vc = Util.getViewControllerID("Profile") as! Profile
+            vc.initViewController(.Public, id: clientData.getMyConnection().friends[indexPath.row].userId!)
+            self.showViewController(vc, sender: self)
         case 1:
             let cell = tableViewConnectionUpper.cellForRowAtIndexPath(indexPath) as! GroupCell
             self.performSegueWithIdentifier("GroupSegue", sender: cell)
@@ -1230,7 +1293,10 @@ extension Profile{
             var contacts = allContacts[allContactsSectionIndex[indexPath.section]]!
             switch contacts[indexPath.row]["type"]! {
             case "individual":
-                break
+                let cell = tableViewConnectionUpper.cellForRowAtIndexPath(indexPath) as! IndividualCell
+                let vc = Util.getViewControllerID("Profile") as! Profile
+                vc.initViewController(.Public, id: clientData.getMyConnection().friends[cell.indexPath.row].userId!)
+                self.showViewController(vc, sender: self)
             case "group":
                 let cell = tableViewConnectionUpper.cellForRowAtIndexPath(indexPath) as! GroupCell
                 self.performSegueWithIdentifier("GroupSegue", sender: cell)
@@ -1274,7 +1340,9 @@ extension Profile{
     func didSelectRowTableViewConnectionMyProfile(tableView: UITableView, indexPath: NSIndexPath){
         switch getConnectionsMyProfileData()[indexPath.row] {
         case .Individual:
-            break
+            let vc = Util.getViewControllerID("Profile") as! Profile
+            vc.initViewController(.Public, id: clientData.getMyConnection().friends[0].userId!)
+            showViewController(vc, sender: self)
         case .Organization:
             self.performSegueWithIdentifier("OrgSegue", sender: 0)
         case .Group, .InterestGroup:
@@ -1403,11 +1471,26 @@ extension Profile{
         labelFriendRequest.text = "\(clientData.getMyConnection().pending.count)"
         labelFriendRequest.hidden = clientData.getMyConnection().pending.count > 0 ? false : true
         
+        buttonHeaderMyProfile.setTitle(type.headerTitle[0], forState: .Normal)
+        buttonHeaderConnection.setTitle(type.headerTitle[1], forState: .Normal)
+        
+        if type == .Mine{
+            viewFriendRequestHeader.hidden = false
+            viewNotificationHeader.hidden = false
+            buttonSearchHeader.hidden = false
+            buttonHeaderConnection.hidden = false
+        }else{
+            viewFriendRequestHeader.hidden = true
+            viewNotificationHeader.hidden = true
+            buttonSearchHeader.hidden = true
+            buttonHeaderConnection.hidden = true
+        }
+        
     }
     
     func setAccNavBar(){
         let rightBarButton = UIBarButtonItem(image: UIImage(named: "menu"), style: .Plain, target: self, action: #selector(rightNavigationBarButtonTapped))
-        self.navigationItem.rightBarButtonItem = rightBarButton
+        self.navigationItem.rightBarButtonItem = type == .Mine ? rightBarButton : nil
         layoutWithNavBar()
     }
     
@@ -1753,6 +1836,7 @@ extension Profile: IndividualCellDelegate{
 // - MARK OrganizationCell My Profile Delegate
 extension Profile: OrganizationCellDelegate{
     func buttonAddTapped(cell: OrganizationCell) {
+        print("testing")
         if cell.forSearch!{
             let organization = searchResult.organizations[cell.indexPath.row - 1]
             Engine.requestJoinGroup(idGroup: organization.id){status in

@@ -111,7 +111,9 @@ class Menu : UITableViewController {
             self.revealController.showViewController(self)
             var vc : UIViewController?
             if indexPath.isEqualCode("1-0") {
-                vc = Util.getViewControllerID("Profile")
+                let profileVC = Util.getViewControllerID("Profile") as! Profile
+                profileVC.initViewController(id: clientData.cacheSelfId())
+                vc = profileVC
             }else if indexPath.isEqualCode("3-5"){
                 vc = Util.getViewControllerID("InterestGroups")
             }else if indexPath.isEqualCode("2-0"){
