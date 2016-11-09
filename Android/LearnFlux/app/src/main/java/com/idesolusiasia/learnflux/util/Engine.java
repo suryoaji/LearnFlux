@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.idesolusiasia.learnflux.LoginActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
+import com.idesolusiasia.learnflux.entity.BasicItem;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Thread;
@@ -893,11 +894,8 @@ public class Engine {
 							for (int i = 0; i < errors.length(); i++) {
 								JSONObject objs = errors.getJSONObject(i);
 								String details = objs.getString("details");
-								if (details.contains("Your password")) {
-									Functions.showAlert(context, "Errors", "Your password must have at least 8 characters");
-								} else {
-									Functions.showAlert(context, "Errors", details);
-								}
+								Functions.showAlert(context, "Notification", details);
+
 
 							}
 						}catch (JSONException e) {

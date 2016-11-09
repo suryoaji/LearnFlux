@@ -1,7 +1,6 @@
 package com.idesolusiasia.learnflux;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +8,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -24,6 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -37,7 +35,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -116,16 +113,18 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_base);
+		setContentView(R.layout.activity_my_profile);
 		super.onCreateDrawer(savedInstanceState);
+
 
 		AndroidNetworking.initialize(getApplicationContext()); // initialize library
 
-		final FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
-		final LayoutInflater layoutInflater = LayoutInflater.from(this);
-		View childLayout = layoutInflater.inflate(
-				R.layout.activity_my_profile, null);
-		parentLayout.addView(childLayout);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+
 		visible="none";
 		visible2=true;
 
@@ -145,34 +144,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		final ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
 		final View includedLayout = findViewById(R.id.mixLayout);
 		final View includedLayout2 = findViewById(R.id.mixLayout2);
-		final ImageView addProfile= (ImageView) findViewById(R.id.addProfile);
 		scroll3.setVisibility(View.GONE);
-
-		final int profID = getIntent().getIntExtra("id",0);
-		String profFrom = getIntent().getStringExtra("from");
-
-		if(profFrom.contains("baseActivity")){
-			addProfile.setVisibility(View.GONE);
-			connectionTab.setVisibility(View.VISIBLE);
-		}else if(profFrom.contains("fromSearch")){
-			addProfile.setVisibility(View.VISIBLE);
-			connectionTab.setVisibility(View.INVISIBLE);
-			addProfile.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(final View v) {
-					if(User.getUser().getID()== profID){
-						Functions.showAlert(v.getContext(), "Message", "You cannot add yourself");
-					} else {
-						Engine.getUserFriend(v.getContext(), profID, new RequestTemplate.ServiceCallback() {
-							@Override
-							public void execute(JSONObject obj) {
-								Toast.makeText(v.getContext(), "Successfully adding a friend", Toast.LENGTH_SHORT).show();
-							}
-						});
-					}
-					}
-			});
-		}
 
 		myProfileTab.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -515,11 +487,17 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 						Contact childrenContact = Converter.convertContact(array.getJSONObject(i));
 						childList.add(childrenContact);
 					}
-					recyclerChildren.setVisibility(View.VISIBLE);
-					childrenEmptyView.setVisibility(View.GONE);
-					childAdapter = new ChildrenAdapter(getApplicationContext(),childList);
-					recyclerChildren.setAdapter(childAdapter);
-					recyclerChildren.refreshDrawableState();
+					if(childList.isEmpty()){
+						recyclerChildren.setVisibility(View.GONE);
+						childrenEmptyView.setVisibility(View.VISIBLE);
+					}else{
+						recyclerChildren.setVisibility(View.VISIBLE);
+						childrenEmptyView.setVisibility(View.GONE);
+						childAdapter = new ChildrenAdapter(getApplicationContext(),childList);
+						recyclerChildren.setAdapter(childAdapter);
+						recyclerChildren.refreshDrawableState();
+					}
+
 
 				}catch (JSONException e){
 					e.printStackTrace();
@@ -528,7 +506,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		});
 		//Affilited Organization
 		affilatedOrganizationRecycler = (RecyclerView)findViewById(R.id.organizationRecycler);
-		empty_view = (TextView)findViewById(R.id.empty_view);
+		empty_view = (TextView)findViewById(R.id.emptyViewOrg);
 		showAllOrganization = (LinearLayout)findViewById(R.id.layoutShowAll);
 		showAllOrganization.setVisibility(View.VISIBLE);
 		showAllOrganization.bringToFront();
@@ -752,7 +730,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 						for(String string : collectionOfStrings) {
 							sb.append("Admin"+ " of " + string);
 							sb.append(",");
-							txtParentDesc.setText(sb.length() > 0 ? sb.substring(0, sb.length() - 1): " ");
+							txtParentDesc.setText(sb.length() > 0 ? sb.substring(0, sb.length() - 1): "");
 						}
 
 					}
@@ -938,7 +916,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		Intent intent = getIntent();
+		Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
 		overridePendingTransition(0, 0);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		finish();

@@ -18,6 +18,7 @@ public class Contact {
     private String work;
     private Links _links;
     private Embedded _embedded;
+    private List<Contact> mutual;
 
     public String getLast_name() {
         return last_name;
@@ -105,6 +106,15 @@ public class Contact {
     public void setWork(String work) {
         this.work = work;
     }
+
+    public List<Contact> getMutual() {
+        return mutual;
+    }
+
+    public void setMutual(List<Contact> mutual) {
+        this.mutual = mutual;
+    }
+
 
     public class Links {
         public Links(){

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -46,7 +47,7 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
         holder.image.setImageUrl(url, imageLoader);
         holder.txt1.setText(org.getName());
         holder.txt2.setText(org.getAccess());
-
+        holder.add.setVisibility(View.GONE);
     }
 
     @Override
@@ -57,23 +58,25 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
     public class OrgTileHolder extends RecyclerView.ViewHolder {
         NetworkImageView image;
         TextView txt1, txt2;
+        ImageView add;
         public OrgTileHolder(View itemView) {
             super(itemView);
             image = (NetworkImageView) itemView.findViewById(R.id.imageOrgConnection);
             txt1 = (TextView)itemView.findViewById(R.id.titleOrgConnection);
             txt2 = (TextView)itemView.findViewById(R.id.StatusOrgConnection);
+            add = (ImageView)itemView.findViewById(R.id.joinGroup);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     final int pos = getAdapterPosition();
-                    Intent l = new Intent(context, GroupDetailActivity.class);
+                    Intent l = new Intent(view.getContext(), GroupDetailActivity.class);
                     l.putExtra("clickOrganization","Profile");
                     l.putExtra("plusButton","hide");
                     l.putExtra("id", organizations.get(pos).getId());
                     l.putExtra("title",organizations.get(pos).getName());
                     l.putExtra("type", organizations.get(pos).getType());
                     l.putExtra("color", Functions.generateRandomPastelColor());
-                    context.startActivity(l);
+                    view.getContext().startActivity(l);
                 }
             });
         }

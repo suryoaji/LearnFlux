@@ -82,7 +82,6 @@ public class BaseActivity extends AppCompatActivity
 					@Override
 					public void onClick(View view) {
 						Intent e = new Intent(BaseActivity.this, MyProfileActivity.class);
-						e.putExtra("from", "baseActivity");
 						startActivity(e);
 					}
 				});

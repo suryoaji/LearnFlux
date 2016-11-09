@@ -34,7 +34,7 @@
             android:layout_marginTop="?attr/actionBarSize"
             android:id="@+id/activity_layout">
 
-            <include layout="@layout/my_profile"/>
+            <include layout="@layout/public_profile"/>
 
         </FrameLayout>
     </android.support.design.widget.CoordinatorLayout>

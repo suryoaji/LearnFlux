@@ -8,6 +8,6 @@
         android:layout_margin="3dp"
         android:scaleType="fitCenter"
         android:src="@drawable/kid1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="60dp"
+        android:layout_height="40dp" />
 </LinearLayout>

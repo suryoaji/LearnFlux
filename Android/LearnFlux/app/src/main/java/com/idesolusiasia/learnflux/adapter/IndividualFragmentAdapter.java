@@ -1,25 +1,19 @@
 package com.idesolusiasia.learnflux.adapter;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.ChattingActivity;
-import com.idesolusiasia.learnflux.MyProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
-import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
@@ -54,7 +48,7 @@ public class IndividualFragmentAdapter extends RecyclerView.Adapter<IndividualFr
     @Override
     public void onBindViewHolder(OrgTileHolder holder, int position) {
         final Contact c= Friends.get(position);
-        holder.individualName.setText(c.getFirst_name());
+        holder.individualName.setText(c.getFirst_name()+ " "+c.getLast_name());
         if(c.get_links().getProfile_picture()!=null) {
             String getProfile = c.get_links().getProfile_picture().getHref();
             final String url = "http://lfapp.learnflux.net" + getProfile;

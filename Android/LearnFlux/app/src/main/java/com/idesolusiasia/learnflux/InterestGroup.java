@@ -10,6 +10,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +19,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +29,9 @@ import android.widget.Toast;
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.CreateGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.InterestGroupAdapter;
+import com.idesolusiasia.learnflux.adapter.SearchAdapter;
+import com.idesolusiasia.learnflux.adapter.SearchInterestGroup;
+import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Participant;
@@ -40,13 +47,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by Ide Solusi Asia on 8/15/2016.
  */
 public class InterestGroup extends BaseActivity{
-
     ArrayList<Group> arrOrg = new ArrayList<Group>();
     public Participant participant=null;
     private GridLayoutManager lLayout;
@@ -57,20 +64,30 @@ public class InterestGroup extends BaseActivity{
     AddGroupAdapter adap;
     public String name,desc;
     ListView listcontent;
+    EditText searchBar;
+    RecyclerView searchRecycler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_group_interest);
-        setContentView(R.layout.activity_base);
+        setContentView(R.layout.activity_group_interest);
         super.onCreateDrawer(savedInstanceState);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
 
-        FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
-        final LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View childLayout = layoutInflater.inflate(
-                R.layout.activity_group_interest, null);
-        parentLayout.addView(childLayout);
         recyclerView = (RecyclerView)findViewById(R.id.recycler_group_interest);
+        final View includedLayout3 = (LinearLayout) findViewById(R.id.searchView);
+        final View layout= (LinearLayout)findViewById(R.id.linearInterest);
+        final ImageButton search = (ImageButton)findViewById(R.id.searchInterest);
+        final ImageView enterSearh = (ImageView)findViewById(R.id.enterYourPreference);
+        searchBar = (EditText)findViewById(R.id.searchID);
+        final ImageView back = (ImageView)findViewById(R.id.imageBack);
+        searchRecycler = (RecyclerView)findViewById(R.id.recyclerViewSearch);
+        LinearLayoutManager linearManagerSearch = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,false);
+        searchRecycler.setLayoutManager(linearManagerSearch);
         emptyView = (TextView) findViewById(R.id.empty_view);
         add = (ImageView)findViewById(R.id.imageButtonAdd);
         add.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +99,56 @@ public class InterestGroup extends BaseActivity{
         lLayout = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(lLayout);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                includedLayout3.setVisibility(View.VISIBLE);
+                layout.setVisibility(View.GONE);
+                searchBar.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            searching();
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+            }
+        });
         initGroup();
+    }
+    private void searching(){
+        arrOrg = new ArrayList<>();
+        Engine.getSearchValue(getApplicationContext(), searchBar.getText().toString().trim(),
+                new RequestTemplate.ServiceCallback() {
+                    @Override
+                    public void execute(JSONObject obj) {
+                        try{
+                            JSONArray group = obj.getJSONArray("groups");
+                            if(group!=null){
+                                for(int i=0;i<group.length();i++){
+                                    Group g = Converter.convertGroup(group.getJSONObject(i));
+                                    arrOrg.add(g);
+                                }
+                            }
+                            SearchInterestGroup scg = new SearchInterestGroup(getApplicationContext(),arrOrg);
+                            searchRecycler.setAdapter(scg);
+                            searchRecycler.refreshDrawableState();
+
+
+
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
     private void initGroup(){
         arrOrg = new ArrayList<>();

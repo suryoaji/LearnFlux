@@ -3,6 +3,7 @@ package com.idesolusiasia.learnflux.util;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.idesolusiasia.learnflux.entity.BasicItem;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.FriendReq;
@@ -42,8 +43,19 @@ public class Converter {
 				}
 			}
 		}
+		if(obj.has("reference")){
+			JSONObject org = obj.getJSONObject("reference");
+			BasicItem bc = Converter.convertItem(org);
+			String id =bc.getId();
+			Log.i("threadID: ", id);
+		}
+
+
 
 		return t;
+	}
+	public static BasicItem convertItem(JSONObject obj)throws JSONException{
+		return gson.fromJson(obj.toString(),BasicItem.class);
 	}
 	public static Contact convertContact(JSONObject obj)throws JSONException{
 		return gson.fromJson(obj.toString(),Contact.class);
@@ -53,9 +65,6 @@ public class Converter {
 	}
 	public static FriendReq convertFriendRequest(JSONObject obj)throws JSONException{
 		return gson.fromJson(obj.toString(), FriendReq.class);
-	}
-	public static Contact convertChildren(JSONObject obj)throws JSONException{
-		return gson.fromJson(obj.toString(), Contact.class);
 	}
 	public static Participant convertPeople(JSONObject obj)throws JSONException{
 		return gson.fromJson(obj.toString(),Participant.class);

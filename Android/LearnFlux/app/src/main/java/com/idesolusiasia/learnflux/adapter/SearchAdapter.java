@@ -8,26 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.GroupDetailActivity;
-import com.idesolusiasia.learnflux.MyProfileActivity;
-import com.idesolusiasia.learnflux.OrgProfileActivity;
+import com.idesolusiasia.learnflux.PublicProfile;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.Participant;
-import com.idesolusiasia.learnflux.entity.User;
-import com.idesolusiasia.learnflux.util.Engine;
-import com.idesolusiasia.learnflux.util.Functions;
-import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -104,9 +95,8 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 public void onClick(final View v) {
                     int pos = getAdapterPosition();
                     final Contact ct= (Contact)search.get(pos);
-                    Intent i = new Intent (v.getContext(), MyProfileActivity.class);
+                    Intent i = new Intent (v.getContext(), PublicProfile.class);
                     i.putExtra("id", ct.getId());
-                    i.putExtra("from", "fromSearch");
                     v.getContext().startActivity(i);
                 }
             });
