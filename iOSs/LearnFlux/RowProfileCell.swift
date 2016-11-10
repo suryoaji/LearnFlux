@@ -22,6 +22,8 @@ class RowProfileCell: UITableViewCell {
     @IBOutlet weak var labelWork: UILabel!
     @IBOutlet weak var labelSFrom: UILabel!
     @IBOutlet weak var labelSWork: UILabel!
+    @IBOutlet weak var labelMutuals: UILabel!
+    @IBOutlet weak var imageViewMutualPhoto: UIImageView!
     @IBOutlet weak var buttonOpenChat: UIButton!
     @IBOutlet weak var containerViewInsideUpper: UIView!
     @IBOutlet weak var containerViewInsideLower: UIView!
@@ -75,6 +77,12 @@ class RowProfileCell: UITableViewCell {
             self.labelWork.hidden = true
         }
         
+        if let mutuals = values["mutual"] as? Array<Int> where !mutuals.isEmpty{
+            let mutuals = setLabelMutuals(mutuals)
+            self.labelMutuals.attributedText = mutuals.1
+            self.imageViewMutualPhoto.image = mutuals.0
+        }
+        
         if let roles = values["roles"] {
             self.labelRoles.text = roles as? String
             if heightForView(self.labelRoles.text!, font: UIFont(name: "Helvetica Neue", size: 14.0)!, width: scale * self.labelRoles.frame.width) < scale * self.labelRoles.frame.height && buttonMore != nil{
@@ -100,6 +108,19 @@ class RowProfileCell: UITableViewCell {
         
         label.sizeToFit()
         return label.frame.height
+    }
+    
+    private func setLabelMutuals(mutuals: Array<Int>) -> (UIImage, NSAttributedString){
+        let firstWords = NSMutableAttributedString(string: "\(mutuals.count) Mutuals friends, ", attributes: [NSFontAttributeName : UIFont.systemFontOfSize(14, weight: UIFontWeightMedium)])
+        let friend1 = Engine.clientData.getMyConnection().friends.filter({ $0.userId! == mutuals[0] }).first!
+        let secondWords = NSMutableAttributedString(string: "including \(friend1.lastName != nil ? friend1.firstName! + " " + friend1.lastName! : friend1.firstName!)", attributes: [NSFontAttributeName : UIFont(name: "Helvetica Neue", size: 14)!])
+        if mutuals.count > 1{
+            let friend2 = Engine.clientData.getMyConnection().friends.filter({ $0.userId! == mutuals[1] }).first!
+            let addSecondWords = NSMutableAttributedString(string: ", and \(friend2.lastName != nil ? friend2.firstName! + " " + friend2.lastName! : friend2.firstName!)", attributes: [NSFontAttributeName : UIFont(name: "Helvetica Neue", size: 14)!])
+            secondWords.appendAttributedString(addSecondWords)
+        }
+        firstWords.appendAttributedString(secondWords)
+        return (friend1.photo ?? UIImage(named: "photo-container.png")!, firstWords)
     }
 
 }

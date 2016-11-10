@@ -37,6 +37,7 @@ struct keyCacheMe{
     static let type = "type"
     static let linkPhoto = "profile_picture"
     static let mutualFriends = "mutual"
+    static let groups = "groups"
 }
 
 struct keyCacheFriends{

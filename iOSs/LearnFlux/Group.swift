@@ -45,7 +45,7 @@ class Group{
         self.threadId = self.thread?.id;
     }
     
-    init(dict: AnyObject?) {
+    init(dict: AnyObject?, imageHasLoaded: ((type: Int, id: String, status: Bool) -> Void)? = nil) {
         guard let data = dict as? dictType else { return; }
         if let s = data["type"] as? String { type = s; }
         if let s = data["id"] as? String { id = s; }
@@ -57,14 +57,19 @@ class Group{
         
         if let s = data["participants"] as? Array<dictType> { participants = Participant.convertFromArr(s) }
         if let s = data["child"] { child = Group.convertFromArr(s); }
-        if let s = data["image"] as? String { imageString = s; loadImage() }
+        if let s = data["image"] as? String { imageString = s; loadImage(imageHasLoaded) }
     }
     
-    func loadImage(){
+    func loadImage(callback: ((type: Int, id: String, status: Bool) -> Void)?){
         if self.imageString != nil && !self.imageString!.isEmpty{
             Engine.getImageGroup(group: self){ image in
                 self.image = image
                 self.imageString = nil
+                if image != nil{
+                    if callback != nil { callback!(type: 2, id: "\(self.id)", status: true) }
+                }else{
+                    if callback != nil { callback!(type: 2, id: "\(self.id)", status: false) }
+                }
             }
         }
     }

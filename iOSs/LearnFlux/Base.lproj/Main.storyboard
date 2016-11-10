@@ -1474,9 +1474,10 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="73" height="73"/>
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             <subviews>
-                                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="female01.png" id="MeJ-MJ-6wM">
+                                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="female01.png" id="MeJ-MJ-6wM">
                                                                                     <rect key="frame" x="10" y="23" width="50" height="50"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                                    <color key="backgroundColor" red="0.96078431372549022" green="0.96078431372549022" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
                                                                                     <userDefinedRuntimeAttributes>
                                                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                                                             <integer key="value" value="25"/>
@@ -1500,8 +1501,10 @@
                                                     <outlet property="containerView" destination="o2K-mY-wGl" id="hlO-9U-D5p"/>
                                                     <outlet property="containerViewInsideLower" destination="1mc-bT-urS" id="I0g-Hj-J5U"/>
                                                     <outlet property="containerViewInsideUpper" destination="8z4-qr-H5o" id="E61-Tq-AFb"/>
+                                                    <outlet property="imageViewMutualPhoto" destination="MeJ-MJ-6wM" id="daR-pn-ijh"/>
                                                     <outlet property="imageViewPhoto" destination="eWF-t2-OKi" id="4FV-FH-mbl"/>
                                                     <outlet property="labelFrom" destination="lCW-cx-9uB" id="Y0V-5D-07B"/>
+                                                    <outlet property="labelMutuals" destination="P1B-te-a7V" id="Vr5-hH-4hv"/>
                                                     <outlet property="labelName" destination="UHp-Xw-YGN" id="tjc-m1-rWv"/>
                                                     <outlet property="labelRoles" destination="Ntb-yW-pCv" id="7qr-Qw-cci"/>
                                                     <outlet property="labelSFrom" destination="eEI-YM-fdX" id="xed-88-dAH"/>
@@ -3110,7 +3113,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="verticalCell" reuseIdentifier="verticalCell" id="Tvd-lE-2jG">
-                                        <rect key="frame" x="10" y="74" width="148" height="278"/>
+                                        <rect key="frame" x="10" y="10" width="148" height="278"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="148" height="278"/>
@@ -3878,7 +3881,7 @@ Coming soon</string>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-0" rowHeight="50" id="cie-wS-3m8">
-                                <rect key="frame" x="0.0" y="92" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="28" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cie-wS-3m8" id="cPA-6U-ivk">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -3900,7 +3903,7 @@ Coming soon</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-1" rowHeight="50" id="XyO-PD-hU4">
-                                <rect key="frame" x="0.0" y="142" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="78" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XyO-PD-hU4" id="EnV-zl-ko1">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -3921,7 +3924,7 @@ Coming soon</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-2" rowHeight="50" id="0MB-2A-OI5">
-                                <rect key="frame" x="0.0" y="192" width="320" height="50"/>
+                                <rect key="frame" x="0.0" y="128" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0MB-2A-OI5" id="zDv-cU-psG">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -4695,7 +4698,7 @@ Photo</string>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-0" rowHeight="57" id="wEe-vv-aLp">
-                                <rect key="frame" x="0.0" y="92" width="320" height="57"/>
+                                <rect key="frame" x="0.0" y="28" width="320" height="57"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wEe-vv-aLp" id="vvu-bU-Xqd">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
@@ -4714,7 +4717,7 @@ Event Title</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="2-0" rowHeight="35" id="J2G-vb-4Z0">
-                                <rect key="frame" x="0.0" y="149" width="320" height="35"/>
+                                <rect key="frame" x="0.0" y="85" width="320" height="35"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="J2G-vb-4Z0" id="c2r-OB-tbN">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
@@ -4735,7 +4738,7 @@ Event Title</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="3-0" rowHeight="66" id="MLH-Zf-Xv5">
-                                <rect key="frame" x="0.0" y="184" width="320" height="66"/>
+                                <rect key="frame" x="0.0" y="120" width="320" height="66"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MLH-Zf-Xv5" id="XZ3-V4-NPk">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
@@ -4758,7 +4761,7 @@ Need to be sizefit</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="4-0" rowHeight="44" id="fOB-bG-9i9">
-                                <rect key="frame" x="0.0" y="250" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="186" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fOB-bG-9i9" id="1uN-hW-Syx">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -4775,7 +4778,7 @@ Need to be sizefit</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="4-1" rowHeight="44" id="lwL-AD-2PD">
-                                <rect key="frame" x="0.0" y="294" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="230" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lwL-AD-2PD" id="dbf-mU-rqL">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -4792,7 +4795,7 @@ Need to be sizefit</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="5-0" rowHeight="44" id="xuv-3C-bJ1">
-                                <rect key="frame" x="0.0" y="338" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="274" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xuv-3C-bJ1" id="17W-qm-f77">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -5030,7 +5033,7 @@ Polling Title</string>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-0" id="01M-2A-uXt">
-                                <rect key="frame" x="0.0" y="92" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="01M-2A-uXt" id="3oE-VC-xlr">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -5049,7 +5052,7 @@ Polling Title</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-1" id="NAe-xV-klK">
-                                <rect key="frame" x="0.0" y="136" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="72" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NAe-xV-klK" id="O7P-LI-aR9">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -5069,7 +5072,7 @@ Polling Title</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-2" id="iWA-Kb-vtS">
-                                <rect key="frame" x="0.0" y="180" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="116" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iWA-Kb-vtS" id="Kwg-HV-zOy">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -5099,7 +5102,7 @@ Polling Title</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="1-3" id="Pbb-Tl-qP9">
-                                <rect key="frame" x="0.0" y="224" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="160" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Pbb-Tl-qP9" id="d5K-RI-4Rv">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -5118,7 +5121,7 @@ Polling Title</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="2-0" rowHeight="149" id="IbS-cB-9S2">
-                                <rect key="frame" x="0.0" y="268" width="320" height="149"/>
+                                <rect key="frame" x="0.0" y="204" width="320" height="149"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IbS-cB-9S2" id="GGN-Po-6te">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="148"/>
@@ -5157,7 +5160,7 @@ Polling Title</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="2-1" rowHeight="149" id="0YY-f2-bFs">
-                                <rect key="frame" x="0.0" y="417" width="320" height="149"/>
+                                <rect key="frame" x="0.0" y="353" width="320" height="149"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0YY-f2-bFs" id="IWV-Sn-RqO">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="148"/>
@@ -5196,7 +5199,7 @@ Polling Title</string>
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="2-2" rowHeight="149" id="KHn-PO-cmv">
-                                <rect key="frame" x="0.0" y="566" width="320" height="149"/>
+                                <rect key="frame" x="0.0" y="502" width="320" height="149"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KHn-PO-cmv" id="qYX-M0-vb2">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="148"/>

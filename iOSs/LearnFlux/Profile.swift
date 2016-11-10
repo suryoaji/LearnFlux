@@ -409,12 +409,33 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             profileId = clientData.cacheSelfId()
         }else{
             profileId = id
+            Engine.requestUserDetail(self, idUser: id){status, JSON in
+                if let dataUser = JSON as? Dictionary<String, AnyObject> where status == .Success{
+                    if let index = self.clientData.getMyConnection().friends.indexOf({ $0.userId == id }){
+                        self.tableViewMyProfile.reloadData()
+                        self.clientData.getMyConnection().friends[index].update(dataUser){[unowned self] type, id, status in
+                            if status && type == 1{
+                                if let childrens = self.type.data(self.profileId)!.childrens where !childrens.isEmpty{
+                                    self.tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 1)], withRowAnimation: .None)
+                                }
+                            }
+                            if status && type == 2{
+                                if let groups = self.type.data(self.profileId)!.groups where !groups.isEmpty{
+                                    self.tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 2)], withRowAnimation: .None)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadDataForScreen()
+        if type == .Mine{
+            loadDataForScreen()
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -742,7 +763,7 @@ extension Profile{
     
     func numberOfRowTableViewChildrenDetail(section: Int) -> Int{
         if childLastTapped < clientData.getMyChildrens().count && childLastTapped >= 0{
-            let childrenData = clientData.getMyChildrens()[childLastTapped]
+            let childrenData = type == .Mine ? clientData.getMyChildrens()[childLastTapped] : type.data(profileId)!.childrens![childLastTapped]
             if let interests = childrenData.interests{
                 return interests.count + 2
             }else{
@@ -888,22 +909,36 @@ extension Profile{
     
     func cellForRowTableViewChildrenDetail(indexPath: NSIndexPath) -> UITableViewCell{
         var cell = UITableViewCell()
-        if childLastTapped < clientData.getMyChildrens().count && childLastTapped >= 0{
-            let childrenData = clientData.getMyChildrens()[childLastTapped]
-            switch indexPath.row {
-            case 0:
-                cell = tableViewChildrenDetail.dequeueReusableCellWithIdentifier("Cell")!
-                let imageView = cell.viewWithTag(1) as! UIImageView
-                let labelName = cell.viewWithTag(2) as! UILabel
-                imageView.image = childrenData.photo ?? UIImage(named: "photo-container.png")
-                labelName.text = childrenData.lastName != nil ? "\(childrenData.firstName!) \(childrenData.lastName!)" : "\(childrenData.firstName!)"
-            case 1:
-                cell = tableViewChildrenDetail.dequeueReusableCellWithIdentifier("InterestHeader")!
-            default:
-                let interestCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("3") as! RowInterestsCell
-                interestCell.customInit(childrenData.interests ?? [], indexPath: indexPath)
-                cell = interestCell
+        var childrenData : User?
+        if type == .Mine && childLastTapped < clientData.getMyChildrens().count && childLastTapped >= 0{
+            childrenData = clientData.getMyChildrens()[childLastTapped]
+        }else if type != .Mine{
+            guard let user = type.data(profileId) else{
+                return cell
             }
+            guard let childrenUser = user.childrens else{
+                return cell
+            }
+            if childLastTapped < childrenUser.count && childLastTapped >= 0{
+                childrenData = type.data(profileId)!.childrens![childLastTapped]
+            }
+        }
+        guard let data = childrenData else{
+            return cell
+        }
+        switch indexPath.row {
+        case 0:
+            cell = tableViewChildrenDetail.dequeueReusableCellWithIdentifier("Cell")!
+            let imageView = cell.viewWithTag(1) as! UIImageView
+            let labelName = cell.viewWithTag(2) as! UILabel
+            imageView.image = data.photo ?? UIImage(named: "photo-container.png")
+            labelName.text = data.lastName != nil ? "\(data.firstName!) \(data.lastName!)" : "\(data.firstName!)"
+        case 1:
+            cell = tableViewChildrenDetail.dequeueReusableCellWithIdentifier("InterestHeader")!
+        default:
+            let interestCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("3") as! RowInterestsCell
+            interestCell.customInit(data.interests ?? [], indexPath: indexPath)
+            cell = interestCell
         }
         return cell
     }
@@ -916,15 +951,34 @@ extension Profile{
         if indexPath.row == 0{
             switch indexPath.section {
             case 1:
-                if !clientData.getMyChildrens().isEmpty{
+                if type == .Mine && !clientData.getMyChildrens().isEmpty{
+                    fallthrough
+                }else if type != .Mine{
+                    guard let user = type.data(profileId) else{
+                        break
+                    }
+                    guard let children = user.childrens where !children.isEmpty else{
+                        break
+                    }
                     fallthrough
                 }else{
                     break
                 }
             case 2:
-                if !clientData.getGroups(.Organisation).isEmpty{
+                if type == .Mine && !clientData.getGroups(.Organisation).isEmpty{
                     let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
-                    headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: type == .Mine ? "+ edit profile" : "")
+                    headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: "+ edit profile")
+                    headerCell.delegate = self
+                    return headerCell
+                }else if type != .Mine{
+                    guard let user = type.data(profileId) else{
+                        break
+                    }
+                    guard !user.getOrganizations().isEmpty else{
+                        break
+                    }
+                    let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
+                    headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: "")
                     headerCell.delegate = self
                     return headerCell
                 }else{
@@ -960,15 +1014,16 @@ extension Profile{
                               "name"  : clientData.cacheFullname(),
                               "roles" : self.roles,
                               "from"  : clientData.cacheSelfFrom(),
-                              "work"  : clientData.cacheSelfWork()]
+                              "work"  : clientData.cacheSelfWork(),]
                 }else{
                     if let data = type.data(profileId){
-                        values = ["photo" : data.photo ?? UIImage(named: "photo-container.png")!,
-                                  "id"    : data.userId!,
-                                  "name"  : "\(data.firstName!) \(data.lastName ?? "")",
-                                  "roles" : "",
-                                  "from"  : data.location ?? "",
-                                  "work"  : data.work ?? ""]
+                        values = ["photo"  : data.photo ?? UIImage(named: "photo-container.png")!,
+                                  "id"     : data.userId!,
+                                  "name"   : "\(data.firstName!) \(data.lastName ?? "")",
+                                  "roles"  : "",
+                                  "from"   : data.location ?? "",
+                                  "work"   : data.work ?? "",
+                                  "mutual" : data.mutualFriend ?? []]
                     }
                 }
                 profileCell.setValues(values, scale: self.view.frame.width / profileCell.frame.width, stateMore: shouldMoreLabelRoles)
@@ -980,7 +1035,18 @@ extension Profile{
                 
                 return profileCell
             case 1:
-                if !clientData.getMyChildrens().isEmpty{
+                if type == .Mine && !clientData.getMyChildrens().isEmpty{
+                    let childrenCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("5")!
+                    let collectionView = childrenCell.viewWithTag(2) as! UICollectionView
+                    collectionView.reloadData()
+                    return childrenCell
+                }else if type != .Mine{
+                    guard let user = type.data(profileId) else{
+                        break
+                    }
+                    guard let children = user.childrens where !children.isEmpty else{
+                        break
+                    }
                     let childrenCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("5")!
                     let collectionView = childrenCell.viewWithTag(2) as! UICollectionView
                     collectionView.reloadData()
@@ -989,7 +1055,7 @@ extension Profile{
                     break
                 }
             case 2:
-                if !clientData.getGroups(.Organisation).isEmpty{
+                if type == .Mine && !clientData.getGroups(.Organisation).isEmpty{
                     let organizationCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("2")!
                     let collectionView = organizationCell.viewWithTag(1) as! UICollectionView
                     let number = organizationCell.viewWithTag(2) as! UILabel
@@ -1002,6 +1068,30 @@ extension Profile{
                         containerButtonNumber.hidden = clientData.getGroups(.Organisation).count > 3 ? false : true
                         number.layer.cornerRadius = number.bounds.size.width / 2
                         number.text = "\(clientData.getGroups(.Organisation).count - 3)"
+                        button.enabled = true
+                        button.addTarget(self, action: #selector(showOrganizations), forControlEvents: .TouchUpInside)
+                    }
+                    collectionView.reloadData()
+                    return organizationCell
+                }else if type != .Mine{
+                    guard let user = type.data(profileId) else{
+                        break
+                    }
+                    guard !user.getOrganizations().isEmpty else{
+                        break
+                    }
+                    let organizationCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("2")!
+                    let collectionView = organizationCell.viewWithTag(1) as! UICollectionView
+                    let number = organizationCell.viewWithTag(2) as! UILabel
+                    let button = organizationCell.viewWithTag(3) as! UIButton
+                    let containerButtonNumber = organizationCell.viewWithTag(4)!
+                    if shouldShowOrganizations{
+                        containerButtonNumber.hidden = true
+                        collectionView.frame.size.width = organizationCell.frame.width
+                    }else{
+                        containerButtonNumber.hidden = user.getOrganizations().count > 3 ? false : true
+                        number.layer.cornerRadius = number.bounds.size.width / 2
+                        number.text = "\(user.getOrganizations().count - 3)"
                         button.enabled = true
                         button.addTarget(self, action: #selector(showOrganizations), forControlEvents: .TouchUpInside)
                     }
@@ -1357,13 +1447,25 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         switch collectionView.tag {
         case 1:
-            if shouldShowOrganizations{
-                return clientData.getGroups(.Organisation).count
+            if type == .Mine{
+                if shouldShowOrganizations{
+                    return clientData.getGroups(.Organisation).count
+                }else{
+                    return clientData.getGroups(.Organisation).count > 3 ? 3 : clientData.getGroups(.Organisation).count
+                }
             }else{
-                return clientData.getGroups(.Organisation).count > 3 ? 3 : clientData.getGroups(.Organisation).count
+                if shouldShowOrganizations{
+                    return type.data(profileId)!.getOrganizations().count
+                }else{
+                    return type.data(profileId)!.getOrganizations().count > 3 ? 3 : type.data(profileId)!.getOrganizations().count
+                }
             }
         case 2:
-            return clientData.getMyChildrens().count > 3 ? 4 : clientData.getMyChildrens().count
+            if type == .Mine{
+                return clientData.getMyChildrens().count > 3 ? 4 : clientData.getMyChildrens().count
+            }else{
+                return type.data(profileId)!.childrens!.count > 3 ? 4 : type.data(profileId)!.childrens!.count
+            }
         case 3:
             return 1
         default: return 0
@@ -1376,7 +1478,11 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
         case 1:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
             let imageViewPhoto = cell.viewWithTag(1) as! UIImageView
-            imageViewPhoto.image = clientData.getGroups(.Organisation)[indexPath.row].image ?? UIImage(named: "company1.png")
+            if type == .Mine{
+                imageViewPhoto.image = clientData.getGroups(.Organisation)[indexPath.row].image ?? UIImage(named: "company1.png")
+            }else{
+                imageViewPhoto.image = type.data(profileId)!.getOrganizations()[indexPath.row].image ?? UIImage(named: "company1.png")
+            }
         case 2:
             if indexPath.row == 3{
                 cell = collectionView.dequeueReusableCellWithReuseIdentifier("AddMore", forIndexPath: indexPath)
@@ -1385,7 +1491,11 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
             }else{
                 cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
                 let imageViewPhoto = cell.viewWithTag(1) as! UIImageView
-                imageViewPhoto.image = clientData.getMyChildrens()[indexPath.row].photo ?? UIImage(named: "photo-container.png")
+                if type == .Mine{
+                    imageViewPhoto.image = clientData.getMyChildrens()[indexPath.row].photo ?? UIImage(named: "photo-container.png")
+                }else{
+                    imageViewPhoto.image = type.data(profileId)!.childrens![indexPath.row].photo ?? UIImage(named: "photo-container.png")
+                }
             }
         case 3:
             cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
@@ -1419,7 +1529,9 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
         case 1:
             if indexPath.row == 3 && !self.shouldShowOrganizations{
             }else{
-                self.performSegueWithIdentifier("OrgSegue", sender: indexPath.row)
+                if type == .Mine{
+                    self.performSegueWithIdentifier("OrgSegue", sender: indexPath.row)
+                }
             }
         case 2:
             if indexPath.row != 3{
@@ -1667,7 +1779,7 @@ extension Profile{
         if segue.identifier == "OrgSegue"{
             let orgDetailController = segue.destinationViewController as! OrgDetails
             var group = Group(type: "", id: "", name: "")
-            group = clientData.getGroups(.Organisation)[sender as! Int]
+            group = type == .Mine ? clientData.getGroups(.Organisation)[sender as! Int] : type.data(profileId)!.getOrganizations()[sender as! Int]
             orgDetailController.initView(group.id, orgTitle: group.name, indexTab: 0)
         }else if segue.identifier == "GroupSegue"{
             let groupDetailController = segue.destinationViewController as! GroupDetails
