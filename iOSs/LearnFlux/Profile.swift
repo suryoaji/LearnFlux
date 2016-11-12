@@ -356,11 +356,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                 self.groups = groups
             }
         }
-        Engine.getSelfRoles{ roles in
-            if let roles = roles{
-                self.roles = roles
-            }
-        }
+        self.roles = Engine.getSelfRoles()
         Engine.getAllContacts(){ arrDictContacts in
             self.allContacts = Engine.generateContactsByFirstLetter(arrDictContacts)
             self.allContactsSectionIndex = [String](self.allContacts.keys)
@@ -1797,7 +1793,7 @@ extension Profile{
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "OrgSegue"{
             let orgDetailController = segue.destinationViewController as! OrgDetails
-            var group = Group(type: "", id: "", name: "")
+            var group = Group(dict: nil)
             group = type == .Mine ? clientData.getGroups(.Organisation)[sender as! Int] : type.data(profileId)!.getOrganizations()[sender as! Int]
             orgDetailController.initView(group.id, orgTitle: group.name, indexTab: 0)
         }else if segue.identifier == "GroupSegue"{

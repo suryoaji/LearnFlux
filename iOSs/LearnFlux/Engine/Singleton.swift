@@ -80,11 +80,11 @@ class Data : NSObject {
     
     var newMessageCreated : String! = "";
     
+    private var childrens : [User] = []
+    
     private var pendingConnections : [User] = []
     
     private var requestedConnections : [User] = []
-    
-    private var childrens : [User] = []
     
     private var connection: [User]?{
         didSet{
@@ -147,30 +147,48 @@ class Data : NSObject {
     func setMyConnections(arrFriends: Array<Dictionary<String, AnyObject>>, _ arrPendingFriends: Array<Dictionary<String, AnyObject>>, _ arrRequestedFriends: Array<Dictionary<String, AnyObject>>){
         self.connection = makeConnectionsArr(arrFriends)
         self.pendingConnections = makeConnectionsArr(arrPendingFriends)
-        
-        if !arrRequestedFriends.isEmpty{
-            let arrFilteredRequestedFriends = arrRequestedFriends.filter({ dict -> Bool in
-                if dict["id"] as! Int == cacheSelfId(){
-                    return false
-                }
-                if arrFriends.contains({ ($0["id"] as! Int) == dict["id"] as! Int }){
-                    return false
-                }
-                return true
-            })
-            let arrFiltered = arrFilteredRequestedFriends.reduce(Array<Dictionary<String, AnyObject>>(), combine: { a, b in
-                if a.contains({ $0["id"] as! Int == b["id"] as! Int }){
-                    return a
-                }else{
-                    return a + [b]
-                }
-            })
-            self.requestedConnections = makeConnectionsArr(arrFiltered)
-        }else{
-            self.requestedConnections = []
-        }
+        self.requestedConnections = makeConnectionsArr(repairJSONRequestedConnections(arrRequestedFriends))
         
         loadAllPendingFriendsDetail()
+    }
+    
+    func checkUpdateMyConnections(arrFriends: Array<Dictionary<String, AnyObject>>, _ arrPendingFriends: Array<Dictionary<String, AnyObject>>, _ arrRequestedFriends: Array<Dictionary<String, AnyObject>>){
+        if connection != nil{ checkUpdateConnections(arrFriends) }
+        checkUpdatePendingConnections(arrPendingFriends)
+        checkUpdateRequestedConnections(arrRequestedFriends)
+    }
+    
+    func checkUpdateConnections(arrFriends: Array<Dictionary<String, AnyObject>>){
+        let newArr = repairJSONConnections(arrFriends)
+        for each in newArr{
+            if let index = connection!.indexOf({ $0.userId! == each[keyCacheMe.id] as! Int }){
+                connection![index].refresh(each)
+            }else{
+                addToConnection(User(dict: each))
+            }
+        }
+    }
+    
+    func checkUpdatePendingConnections(arrPendingFriends: Array<Dictionary<String, AnyObject>>){
+        let newArr = repairJSONConnections(arrPendingFriends)
+        for each in newArr{
+            if let index = pendingConnections.indexOf({ $0.userId! == each[keyCacheMe.id] as! Int }){
+                pendingConnections[index].refresh(each)
+            }else{
+                pendingConnections.append(User(dict: each))
+            }
+        }
+    }
+    
+    func checkUpdateRequestedConnections(arrRequestedFriends: Array<Dictionary<String, AnyObject>>){
+        let newArr = repairJSONRequestedConnections(arrRequestedFriends)
+        for each in newArr{
+            if let index = requestedConnections.indexOf({ $0.userId! == each[keyCacheMe.id] as! Int }){
+                requestedConnections[index].refresh(each)
+            }else{
+                requestedConnections.append(User(dict: each))
+            }
+        }
     }
     
     func loadAllPendingFriendsDetail(){
@@ -198,15 +216,36 @@ class Data : NSObject {
     }
     
     func makeConnectionsArr(rawArr: Array<Dictionary<String, AnyObject>>) -> ([User]){
-        var tempUsers : [User] = []
-        for dicUser in rawArr{
-            if dicUser["id"] as! Int == cacheSelfId(){
-                continue
-            }
-            let user = User(dict: dicUser)
-            tempUsers.append(user)
+        let newArr = repairJSONConnections(rawArr)
+        return newArr.map({ User(dict: $0) })
+    }
+    
+    func repairJSONConnections(rawArr: Array<Dictionary<String, AnyObject>>) -> Array<Dictionary<String, AnyObject>>{
+        return rawArr.filter({ $0[keyCacheMe.id] as! Int != cacheSelfId() })
+    }
+    
+    func repairJSONRequestedConnections(rawArr: Array<Dictionary<String, AnyObject>>) -> Array<Dictionary<String, AnyObject>>{
+        if !rawArr.isEmpty{
+            let arrFilteredRequestedFriends = rawArr.filter({ dict -> Bool in
+                if dict["id"] as! Int == cacheSelfId(){
+                    return false
+                }
+                if connection!.contains({ $0.userId! == dict["id"] as! Int }){
+                    return false
+                }
+                return true
+            })
+            let arrFiltered = arrFilteredRequestedFriends.reduce(Array<Dictionary<String, AnyObject>>(), combine: { a, b in
+                if a.contains({ $0["id"] as! Int == b["id"] as! Int }){
+                    return a
+                }else{
+                    return a + [b]
+                }
+            })
+            return arrFiltered
+        }else{
+            return []
         }
-        return tempUsers
     }
     
     func updateSpecificEventsByIdGroup(idGroup : String, events: [Event]?){
@@ -457,8 +496,7 @@ class Data : NSObject {
     func convertToGroup(dict: Dictionary<String, AnyObject>) -> (Group?){
         if let id = dict["id"], let type = dict["type"], let name = dict["name"], let thread = dict["message"]{
             if let sId = id as? String, let sType = type as? String, let sName = name as? String, let dThread = thread as? Dictionary<String, AnyObject>{
-                let threadRef = Thread(dict: dThread);
-                return Group(type: sType, id: sId, name: sName, thread: threadRef)
+                return Group(dict: [keyGroupName.type : sType, keyGroupName.id : sId, keyGroupName.name : sName, keyGroupName.message : dThread])
             }
         }
         return nil

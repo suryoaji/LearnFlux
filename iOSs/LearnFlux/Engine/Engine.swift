@@ -361,32 +361,25 @@ class Engine : NSObject {
     }
     
     static func reloadDataAPI(){
-        me() { status, JSON in
-            guard let dataJSON = JSON as? dictType else{
-                return
-            }
-            if !dataJSON.isEmpty{
-                self.getGroups(){ status, arrGroup in
-                    if let groups = arrGroup{
-                        for eachGroup in groups{
-                            Engine.getGroupInfo(groupId: eachGroup.id){ status, group in
-                                Engine.clientData.updateGroup(group!)
-                            }
-                        }
+        self.getConnection(isNew: false)
+        self.getGroups(isNew: false){ status, arrGroup in
+            if let groups = arrGroup{
+                for eachGroup in groups{
+                    Engine.getGroupInfo(groupId: eachGroup.id){ status, group in
+                        Engine.clientData.updateGroup(group!)
                     }
                 }
-                self.getThreads()
-                self.getEvents(){ status, JSON in
-                    if let events = Engine.clientData.getMyEvents(){
-                        for eachEvent in events{
-                            Engine.getEventDetail(event: eachEvent)
-                        }
-                    }
-                }
-                self.getConnection()
-                self.clientData.setMyChildrens()
             }
         }
+        self.getThreads()
+        self.getEvents(){ status, JSON in
+            if let events = Engine.clientData.getMyEvents(){
+                for eachEvent in events{
+                    Engine.getEventDetail(event: eachEvent)
+                }
+            }
+        }
+        self.clientData.setMyChildrens()
     }
     
     static func getEvents(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
@@ -402,7 +395,7 @@ class Engine : NSObject {
         }
     }
     
-    static func getConnection(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
+    static func getConnection(viewController: UIViewController? = nil, isNew: Bool = true, callback: JSONreturn? = nil){
         makeRequestAlamofire(viewController, url: clientData.cacheLinkFriends() != nil ? Url.getBaseUrl() + clientData.cacheLinkFriends()! : Url.connections, param: nil){ status, dataJSON in
             guard let rawJSON = dataJSON where status == .Success else{
                 if callback != nil { callback!(status, dataJSON) }
@@ -415,8 +408,11 @@ class Engine : NSObject {
             let arrFriends = json[keyCacheFriends.friends] as! Array<Dictionary<String, AnyObject>>
             let arrPendingFriends = json[keyCacheFriends.pending] as! Array<Dictionary<String, AnyObject>>
             let arrRequestedFriends = (json[keyCacheFriends.request] as! Array<Dictionary<String, AnyObject>>)
-            clientData.setMyConnections(arrFriends, arrPendingFriends, arrRequestedFriends)
-            
+            if isNew{
+                clientData.setMyConnections(arrFriends, arrPendingFriends, arrRequestedFriends)
+            }else{
+                clientData.checkUpdateMyConnections(arrFriends, arrPendingFriends, arrRequestedFriends)
+            }
             if callback != nil{ callback!(status, dataJSON) }
         }
     }
@@ -446,11 +442,18 @@ class Engine : NSObject {
         return data as? dictType;
     }
 
-    static func getGroups(viewController: UIViewController? = nil, filter: GroupType = .All, callback: ((RequestStatusType, [Group]?)->Void)? = nil) -> [Group]? {
+    static func getGroups(viewController: UIViewController? = nil, filter: GroupType = .All, isNew: Bool = true, callback: ((RequestStatusType, [Group]?)->Void)? = nil) -> [Group]? {
         makeRequestAlamofire(viewController, url: Url.groups, param: nil){ status, dataJSON in
+            if let groups = self.getArrData(dataJSON){
+                if isNew{
+                    self.clientData.setGroups(groups)
+                    if callback != nil { callback!(status, clientData.getGroups(filter)) }
+                }else{
+                    
+                }
+            }
             
-            if let groups = self.getArrData(dataJSON) { self.clientData.setGroups(groups); }
-            if callback != nil { callback!(status, clientData.getGroups(filter)) }
+            
         }
         return clientData.getGroups(filter);
     }
@@ -464,9 +467,13 @@ class Engine : NSObject {
         }
     }
     
-    static func getImageSelf(viewController: UIViewController? = nil, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
+    static func getImageSelf(viewController: UIViewController? = nil, fromCache: Bool = false){
         if let linkImage = clientData.cacheLinkPhoto(){
-            getImageIndividual(viewController, urlIndividual: linkImage, fromCache: false, callback: callback)
+            getImageIndividual(viewController, urlIndividual: linkImage, fromCache: false){ image in
+                if let image = image{
+                    clientData.photo = image
+                }
+            }
         }
     }
     
@@ -513,22 +520,32 @@ class Engine : NSObject {
         }
     }
     
-    static func getSelfRoles(callback: (String? -> Void)?){
-        if callback != nil{
-            let flatted = clientData.getGroups(.Organisation).flatMap { group -> [String] in
-                let participantFlated = group.participants!.map({ participant -> String in
-                    var string = ""
-                    if let userId = participant.user?.userId where userId == clientData.cacheSelfId(){
-                        if let role = participant.role?.type where role.lowercaseString != "user"{
-                            string += "\(participant.role!.name) of \(group.name)"
-                        }
-                    }
-                    return string
-                })
-                return participantFlated.filter({ !$0.isEmpty })
+    static func getSelfRoles() -> String{
+        let flatted = clientData.getGroups(.Organisation).reduce([String](), combine: { a, b in
+            guard let role = b.role else{ return a }
+            if role.lowercaseString != "user"{
+                return a + ["\(role) of \(b.name)"]
+            }else{
+                return a
             }
-            callback!(flatted.joinWithSeparator(", "))
-        }
+        })
+        return flatted.isEmpty ? "" : flatted.joinWithSeparator(", ")
+        
+//        if callback != nil{
+//            let flatted = clientData.getGroups(.Organisation).flatMap { group -> [String] in
+//                let participantFlated = group.participants!.map({ participant -> String in
+//                    var string = ""
+//                    if let userId = participant.user?.userId where userId == clientData.cacheSelfId(){
+//                        if let role = participant.role?.type where role.lowercaseString != "user"{
+//                            string += "\(participant.role!.name) of \(group.name)"
+//                        }
+//                    }
+//                    return string
+//                })
+//                return participantFlated.filter({ !$0.isEmpty })
+//            }
+//            callback!(flatted.joinWithSeparator(", "))
+//        }
     }
     
     static func getRoleOfGroup(group: Group) -> Role?{

@@ -115,6 +115,7 @@ class Login: UIViewController, UITextFieldDelegate {
                         }
                         Engine.getConnection()
                         Engine.clientData.setMyChildrens()
+                        Engine.getImageSelf()
                     }else{
                         Util.stopIndicator(self.view)
                         Util.showMessageInViewController(self, title: "Our apologies.", message: "We sincerely apologize for the inconvenience. Our server is currently in maintenance, but will return shortly. Thank you for your patience", buttonOKTitle: "OK", callback: nil)

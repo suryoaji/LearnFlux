@@ -23,8 +23,6 @@ class NewHome : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad();
         animateWhenSelfPushed()
-        
-        getImageSelf()
     }
     
     func animateWhenSelfPushed(){
@@ -34,14 +32,6 @@ class NewHome : UIViewController {
             self.contentView.frame.origin.x = 0
             self.contentView.alpha = 1.0
             }, completion: nil)
-    }
-    
-    func getImageSelf(){
-        Engine.getImageSelf(){ image in
-            if let image = image{
-                self.clientData.photo = image
-            }
-        }
     }
     
     override func viewDidAppear(animated: Bool) {

@@ -8,6 +8,19 @@
 
 import Foundation
 
+struct keyGroupName{
+    static let type = "type"
+    static let id = "id"
+    static let name = "name"
+    static let parent = "parent"
+    static let description = "description"
+    static let message = "message"
+    static let participants = "participants"
+    static let child = "child"
+    static let image = "image"
+    static let role = "access"
+}
+
 class Group{
     var type: String!
     var id: String!
@@ -15,49 +28,28 @@ class Group{
     var thread: Thread?
     var parent: Any?
     var parentId: String!
-    var threadId: String?
     var color: UIColor!;
     var participants : [Participant]?;
     var description : String?;
     var child : [Group]?;
     var imageString: String?
     var image: UIImage?
-    
-    init(type: String, id: String, name: String, threadId: String? = nil, parentId: String! = ""){
-        self.type = type
-        self.id = id
-        self.name = name
-        self.parentId = parentId
-        if threadId != nil{
-            self.threadId = threadId
-        }
-    }
-    
-    init(type: String, id: String, name: String, thread: Thread, parent: AnyObject? = nil) {
-        self.type = type
-        self.id = id
-        self.name = name;
-        self.parent = parent;
-        if let p = parent as? Group {
-            self.parentId = p.id;
-        }
-        self.thread = thread;
-        self.threadId = self.thread?.id;
-    }
+    var role: String?
     
     init(dict: AnyObject?, imageHasLoaded: ((type: Int, id: String, status: Bool) -> Void)? = nil) {
-        guard let data = dict as? dictType else { return; }
-        if let s = data["type"] as? String { type = s; }
-        if let s = data["id"] as? String { id = s; }
-        if let s = data["name"] as? String { name = s; }
-        if let s = data["parent"] as? dictType { let p = Group(dict: s); parent = p as Any; parentId = p.id; }
-        if let s = data["description"] as? String { description = s; }
+        guard let data = dict as? dictType else { type = ""; id = ""; name = ""; return }
+        if let s = data[keyGroupName.type] as? String { type = s; }
+        if let s = data[keyGroupName.id] as? String { id = s; }
+        if let s = data[keyGroupName.name] as? String { name = s; }
+        if let s = data[keyGroupName.parent] as? dictType { let p = Group(dict: s); parent = p as Any; parentId = p.id; }
+        if let s = data[keyGroupName.description] as? String { description = s; }
         
-        if let s = data["message"] as? dictType { thread = Thread(dict: s); participants = thread?.participants; threadId = thread?.id }
+        if let s = data[keyGroupName.message] as? dictType { thread = Thread(dict: s); participants = thread?.participants}
         
-        if let s = data["participants"] as? Array<dictType> { participants = Participant.convertFromArr(s) }
-        if let s = data["child"] { child = Group.convertFromArr(s); }
-        if let s = data["image"] as? String { imageString = s; loadImage(imageHasLoaded) }
+        if let s = data[keyGroupName.participants] as? Array<dictType> { participants = Participant.convertFromArr(s) }
+        if let s = data[keyGroupName.child] { child = Group.convertFromArr(s); }
+        if let s = data[keyGroupName.image] as? String { imageString = s; loadImage(imageHasLoaded) }
+        if let s = data[keyGroupName.role] as? String { role = s }
     }
     
     func loadImage(callback: ((type: Int, id: String, status: Bool) -> Void)?){
@@ -80,11 +72,6 @@ class Group{
         self.participants = group.participants
         self.child = group.child
         self.thread = group.thread
-        self.threadId = group.thread?.id
-    }
-    
-    func getIdThread() -> String?{
-        return self.threadId
     }
     
     static func convertFromArr(dict: AnyObject?) -> [Group]? {
