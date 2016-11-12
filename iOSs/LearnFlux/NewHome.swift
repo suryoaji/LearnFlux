@@ -49,6 +49,8 @@ class NewHome : UIViewController {
         mockUp()
         let screenWidth = UIScreen.mainScreen().bounds.width;
         self.revealController.setMinimumWidth(screenWidth * 0.65, maximumWidth: screenWidth * 0.9, forViewController: self.revealController.leftViewController)
+        
+        Engine.reloadDataAPI()
     }
     
     func rightNavigationBarButtonTapped(sender: UIBarButtonItem){

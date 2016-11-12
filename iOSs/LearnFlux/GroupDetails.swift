@@ -11,11 +11,17 @@ import Foundation
 @objc protocol GroupDetailsDelegate {
     func pushViewController (viewController: UIViewController, animated: Bool)
     func presentViewController (viewController: UIViewController, animated: Bool)
+    var viewController : GroupDetails{ get }
 }
 
 class GroupDetails : UIViewController, GroupDetailsDelegate {
     let clientData = Engine.clientData
     weak var orgEventsDelegate : OrgEventsDelegate!
+    var viewController: GroupDetails{
+        get{
+            return self
+        }
+    }
     
     @IBOutlet var viewSelection : UIView!;
     @IBOutlet var viewTabs : UIView!;

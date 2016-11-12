@@ -12,6 +12,10 @@ import UIKit
 class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     var rightBarButton : UIBarButtonItem!
+    
+    func initViewController(index: Int){
+        self.selectedIndex = index
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +26,6 @@ class chatTabBarController: UITabBarController, UITabBarControllerDelegate {
         self.tabBar.tintColor = LFColor.blue
         self.view.backgroundColor = UIColor.whiteColor()
         UITabBarItem.appearance().setTitleTextAttributes([NSFontAttributeName : UIFont(name: "BanglaSangamMN", size: 10)!], forState: .Normal)
-        
         // Do any additional setup after loading the view.
     }
     

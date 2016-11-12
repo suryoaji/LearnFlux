@@ -59,21 +59,23 @@ class GroupCell: UITableViewCell {
         }
     }
     
-    func setValues(indexPath: NSIndexPath, group: Dictionary<String, String>, type: Int = 0, groupType: GroupType = .Group){
+    func setValues(indexPath: NSIndexPath, group: Dictionary<String, String>, type: Int = 0, groupType: GroupType = .Group, shouldHideButtonAction: Bool = false){
         labelName.text = group["name"]
         labelSide.text = group["side"]
         if type == 1 { buttonAction.setImage(UIImage(named: "add-group"), forState: .Normal) }
         self.indexPath = indexPath
         self.groupType = groupType
+        self.buttonAction.hidden = shouldHideButtonAction
     }
     
-    func setValues(indexPath: NSIndexPath, group: Group, type: Int = 0, groupType: GroupType = .Group, forSearch: Bool = false){
+    func setValues(indexPath: NSIndexPath, group: Group, type: Int = 0, groupType: GroupType = .Group, forSearch: Bool = false, shouldHideButtonAction: Bool = false){
         labelName.text = group.name
         labelSide.text = Engine.getRoleOfGroup(group)?.name.lowercaseString ?? "member"
         if type == 1 { buttonAction.setImage(UIImage(named: "add-group"), forState: .Normal); self.type = .NotMine }
         self.indexPath = indexPath
         self.groupType = groupType
         self.forSearch = forSearch
+        self.buttonAction.hidden = shouldHideButtonAction
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

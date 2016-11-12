@@ -27,25 +27,15 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
     @IBAction func startConversationTapped(sender: UIButton) {
         if let groupDetailsDelegate = groupDetailsDelegate{
             if let group = group where group.thread != nil{
-                if let threads = clientData.getMyThreads(){
-                    let thread = threads.filter( { $0.id == group.thread!.id })
-                    if !thread.isEmpty{
-                        let index = threads.indexOf(thread.first!)
-                        let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow
-                        vc.initChat(index!, idThread: thread.first!.id, from: .OpenChat)
-                        groupDetailsDelegate.pushViewController(vc, animated: true)
-                    }else{
-                        let alert = UIAlertController(title: "", message: "Chat of this group has been deleted accidently, so the best way is just delete this group because this could make problems in future", preferredStyle: .Alert)
-                        let alertAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                        alert.addAction(alertAction)
-                        groupDetailsDelegate.presentViewController(alert, animated: true)
-                    }
+                let stateConversation = Engine.startConversation(groupDetailsDelegate.viewController, groupThread: group.thread!)
+                guard let state = stateConversation else{
+                    return
                 }
+                let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow
+                vc.initChat(state.index, idThread: state.thread.id, from: .OpenChat)
+                groupDetailsDelegate.pushViewController(vc, animated: true)
             }else{
-                let alert = UIAlertController(title: "", message: "Chat of this group has been deleted accidently, so the best way is just delete this group because this could make problems in future", preferredStyle: .Alert)
-                let alertAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                alert.addAction(alertAction)
-                groupDetailsDelegate.presentViewController(alert, animated: true)
+                Util.showMessageInViewController(groupDetailsDelegate.viewController, title: "", message: "Chat of this group has been deleted accidently, so the best way is just delete this group because this could make problems in future")
             }
         }
     }

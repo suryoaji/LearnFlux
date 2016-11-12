@@ -100,7 +100,30 @@ class User {
         guard let groups = groups else{
             return []
         }
-        return groups.filter({ $0.type == "organization" })
+        return groups.filter({ $0.type.lowercaseString == "organization" })
+    }
+    
+    func getGroups() -> [Group]{
+        guard let groups = groups else{
+            return []
+        }
+        return groups.filter({ $0.type.lowercaseString == "group" })
+    }
+    
+    func getMutualFriends() -> [User]{
+        guard let mutuals = mutualFriend else{
+            return []
+        }
+        return mutuals.map({ id in
+            Engine.clientData.getMyConnection().friends.filter({ $0.userId! == id }).first!
+        })
+    }
+    
+    func getMutualFriendsId() ->[Int]{
+        guard let mutuals = mutualFriend else{
+            return []
+        }
+        return mutuals
     }
     
     func getFriends() -> (mine: [Int], notMine: [Int]){

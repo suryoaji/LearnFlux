@@ -381,7 +381,7 @@ class Data : NSObject {
         }
     }
     
-    func getThread(dict: Dictionary<String, AnyObject>) -> (Thread)?{
+    func getThread(dict: Dictionary<String, AnyObject>) -> (index: Int, thread: Thread)?{
         guard let id = dict["id"] as? String else{
             return nil
         }
@@ -409,7 +409,8 @@ class Data : NSObject {
         }else{
             addThread(newDict)
         }
-        return self.threads!.filter({ $0.id == id }).first!
+        let index = self.threads!.indexOf({ $0.id == id })!
+        return (index: index, thread: self.threads![index])
     }
     
     func getMyEvents()->[Event]?{
@@ -461,6 +462,12 @@ class Data : NSObject {
             }
         }
         return nil
+    }
+    
+    func cleanAllCache(){
+        for key in Array(defaults.dictionaryRepresentation().keys) {
+            defaults.removeObjectForKey(key)
+        }
     }
     
     func cacheThreads() -> (Array<Dictionary<String, AnyObject>>)?{

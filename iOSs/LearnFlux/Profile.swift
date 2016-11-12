@@ -446,6 +446,15 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         if !shouldEditMyProfile{ tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 4)], withRowAnimation: .None) }
     }
     
+    var timerForReloadFriend = NSTimer()
+    func reloadFriendsTimedly(){
+        timerForReloadFriend = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(reloadFriends), userInfo: nil, repeats: true)
+    }
+    
+    func reloadFriends(){
+        Engine.getConnection()
+    }
+    
     func rightNavigationBarButtonTapped(sender: UIBarButtonItem){
         
     }
@@ -707,10 +716,19 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     
     func getConnectionsMyProfileData() -> Array<ConnectionType>{
         var types = Array<ConnectionType>()
-        if !clientData.getMyConnection().friends.isEmpty{ types.append(.Individual) }
-        if !clientData.getGroups(.Organisation).isEmpty{ types.append(.Organization) }
-        if !clientData.getGroups(.InterestGroup).isEmpty{ types.append(.InterestGroup) }
-        if !groups.isEmpty{ types.append(.Group) }
+        if type == .Mine{
+            if !clientData.getMyConnection().friends.isEmpty{ types.append(.Individual) }
+            if !clientData.getGroups(.Organisation).isEmpty{ types.append(.Organization) }
+            if !clientData.getGroups(.InterestGroup).isEmpty{ types.append(.InterestGroup) }
+            if !groups.isEmpty{ types.append(.Group) }
+        }else{
+            if let user = type.data(profileId){
+                if !user.getMutualFriendsId().isEmpty{ types.append(.Individual) }
+                if !user.getOrganizations().isEmpty{ types.append(.Organization) }
+                if !user.getGroups().isEmpty{ types.append(.InterestGroup) }
+                if user.getGroups().count > 1 { types.append(.InterestGroup)}
+            }
+        }
         return types
     }
     
@@ -948,59 +966,48 @@ extension Profile{
     }
     
     func cellForRowTableViewMyProfileNormal(indexPath: NSIndexPath) -> UITableViewCell{
+        func initHeaderCell() -> SectionTitleCell{
+            let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
+            headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: type == .Mine ? "+ edit profile" : "")
+            headerCell.delegate = self
+            return headerCell
+        }
         if indexPath.row == 0{
             switch indexPath.section {
             case 1:
-                if type == .Mine && !clientData.getMyChildrens().isEmpty{
-                    fallthrough
-                }else if type != .Mine{
-                    guard let user = type.data(profileId) else{
-                        break
-                    }
-                    guard let children = user.childrens where !children.isEmpty else{
-                        break
-                    }
-                    fallthrough
+                var childrens = [User]()
+                if type == .Mine{
+                    childrens = clientData.getMyChildrens()
                 }else{
-                    break
+                    if let user = type.data(profileId){ childrens = user.childrens ?? [] }
+                }
+                if !childrens.isEmpty{
+                    return initHeaderCell()
                 }
             case 2:
-                if type == .Mine && !clientData.getGroups(.Organisation).isEmpty{
-                    let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
-                    headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: "+ edit profile")
-                    headerCell.delegate = self
-                    return headerCell
-                }else if type != .Mine{
-                    guard let user = type.data(profileId) else{
-                        break
-                    }
-                    guard !user.getOrganizations().isEmpty else{
-                        break
-                    }
-                    let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
-                    headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: "")
-                    headerCell.delegate = self
-                    return headerCell
+                var organizations = [Group]()
+                if type == .Mine{
+                    organizations = clientData.getGroups(.Organisation)
                 }else{
-                    break
+                    if let user = type.data(profileId){ organizations = user.getOrganizations() }
+                }
+                if !organizations.isEmpty{
+                    return initHeaderCell()
                 }
             case 3:
                 if let interests = type.data(profileId)!.interests where !interests.isEmpty{
-                    fallthrough
+                    return initHeaderCell()
                 }else{
                     break
                 }
             case 4:
                 if !getConnectionsMyProfileData().isEmpty{
-                    fallthrough
+                    return initHeaderCell()
                 }else{
                     break
                 }
             default:
-                let headerCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("headerSection") as! SectionTitleCell
-                headerCell.customInit(type.sectionTitle[indexPath.section], indexPath: indexPath, titleEdit: type == .Mine ? "+ edit profile" : "")
-                headerCell.delegate = self
-                return headerCell
+                return initHeaderCell()
             }
         }else{
             switch indexPath.section{
@@ -1035,70 +1042,43 @@ extension Profile{
                 
                 return profileCell
             case 1:
-                if type == .Mine && !clientData.getMyChildrens().isEmpty{
-                    let childrenCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("5")!
-                    let collectionView = childrenCell.viewWithTag(2) as! UICollectionView
-                    collectionView.reloadData()
-                    return childrenCell
-                }else if type != .Mine{
-                    guard let user = type.data(profileId) else{
-                        break
-                    }
-                    guard let children = user.childrens where !children.isEmpty else{
-                        break
-                    }
-                    let childrenCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("5")!
-                    let collectionView = childrenCell.viewWithTag(2) as! UICollectionView
-                    collectionView.reloadData()
-                    return childrenCell
+                var childrens = [User]()
+                if type == .Mine{
+                    childrens = clientData.getMyChildrens()
                 }else{
-                    break
+                    if let user = type.data(profileId) { childrens = user.childrens ?? [] }
+                }
+                if !childrens.isEmpty{
+                    let childrenCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("5")!
+                    let collectionView = childrenCell.viewWithTag(2) as! UICollectionView
+                    collectionView.reloadData()
+                    return childrenCell
                 }
             case 2:
-                if type == .Mine && !clientData.getGroups(.Organisation).isEmpty{
-                    let organizationCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("2")!
-                    let collectionView = organizationCell.viewWithTag(1) as! UICollectionView
-                    let number = organizationCell.viewWithTag(2) as! UILabel
-                    let button = organizationCell.viewWithTag(3) as! UIButton
-                    let containerButtonNumber = organizationCell.viewWithTag(4)!
-                    if shouldShowOrganizations{
-                        containerButtonNumber.hidden = true
-                        collectionView.frame.size.width = organizationCell.frame.width
-                    }else{
-                        containerButtonNumber.hidden = clientData.getGroups(.Organisation).count > 3 ? false : true
-                        number.layer.cornerRadius = number.bounds.size.width / 2
-                        number.text = "\(clientData.getGroups(.Organisation).count - 3)"
-                        button.enabled = true
-                        button.addTarget(self, action: #selector(showOrganizations), forControlEvents: .TouchUpInside)
-                    }
-                    collectionView.reloadData()
-                    return organizationCell
-                }else if type != .Mine{
-                    guard let user = type.data(profileId) else{
-                        break
-                    }
-                    guard !user.getOrganizations().isEmpty else{
-                        break
-                    }
-                    let organizationCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("2")!
-                    let collectionView = organizationCell.viewWithTag(1) as! UICollectionView
-                    let number = organizationCell.viewWithTag(2) as! UILabel
-                    let button = organizationCell.viewWithTag(3) as! UIButton
-                    let containerButtonNumber = organizationCell.viewWithTag(4)!
-                    if shouldShowOrganizations{
-                        containerButtonNumber.hidden = true
-                        collectionView.frame.size.width = organizationCell.frame.width
-                    }else{
-                        containerButtonNumber.hidden = user.getOrganizations().count > 3 ? false : true
-                        number.layer.cornerRadius = number.bounds.size.width / 2
-                        number.text = "\(user.getOrganizations().count - 3)"
-                        button.enabled = true
-                        button.addTarget(self, action: #selector(showOrganizations), forControlEvents: .TouchUpInside)
-                    }
-                    collectionView.reloadData()
-                    return organizationCell
+                var organizations = [Group]()
+                if type == .Mine{
+                    organizations = clientData.getGroups(.Organisation)
                 }else{
-                    break
+                    if let user = type.data(profileId) { organizations = user.getOrganizations() }
+                }
+                if !organizations.isEmpty{
+                    let organizationCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("2")!
+                    let collectionView = organizationCell.viewWithTag(1) as! UICollectionView
+                    let number = organizationCell.viewWithTag(2) as! UILabel
+                    let button = organizationCell.viewWithTag(3) as! UIButton
+                    let containerButtonNumber = organizationCell.viewWithTag(4)!
+                    if shouldShowOrganizations{
+                        containerButtonNumber.hidden = true
+                        collectionView.frame.size.width = organizationCell.frame.width
+                    }else{
+                        containerButtonNumber.hidden = organizations.count > 3 ? false : true
+                        number.layer.cornerRadius = number.bounds.size.width / 2
+                        number.text = "\(organizations.count - 3)"
+                        button.enabled = true
+                        button.addTarget(self, action: #selector(showOrganizations), forControlEvents: .TouchUpInside)
+                    }
+                    collectionView.reloadData()
+                    return organizationCell
                 }
             case 3:
                 if let interests = type.data(profileId)!.interests where !interests.isEmpty{
@@ -1114,6 +1094,8 @@ extension Profile{
                 }else{
                     let connectionCell = tableViewMyProfile.dequeueReusableCellWithIdentifier("6")!
                     let connectionTableView = connectionCell.viewWithTag(1) as! UITableView
+                    let seeAllButton = connectionCell.viewWithTag(3)!
+                    seeAllButton.backgroundColor = type == .Mine ? LFColor.green : UIColor(white: 220.0/255, alpha: 1.0)
                     connectionTableView.reloadData()
                     connectionCell.height = originalSizeConnectionTableView.size.height * 4/3 + connectionTableView.superview!.frame.origin.y
                     return connectionCell
@@ -1121,7 +1103,6 @@ extension Profile{
             default: break
             }
         }
-        
         let cellZero = UITableViewCell()
         cellZero.frame.size.height = 0
         return cellZero
@@ -1275,27 +1256,63 @@ extension Profile{
         let rowTypes = getConnectionsMyProfileData()
         switch rowTypes[indexPath.row] {
         case .Individual:
-            let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
-            individualCell.setValues(clientData.getMyConnection().friends[0], indexPath: NSIndexPath(forRow: 0, inSection: 0))
-            individualCell.delegate = self
-            if clientData.getMyConnection().friends[0].photo == nil{
-                Engine.getPhotoOfConnection(NSIndexPath(forRow: 0, inSection: 0)){ success in
-                    if success{
-                        self.tableViewConnectionUpper.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
+            var friend : User?{
+                get{
+                    if type == .Mine{
+                        return clientData.getMyConnection().friends[0]
+                    }else{
+                        if let user = type.data(profileId){ return user.getMutualFriends()[0] }
+                        return nil
                     }
                 }
             }
-            cell = individualCell
+            if friend != nil{
+                let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
+                individualCell.setValues(friend!, indexPath: NSIndexPath(forRow: 0, inSection: 0), type: type == .Mine ? .Friend : .Pending)
+                individualCell.delegate = self
+                if friend!.photo == nil{
+                    Engine.getPhotoOfConnection(NSIndexPath(forRow: 0, inSection: 0)){ success in
+                        if success{
+                            self.tableViewConnectionUpper.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
+                        }
+                    }
+                }
+                cell = individualCell
+            }
         case .Organization:
-            let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
-            let organizations = clientData.getGroups(.Organisation)
-            organizationCell.setValues(organizations[0], indexPath: NSIndexPath(forRow: 0, inSection: 0))
-            cell = organizationCell
+            var organization: Group?{
+                get{
+                    if type == .Mine{
+                        return clientData.getGroups(.Organisation).first
+                    }else{
+                        if let user = type.data(profileId) { return user.getOrganizations().first! }
+                        return nil
+                    }
+                }
+            }
+            if organization != nil{
+                let organizationCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Organization") as! OrganizationCell
+                let organizations = organization
+                organizationCell.setValues(organization!, indexPath: NSIndexPath(forRow: 0, inSection: 0))
+                cell = organizationCell
+            }
         case .InterestGroup:
-            let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
-            groupCell.delegate = self
-            groupCell.setValues(NSIndexPath(forRow: 0, inSection: 0), group: clientData.getGroups(.InterestGroup)[0], groupType: .InterestGroup)
-            cell = groupCell
+            var group : Group? {
+                get{
+                    if type == .Mine{
+                        return clientData.getGroups(.InterestGroup).first!
+                    }else{
+                        if let user = type.data(profileId) { return user.getGroups().count > 1 ? user.getGroups()[1] : user.getGroups()[0] }
+                        return nil
+                    }
+                }
+            }
+            if group != nil{
+                let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
+                groupCell.delegate = self
+                groupCell.setValues(NSIndexPath(forRow: 0, inSection: 0), group: group!, groupType: .InterestGroup, shouldHideButtonAction: type == .Mine ? false : true)
+                cell = groupCell
+            }
         case .Group:
             let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
             groupCell.delegate = self
@@ -1428,16 +1445,18 @@ extension Profile{
     }
     
     func didSelectRowTableViewConnectionMyProfile(tableView: UITableView, indexPath: NSIndexPath){
-        switch getConnectionsMyProfileData()[indexPath.row] {
-        case .Individual:
-            let vc = Util.getViewControllerID("Profile") as! Profile
-            vc.initViewController(.Public, id: clientData.getMyConnection().friends[0].userId!)
-            showViewController(vc, sender: self)
-        case .Organization:
-            self.performSegueWithIdentifier("OrgSegue", sender: 0)
-        case .Group, .InterestGroup:
-            let cell = tableView.cellForRowAtIndexPath(indexPath) as! GroupCell
-            self.performSegueWithIdentifier("GroupSegue", sender: cell)
+        if type == .Mine{
+            switch getConnectionsMyProfileData()[indexPath.row] {
+            case .Individual:
+                let vc = Util.getViewControllerID("Profile") as! Profile
+                vc.initViewController(.Public, id: clientData.getMyConnection().friends[0].userId!)
+                showViewController(vc, sender: self)
+            case .Organization:
+                self.performSegueWithIdentifier("OrgSegue", sender: 0)
+            case .Group, .InterestGroup:
+                let cell = tableView.cellForRowAtIndexPath(indexPath) as! GroupCell
+                self.performSegueWithIdentifier("GroupSegue", sender: cell)
+            }
         }
     }
 }
@@ -1791,14 +1810,8 @@ extension Profile{
             }
         }else if segue.identifier == "ChatSegue"{
             let chatController = segue.destinationViewController as! ChatFlow
-            var indexThread = 0
-            if let sender = sender as? GroupCell{
-                let group = sender.groupType! == .InterestGroup ? clientData.getGroups(.InterestGroup).first! : groups[sender.indexPath.row]
-                indexThread = clientData.getMyThreads()!.indexOf({ $0.id == group.threadId! })!
-            }else if let sender = sender as? Thread{
-                indexThread = clientData.getMyThreads()!.indexOf({ $0.id == sender.id })!
-            }
-            chatController.initChat(indexThread, idThread: clientData.getMyThreads()![indexThread].id, from: .OpenChat)
+            let sender = sender as! Dictionary<String, AnyObject>
+            chatController.initChat(sender["index"] as! Int, idThread: (sender["thread"] as! Thread).id, from: .OpenChat)
         }
     }
 }
@@ -1856,7 +1869,16 @@ extension Profile: GroupCellDelegate{
             }
         }else{
             if cell.indexPath != nil{
-                performSegueWithIdentifier("ChatSegue", sender: cell)
+                var stateConversation : (index: Int, thread: Thread)?
+                if cell.groupType == .InterestGroup{
+                    stateConversation = Engine.startConversation(self, groupThread: clientData.getGroups(.InterestGroup).first!.thread!)
+                }else if cell.groupType != .InterestGroup{
+                    stateConversation = Engine.startConversation(self, groupThread: self.groups[cell.indexPath.row].thread!)
+                }
+                guard let state = stateConversation else{
+                    return
+                }
+                performSegueWithIdentifier("ChatSegue", sender: ["index" : state.index, "thread" : state.thread])
             }
         }
     }
@@ -1920,7 +1942,7 @@ extension Profile: IndividualCellDelegate{
             let user = clientData.getMyConnection().friends[cell.indexPath.row]
             Engine.createPrivateThread(userId: [user.userId!]){ status, thread in
                 if let thread = thread where status == .Success{
-                    self.performSegueWithIdentifier("ChatSegue", sender: thread)
+                    self.performSegueWithIdentifier("ChatSegue", sender: ["index": thread.index, "thread" : thread.thread])
                 }
             }
         }else{

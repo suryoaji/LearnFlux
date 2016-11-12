@@ -11,19 +11,12 @@ import Foundation
 class Connections : UITableViewController {
     
     var buttonDone : UIBarButtonItem!
-//    var actualConnect = Array<User>()
     var selectedConnect : Array<Bool> = [];
     let flow = Flow.sharedInstance
     let clientData = Engine.clientData
     
     override func viewDidLoad() {
         super.viewDidLoad();
-        let item = UIBarButtonItem();
-        item.image = UIImage(named: "menu-1.png");
-        self.navigationItem.leftBarButtonItem = item;
-        item.action = #selector(self.revealMenu);
-        item.target = self;
-        
         selectedConnect = Array(count: clientData.getMyConnection().friends.count, repeatedValue: false)
         
         self.tabBarController?.title = "Connections";
@@ -38,6 +31,8 @@ class Connections : UITableViewController {
                 self.title = "Select Participants";
                 setupDoneButton()
             }
+        }else{
+            
         }
     }
     
@@ -85,10 +80,6 @@ class Connections : UITableViewController {
         }else if let activeFlow = flow.activeFlow() where activeFlow == .NewInterestGroup{
             flow.end()
         }
-    }
-    
-    @IBAction func revealMenu (sender: AnyObject) {
-        self.revealController.showViewController(self.revealController.leftViewController);
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -141,7 +132,7 @@ class Connections : UITableViewController {
             arrUserId.append(user.userId!)
             Engine.createPrivateThread(userId: arrUserId){ status, thread in
                 if let thread = thread where status == .Success{
-                    self.performSegueWithIdentifier("InitiateChat", sender: thread)
+                    self.performSegueWithIdentifier("InitiateChat", sender: ["index" : thread.index, "thread" : thread.thread])
                 }
             }
         }
@@ -154,9 +145,9 @@ class Connections : UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "InitiateChat") {
             let chatVC = segue.destinationViewController as! ChatFlow;
-            let thread = sender as! Thread
+            let thread = sender as! Dictionary<String, AnyObject>
             
-            chatVC.initChat(clientData.getMyThreads()!.indexOf({ $0.id == thread.id })!, idThread: thread.id, from: .OpenChat)
+            chatVC.initChat(thread["index"] as! Int, idThread: (thread["thread"] as! Thread).id, from: .OpenChat)
         }
     }
 }

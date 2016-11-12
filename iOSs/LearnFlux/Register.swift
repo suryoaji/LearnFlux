@@ -56,12 +56,15 @@ class Register : UIViewController {
             if (status == .CustomError) {
                 if (status == .CustomError) {
                     let errors = (JSON!["errors"] as! Array<Dictionary<String, AnyObject>>).first!
-                    if let message = errors["details"] as? String{
+                    let stringNeedChange = "{{ limit }}"
+                    if var message = errors["details"] as? String{
                         if message.lowercaseString.containsString("username"){
+                            message = message.stringByReplacingOccurrencesOfString(stringNeedChange, withString: "6")
                             self.popError(message, inView: self.tfUsername)
                         }else if message.lowercaseString.containsString("email"){
                             self.popError(message, inView: self.tfEmail)
                         }else if message.lowercaseString.containsString("password"){
+                            message = message.stringByReplacingOccurrencesOfString(stringNeedChange, withString: "8")
                             self.popError(message, inView: self.tfPassword)
                         }else{
                             self.popError(message, inView: self.btnSubmit)

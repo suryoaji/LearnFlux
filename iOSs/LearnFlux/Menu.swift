@@ -114,20 +114,31 @@ class Menu : UITableViewController {
                 let profileVC = Util.getViewControllerID("Profile") as! Profile
                 profileVC.initViewController(id: clientData.cacheSelfId())
                 vc = profileVC
+            }else if indexPath.isEqualCode("3-0"){
+                let navVc = Util.getViewControllerID("chatTabBarController") as! chatTabBarController
+                navVc.initViewController(2)
+                vc = navVc
             }else if indexPath.isEqualCode("3-5"){
                 vc = Util.getViewControllerID("InterestGroups")
             }else if indexPath.isEqualCode("2-0"){
                 vc = Util.getViewControllerID("NewHome")
+            }else if indexPath.isEqualCode("6-0"){
+                vc = Util.getViewControllerID("Login")
             }
             if let vc = vc where self.revealController.frontViewController.isKindOfClass(NavController){
                 let navController = self.revealController.frontViewController as! NavController
                 let homeVc = Util.getViewControllerID("NewHome")
                 if vc.isKindOfClass(NewHome){
                     navController.setViewControllers([vc], animated: false)
+                    self.revealController.showViewController(navController)
+                }else if vc.isKindOfClass(Login){
+                    self.revealController.frontViewController = vc
+                    self.revealController.showViewController(vc)
+                    clientData.cleanAllCache()
                 }else{
                     navController.setViewControllers([homeVc, vc], animated: false)
+                    self.revealController.showViewController(navController)
                 }
-                self.revealController.showViewController(navController)
             }
             lastSelected = indexPath
         }

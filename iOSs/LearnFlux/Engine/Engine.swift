@@ -360,6 +360,35 @@ class Engine : NSObject {
         }
     }
     
+    static func reloadDataAPI(){
+        me() { status, JSON in
+            guard let dataJSON = JSON as? dictType else{
+                return
+            }
+            if !dataJSON.isEmpty{
+                self.getGroups(){ status, arrGroup in
+                    if let groups = arrGroup{
+                        for eachGroup in groups{
+                            Engine.getGroupInfo(groupId: eachGroup.id){ status, group in
+                                Engine.clientData.updateGroup(group!)
+                            }
+                        }
+                    }
+                }
+                self.getThreads()
+                self.getEvents(){ status, JSON in
+                    if let events = Engine.clientData.getMyEvents(){
+                        for eachEvent in events{
+                            Engine.getEventDetail(event: eachEvent)
+                        }
+                    }
+                }
+                self.getConnection()
+                self.clientData.setMyChildrens()
+            }
+        }
+    }
+    
     static func getEvents(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
         makeRequestAlamofire(viewController, url: Url.events, param: nil){ status, dataJSON in
             if let rawJSON = dataJSON{
@@ -777,10 +806,10 @@ class Engine : NSObject {
         }
     }
     
-    static func createPrivateThread(viewController: UIViewController? = nil, userId: [Int], callback: ((RequestStatusType, Thread?) -> Void)? = nil){
+    static func createPrivateThread(viewController: UIViewController? = nil, userId: [Int], callback: ((RequestStatusType, (index: Int, thread: Thread)?) -> Void)? = nil){
         makeRequestAlamofire(viewController, method: .POST, url: Url.messages, param: ["participants" : userId]){ status, JSON in
             if let threadDict = getDictData(JSON) where status == .Success && JSON != nil{
-                let thread : Thread? = clientData.getThread(threadDict)
+                let thread : (index: Int, thread: Thread)? = clientData.getThread(threadDict)
                 if callback != nil { callback!(status, thread) }
             }
         }
@@ -923,6 +952,7 @@ class Engine : NSObject {
                     if callback != nil{ callback!(status: status, newMessage: nil, lastSync: 0) }
                     return
                 }
+                print(indexpath)
                 if let rawMessages = threadsData[indexpath]["messages"]{
                     let messages = rawMessages as! Array<Dictionary<String, AnyObject>>
                     if let result = Thread.getMessagesFromArr(messages){
@@ -935,6 +965,19 @@ class Engine : NSObject {
             }else{
                 if callback != nil{ callback!(status: status, newMessage: nil, lastSync: 0) }
             }
+        }
+    }
+    
+    static func startConversation(viewController : UIViewController, groupThread: Thread) -> (index: Int, thread: Thread)?{
+        guard let threads = clientData.getMyThreads() else{
+            Util.showMessageInViewController(viewController, title: "Ops", message: "Sorry, this chat is unavailable")
+            return nil
+        }
+        if let index = threads.indexOf({ $0.id == groupThread.id }){
+            return (index: index, thread: threads[index])
+        }else{
+            Util.showMessageInViewController(viewController, title: "", message: "Chat of this group has been deleted accidently, so the best way is just delete this group because this could make problems in future")
+            return nil
         }
     }
     
