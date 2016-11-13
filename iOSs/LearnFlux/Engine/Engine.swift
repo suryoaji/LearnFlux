@@ -10,6 +10,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 import Kingfisher
+import EventKit
 
 extension UIViewController{
     func e_globalResignFirstResponderRec(view: UIView){
@@ -1162,5 +1163,29 @@ class Engine : NSObject {
                 if (callback != nil) { callback! (status, dict); }
             }
         }
+    }
+    
+    static func addEventToCalendar(title title: String, description: String?, startDate: NSDate, endDate: NSDate, completion: ((success: Bool, error: NSError?) -> Void)? = nil) {
+        let eventStore = EKEventStore()
+        
+        eventStore.requestAccessToEntityType(.Event, completion: { (granted, error) in
+            if (granted) && (error == nil) {
+                let event = EKEvent(eventStore: eventStore)
+                event.title = title
+                event.startDate = startDate
+                event.endDate = endDate
+                event.notes = description
+                event.calendar = eventStore.defaultCalendarForNewEvents
+                do {
+                    try eventStore.saveEvent(event, span: .ThisEvent)
+                } catch let e as NSError {
+                    completion?(success: false, error: e)
+                    return
+                }
+                completion?(success: true, error: nil)
+            } else {
+                completion?(success: false, error: error)
+            }
+        })
     }
 }

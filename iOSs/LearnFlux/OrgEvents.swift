@@ -285,6 +285,8 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         let lblLocation = cell.viewWithTag(2) as! UILabel
         let btnEdit = cell.viewWithTag(14) as! UIButton
         let btnMessage = cell.viewWithTag(11) as! UIButton
+        let btnCalendar = cell.viewWithTag(12) as! UIButton
+        btnCalendar.addTarget(self, action: #selector(btnCalendarTapped), forControlEvents: .TouchUpInside)
         btnMessage.addTarget(self, action: #selector(btnMessageTapped), forControlEvents: .TouchUpInside)
         
         let events = getEventsShown()
@@ -298,12 +300,12 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         lblDesc.text = event.details
         btnMessage.enabled = false
         if event.thread != nil{
-            
             if let indexThread = clientData.getMyThreads()!.indexOf({ $0.id == event.thread.id }) where attendance[indexPath.row].lowercaseString == "going"{
                 btnMessage.enabled = true
                 btnMessage.layer.name = "\(indexThread)"
             }
         }
+        btnCalendar.layer.name = "\(indexPath.row)"
         
         if self.isCreatorOfEvent(event){
             btnEdit.alpha = 1
@@ -317,6 +319,16 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
+    }
+    
+    @IBAction func btnCalendarTapped(sender: UIButton){
+        let indexEvent = Int(sender.layer.name!)!
+        let event = getEventsShown()[indexEvent]
+        guard let dateEvent = Util.dateFromString(event.time) else{
+            Util.showMessageInViewController(self, title:"Ops", message: "Sorry, something went wrong")
+            return
+        }
+        Engine.addEventToCalendar(title: event.title, description: event.details, startDate: dateEvent, endDate: dateEvent)
     }
     
     @IBAction func btnMessageTapped(sender: UIButton){
