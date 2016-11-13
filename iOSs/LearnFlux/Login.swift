@@ -12,6 +12,7 @@ import AMPopTip
 class Login: UIViewController, UITextFieldDelegate {
 
     let aDelegate = UIApplication.sharedApplication().delegate as! AppDelegate;
+    let clientData = Engine.clientData
     let popTip = AMPopTip();
     var textfieldClicked = UITextField()
     
@@ -84,8 +85,9 @@ class Login: UIViewController, UITextFieldDelegate {
         }
         Util.showIndicatorDarkOverlay(self.view, message: "loading")
         self.isPush = false
-        Engine.login(self, username: tfUsername.text!, password: tfPassword.text!) { status, JSON in
+        Engine.login(self, username: tfUsername.text!, password: tfPassword.text!) { [unowned self] status, JSON in
              if status == .Success && JSON != nil{
+                self.clientData.cleanAllCache()
                 Engine.me(self) { status, JSON in
                     guard status == .Success else{
                         Util.stopIndicator(self.view)
@@ -96,12 +98,10 @@ class Login: UIViewController, UITextFieldDelegate {
                         return
                     }
                     if !dataJSON.isEmpty{
-                        Engine.getGroups(){ status, arrGroup in
-                            if let groups = arrGroup{
-                                for eachGroup in groups{
-                                    Engine.getGroupInfo(groupId: eachGroup.id){ status, group in
-                                        Engine.clientData.updateGroup(group!)
-                                    }
+                        Engine.getGroups(){ status in
+                            if !self.clientData.getGroups().isEmpty{
+                                for eachGroup in self.clientData.getGroups(){
+                                    Engine.getGroupInfo(groupId: eachGroup.id)
                                 }
                             }
                         }

@@ -8,9 +8,19 @@
 
 import UIKit
 
-class Event: NSObject {
-    
-//    typealias User = (id: String, type: String, link: String)
+struct keyEventName{
+    static let id = "id"
+    static let timestamp = "timestamp"
+    static let details = "details"
+    static let location = "location"
+    static let status = "rsvp"
+    static let title = "title"
+    static let participants = "participants"
+    static let by = "created_by"
+    static let thread = "thread"
+}
+
+class Event {
     typealias EventThread = (id: String, title: String)
     typealias Participant = (user: User, rsvp: Int)
     struct statusEvent{
@@ -30,20 +40,25 @@ class Event: NSObject {
     var thread: EventThread!
     var status: Int! = 0
     
-    init(id: String, title: String, time: String, details: String, location: String, status: Int) {
-        self.title = title
-        self.id = id
-        self.time = time
-        self.by = User(dict: [keyCacheMe.id : 0, keyCacheMe.type : ""])
-        self.location = location
-        self.details = details
-        self.participants = []
-        self.thread = (id: "", title: "")
-        self.status = status
+    init(dict: AnyObject?){
+        guard let data = dict as? Dictionary<String, AnyObject> else{
+            return
+        }
+        if let s = data[keyEventName.id] as? String{ id = s }
+        if let s = data[keyEventName.timestamp] as? Double{ time = String(NSDate(timeIntervalSince1970: s)) }
+        if let s = data[keyEventName.details] as? String{ details = s }
+        if let s = data[keyEventName.location] as? String{ location = s }
+        if let s = data[keyEventName.status] as? Int{ status = s }
+        if let s = data[keyEventName.title] as? String { title = s }else{ title = "" }
+        update(data)
     }
     
-    convenience init(id: String, time: String, details: String, location: String, status: Int) {
-        self.init(id: id, title: "", time: time, details: details, location: location, status: status)
+    func update(newInfo: Dictionary<String, AnyObject>){
+        if let s = newInfo[keyEventName.title] as? String{ title = s }
+        if let s = newInfo[keyEventName.participants] as? Array<Dictionary<String, AnyObject>>{ participants = getParticipantsFromArr(s) }
+        if let s = newInfo[keyEventName.by] as? Dictionary<String, AnyObject>{ by = User(dict: s) }
+        if let s = newInfo[keyEventName.thread] as? Dictionary<String, AnyObject>{ thread = getThreadFromDict(s) }
+        if let s = newInfo[keyEventName.status] as? Int{ status = s }
     }
     
     func selfDescription() -> (String){
@@ -57,107 +72,20 @@ class Event: NSObject {
               "thread: \(thread)\n")
     }
     
-    func setPropertyBy(by: User){
-        self.by = by
-    }
-    
-    func setPropertyLocation(string: String){
-        self.location = string
-    }
-    
-    func setPropertyDetails(string: String){
-        self.details = string
-    }
-    
-    func setPropertyParticipants(arrParticipant: [Participant]){
-        self.participants = arrParticipant
-    }
-    
-    func setPropertyThread(thread: EventThread){
-        self.thread = thread
-    }
-    
-    func setPropertyStatus(status: Int){
-        self.status = status
-    }
-    
-    func updateMe(newInfo: Dictionary<String, AnyObject>){
-        guard let rawTitle        = newInfo["title"],
-              let rawParticipants = newInfo["participants"],
-              let rawBy           = newInfo["created_by"],
-              let rawThread       = newInfo["thread"],
-              let status          = newInfo["rsvp"] else{
-                return
-        }
-        guard let sTitle          = rawTitle as? String,
-              let arrParticipants = rawParticipants as? Array<AnyObject>,
-              let dictBy          = rawBy as? Dictionary<String, AnyObject>,
-              let dictThread      = rawThread as? Dictionary<String, AnyObject>,
-              let iStatus         = status as? Int else{
-                return
-        }
-        self.setPropertyParticipants(getParticipantsFromArr(arrParticipants))
-        self.setPropertyThread(getThreadFromDict(dictThread))
-        self.setPropertyBy(getByFromDict(dictBy))
-        self.title = sTitle
-        self.status = iStatus
-    }
-    
-    func getByFromDict(dict: Dictionary<String, AnyObject>)->(User){
-        return User(dict: dict)
-    }
-    
     func getThreadFromDict(dict: Dictionary<String, AnyObject>)->(EventThread){
         return (id: dict["id"] as! String, title: dict["title"] as! String)
     }
     
     func getParticipantsFromArr(arr: Array<AnyObject>)->([Participant]){
-        var arrParticipant = [Participant]()
-        for each in arr{
-            let dictEach = each as! Dictionary<String, AnyObject>
-            arrParticipant.append(getParticipant(dictEach))
-        }
-        return arrParticipant
+        return arr.map({ getParticipant($0 as! Dictionary<String, AnyObject>) })
     }
     
     func getParticipant(dict: Dictionary<String, AnyObject>)->(Participant){
-        let user = getUser(dict["user"] as! Dictionary<String, AnyObject>)
+        let user = User(dict: dict["user"] as! Dictionary<String, AnyObject>)
         let rsvp = dict["rsvp"] as! Int
         if user.userId! == Engine.clientData.cacheSelfId(){
-            self.setPropertyStatus(rsvp)
+            status = rsvp
         }
         return (user: user, rsvp: rsvp)
     }
-    
-    func getUser(dict: Dictionary<String, AnyObject>) -> (User){
-        return User(dict: dict)
-    }
-    
-    static func convertToEvent(dict: Dictionary<String, AnyObject>) -> (Event?){
-        guard let id = dict["id"],
-              let timestamp = dict["timestamp"],
-              let details = dict["details"],
-              let location = dict["location"],
-              let status = dict["rsvp"] else{
-              return nil
-        }
-        guard let sId        = id as? String,
-              let dTimestamp = timestamp as? Double,
-              let sDetails   = details as? String,
-              let sLocation  = location as? String,
-              let iStatus = status as? Int else{
-                return nil
-        }
-        let date = NSDate(timeIntervalSince1970: dTimestamp)
-        let returnedEvent : Event!
-        if let title = dict["title"] where (title as? String) != nil{
-             returnedEvent = Event(id: sId, title: title as! String, time: String(date), details: sDetails, location: sLocation, status: iStatus)
-        }else{
-             returnedEvent = Event(id: sId, time: String(date), details: sDetails, location: sLocation, status: iStatus)
-        }
-        returnedEvent.updateMe(dict)
-        
-        return returnedEvent
-    }
-    
 }

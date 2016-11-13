@@ -29,12 +29,22 @@ class Group{
     var parent: Any?
     var parentId: String!
     var color: UIColor!;
-    var participants : [Participant]?;
+    var participants : [Participant]?{
+        get{
+            return thread?.participants
+        }
+    }
     var description : String?;
     var child : [Group]?;
     var imageString: String?
     var image: UIImage?
     var role: String?
+    var isAdmin: Bool{
+        get{
+            guard let role = role else{ return false }
+            return role.lowercaseString == "admin" ? true : false
+        }
+    }
     
     init(dict: AnyObject?, imageHasLoaded: ((type: Int, id: String, status: Bool) -> Void)? = nil) {
         guard let data = dict as? dictType else { type = ""; id = ""; name = ""; return }
@@ -43,10 +53,7 @@ class Group{
         if let s = data[keyGroupName.name] as? String { name = s; }
         if let s = data[keyGroupName.parent] as? dictType { let p = Group(dict: s); parent = p as Any; parentId = p.id; }
         if let s = data[keyGroupName.description] as? String { description = s; }
-        
-        if let s = data[keyGroupName.message] as? dictType { thread = Thread(dict: s); participants = thread?.participants}
-        
-        if let s = data[keyGroupName.participants] as? Array<dictType> { participants = Participant.convertFromArr(s) }
+        if let s = data[keyGroupName.message] as? dictType { thread = Thread(dict: s)}
         if let s = data[keyGroupName.child] { child = Group.convertFromArr(s); }
         if let s = data[keyGroupName.image] as? String { imageString = s; loadImage(imageHasLoaded) }
         if let s = data[keyGroupName.role] as? String { role = s }
@@ -66,22 +73,15 @@ class Group{
         }
     }
     
-    func update(group: Group){
-        self.color = self.color == nil ? group.color : self.color
-        self.description = self.description == nil ? group.description : self.description
-        self.participants = group.participants
-        self.child = group.child
-        self.thread = group.thread
+    func update(dict: Dictionary<String, AnyObject>){
+        if let s = dict[keyGroupName.description] as? String { description = s }
+        if let s = dict[keyGroupName.message] as? dictType { thread = Thread(dict: s) }
+        if let s = dict[keyGroupName.child] as? Array<Dictionary<String, AnyObject>> { child = Group.convertFromArr(s) }
     }
     
-    static func convertFromArr(dict: AnyObject?) -> [Group]? {
-        guard let data = dict as? arrType else { return nil; }
-        var result = [Group]();
-        for el in data {
-            guard let group = Group.convertFromDict(el) else { continue; }
-            result.append(group);
-        }
-        return result;
+    static func convertFromArr(arr: AnyObject?) -> [Group]? {
+        guard let data = arr as? arrType else{ return nil }
+        return data.map({ Group(dict: $0) })
     }
     
     static func convertFromDict(dict: AnyObject?) -> Group?{

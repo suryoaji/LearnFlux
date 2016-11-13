@@ -153,16 +153,16 @@ class Data : NSObject {
     }
     
     func checkUpdateMyConnections(arrFriends: Array<Dictionary<String, AnyObject>>, _ arrPendingFriends: Array<Dictionary<String, AnyObject>>, _ arrRequestedFriends: Array<Dictionary<String, AnyObject>>){
-        if connection != nil{ checkUpdateConnections(arrFriends) }
+        if connection != nil{ checkUpdateConnections(arrFriends, shouldLoadImage: true) }
         checkUpdatePendingConnections(arrPendingFriends)
         checkUpdateRequestedConnections(arrRequestedFriends)
     }
     
-    func checkUpdateConnections(arrFriends: Array<Dictionary<String, AnyObject>>){
+    func checkUpdateConnections(arrFriends: Array<Dictionary<String, AnyObject>>, shouldLoadImage: Bool = false){
         let newArr = repairJSONConnections(arrFriends)
         for each in newArr{
             if let index = connection!.indexOf({ $0.userId! == each[keyCacheMe.id] as! Int }){
-                connection![index].refresh(each)
+                connection![index].refresh(each, shouldLoadImage: shouldLoadImage)
             }else{
                 addToConnection(User(dict: each))
             }
@@ -280,13 +280,7 @@ class Data : NSObject {
     }
     
     func addSpecificEvents(idGroup: String, arrDictEvents: Array<Dictionary<String, AnyObject>>){
-        var conEvents : [Event] = []
-        for each in arrDictEvents{
-            if let event = Event.convertToEvent(each){
-                conEvents.append(event)
-            }
-        }
-        self.specificEvents.append((id: idGroup, events: conEvents))
+        self.specificEvents.append((id: idGroup, events: arrDictEvents.map({ Event(dict: $0) })))
     }
     
     func sortThreads(notification: NSNotification){
@@ -294,12 +288,6 @@ class Data : NSObject {
             self.threads = nil
             self.threads = con
         }
-    }
-    
-    func updateGroup(group: Group){
-        let index = groups!.indexOf({ $0.id == group.id })!
-        groups!.removeAtIndex(index)
-        groups!.insert(group, atIndex: index)
     }
     
     func addNewGroup(dict: Dictionary<String, AnyObject>){
@@ -461,18 +449,23 @@ class Data : NSObject {
     }
 
     func makeEventsArr(rawArr : Array<Dictionary<String, AnyObject>>) -> ([Event]){
-        var tempEvents : [Event] = []
-        for dicEvent in rawArr{
-            let event = Event.convertToEvent(dicEvent)
-            if let inEvent = event{
-                tempEvents.append(inEvent)
-            }
-        }
-        return tempEvents
+        return rawArr.map({ Event(dict: $0) })
     }
 
     func setGroups(arr: arrType){
-        self.groups = Group.convertFromArr(arr);
+        self.groups = Group.convertFromArr(arr)
+    }
+    
+    func checkUpdateGroups(arr: arrType){
+        guard let groups = groups else{ return }
+        for each in arr{
+            if groups.indexOf({ $0.id == each[keyGroupName.id] as! String }) != nil{
+//                self.groups![index].update(each)
+            }else{
+                self.groups!.append(Group(dict: each))
+                self.groups!.last?.update(each)
+            }
+        }
     }
     
     func getGroups(filter: GroupType = .All) -> ([Group]){

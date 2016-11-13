@@ -27,13 +27,8 @@ struct Participant {
     }
 
     static func convertFromArr (arr : AnyObject?) -> [Participant]? {
-        guard let data = arr as? arrType else { return nil; }
-        var result = [Participant]();
-        for el in data {
-            guard let p = Participant.convertFromDict(el) else { continue; }
-            result.append(p);
-        }
-        return result;
+        guard let data = arr as? arrType else { return nil }
+        return data.map({ Participant(dict: $0) }).filter({ $0 != nil })
     }
     
     static func convertFromDict (dict : AnyObject?) -> Participant? {
@@ -54,6 +49,5 @@ struct Participant {
         self = result;
         return true;
     }
-    
     
 }

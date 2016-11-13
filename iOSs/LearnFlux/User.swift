@@ -84,7 +84,7 @@ class User {
         }
     }
     
-    func refresh(dict: AnyObject?, imageHasLoaded: ((type: Int, id: String, status: Bool) -> Void)? = nil){
+    func refresh(dict: AnyObject?, shouldLoadImage : Bool = false, imageHasLoaded: ((type: Int, id: String, status: Bool) -> Void)? = nil){
         guard let data = dict else { return }
         if let s = data[keyCacheMe.firstName] as? String { firstName = s }
         if let s = data[keyCacheMe.lastName] as? String{ lastName = s }
@@ -94,7 +94,7 @@ class User {
         if let s = data[keyCacheMe.links] as? Dictionary<String, AnyObject>{
             if let photoLinks = s[keyCacheMe.linkPhoto]{
                 if let photoLink = photoLinks["href"] as? String{
-                    if picture != nil && picture! != updateLinks(photoLink){
+                    if (picture != nil && picture! != updateLinks(photoLink)) || shouldLoadImage{
                         self.picture = updateLinks(photoLink); loadImage(imageHasLoaded)
                     }else{
                         if imageHasLoaded != nil{ imageHasLoaded!(type: 1, id: "", status: false) }
@@ -160,7 +160,6 @@ class User {
                 if let link = self.picture{
                     Engine.getImageIndividual(urlIndividual: link){image in
                         self.photo = image
-                        self.picture = nil
                         if image != nil{
                             if callback != nil { callback!(type: 1, id: "\(self.userId!)", status: true) }
                         }else{
@@ -170,7 +169,6 @@ class User {
                 }
             }else{
                 self.photo = Engine.clientData.photo
-                self.picture = nil
             }
         }
     }

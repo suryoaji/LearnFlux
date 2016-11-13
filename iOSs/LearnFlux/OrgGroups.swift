@@ -78,13 +78,6 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         self.navigationItem.rightBarButtonItem = rightBarButton
         rightBarButton.action = #selector(self.rightNavigationBarButtonTapped)
         rightBarButton.target = self
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.getGroup), name: "ThreadsUpdateNotification", object: nil)
-    }
-    
-    @IBAction func getGroup(notification : NSNotification){
-        self.groups = clientData.getGroups(.InterestGroup)
-        cv.reloadData()
     }
     
     @IBAction func rightNavigationBarButtonTapped(sender: UIBarButtonItem){
@@ -117,10 +110,9 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         if let data = groups {
             let group = data[indexPath.row];
             lblTitle.text = group.name.uppercaseString;
-    //        lblDesc.text = (group["description"]! as? String)?.uppercaseString;
             lblDesc.text = "";
             
-            editButton.alpha = Engine.isAdminOfGroup(group) ? 1.0 : 0.0
+            editButton.alpha = group.isAdmin ? 1.0 : 0.0
             
             if group.color == nil {
                 let color = randomizePastelColor();
@@ -140,10 +132,8 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         vc.initFromCall(data[indexPath.row]);
         if pushDelegate == nil{
             Engine.getGroupInfo(groupId: data[indexPath.row].id){status, group in
-                if status == .Success{
-                    let newGroup = data[indexPath.row]
-                    newGroup.update(group!)
-                    vc.initFromCall(newGroup)
+                if let group = group where status == .Success{
+                    vc.initFromCall(group)
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
@@ -158,33 +148,5 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         let screenSize = UIScreen.mainScreen().bounds.width;
         size.width = (screenSize / 2) - 15;
         return size;
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.destinationViewController as? NewGroups) != nil{
-            createNewInterestGroup()
-        }
-    }
-    
-    func createNewInterestGroup(){
-        flow.begin(.NewInterestGroup)
-        flow.setCallback { result in
-            guard let title = result!["title"] as? String else { print ("FLOW: title not found"); return; }
-            guard let desc = result!["desc"] as? String else { print ("FLOW: desc not found"); return; }
-            guard let userIds = result!["userIds"] as? [Int] else { print ("FLOW: userIds not found"); return; }
-            Engine.createGroupChat(self, name: title, description: desc, userId: userIds) { status, JSON in
-                if status == .Success && JSON != nil{
-                    self.groups = self.clientData.getGroups().filter({ $0.type == "group" })
-                    let dataJSON = JSON!["data"] as! Dictionary<String, AnyObject>
-                    let vc = Util.getViewControllerID("GroupDetails") as! GroupDetails;
-                    let group = Group(dict: dataJSON);
-                    group.description = self.flow.get(key: "desc")! as? String;
-                    group.color = self.randomizePastelColor();
-                    vc.isAdmin = true
-                    vc.initFromCall(group);
-                    self.navigationController?.pushViewController(vc, animated: true);
-                }
-            }
-        }
     }
 }

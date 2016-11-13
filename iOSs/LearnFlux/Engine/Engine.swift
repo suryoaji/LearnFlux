@@ -52,19 +52,6 @@ class Engine : NSObject {
     static var clientData = Data.sharedInstance
     private static var locked : Bool = false;
     
-    static func isAdminOfGroup(group: Group) -> (Bool){
-        guard let participants = group.participants?.filter({ $0.user!.userId! == clientData.cacheSelfId() }) where !participants.isEmpty else{
-            return false
-        }
-        guard let role = participants.first!.role else{
-            return false
-        }
-        if role.type.lowercaseString == "admin"{
-            return true
-        }
-        return false
-    }
-    
     static func getJSON (param: [String: AnyObject])->String {
         do {
             let jsonData = try NSJSONSerialization.dataWithJSONObject(param, options: NSJSONWritingOptions.PrettyPrinted)
@@ -348,11 +335,9 @@ class Engine : NSObject {
         if let events = clientData.getSpecificEventsByIdGroup(idGroup) where !events.isEmpty{
             for event in events{
                 makeRequestAlamofire(url: Url.events + "/\(event.id)", param: nil){status, JSON in
-                    if status == .Success{
+                    if status == .Success && JSON != nil{
                         if let dict = self.getDictData(JSON){
-                            if let newEvent = Event.convertToEvent(dict){
-                                clientData.updateSpecificEventsByIdGroup(idGroup, events: [newEvent])
-                            }
+                            clientData.updateSpecificEventsByIdGroup(idGroup, events: [Event(dict: dict)])
                         }
                     }
                 }
@@ -361,35 +346,32 @@ class Engine : NSObject {
     }
     
     static func reloadDataAPI(){
-        self.getConnection(isNew: false)
-        self.getGroups(isNew: false){ status, arrGroup in
-            if let groups = arrGroup{
-                for eachGroup in groups{
-                    Engine.getGroupInfo(groupId: eachGroup.id){ status, group in
-                        Engine.clientData.updateGroup(group!)
-                    }
+        getConnection(isNew: false)
+        getGroups(isNew: false){ status in
+            if !clientData.getGroups().isEmpty{
+                for eachGroup in clientData.getGroups(){
+                    Engine.getGroupInfo(groupId: eachGroup.id)
                 }
             }
         }
-        self.getThreads()
-        self.getEvents(){ status, JSON in
+        getThreads()
+        getEvents(){ status, JSON in
             if let events = Engine.clientData.getMyEvents(){
                 for eachEvent in events{
                     Engine.getEventDetail(event: eachEvent)
                 }
             }
         }
-        self.clientData.setMyChildrens()
     }
     
     static func getEvents(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
         makeRequestAlamofire(viewController, url: Url.events, param: nil){ status, dataJSON in
-            if let rawJSON = dataJSON{
-                let json = JSON(rawJSON).dictionaryObject
-                if let data = json?["data"]{
-                    let arrData = data as! Array<Dictionary<String, AnyObject>>
-                    clientData.setMyEvents(arrData)
-                }
+            guard let rawJSON = dataJSON as? Dictionary<String, AnyObject> else{
+                if callback != nil{ callback!(status, dataJSON) }
+                return
+            }
+            if let arrData = rawJSON["data"] as? Array<Dictionary<String, AnyObject>>{
+                clientData.setMyEvents(arrData)
             }
             if callback != nil{ callback!(status, dataJSON) }
         }
@@ -421,7 +403,7 @@ class Engine : NSObject {
         makeRequestAlamofire(viewController, url: Url.events + "/\(event.id)", param: nil){ status, JSON in
             if status == .Success{
                 if let dictJSON = JSON!["data"] as? Dictionary<String, AnyObject>{
-                    event.updateMe(dictJSON)
+                    event.update(dictJSON)
                 }
             }
             if callback != nil { callback!(status, JSON) }
@@ -442,20 +424,17 @@ class Engine : NSObject {
         return data as? dictType;
     }
 
-    static func getGroups(viewController: UIViewController? = nil, filter: GroupType = .All, isNew: Bool = true, callback: ((RequestStatusType, [Group]?)->Void)? = nil) -> [Group]? {
+    static func getGroups(viewController: UIViewController? = nil, isNew: Bool = true, callback: ((RequestStatusType)->Void)? = nil){
         makeRequestAlamofire(viewController, url: Url.groups, param: nil){ status, dataJSON in
-            if let groups = self.getArrData(dataJSON){
+            if let arrGroups = self.getArrData(dataJSON){
                 if isNew{
-                    self.clientData.setGroups(groups)
-                    if callback != nil { callback!(status, clientData.getGroups(filter)) }
+                    self.clientData.setGroups(arrGroups)
                 }else{
-                    
+                    self.clientData.checkUpdateGroups(arrGroups)
                 }
             }
-            
-            
+            if callback != nil { callback!(status) }
         }
-        return clientData.getGroups(filter);
     }
     
     static func getImageGroup(viewController: UIViewController? = nil, group: Group, fromCache: Bool = false, callback: ((UIImage?) -> Void)? = nil){
@@ -840,16 +819,18 @@ class Engine : NSObject {
         }
     }
 
-    static func getGroupInfo(viewController: UIViewController? = nil, groupId: String, callback: ((RequestStatusType, Group?)->Void)? = nil) {
+    static func getGroupInfo(viewController: UIViewController? = nil, groupId: String, callback: ((RequestStatusType, Group?) -> Void)? = nil) {
         let url = Url.groups + "/" + groupId
         makeRequestAlamofire(viewController, url: url, param: nil){ status, dataJSON in
-            let data = self.getDictData(dataJSON)
-            let group = Group(dict: data)
-            if let index = clientData.getGroups().indexOf({ $0.id == group.id }){
-                clientData.getGroups()[index].update(group)
+            guard let data = self.getDictData(dataJSON) where status == .Success else{
+                if callback != nil { callback!(status, nil) }
+                return
+            }
+            if let index = clientData.getGroups().indexOf({ $0.id == data[keyGroupName.id] as! String }){
+                clientData.getGroups()[index].update(data)
                 if callback != nil { callback!(status, clientData.getGroups()[index]) }
             }else{
-                if callback != nil { callback!(status, group) }
+                if callback != nil { callback!(status, nil) }
             }
         }
     }
@@ -1030,10 +1011,10 @@ class Engine : NSObject {
             if status == .Success && JSON != nil{
                 var dict = getDictData(JSON)
                 dict!["rsvp"] = 2
-                let event = Event.convertToEvent(dict!)
-                event?.setPropertyBy(User.convertFromDict(clientData.cacheMe())!)
+                let event = Event(dict: dict!)
+                event.by = User.convertFromDict(clientData.cacheMe())!
                 let idGroup = (param!["reference"] as! Dictionary<String, AnyObject>)["id"] as! String
-                clientData.updateSpecificEventsByIdGroup(idGroup, events: [event!])
+                clientData.updateSpecificEventsByIdGroup(idGroup, events: [event])
             }
             if callback != nil { callback!(status, JSON) }
         }

@@ -77,15 +77,14 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
     }
     
     func checkAdmin() -> (Bool){
-        let admin : Bool = Engine.isAdminOfGroup(self.group!)
-        if admin{
+        if self.group!.isAdmin{
             changeImageRightBarButton("edit")
             print("this group could be edited")
         }else{
             self.navigationItem.rightBarButtonItem = nil
             print("this group could not be edited")
         }
-        return admin
+        return self.group!.isAdmin
     }
     
     var initIndex : Int!

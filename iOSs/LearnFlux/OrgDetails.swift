@@ -61,7 +61,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
                 if let profileViewController = tabs[3] as? OrgProfile{
                     profileViewController.setOrganizationInfo(orgData)
                 }
-                self.isAdmin = checkAdmin()
+                self.isAdmin = orgData.isAdmin
             }
         }
     }
@@ -85,8 +85,17 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         return nil
     }
     
-    func checkAdmin() -> (Bool){
-        return Engine.isAdminOfGroup(self.orgData!)
+    func timedRefreshData(){
+        NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(refreshData2), userInfo: nil, repeats: false)
+    }
+    
+    func refreshData2(){
+        Engine.getGroupInfo(self, groupId: orgId) { status, group in
+            self.orgData = group;
+            self.propagateData();
+            Util.mainThread() { self.updateView (); }
+            self.timedRefreshData()
+        }
     }
 
     func refreshData(callback: (() -> Void)?) {
@@ -95,6 +104,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
             self.propagateData();
             Util.mainThread() { self.updateView (); }
             if (callback != nil) { callback!(); }
+            self.timedRefreshData()
         }
     }
     
