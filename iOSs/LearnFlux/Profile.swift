@@ -448,7 +448,12 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     }
     
     func reloadFriends(){
-        Engine.getConnection()
+        Engine.getConnection(isNew: false)
+        if indicatorHeader == 0{
+            tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 4)], withRowAnimation: .None)
+        }else if indicatorHeader == 1 && (indicatorAccConnection == 0 || indicatorAccConnection == 3){
+            tableViewConnectionUpper.reloadData()
+        }
     }
     
     func rightNavigationBarButtonTapped(sender: UIBarButtonItem){
