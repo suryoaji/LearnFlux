@@ -830,7 +830,7 @@ class Engine : NSObject {
                 clientData.getGroups()[index].update(data)
                 if callback != nil { callback!(status, clientData.getGroups()[index]) }
             }else{
-                if callback != nil { callback!(status, nil) }
+                if callback != nil { callback!(status, Group(dict: data)) }
             }
         }
     }

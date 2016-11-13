@@ -1928,6 +1928,7 @@ extension Profile: GroupRequestCellDelegate{
         let group = requestedGroups[cell.indexPath.row - 1]
         Engine.requestJoinGroup(idGroup: group.id){status in
             self.requestedGroups.removeAtIndex(cell.indexPath.row - 1)
+            self.tableViewFriendRequest.reloadData()
             var notifs = self.clientData.cacheNotifications()
             if let index = notifs.indexOf({ $0["ref"] as! String == group.id }){
                 notifs.removeAtIndex(index)
