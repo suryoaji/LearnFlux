@@ -440,19 +440,40 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         originalSizeConnectionTableView = tableViewConnectionLower.frame
         
         if !shouldEditMyProfile{ tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 4)], withRowAnimation: .None) }
+        
+        reloadFriendsTimedly()
     }
     
-    var timerForReloadFriend = NSTimer()
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        timer.invalidate()
+    }
+    
+    var timer = NSTimer()
     func reloadFriendsTimedly(){
-        timerForReloadFriend = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(reloadFriends), userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: #selector(reloadFriends), userInfo: nil, repeats: false)
     }
     
     func reloadFriends(){
-        Engine.getConnection(isNew: false)
-        if indicatorHeader == 0{
-            tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 4)], withRowAnimation: .None)
-        }else if indicatorHeader == 1 && (indicatorAccConnection == 0 || indicatorAccConnection == 3){
-            tableViewConnectionUpper.reloadData()
+        Engine.getConnection(isNew: false){[unowned self] status, JSON in
+            guard status == .Success else{
+                return
+            }
+            self.labelFriendRequest.text = "\(self.clientData.getMyConnection().pending.count)"
+            self.labelFriendRequest.hidden = self.clientData.getMyConnection().pending.count > 0 ? false : true
+            if self.clientData.getMyConnection().pending.count > 0{ self.tableViewFriendRequest.reloadData() }
+            
+            if self.indicatorHeader == 0{
+                self.tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 4)], withRowAnimation: .None)
+            }else if self.indicatorHeader == 1 && (self.indicatorAccConnection == 0 || self.indicatorAccConnection == 3){
+                Engine.getAllContacts(){ arrDictContacts in
+                    self.allContacts = Engine.generateContactsByFirstLetter(arrDictContacts)
+                    self.allContactsSectionIndex = [String](self.allContacts.keys)
+                    self.allContactsSectionIndex.sortInPlace({ $0 < $1 })
+                    self.tableViewConnectionUpper.reloadData()
+                }
+            }
+            self.reloadFriendsTimedly()
         }
     }
     
@@ -1200,11 +1221,6 @@ extension Profile{
             let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
             individualCell.setValues(clientData.getMyConnection().friends[indexPath.row], indexPath: indexPath)
             individualCell.delegate = self
-            Engine.getPhotoOfConnection(indexPath){ success in
-                if success{
-                    self.tableViewConnectionUpper.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
-                }
-            }
             cell = individualCell
         case 1:
             let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
@@ -1224,14 +1240,6 @@ extension Profile{
                 let index = clientData.getMyConnection().friends.indexOf({ $0.userId! == Int(contacts[indexPath.row]["id"]!)! })
                 individualCell.setValues(clientData.getMyConnection().friends[index!], indexPath: NSIndexPath(forRow: index!, inSection: 0))
                 individualCell.delegate = self
-                if clientData.getMyConnection().friends[index!].photo == nil{
-                    Engine.getPhotoOfConnection(NSIndexPath(forRow: index!, inSection: 0)){ success in
-                        if success{
-                            self.tableViewConnectionUpper.reloadRowsAtIndexPaths([NSIndexPath(forRow: index!, inSection: 0)], withRowAnimation: .None)
-                        }
-                    }
-                    
-                }
                 cell = individualCell
             case "group":
                 let groupCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Group") as! GroupCell
@@ -1271,13 +1279,6 @@ extension Profile{
                 let individualCell = tableViewConnectionUpper.dequeueReusableCellWithIdentifier("Cell") as! IndividualCell
                 individualCell.setValues(friend!, indexPath: NSIndexPath(forRow: 0, inSection: 0), type: type == .Mine ? .Friend : .Pending)
                 individualCell.delegate = self
-                if friend!.photo == nil{
-                    Engine.getPhotoOfConnection(NSIndexPath(forRow: 0, inSection: 0)){ success in
-                        if success{
-                            self.tableViewConnectionUpper.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
-                        }
-                    }
-                }
                 cell = individualCell
             }
         case .Organization:
