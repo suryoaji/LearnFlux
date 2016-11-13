@@ -986,6 +986,9 @@ class Engine : NSObject {
                     makeRequestAlamofire(method: .PUT, url: Url.events + "/\(events[rowEvent!].id)", param: ["rsvp" : status], callback: { (stateReq, _) in
                         if stateReq == .Success{
                             clientData.getSpecificEventsByIdGroup(idGroup)![rowEvent!].status = status
+                            if let index = clientData.getMyEvents()!.indexOf({ $0.id == events[rowEvent!].id }){
+                                clientData.getMyEvents()![index].status = status
+                            }
                         }
                         rowEvent = nil
                         if callback != nil { callback!(stateReq, nil) }
@@ -997,6 +1000,7 @@ class Engine : NSObject {
                 makeRequestAlamofire(method: .PUT, url: Url.events + "/\(clientData.getMyEvents()![rowEvent!].id)", param: ["rsvp" : status], callback: { (stateReq, _) in
                     if stateReq == .Success{
                         clientData.getMyEvents()![rowEvent!].status = status
+                        clientData.updateStatusSpecificEventIfAvailable(clientData.getMyEvents()![rowEvent!].id, status: status)
                     }
                     rowEvent = nil
                     if callback != nil { callback!(stateReq, nil) }

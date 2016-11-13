@@ -267,6 +267,27 @@ class Data : NSObject {
         self.specificEvents.insert(conSpecificEvents, atIndex: indexSpecificEvents)
     }
     
+    func updateStatusSpecificEventIfAvailable(idEvent: String, status: Int){
+        if let indexSpecificEvents = getIndexOfSpecificEventsByIdEvent(idEvent){
+            if let indexEventInSpecificEvents = getIndexOfSpecificEventByRowAndIdEvent(indexSpecificEvents, idEvent: idEvent){
+                specificEvents[indexSpecificEvents].events[indexEventInSpecificEvents].status = status
+            }
+        }
+    }
+    
+    func getIndexOfSpecificEventByRowAndIdEvent(row: Int, idEvent: String) -> Int?{
+        return specificEvents[row].events.indexOf({ $0.id == idEvent })
+    }
+    
+    func getIndexOfSpecificEventsByIdEvent(id: String) -> Int?{
+        return specificEvents.indexOf({ a in
+            if a.events.contains({ $0.id == id }){
+                return true
+            }
+            return false
+        })
+    }
+    
     func getSpecificEventsByIdGroup(idGroup: String) -> [Event]?{
         let filteredSpecificEvents =  self.specificEvents.filter({ $0.id == idGroup })
         if !filteredSpecificEvents.isEmpty{

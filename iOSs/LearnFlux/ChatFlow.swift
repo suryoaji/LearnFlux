@@ -45,7 +45,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     @IBOutlet var pulldownPanelContent : UIView!;
     
     var isImportantMessage : Bool = false;
-    var timer : NSTimer!;
     var ownMessagePendingCount: Int! = 0;
     
     var shouldFinishSendingMessage : Bool = true;
@@ -306,6 +305,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         initParticipantsPanel()
     }
     
+    var timer = NSTimer()
     func loadMessages(){
 //        self.messages = getJSQMessages(self.chatId)
         if let messages = Engine.clientData.getMyThreads()![rowIndexPathFromThread].messages{
@@ -399,10 +399,8 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     }
     
     override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(true)
-        if timer != nil{
-            timer.invalidate()
-        }
+        super.viewWillDisappear(animated)
+        timer.invalidate()
         self.removeAllObserver()
     }
     
@@ -473,10 +471,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
             flow.clear();
         }
     }
-    
-//    override func viewDidDisappear(animated: Bool) {
-//        super.viewDidDisappear(animated)
-//    }
     
 //    func initAttachmentPanelOld() {
 //        let container = attachmentPanel;

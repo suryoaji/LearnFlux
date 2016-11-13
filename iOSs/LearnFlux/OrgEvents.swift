@@ -58,12 +58,11 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
     
     @IBOutlet var tv : UITableView!;
     
-    func loadEvents(target: UIViewController){
-        holdView = UIView(frame: target.view.bounds)
+    func loadEvents(){
+        holdView = UIView(frame: view.bounds)
         holdView.backgroundColor = UIColor(white: 0.93, alpha: 1.0)
-        target.view.addSubview(holdView)
-        Engine.getEvents(target){ status, JSON in
-            
+        view.addSubview(holdView)
+        Engine.getEvents(self){ status, JSON in
             self.reloadData()
             if let events = self.clientData.getMyEvents(){
                 var countLoaded = 0
@@ -105,7 +104,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         
         self.setTableViewData()
 
-//        self.loadEvents(self)
+//        self.loadEvents()
         shouldRemoveHoldView()
         if self.parentController == .OrgDetail{
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(addObservers), name: "OrgDetailAppearNotification", object: nil)
@@ -187,9 +186,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         var sEvents : [Event] = []
         if let events = clientData.getSpecificEventsByIdGroup(self.idGroup){
             sEvents = events
-        }else if let events = clientData.getMyEvents(){
-            sEvents = events
-        }
+        }        
         attendance = Array(count: sEvents.count, repeatedValue: "")
         expanded = Array(count: sEvents.count, repeatedValue: false)
         expDescHeight = Array(count: sEvents.count, repeatedValue: 0.0)
@@ -199,12 +196,12 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
             let label = cell.viewWithTag(3)! as! UILabel;
             expDescHeight[i] = Util.labelPerfectHeight(label)
         }
+        
+        
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let count = clientData.getSpecificEventsByIdGroup(self.idGroup)?.count{
-            return count
-        }else if let count = clientData.getMyEvents()?.count{
             return count
         }
         return 0
@@ -239,8 +236,6 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
     func getEventsShown() -> ([Event]){
         var events : [Event] = []
         if let eventsData = clientData.getSpecificEventsByIdGroup(self.idGroup){
-            events = eventsData
-        }else if let eventsData = clientData.getMyEvents(){
             events = eventsData
         }
         return events
@@ -303,7 +298,8 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         lblDesc.text = event.details
         btnMessage.enabled = false
         if event.thread != nil{
-            if let indexThread = events.indexOf({ $0.id == event.thread.id }){
+            
+            if let indexThread = clientData.getMyThreads()!.indexOf({ $0.id == event.thread.id }) where attendance[indexPath.row].lowercaseString == "going"{
                 btnMessage.enabled = true
                 btnMessage.layer.name = "\(indexThread)"
             }
