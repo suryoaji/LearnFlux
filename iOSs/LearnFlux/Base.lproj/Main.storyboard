@@ -1385,7 +1385,7 @@
                                                                             <rect key="frame" x="0.0" y="19" width="186" height="34"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                                             <string key="text">Comedian, Cool Teacher, Android and Woman Engineer, Bad Ass, Young and Wild Soul, ACS Teacher, World Asset, Teacher, Teacher, Teacher</string>
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
                                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
