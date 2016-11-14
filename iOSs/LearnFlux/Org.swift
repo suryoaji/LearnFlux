@@ -102,7 +102,9 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
         if sender.tag == 21 || sender.tag == 22{
             self.performSegueWithIdentifier("OrganisationDetails", sender: sender)
         }else if sender.tag == 20{
-            self.performSegueWithIdentifier("ChatFlow", sender: sender)
+            if let thread = Engine.startConversation(self, groupThread: groups![Int(sender.layer.name!)!].thread!){
+                self.performSegueWithIdentifier("ChatFlow", sender: ["index" : thread.index, "thread" : thread.thread])
+            }
         }
     }
     
@@ -129,11 +131,9 @@ class Org : UIViewController, UICollectionViewDataSource, UICollectionViewDelega
             }
             vc.initView(group.id, orgTitle: group.name, indexTab: indexTab)
         }else if segue.identifier == "ChatFlow"{
-            if let btn = sender as? UIButton{
+            if let data = sender as? Dictionary<String, AnyObject>{
                 let vc = segue.destinationViewController as! ChatFlow
-                let value = Int(btn.layer.name!)!
-                let index = Engine.clientData.getMyThreads()!.indexOf({ $0.id == groups![value].thread!.id })
-                vc.initChat(index!, idThread: groups![value].thread!.id, from: .OpenChat)
+                vc.initChat(data["index"] as! Int, idThread: (data["thread"] as! Thread).id, from: .OpenChat)
             }
         }
     }
