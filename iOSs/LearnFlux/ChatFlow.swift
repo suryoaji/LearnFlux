@@ -325,7 +325,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
                 userInfo["lastSync"] = NSDate().timeIntervalSince1970
             }
         }
-        timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
     }
     
     func getNewMessages(timer: NSTimer?){
@@ -400,7 +400,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        timer.invalidate()
+        if timer.valid{ timer.invalidate() }
         self.removeAllObserver()
     }
     
@@ -969,8 +969,9 @@ extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
             return "Will you attend this Event?"
         }
         let title = data["title"] as! String
-        let location = data["location"] as! String
-        return "\(title) at \(location)"
+//        let location = data["location"] as! String
+        return "\(title)"
+//        return "\(title) at \(location)"
     }
     
     func rsvpByRow(selectedRow: Int) -> (Int){

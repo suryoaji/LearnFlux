@@ -10,6 +10,9 @@ import Foundation
 
 class EventDetails : UITableViewController {
     
+    //nanti harus dihapus
+    var hideRespose = true
+    
     var meta : Dictionary<String, AnyObject>!;
     
     override func viewDidLoad() {
@@ -22,12 +25,12 @@ class EventDetails : UITableViewController {
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 6;
+        return 6
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch (section) {
-        case 4: return "Your response";
+        case 4: return hideRespose ? "" : "Your response"
         case 5: return "Available action";
         default: return "";
         }
@@ -45,6 +48,11 @@ class EventDetails : UITableViewController {
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath.section == 4{
+            if hideRespose{
+                return 0
+            }
+        }
         return tableView.dequeueReusableCellWithIdentifier(indexPath.code)!.height;
     }
     

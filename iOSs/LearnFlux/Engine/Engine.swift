@@ -510,39 +510,6 @@ class Engine : NSObject {
             }
         })
         return flatted.isEmpty ? "" : flatted.joinWithSeparator(", ")
-        
-//        if callback != nil{
-//            let flatted = clientData.getGroups(.Organisation).flatMap { group -> [String] in
-//                let participantFlated = group.participants!.map({ participant -> String in
-//                    var string = ""
-//                    if let userId = participant.user?.userId where userId == clientData.cacheSelfId(){
-//                        if let role = participant.role?.type where role.lowercaseString != "user"{
-//                            string += "\(participant.role!.name) of \(group.name)"
-//                        }
-//                    }
-//                    return string
-//                })
-//                return participantFlated.filter({ !$0.isEmpty })
-//            }
-//            callback!(flatted.joinWithSeparator(", "))
-//        }
-    }
-    
-    static func getRoleOfGroup(group: Group) -> Role?{
-        guard let participants = group.participants else{
-            return nil
-        }
-        let arr = participants.filter({ $0.user!.userId != nil && $0.user!.userId! == clientData.cacheSelfId() })
-        guard let participant = arr.first else{
-            return nil
-        }
-        guard let role = participant.role else{
-            return nil
-        }
-        if role.type.lowercaseString != "user"{
-            return role
-        }
-        return nil
     }
     
     static func getAvailableInterests(viewController: UIViewController? = nil, callback: (([String]?)->Void)? = nil) {

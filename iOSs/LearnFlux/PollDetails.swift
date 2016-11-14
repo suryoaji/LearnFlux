@@ -10,6 +10,8 @@ import Foundation
 
 class PollDetails : UITableViewController {
     
+    var hideChoise = true
+    
     var meta : Dictionary<String, AnyObject>!
     
     override func viewDidLoad() {
@@ -27,7 +29,7 @@ class PollDetails : UITableViewController {
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch (section) {
-        case 2: return "Choice";
+        case 2: return hideChoise ? "" : "Choice"
         case 3: return "Available action";
         default: return "";
         }
@@ -47,7 +49,11 @@ class PollDetails : UITableViewController {
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         var code = indexPath.code;
         if (indexPath.section == 2) {
-            code = "2-0";
+            if hideChoise{
+                return 0
+            }else{
+                code = "2-0";
+            }
         }
         print (code);
         return tableView.dequeueReusableCellWithIdentifier(code)!.height;

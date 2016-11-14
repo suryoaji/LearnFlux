@@ -145,9 +145,11 @@ extension InterestGroups{
             imageViewNoGroup.hidden = true
             if clientData.getGroups(.InterestGroup).count > MAX_INTEREST_GROUP_SHOWN{
                 buttonSeeAllInterestGroup.backgroundColor = LFColor.green
+                buttonSeeAllInterestGroup.setTitleColor(UIColor.whiteColor(), forState: .Normal)
                 buttonSeeAllInterestGroup.enabled = true
             }else{
                 buttonSeeAllInterestGroup.backgroundColor = UIColor(white: 245.0/255, alpha: 1.0)
+                buttonSeeAllInterestGroup.setTitleColor(UIColor.grayColor(), forState: .Normal)
                 buttonSeeAllInterestGroup.enabled = false
             }
             collectionViewGroups.reloadData()

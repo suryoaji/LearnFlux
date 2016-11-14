@@ -54,7 +54,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
             }
         }
     }
-    var timer: NSTimer!
+    var timer = NSTimer()
     
     @IBOutlet var tv : UITableView!;
     
@@ -111,6 +111,11 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         }else if self.parentController == .GroupDetail{
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(addObservers), name: "GroupDetailAppearNotification", object: nil)
         }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        if timer.valid{ timer.invalidate() }
     }
     
     func setStatusEvent(event: Event)-> (String){

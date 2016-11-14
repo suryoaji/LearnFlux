@@ -409,15 +409,18 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
                 if let dataUser = JSON as? Dictionary<String, AnyObject> where status == .Success{
                     if let index = self.clientData.getMyConnection().friends.indexOf({ $0.userId == id }){
                         self.tableViewMyProfile.reloadData()
-                        self.clientData.getMyConnection().friends[index].update(dataUser){[unowned self] type, id, status in
+                        self.clientData.getMyConnection().friends[index].update(dataUser){[weak self] type, id, status in
+                            guard let s = self else{
+                                return
+                            }
                             if status && type == 1{
-                                if let childrens = self.type.data(self.profileId)!.childrens where !childrens.isEmpty{
-                                    self.tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 1)], withRowAnimation: .None)
+                                if let childrens = s.type.data(s.profileId)!.childrens where !childrens.isEmpty{
+                                    s.tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forItem: 1, inSection: 1)], withRowAnimation: .None)
                                 }
                             }
                             if status && type == 2{
-                                if let groups = self.type.data(self.profileId)!.groups where !groups.isEmpty{
-                                    self.tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 2)], withRowAnimation: .None)
+                                if let groups = s.type.data(s.profileId)!.groups where !groups.isEmpty{
+                                    s.tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 2)], withRowAnimation: .None)
                                 }
                             }
                         }
@@ -441,12 +444,12 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         
         if !shouldEditMyProfile{ tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 4)], withRowAnimation: .None) }
         
-        reloadFriendsTimedly()
+        if type == .Mine{ reloadFriendsTimedly() }
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        timer.invalidate()
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        if timer.valid{ timer.invalidate() }
     }
     
     var timer = NSTimer()

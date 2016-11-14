@@ -12,7 +12,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     var rightBarButton : UIBarButtonItem!
     let flow = Flow.sharedInstance
     let clientData = Engine.clientData
-    var timer : NSTimer!
+    var timer = NSTimer()
     
     @IBOutlet var cv : UICollectionView!;
     
@@ -63,9 +63,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        if timer != nil && timer.valid{
-            timer.invalidate()
-        }
+        if timer.valid{ timer.invalidate() }
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     

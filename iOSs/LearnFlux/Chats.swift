@@ -21,7 +21,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var viewMenu : UIView!;
     @IBOutlet weak var viewConfirmDelete: UIView!
     var idsThreadWillDeleted : Array<String> = []
-    var timer : NSTimer!
+    var timer = NSTimer()
     
     override func viewDidLoad() {
         super.viewDidLoad();
@@ -44,6 +44,7 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        if timer.valid{ timer.invalidate() }
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     

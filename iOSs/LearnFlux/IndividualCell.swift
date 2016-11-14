@@ -51,6 +51,7 @@ class IndividualCell: UITableViewCell {
         self.contentView.layer.borderWidth = 0.6
         self.contentView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
         imageViewPhoto.layer.cornerRadius = self.frame.height == 44 ? (UIScreen.mainScreen().bounds.height / 568.0 * imageViewPhoto.frame.width) / 2 : imageViewPhoto.frame.width / 2
+        labelSide.text = dummySides[Int(arc4random_uniform(2))]
     }
     
     func setValues(contact: Dictionary<String, String>){
@@ -78,7 +79,6 @@ class IndividualCell: UITableViewCell {
         }else{
             labelName.text = contact.firstName?.capitalizedString
         }
-        labelSide.text = dummySides[Int(arc4random_uniform(2))]
         imageViewPhoto.image = contact.photo ?? UIImage(named: "photo-container.png")
     }
 

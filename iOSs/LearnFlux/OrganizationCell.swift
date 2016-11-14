@@ -52,7 +52,11 @@ class OrganizationCell: UITableViewCell {
         labelName.text = organization.name
         imageViewOrganization.image = organization.image != nil ? organization.image! : UIImage(named: "company1.png")
         if type == .Mine {
-            labelSide.text = Engine.getRoleOfGroup(organization)?.name.lowercaseString ?? "member"
+            if let role = organization.role{
+                labelSide.text = role.lowercaseString == "user" ? "member" : role.capitalizedString
+            }else{
+                labelSide.text = "member"
+            }
             if buttonAction.hidden == false{
                 viewContainerLabels.frame.size.width = self.frame.width - viewContainerLabels.frame.origin.x - 13
             }

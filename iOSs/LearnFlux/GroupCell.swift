@@ -70,7 +70,11 @@ class GroupCell: UITableViewCell {
     
     func setValues(indexPath: NSIndexPath, group: Group, type: Int = 0, groupType: GroupType = .Group, forSearch: Bool = false, shouldHideButtonAction: Bool = false){
         labelName.text = group.name
-        labelSide.text = Engine.getRoleOfGroup(group)?.name.lowercaseString ?? "member"
+        if let role = group.role{
+            labelSide.text = role.lowercaseString == "user" ? "member" : role.capitalizedString
+        }else{
+            labelSide.text = "member"
+        }
         if type == 1 { buttonAction.setImage(UIImage(named: "add-group"), forState: .Normal); self.type = .NotMine }
         self.indexPath = indexPath
         self.groupType = groupType

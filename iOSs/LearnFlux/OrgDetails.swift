@@ -85,16 +85,18 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         return nil
     }
     
+    var timer = NSTimer()
     func timedRefreshData(){
-        NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(refreshData2), userInfo: nil, repeats: false)
+        timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: #selector(refreshData2), userInfo: nil, repeats: false)
     }
     
     func refreshData2(){
-        Engine.getGroupInfo(self, groupId: orgId) { status, group in
-            self.orgData = group;
-            self.propagateData();
-            Util.mainThread() { self.updateView (); }
-            self.timedRefreshData()
+        Engine.getGroupInfo(self, groupId: orgId) {[weak self] status, group in
+            guard let s = self else{ return }
+            s.orgData = group;
+            s.propagateData();
+            Util.mainThread() { s.updateView (); }
+            s.timedRefreshData()
         }
     }
 
@@ -176,6 +178,8 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         self.createScrollView()
         self.changeView(indicatorViewShown)
         
+        self.orgImageViewLogo.image = clientData.getGroups().filter({ $0.id == orgId }).first!.image ?? nil
+        
         refreshData() {
             self.createScrollView()
             self.propagateData();
@@ -196,6 +200,7 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        if timer.valid{ timer.invalidate() }
         NSNotificationCenter.defaultCenter().postNotificationName("OrgDetailDisappearNotification", object: nil)
         orgEventsDelegate.removeSpecificNotification()
     }

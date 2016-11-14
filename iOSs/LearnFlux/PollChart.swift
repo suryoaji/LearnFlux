@@ -55,14 +55,14 @@ class PollChart: UIViewController, ChartViewDelegate {
         chartView.descriptionText = ""
         chartView.setExtraOffsets(left: 5.0, top: 10.0, right: 5.0, bottom: 5.0)
         chartView.drawCenterTextEnabled = true
-        let paragraphStyle : NSMutableParagraphStyle = NSParagraphStyle.defaultParagraphStyle().mutableCopy() as! NSMutableParagraphStyle
-        paragraphStyle.lineBreakMode = .ByTruncatingTail
-        paragraphStyle.alignment = .Center
-        let centerText = NSMutableAttributedString(string: String("Charts\nby Daniel Cohen Gindi"), attributes: [NSFontAttributeName: UIFont(name: "HelveticaNeue-Light", size: 13.0)!, NSParagraphStyleAttributeName: paragraphStyle])
-        centerText.addAttributes([NSFontAttributeName: UIFont(name: "HelveticaNeue-Light", size: 11.0)!, NSForegroundColorAttributeName: UIColor.grayColor()], range: NSMakeRange(10, centerText.length - 10))
-        centerText.addAttributes([NSFontAttributeName: UIFont(name: "HelveticaNeue-LightItalic", size: 11.0)!, NSForegroundColorAttributeName: UIColor(red: 51 / 255.0, green: 181 / 255.0, blue: 229 / 255.0, alpha: 1.0)], range: NSMakeRange(centerText.length - 19, 19))
-        chartView.centerAttributedText = centerText
-        chartView.drawHoleEnabled = true
+//        let paragraphStyle : NSMutableParagraphStyle = NSParagraphStyle.defaultParagraphStyle().mutableCopy() as! NSMutableParagraphStyle
+//        paragraphStyle.lineBreakMode = .ByTruncatingTail
+//        paragraphStyle.alignment = .Center
+//        let centerText = NSMutableAttributedString(string: String("Charts\nby Daniel Cohen Gindi"), attributes: [NSFontAttributeName: UIFont(name: "HelveticaNeue-Light", size: 13.0)!, NSParagraphStyleAttributeName: paragraphStyle])
+//        centerText.addAttributes([NSFontAttributeName: UIFont(name: "HelveticaNeue-Light", size: 11.0)!, NSForegroundColorAttributeName: UIColor.grayColor()], range: NSMakeRange(10, centerText.length - 10))
+//        centerText.addAttributes([NSFontAttributeName: UIFont(name: "HelveticaNeue-LightItalic", size: 11.0)!, NSForegroundColorAttributeName: UIColor(red: 51 / 255.0, green: 181 / 255.0, blue: 229 / 255.0, alpha: 1.0)], range: NSMakeRange(centerText.length - 19, 19))
+//        chartView.centerAttributedText = centerText
+//        chartView.drawHoleEnabled = true
         chartView.rotationAngle = 0.0
         chartView.rotationEnabled = true
         chartView.highlightPerTapEnabled = true

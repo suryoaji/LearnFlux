@@ -165,7 +165,7 @@ class AttachEvent : UITableViewController, UITextFieldDelegate {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
         if (indexPath.section == 1) {
-            switch (indexPath.row) {
+            switch (indexPath.row) { 
             case 1: beginDateEdit(nil)
             case 2: beginTimeEdit(nil)
             default:
