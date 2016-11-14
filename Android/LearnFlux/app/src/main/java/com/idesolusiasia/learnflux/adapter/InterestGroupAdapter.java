@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -17,6 +16,7 @@ import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.List;
  * Created by Ide Solusi Asia on 8/15/2016.
  */
 public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdapter.OrgTileHolder> {
-    List<Group> organizations;
+    private List<Group> organizations;
     private Context context;
     ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
 
@@ -44,10 +44,13 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
     @Override
     public void onBindViewHolder(OrgTileHolder holder, final int position) {
         final Group org= organizations.get(position);
-        final String url = "http://lfapp.learnflux.net/v1/image?key="+org.getImage();
+        final String url = "http://lfapp.learnflux.net/v1/image?key=";
         holder.tvName.setText(org.getName());
-        holder.ivLogo.setDefaultImageResId(R.drawable.organization);
-        holder.ivLogo.setImageUrl(url, imageLoader);
+        if(org.getImage()==null) {
+            holder.ivLogo.setDefaultImageResId(R.drawable.organization);
+        }else {
+            holder.ivLogo.setImageUrl(url+org.getImage(), imageLoader);
+        }
         holder.tvImageMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,9 +91,9 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
     }
 
     public class OrgTileHolder extends RecyclerView.ViewHolder {
-        public TextView tvName, tvLastSeen, tvCountMessage, tvCountEvent, tvCountActivities;
-        public NetworkImageView ivLogo;
-        public ImageView tvImageMessage, tvImageEvent, tvImageActivities;
+        TextView tvName, tvLastSeen, tvCountMessage, tvCountEvent, tvCountActivities;
+        NetworkImageView ivLogo;
+        ImageView tvImageMessage, tvImageEvent, tvImageActivities;
         public OrgTileHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
@@ -111,6 +114,8 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
                     i.putExtra("id", organizations.get(pos).getId());
                     i.putExtra("title",organizations.get(pos).getName());
                     i.putExtra("type", organizations.get(pos).getType());
+                    i.putExtra("color", Functions.generateRandomPastelColor());
+                    i.putExtra("img", organizations.get(pos).getImage());
                     i.putExtra("clickOrganization", "Default");
                     view.getContext().startActivity(i);
                 }

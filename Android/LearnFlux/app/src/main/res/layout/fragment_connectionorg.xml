@@ -33,6 +33,7 @@
             android:text="No Data Available" />
 
     <Button
+        android:id="@+id/seeHideOrg"
         android:text="see All"
         android:background="#8bc34a"
         android:textColor="#FFF"

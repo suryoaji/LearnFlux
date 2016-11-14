@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.component.RoundedImageView;
 import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.util.Engine;
@@ -58,33 +59,21 @@ public class ThreadAdapter extends ArrayAdapter<Thread> {
 			row=inflater.inflate(R.layout.row_chatroom,null);
 		}
 		final Thread e = threadList.get(position);
-		Log.i("TAGGG: ",e.getId());
 		if(e != null){
-			final RoundedImageView ivThread = (RoundedImageView) row.findViewById(R.id.ivRoundPic);
+			String url = "http://lfapp.learnflux.net/v1/image?key=";
+			final CircularNetworkImageView ivThread = (CircularNetworkImageView) row.findViewById(R.id.ivRoundPic);
 			final TextView tvTitle = (TextView) row.findViewById(R.id.tvChatRoomTitle);
 			final TextView tvLastMessage = (TextView) row.findViewById(R.id.tvLastMessage);
 			final TextView tvDate = (TextView) row.findViewById(R.id.tvDate);
 			LinearLayout bubbleLayout = (LinearLayout) row.findViewById(R.id.bubbleLayout);
 			CheckBox checkBox = (CheckBox) row.findViewById(R.id.checkBox);
 
-			if(e.getGroup()!=null){
-				Engine.getOrganizationProfile(getContext(), e.getGroup().getId(), new RequestTemplate.ServiceCallback() {
-					@Override
-					public void execute(JSONObject obj) {
-						try {
-							String url = "http://lfapp.learnflux.net/v1/image?key=";
-							JSONObject data = obj.getJSONObject("data");
-							String image = data.getString("image");
-							if(image!=null) {
-								ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
-								imageLoader.get(url + image, ImageLoader.getImageListener(ivThread, R.drawable.me, R.drawable.me));
-							}
-						}catch (JSONException e){
-							e.printStackTrace();
-						}
-
-					}
-				});
+			if(e.getImage()!=null) {
+				ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
+				ivThread.setImageUrl(url + e.getImage(), imageLoader);
+				//imageLoader.get(url + e.getImage(), ImageLoader.getImageListener(ivThread, R.drawable.me, R.drawable.me));
+			}else{
+				ivThread.setDefaultImageResId(R.drawable.company1);
 			}
 
 			if (e.isSelected()){

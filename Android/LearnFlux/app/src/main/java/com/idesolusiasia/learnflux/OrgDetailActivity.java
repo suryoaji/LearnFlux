@@ -5,11 +5,9 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -28,14 +25,18 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
+import com.idesolusiasia.learnflux.db.DatabaseFunction;
 import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.Participant;
+import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
+import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +45,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,38 +54,41 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 	public String id, type, clickOrganization;
 	public Group group = null;
 	AddGroupAdapter adap;
-	public String name,desc,title;
-	ListView listcontent;
+	public String name,desc,title,image;
+	ListView listcontent; NetworkImageView imagesOrg;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents, tvTitle;
 	static final int ITEMS = 3;
 
+	ImageLoader imageLoader = VolleySingleton.getInstance(OrgDetailActivity.this).getImageLoader();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_base);
 		super.onCreateDrawer(savedInstanceState);
 
-
-
-		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		id = getIntent().getStringExtra("id");
 		title = getIntent().getStringExtra("title");
 		type = getIntent().getStringExtra("type");
+		image = getIntent().getStringExtra("image");
 		clickOrganization = getIntent().getStringExtra("clickOrganization");
-		Log.i("TEST", "onCreate: " + id);
+		String url = "http://lfapp.learnflux.net/v1/image?key=";
+
+		final FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View childLayout = layoutInflater.inflate(
-				R.layout.activity_org_detail, null);
-
+				R.layout.activity_org_details, null);
 		parentLayout.addView(childLayout);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		tvTitle= (TextView)findViewById(R.id.textView14);
-		tvTitle.setText(title);
 		///////////////////////////finish Base Init///
-
+		tvTitle = (TextView)findViewById(R.id.titleOrgDetails);
+		imagesOrg = (NetworkImageView)findViewById(R.id.imageOrgDetail);
+		tvTitle.setText(title);
+		if(image!=null){
+			imagesOrg.setImageUrl(url+image, imageLoader);
+		}else{
+			imagesOrg.setDefaultImageResId(R.drawable.company1);
+		}
 		mAdap = new FragmentAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mAdap);
@@ -108,7 +111,6 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 			public void onClick(View view) {
 				Intent i = new Intent(OrgDetailActivity.this, OrgProfileActivity.class);
 				i.putExtra("id", id);
-				Log.i("Detail Activity", "onClick: " + id);
 				startActivity(i);
 			}
 		});
@@ -244,7 +246,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	public void addEventProcess(){
+	public void addEventProcess() {
 		final Dialog dialog = new Dialog(OrgDetailActivity.this);
 		dialog.setTitle("Create Event");
 		dialog.setContentView(R.layout.dialog_add_event);
@@ -261,11 +263,11 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 				DatePickerDialog datePickerDialog = new DatePickerDialog(OrgDetailActivity.this, new DatePickerDialog.OnDateSetListener() {
 
 					public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-						calStart.set(year,monthOfYear,dayOfMonth);
+						calStart.set(year, monthOfYear, dayOfMonth);
 						etDate.setText(dateFormatter.format(calStart.getTime()));
 					}
 
-				},calStart.get(Calendar.YEAR), calStart.get(Calendar.MONTH), calStart.get(Calendar.DAY_OF_MONTH));
+				}, calStart.get(Calendar.YEAR), calStart.get(Calendar.MONTH), calStart.get(Calendar.DAY_OF_MONTH));
 				datePickerDialog.show();
 			}
 		});
@@ -286,26 +288,62 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 				timePickerDialog.show();
 			}
 		});
-		Button btnAdd = (Button)dialog.findViewById(R.id.btnSubmitEvent);
+		Button btnAdd = (Button) dialog.findViewById(R.id.btnSubmitEvent);
 		btnAdd.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Engine.createEvent(getApplicationContext(), true, etTitle.getText().toString(), etDesc.getText().toString(),
-						etLocation.getText().toString(), calStart.getTimeInMillis() / 1000, null, id, type, new RequestTemplate.ServiceCallback() {
-					@Override
-					public void execute(JSONObject obj) {
-						Log.i("Data Event", "execute: "+id+", "+type);
-						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
-						dialog.dismiss();
-						Intent startActivity = getIntent();
-						finish();
-						startActivity(startActivity);
+				@Override
+				public void onClick(View view) {
+					boolean pass = true;
+					if (etTitle.getText().toString().isEmpty()) {
+						pass = false;
+						etTitle.requestFocus();
+						etTitle.setError("You need to have a title");
 					}
-				});
-			}
-		});
-		dialog.show();
-	}
+					if (etDesc.getText().toString().isEmpty()) {
+						pass = false;
+						etDesc.requestFocus();
+						etDesc.setError("You need to have a description");
+					}
+					if (etLocation.getText().toString().isEmpty()) {
+						pass = false;
+						etLocation.requestFocus();
+						etLocation.setError("You need to have a location");
+					}
+					if (etDate.getText().toString().isEmpty()) {
+						pass = false;
+						etDate.requestFocus();
+						etDate.setError("You need to have a date");
+					}
+					if (etStart.getText().toString().isEmpty()) {
+						pass = false;
+						etStart.requestFocus();
+						etStart.setError("You need to set the time");
+					}
+					if (pass) {
+						Engine.createEvent(getApplicationContext(), true, etTitle.getText().toString(), etDesc.getText().toString(),
+								etLocation.getText().toString(), calStart.getTimeInMillis() / 1000, null, id, type, new RequestTemplate.ServiceCallback() {
+									@Override
+									public void execute(JSONObject obj) {
+										Log.i("Data Event", "execute: " + id + ", " + type);
+										Toast.makeText(getApplicationContext(), "successfully send the data", Toast.LENGTH_SHORT).show();
+										dialog.dismiss();
+										/*Intent startActivity = new Intent(OrgDetailActivity.this, ChatsActivity.class);
+										startActivity.putExtra("chatroom", "chat");*/
+										Engine.getThreads(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+											@Override
+											public void execute(JSONObject obj) {
+												Intent startActivity = getIntent();
+												finish();
+												startActivity(startActivity);
+											}
+										});
+
+									}
+								});
+					}
+				}
+			});
+			dialog.show();
+		}
 	public void addInterestNewGroup(){
 		final Dialog dialog = new Dialog(OrgDetailActivity.this);
 		dialog.setTitle("Add new Group");
@@ -398,10 +436,9 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		});
 		dial.show();
 	}
-
 	@Override
 	protected void onResume() {
-		super.onResume();
+		super.onResume() ;
 	}
 }
 

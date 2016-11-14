@@ -35,15 +35,19 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.idesolusiasia.learnflux.adapter.ChildrenAdapter;
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
 import com.idesolusiasia.learnflux.adapter.FriendRequest;
-import com.idesolusiasia.learnflux.adapter.MyProfileAdapter;
+import com.idesolusiasia.learnflux.adapter.MyProfileOrganizationAdapter;
 import com.idesolusiasia.learnflux.adapter.MyProfileInterestAdapter;
 import com.idesolusiasia.learnflux.adapter.NotificationAdapter;
 import com.idesolusiasia.learnflux.adapter.SearchAdapter;
@@ -78,7 +82,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	MyProfileInterestAdapter myProfileInterestAdapter;
 	FragmentAdapter mAdap;
 	SearchAdapter id;
-	MyProfileAdapter rcAdapter;
+	MyProfileOrganizationAdapter rcAdapter;
 	ChildrenAdapter childAdapter;
 
 	//ArrayList
@@ -102,7 +106,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	EditText searchBar;
 	String visible;
 	boolean visible2;
-
+	LinearLayoutManager linearLayoutOrg;
 	File file;
 
 	static final int ITEMS = 4;
@@ -113,16 +117,17 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_my_profile);
+		setContentView(R.layout.activity_base);
 		super.onCreateDrawer(savedInstanceState);
 
 
 		AndroidNetworking.initialize(getApplicationContext()); // initialize library
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+		final FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
+		final LayoutInflater layoutInflater = LayoutInflater.from(this);
+		View childLayout = layoutInflater.inflate(
+				R.layout.activity_my_profile, null);
+		parentLayout.addView(childLayout);
 
 
 		visible="none";
@@ -183,8 +188,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 
 		//Friend Request Notification and All Notification
-		final TextView txtNotification1 = (TextView)findViewById(R.id.textNotif1);
-		final TextView txtNotification2 = (TextView)findViewById(R.id.textNotif2);
+		//final TextView txtNotification1 = (TextView)findViewById(R.id.textNotif1);
+		//final TextView txtNotification2 = (TextView)findViewById(R.id.textNotif2);
 		final ProgressBar progress = (ProgressBar)findViewById(R.id.progress_bar);
 
 		connectionNotif.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +258,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 						}
 					});
-					txtNotification1.setVisibility(View.GONE);
+					//txtNotification1.setVisibility(View.GONE);
 					visible="notif";
 				}else{
 					includedLayout.setVisibility(View.GONE);
@@ -270,7 +275,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					includedLayout2.setVisibility(View.VISIBLE);
 					includedLayout2.bringToFront();
 					includedLayout.setVisibility(View.GONE);
-					txtNotification2.setVisibility(View.GONE);
+					//txtNotification2.setVisibility(View.GONE);
 					final RecyclerView recyclerNotif = (RecyclerView) findViewById(R.id.recycleNotification);
 					LinearLayoutManager SecondLinear = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
 					recyclerNotif.setLayoutManager(SecondLinear);
@@ -372,7 +377,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		editProfile.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
 				scroll1.setVisibility(View.GONE);
 				scroll3.setVisibility(View.VISIBLE);
 				scroll3.bringToFront();
@@ -420,53 +424,36 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		parent = (NetworkImageView)findViewById(R.id.imageeees);
 		txtParentDesc = (TextView)findViewById(R.id.txtParentDesc);
 		txtParent = (TextView)findViewById(R.id.txtParentTitle);
-		work.setText("-");
-		from.setText("-");
-		txtParentDesc.setText("-");
-		txtParent.setText("-");
 		child  = (CircularNetworkImageView)findViewById(R.id.imagesChild);
 		parent.setDefaultImageResId(R.drawable.user_profile);
-		//child.setImageUrl(url+ch, imageLoader);
+		child.setDefaultImageResId(R.drawable.user_profile);
 		Engine.getMeWithRequest(getApplicationContext(),"details", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try{
 					Contact ct = Converter.convertContact(obj);
-					if(ct.equals(null)) {
-						work.setText("-");
-						from.setText("-");
-						txtParentDesc.setText("-");
-						txtParent.setText("-");
-					}
 					txtParent.setText(ct.getFirst_name()+" "+ct.getLast_name());
-					from.setText(ct.getLocation());
-					work.setText(ct.getWork());
+					if(ct.getLocation()==null){
+						from.setText("-");
+					}else{
+						from.setText(ct.getLocation());
+					}
+					if(ct.getWork()==null){
+						work.setText("-");
+					}else {
+						work.setText(ct.getWork());
+					}
 					String prof = User.getUser().getProfile_picture();
 					parent.setImageUrl(prof,imageLoader);
+
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
 			}
 		});
+
 		getUserStatus();
-		final TextView tvSeeMore = (TextView)findViewById(R.id.tvSeeMore);
-		txtParentDesc.post(new Runnable() {
-			@Override
-			public void run() {
-				int a = txtParentDesc.getLineCount();
-				if(a>1){
-					tvSeeMore.setVisibility(View.VISIBLE);
-					txtParentDesc.setMaxLines(1);
-				}
-			}
-		});
-		tvSeeMore.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				txtParentDesc.setMaxLines(Integer.MAX_VALUE);
-				tvSeeMore.setVisibility(View.GONE);
-			}
-		});
+
 
 
 		//dialog children
@@ -482,23 +469,24 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			public void execute(JSONObject obj) {
 				try{
 					JSONObject embedded = obj.getJSONObject("_embedded");
-					JSONArray array = embedded.getJSONArray("children");
-					for(int i=0;i<array.length();i++){
-						Contact childrenContact = Converter.convertContact(array.getJSONObject(i));
-						childList.add(childrenContact);
-					}
-					if(childList.isEmpty()){
-						recyclerChildren.setVisibility(View.GONE);
-						childrenEmptyView.setVisibility(View.VISIBLE);
-					}else{
-						recyclerChildren.setVisibility(View.VISIBLE);
-						childrenEmptyView.setVisibility(View.GONE);
-						childAdapter = new ChildrenAdapter(getApplicationContext(),childList);
-						recyclerChildren.setAdapter(childAdapter);
-						recyclerChildren.refreshDrawableState();
-					}
+					if(embedded.has("children")) {
+						JSONArray array = embedded.getJSONArray("children");
+						for (int i = 0; i < array.length(); i++) {
+							Contact childrenContact = Converter.convertContact(array.getJSONObject(i));
+							childList.add(childrenContact);
+						}
+						if (childList.isEmpty()) {
+							recyclerChildren.setVisibility(View.GONE);
+							childrenEmptyView.setVisibility(View.VISIBLE);
+						} else {
+							recyclerChildren.setVisibility(View.VISIBLE);
+							childrenEmptyView.setVisibility(View.GONE);
+							childAdapter = new ChildrenAdapter(getApplicationContext(), childList);
+							recyclerChildren.setAdapter(childAdapter);
+							recyclerChildren.refreshDrawableState();
+						}
 
-
+					}
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
@@ -508,12 +496,9 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		affilatedOrganizationRecycler = (RecyclerView)findViewById(R.id.organizationRecycler);
 		empty_view = (TextView)findViewById(R.id.emptyViewOrg);
 		showAllOrganization = (LinearLayout)findViewById(R.id.layoutShowAll);
-		showAllOrganization.setVisibility(View.VISIBLE);
-		showAllOrganization.bringToFront();
 		affilatedOrganizationButtonMore = (TextView)findViewById(R.id.buttonShowMore);
-		affilatedOrganizationButtonMore.setVisibility(View.GONE);
-		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-		affilatedOrganizationRecycler.setLayoutManager(linearLayoutManager);
+		linearLayoutOrg = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+		affilatedOrganizationRecycler.setLayoutManager(linearLayoutOrg);
 		initOrganizations();
 
 		//User Interest
@@ -669,17 +654,31 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 						affilatedOrganizationRecycler.setVisibility(View.GONE);
 						empty_view.setVisibility(View.VISIBLE);
 					}else {
-						rcAdapter = new MyProfileAdapter(getApplicationContext(), arrOrg);
+						rcAdapter = new MyProfileOrganizationAdapter(getApplicationContext(), arrOrg);
 						affilatedOrganizationRecycler.setAdapter(rcAdapter);
-						if(arrOrg.size()>3){
+						   if(arrOrg.size()>3){
+							   showAllOrganization.setVisibility(View.VISIBLE);
+							   showAllOrganization.bringToFront();
+							   affilatedOrganizationButtonMore.setVisibility(View.VISIBLE);
+                        }else if(arrOrg.size()<3){
+							   showAllOrganization.setVisibility(View.GONE);
+							   affilatedOrganizationButtonMore.setVisibility(View.GONE);
+                        }
+						affilatedOrganizationButtonMore.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								showAllOrganization.setVisibility(View.GONE);
+								affilatedOrganizationButtonMore.setVisibility(View.GONE);
+							}
+						});
+						/*if(arrOrg.size()>3){
 							affilatedOrganizationButtonMore.setOnClickListener(new View.OnClickListener() {
 								@Override
 								public void onClick(View view) {
-									showAllOrganization.setVisibility(View.GONE);
-									affilatedOrganizationButtonMore.setVisibility(View.GONE);
+
 								}
 							});
-						}
+						}*/
 						//emptyView.setVisibility(View.GONE);
 					}
 				}catch (JSONException e){
@@ -698,16 +697,17 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			@Override
 			public void execute(JSONObject obj) {
 				try{
-					JSONArray interest = obj.getJSONArray("interests");
-					for(int i=0;i<interest.length();i++){
-						interestUser.add(interest.get(i).toString());
+					if(obj.has("interests")) {
+						JSONArray interest = obj.getJSONArray("interests");
+						for (int i = 0; i < interest.length(); i++) {
+							interestUser.add(interest.get(i).toString());
+						}
+						emptyRecycler.setVisibility(View.GONE);
+						myProfileInterest.setVisibility(View.VISIBLE);
+						myProfileInterestAdapter = new MyProfileInterestAdapter(interestUser);
+						myProfileInterest.setAdapter(myProfileInterestAdapter);
+						myProfileInterest.refreshDrawableState();
 					}
-					emptyRecycler.setVisibility(View.GONE);
-					myProfileInterest.setVisibility(View.VISIBLE);
-					myProfileInterestAdapter = new MyProfileInterestAdapter(interestUser);
-					myProfileInterest.setAdapter(myProfileInterestAdapter);
-					myProfileInterest.refreshDrawableState();
-
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
@@ -732,6 +732,26 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 							sb.append(",");
 							txtParentDesc.setText(sb.length() > 0 ? sb.substring(0, sb.length() - 1): "");
 						}
+
+						final TextView tvSeeMore = (TextView)findViewById(R.id.tvSeeMore);
+						txtParentDesc.post(new Runnable() {
+							@Override
+							public void run() {
+								int a = txtParentDesc.getLineCount();
+								if(a>1){
+									tvSeeMore.setVisibility(View.VISIBLE);
+									txtParentDesc.setMaxLines(1);
+								}
+							}
+						});
+						tvSeeMore.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								txtParentDesc.setMaxLines(Integer.MAX_VALUE);
+								tvSeeMore.setVisibility(View.GONE);
+							}
+						});
+
 
 					}
 					}
@@ -861,13 +881,32 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		return "com.google.android.apps.photos.content".equals(uri.getAuthority());
 	}
 	void saveButton(){
-		final String a = "http://lfapp.learnflux.net/v1/me/image?key="+User.getUser().getProfile_picture();
+		final String a = "http://lfapp.learnflux.net/v1/me/image?key=profile/"+User.getUser().getID();
 		AndroidNetworking.put(a)
-				.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
 				.addFileBody(file)
+				.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
 				.setTag("uploadTest")
 				.setPriority(Priority.HIGH)
-				.build();
+				.build()
+				.setUploadProgressListener(new UploadProgressListener() {
+					@Override
+					public void onProgress(long bytesUploaded, long totalBytes) {
+					}
+				})
+				.getAsJSONObject(new JSONObjectRequestListener() {
+					@Override
+					public void onResponse(JSONObject response) {
+						if(response.has("")) {
+							Intent i = getIntent();
+							startActivity(i);
+						}
+					}
+					@Override
+					public void onError(ANError error) {
+						// handle error
+					}
+				});
+
 	}
 	public void searchValue(){
 		searchObject = new ArrayList<>();

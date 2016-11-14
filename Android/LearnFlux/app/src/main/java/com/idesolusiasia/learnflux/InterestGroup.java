@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.CreateGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.InterestGroupAdapter;
+import com.idesolusiasia.learnflux.adapter.Interest_GroupYouKnow;
 import com.idesolusiasia.learnflux.adapter.SearchAdapter;
 import com.idesolusiasia.learnflux.adapter.SearchInterestGroup;
 import com.idesolusiasia.learnflux.entity.Contact;
@@ -55,13 +56,16 @@ import java.util.List;
  */
 public class InterestGroup extends BaseActivity{
     ArrayList<Group> arrOrg = new ArrayList<Group>();
+    ArrayList<Group>newArr = new ArrayList<Group>();
     public Participant participant=null;
     private GridLayoutManager lLayout;
     InterestGroupAdapter rcAdapter;
+    Interest_GroupYouKnow intAdapter;
     ImageView add;
-    TextView emptyView;
+    TextView emptyView, emptyPeopleYouKnow;
     RecyclerView recyclerView;
     AddGroupAdapter adap;
+    RecyclerView peopleKnow;
     public String name,desc;
     ListView listcontent;
     EditText searchBar;
@@ -69,14 +73,15 @@ public class InterestGroup extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_group_interest);
-        setContentView(R.layout.activity_group_interest);
+        setContentView(R.layout.activity_base);
         super.onCreateDrawer(savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        final FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
+        final LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View childLayout = layoutInflater.inflate(
+                R.layout.activity_group_interest, null);
+        parentLayout.addView(childLayout);
+
 
         recyclerView = (RecyclerView)findViewById(R.id.recycler_group_interest);
         final View includedLayout3 = (LinearLayout) findViewById(R.id.searchView);
@@ -99,6 +104,13 @@ public class InterestGroup extends BaseActivity{
         lLayout = new GridLayoutManager(getApplicationContext(),2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(lLayout);
+
+        peopleKnow = (RecyclerView)findViewById(R.id.recycler_groupYouMayKnow);
+        emptyPeopleYouKnow = (TextView)findViewById(R.id.emptyGroupYouMayKnow);
+        LinearLayoutManager linearGroupPeople = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        peopleKnow.setLayoutManager(linearGroupPeople);
+        peopleYouKnow();
+
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +134,13 @@ public class InterestGroup extends BaseActivity{
                 });
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                includedLayout3.setVisibility(View.GONE);
+                layout.setVisibility(View.VISIBLE);
+            }
+        });
         initGroup();
     }
     private void searching(){
@@ -141,8 +160,6 @@ public class InterestGroup extends BaseActivity{
                             SearchInterestGroup scg = new SearchInterestGroup(getApplicationContext(),arrOrg);
                             searchRecycler.setAdapter(scg);
                             searchRecycler.refreshDrawableState();
-
-
 
                         }catch (JSONException e){
                             e.printStackTrace();
@@ -179,6 +196,32 @@ public class InterestGroup extends BaseActivity{
             }
         });
     }
+    private void peopleYouKnow(){
+        newArr = new ArrayList<>();
+        Engine.getOrganizations(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+            @Override
+            public void execute(JSONObject obj) {
+                try{
+                    JSONArray array = obj.getJSONArray("data");
+                    for(int i=0;i<array.length();i++){
+                        Group org = Converter.convertOrganizations(array.getJSONObject(i));
+                        if(array.getJSONObject(i).getString("type").equals("group")) {
+                            newArr.add(org);
+                        }
+                    }
+                    if(newArr.isEmpty()){
+                        peopleKnow.setVisibility(View.GONE);
+                        emptyPeopleYouKnow.setVisibility(View.VISIBLE);
+                    }else {
+                        peopleKnow.setVisibility(View.GONE);
+                        emptyPeopleYouKnow.setVisibility(View.VISIBLE);
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
  /*   @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -199,6 +242,8 @@ public class InterestGroup extends BaseActivity{
 
         return super.onOptionsItemSelected(item);
     }*/
+
+
     public void addInterestNewGroup(){
         final Dialog dialog = new Dialog(InterestGroup.this);
         dialog.setTitle("Add new Group");
@@ -212,7 +257,21 @@ public class InterestGroup extends BaseActivity{
             public void onClick(View view) {
                name = groupName.getText().toString().trim();
                desc = groupDesc.getText().toString().trim();
-                OpenDialog2();
+               boolean pass = true;
+               if(name.isEmpty()){
+                   pass = false;
+                   groupName.requestFocus();
+                   groupName.setError("Title cannot be empty");
+               }if(desc.isEmpty()){
+                    pass = false;
+                    groupDesc.requestFocus();
+                    groupDesc.setError("This field is required");
+                }
+                if(pass) {
+                    OpenDialog2();
+                }
+
+
                // openRecycler();
             }
         });
@@ -245,16 +304,24 @@ public class InterestGroup extends BaseActivity{
                 for(int i=0; i<a.size();i++){
                     ids[i]=a.get(i).intValue();
                 }
+
                     Engine.createGroup(getApplicationContext(), ids, name, desc, null,
                             "group", new RequestTemplate.ServiceCallback() {
                                 @Override
                                 public void execute(JSONObject obj) {
-                                    Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
-                                    dial.dismiss();
-                                    finish();
-                                    startActivity(getIntent());
+                                    Toast.makeText(getApplicationContext(), "successfully created "+ name+" group", Toast.LENGTH_SHORT).show();
+                                    Engine.getThreads(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+                                        @Override
+                                        public void execute(JSONObject obj) {
+                                            dial.dismiss();
+                                            finish();
+                                            startActivity(getIntent());
+                                        }
+                                    });
+
                                 }
                             });
+
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -320,4 +387,5 @@ public class InterestGroup extends BaseActivity{
                 });
 
     }*/
+
 }

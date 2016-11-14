@@ -78,7 +78,7 @@ public class ChildrenAdapter extends RecyclerView.Adapter<ChildrenAdapter.OrgTil
 
                     final int pos = getAdapterPosition();
                     int popupWidth = 650;
-                    int popupHeight = 1050;
+                    int popupHeight = 770;
 
                     LinearLayout viewGroup = (LinearLayout) itemView.findViewById(R.id.popup);
                     LayoutInflater layoutInflater = (LayoutInflater) mContext

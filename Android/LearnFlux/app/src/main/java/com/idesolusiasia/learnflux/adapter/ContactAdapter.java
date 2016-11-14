@@ -24,6 +24,7 @@ import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -107,8 +108,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                vh1.getAddF().setVisibility(View.GONE);
                if (contact != null) {
                    vh1.gettitle().setText(contact.getFirst_name());
-                   vh1.getcircular().setImageUrl(url+contact.get_links().getProfile_picture().getHref(),imageLoader);
-
+                   if(contact.get_links().getProfile_picture()==null){
+                       vh1.getcircular().setDefaultImageResId(R.drawable.user_profile);
+                   }else {
+                       vh1.getcircular().setImageUrl(url + contact.get_links().getProfile_picture().getHref(), imageLoader);
+                   }
                }
            }
 
@@ -116,10 +120,15 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                String url="http://lfapp.learnflux.net/v1/image?key=";
                final Group group =(Group)theContact.get(position);
                vh2.getAdd().setVisibility(View.GONE);
-               if(group !=null){
+               if(group !=null) {
                    vh2.gettitle2().setText(group.getName());
-                   vh2.getcircular2().setImageUrl(url+group.getImage(), imageLoader);
+                   if (group.getImage() == null) {
+                       vh2.getcircular2().setDefaultImageResId(R.drawable.company1);
+                   } else {
+                       vh2.getcircular2().setImageUrl(url + group.getImage(), imageLoader);
+                   }
                }
+               vh2.getStats().setText(group.getAccess());
            }
 
   /*  public String getTextToShowInBubble(int pos) {
@@ -191,12 +200,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private class ViewHolder2 extends RecyclerView.ViewHolder{
         TextView title2; NetworkImageView circular2;
         ImageView add;
-
+        TextView stats;
         public ViewHolder2(View itemView) {
             super(itemView);
             title2 = (TextView)itemView.findViewById(R.id.titleOrgConnection);
             circular2 = (NetworkImageView)itemView.findViewById(R.id.imageOrgConnection);
             add = (ImageView)itemView.findViewById(R.id.joinGroup);
+            stats = (TextView)itemView.findViewById(R.id.StatusOrgConnection);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -208,6 +218,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     l.putExtra("id", gr.getId());
                     l.putExtra("title",gr.getName());
                     l.putExtra("type", gr.getType());
+                    l.putExtra("img", gr.getImage());
                     l.putExtra("color", Functions.generateRandomPastelColor());
                     v.getContext().startActivity(l);
                 }
@@ -234,6 +245,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public void setcircular2(CircularNetworkImageView circular2) {
             this.circular2 = circular2;
+        }
+
+        public TextView getStats(){
+            return stats;
+        }
+        public void setStats(TextView stats){
+            this.stats=stats;
         }
     }
            public class RecyclerViewSimpleTextViewHolder extends RecyclerView.ViewHolder {

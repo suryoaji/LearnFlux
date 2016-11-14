@@ -17,6 +17,8 @@ import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.User;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 
@@ -95,9 +97,13 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 public void onClick(final View v) {
                     int pos = getAdapterPosition();
                     final Contact ct= (Contact)search.get(pos);
-                    Intent i = new Intent (v.getContext(), PublicProfile.class);
-                    i.putExtra("id", ct.getId());
-                    v.getContext().startActivity(i);
+                    if(User.getUser().getID()== ct.getId()){
+                        Functions.showAlert(v.getContext(), "Message", "You cannot add yourself");
+                    }else {
+                        Intent i = new Intent(v.getContext(), PublicProfile.class);
+                        i.putExtra("id", ct.getId());
+                        v.getContext().startActivity(i);
+                    }
                 }
             });
         }
@@ -151,6 +157,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     Group gr = (Group)search.get(pos);
                     Intent i = new Intent(v.getContext() , GroupDetailActivity.class);
                     i.putExtra("id", gr.getId());
+                    i.putExtra("img", gr.getImage());
                     i.putExtra("plusButton","show");
                     i.putExtra("clickOrganization", "Default");
                     i.putExtra("title",gr.getName());
@@ -197,6 +204,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(p!=null){
             v1.getIndividualName().setText(p.getFirst_name());
             v1.getCircularImage().setImageUrl(url+p.getId(), imageLoader);
+            v1.getAdd().setVisibility(View.GONE);
         }
     }
     private void configureViewHolder2(viewGroup v22, final Group g){
@@ -204,6 +212,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(g!=null){
             v22.getTxt1().setText(g.getName());
             v22.getImage().setImageUrl(url+g.getImage(),imageLoader);
+            v22.getJoinGrp().setVisibility(View.GONE);
         }
     }
     public void clearData() {

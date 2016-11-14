@@ -16,6 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_THREAD_ID = "id";
 	public static final String COLUMN_THREAD_TITLE = "title";
 	public static final String COLUMN_THREAD_IMAGE = "image";
+	public static final String COLUMN_THREAD_PARTICIPANTID = "participantID";
 	public static final String COLUMN_THREAD_REFID = "refid";
 	public static final String COLUMN_THREAD_REFTYPE = "reftype";
 

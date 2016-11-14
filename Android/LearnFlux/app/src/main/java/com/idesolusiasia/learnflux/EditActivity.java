@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.idesolusiasia.learnflux.adapter.MyProfileAdapter;
+import com.idesolusiasia.learnflux.adapter.MyProfileOrganizationAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class EditActivity extends AppCompatActivity {
     ImageView rightArrow;
-    MyProfileAdapter rcAdapter;
+    MyProfileOrganizationAdapter rcAdapter;
     View included1, included2; TextView causes2;
     RecyclerView recyclerView; 	ArrayList<Group> arrOrg = new ArrayList<Group>();
     @Override
@@ -77,7 +77,7 @@ public class EditActivity extends AppCompatActivity {
                         recyclerView.setVisibility(View.GONE);
                         //emptyView.setVisibility(View.VISIBLE);
                     }else {
-                        rcAdapter = new MyProfileAdapter(getApplicationContext(), arrOrg);
+                        rcAdapter = new MyProfileOrganizationAdapter(getApplicationContext(), arrOrg);
                         recyclerView.setAdapter(rcAdapter);
                         //emptyView.setVisibility(View.GONE);
                     }

@@ -27,7 +27,6 @@ public class Converter {
 	static Gson gson=new Gson();
 
 	public static Thread convertThread(JSONObject obj)throws JSONException{
-		Log.i("cnvertThread", obj.toString());
 		Thread t = gson.fromJson(obj.toString(), Thread.class);
 		if (obj.has("messages")){
 			JSONArray messageArray = obj.getJSONArray("messages");
@@ -43,15 +42,6 @@ public class Converter {
 				}
 			}
 		}
-		if(obj.has("reference")){
-			JSONObject org = obj.getJSONObject("reference");
-			BasicItem bc = Converter.convertItem(org);
-			String id =bc.getId();
-			Log.i("threadID: ", id);
-		}
-
-
-
 		return t;
 	}
 	public static BasicItem convertItem(JSONObject obj)throws JSONException{

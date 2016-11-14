@@ -109,6 +109,7 @@ public class ChatroomFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent i= new Intent(getContext(),ChattingActivity.class);
 				i.putExtra("idThread",adap.getItem(position).getId());
+				i.putExtra("name", adap.getItem(position).getTitle());
 				startActivity(i);
 				Log.i("Chatroom", adap.getItem(position).getTitle());
 			}

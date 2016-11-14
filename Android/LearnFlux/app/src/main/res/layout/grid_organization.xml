@@ -6,10 +6,10 @@
               android:background="@drawable/border_green">
 
     <com.android.volley.toolbox.NetworkImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:id="@+id/ivLogo" android:layout_gravity="center_horizontal"
-        android:src="@drawable/nus_logo" android:layout_alignParentTop="true"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
     <TextView
         android:layout_width="wrap_content"

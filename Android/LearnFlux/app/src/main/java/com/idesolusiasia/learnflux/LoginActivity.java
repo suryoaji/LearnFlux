@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.entity.User;
@@ -21,6 +22,7 @@ public class LoginActivity extends AppCompatActivity{
     private View mLoginFormView;
 	TextView tvRegister;
 	SharedPreferences sharedPref;
+    ProgressBar progress;
     private SharedPreferences.Editor loginPrefsEditor;
 
     @Override
@@ -28,7 +30,9 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        String name = getIntent().getStringExtra("username");
+
+        progress = (ProgressBar)findViewById(R.id.progress_bar);
+        progress.setVisibility(View.GONE);
 	    sharedPref = getApplicationContext().getSharedPreferences("com.idesolusiasia.learnflux",MODE_PRIVATE);
 	    String username = sharedPref.getString("username","");
 	    String password = sharedPref.getString("password","");
@@ -45,7 +49,7 @@ public class LoginActivity extends AppCompatActivity{
 			    }
 		    }, null);
 	    }
-
+        String name = sharedPref.getString("email","");
         etUsername = (EditText) findViewById(R.id.username);
         etPassword = (EditText) findViewById(R.id.password);
         etUsername.setText(name);
@@ -54,6 +58,7 @@ public class LoginActivity extends AppCompatActivity{
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                progress.setVisibility(View.VISIBLE);
                 attemptLogin();
             }
         });
@@ -68,6 +73,7 @@ public class LoginActivity extends AppCompatActivity{
 			    startActivity(i);
 		    }
 	    });
+
     }
 
 
@@ -112,6 +118,7 @@ public class LoginActivity extends AppCompatActivity{
 			        Engine.getMe(LoginActivity.this);
 			        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
 			        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    progress.setVisibility(View.GONE);
 			        startActivity(i);
 		        }
 	        },null);

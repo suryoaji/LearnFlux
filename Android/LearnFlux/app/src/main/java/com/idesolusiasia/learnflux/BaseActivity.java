@@ -70,6 +70,7 @@ public class BaseActivity extends AppCompatActivity
 							String url = "http://lfapp.learnflux.net/v1/image?key=profile/"+contact.getId();
 							User.getUser().setProfile_picture(url);
 							User.getUser().setID(contact.getId());
+							User.getUser().setUsername(contact.getUsername());
 							tvName.setText(contact.getFirst_name()+" "+ contact.getLast_name());
 							tvEmail.setText(contact.getEmail());
 							ivDrawerPic.setImageUrl(url, imageLoader);
@@ -83,6 +84,13 @@ public class BaseActivity extends AppCompatActivity
 					public void onClick(View view) {
 						Intent e = new Intent(BaseActivity.this, MyProfileActivity.class);
 						startActivity(e);
+					}
+				});
+				ivDrawerPic.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent pic = new Intent(BaseActivity.this, MyProfileActivity.class);
+						startActivity(pic);
 					}
 				});
 			}
@@ -133,6 +141,10 @@ public class BaseActivity extends AppCompatActivity
 			startActivity(i);
 		}
 		else if (id == R.id.nav_logout){
+			SharedPreferences prefs = getSharedPreferences("com.idesolusiasia.learnflux",0);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putString("email",User.getUser().getUsername());
+			editor.apply();
 			Functions.logout(getApplicationContext());
 
 		}
@@ -157,4 +169,5 @@ public class BaseActivity extends AppCompatActivity
 		}
 		return true;
 	}
+
 }

@@ -12,10 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
+import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,9 +28,12 @@ import java.util.ArrayList;
 public class OrgProfileActivity extends BaseActivity {
 	public String id, type, name;
 	TextView description, title;
-	ImageView message,addPeople;
+	ImageView message,addGroup;
+	NetworkImageView imageProfile;
 	public ProgressDialog progress;
 	public Group group =null;
+	ImageLoader imageLoader = VolleySingleton.getInstance(OrgProfileActivity.this).getImageLoader();
+	String url = "http://lfapp.learnflux.net/v1/image?key=";
 	public ArrayList<Group> org = new ArrayList<>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +48,15 @@ public class OrgProfileActivity extends BaseActivity {
 		parentLayout.addView(childLayout);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+
 		id =  getIntent().getStringExtra("id");
 		type = getIntent().getStringExtra("type");
 		name = getIntent().getStringExtra("title");
+
 		description = (TextView)findViewById(R.id.textView4);
-		addPeople = (ImageView)findViewById(R.id.addPeople);
+		addGroup = (ImageView)findViewById(R.id.addGroup);
+		addGroup.setVisibility(View.GONE);
+		imageProfile = (NetworkImageView)findViewById(R.id.imageProfile);
 		title = (TextView)findViewById(R.id.textView3);
 		title.setText(name);
 		getProfile();
@@ -59,9 +69,10 @@ public class OrgProfileActivity extends BaseActivity {
 				startActivity(toChat);
 			}
 		});
-		addPeople.setOnClickListener(new View.OnClickListener() {
+		addGroup.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+
 				Engine.joinGroup(getApplicationContext(), id, "join", new RequestTemplate.ServiceCallback() {
 					@Override
 					public void execute(JSONObject obj) {
@@ -83,6 +94,11 @@ public class OrgProfileActivity extends BaseActivity {
 					group = Converter.convertOrganizations(data);
 					description.setText(group.getDescription());
 					title.setText(group.getName());
+					if(group.getImage()!=null) {
+						imageProfile.setImageUrl(url+group.getImage(), imageLoader);
+					}else{
+						imageProfile.setDefaultImageResId(R.drawable.company1);
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

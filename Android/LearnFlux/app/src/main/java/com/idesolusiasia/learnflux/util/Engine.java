@@ -37,13 +37,11 @@ public class Engine {
 		params.put("client_id",context.getString(R.string.client_id));
 		params.put("client_secret",context.getString(R.string.client_secret));
 		params.put("scope","internal");
-		Log.i("map", "getParams: "+params.toString());
 
 
 		RequestTemplate.OAuth(context, url, params, new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
-				Log.i("response",obj.toString());
 				try {
 					User.getUser().setAccess_token(obj.getString("access_token"));
 					User.getUser().setUsername(username);
@@ -108,7 +106,6 @@ public class Engine {
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					Log.i("response_ME", obj.toString());
 					try {
 						Contact c = Converter.convertContact(obj);
 						User.getUser().setUsername(c.getFirst_name()+" "+c.getLast_name());
@@ -151,7 +148,7 @@ public class Engine {
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					Log.i("GET_FRIEND", obj.toString());
+
 					if (callback!=null){
 						callback.execute(obj);
 					}
@@ -204,7 +201,6 @@ public class Engine {
 
 	public static void getThreads(final Context context, final RequestTemplate.ServiceCallback callback){
 		String lastSync = Functions.getLastSync(context);
-		//Log.i("lastSync", lastSync);
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
 				context.getString(R.string.URL_MESSAGES)+"?lastSync="+lastSync;
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
@@ -219,9 +215,7 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 
-					//Log.i("response_GET_Threads", obj.toString());
 					try {
-						//Log.i("lastSync", "save "+obj.getString("lastSync"));
 						Functions.saveLastSync(context,obj.getString("lastSync"));
 
 						JSONArray array = obj.getJSONArray("data");
@@ -273,7 +267,6 @@ public class Engine {
 			HashMap<String,String[]> hashMap = new HashMap<>();
 			hashMap.put("ids",ids);
 			JSONObject params = new JSONObject(hashMap);
-			//Log.i("params_delete", params.toString());
 			RequestTemplate.DELETEJsonRequest(context, url, params, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
@@ -331,13 +324,6 @@ public class Engine {
 							}
 
 						}
-						/*if (messages.toString().contains("have successfully registered")){
-							Intent i = new Intent(context,LoginActivity.class);
-							i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
-							context.startActivity(i);
-						}else{
-							Functions.showAlert(context,"Errors",errors.toString());
-						}*/
 
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -362,7 +348,6 @@ public class Engine {
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					Log.i("response_GET_Messages", obj.toString());
 					try {
 						JSONArray array = obj.getJSONArray("data");
 						ArrayList<Thread> arrThread = new ArrayList<Thread>();
@@ -413,7 +398,6 @@ public class Engine {
 				public void execute(JSONObject obj) {
 
 					if (obj!=null){
-						Log.i("send_message", obj.toString());
 					}
 					if (callback!=null){
 						callback.execute(obj);
@@ -459,7 +443,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj != null) {
-						Log.i("create_event", obj.toString());
 					}
 					if (callback != null) {
 						callback.execute(obj);
@@ -471,13 +454,13 @@ public class Engine {
 				public void execute(JSONObject error) {
 					if (error!=null){
 						try {
-							JSONArray messages = error.getJSONArray("errors");
-							if (messages.toString().contains("have successfully registered")){
-
-							}else{
-								Functions.showAlert(context,"Errors",messages.toString());
+							//JSONArray messages = error.getJSONObject("errors").getJSONArray("messages");
+							JSONArray errors = error.getJSONArray("errors");
+							for(int i=0;i<errors.length();i++){
+								JSONObject objs = errors.getJSONObject(i);
+								String details = objs.getString("details");
+								Toast.makeText(context, details, Toast.LENGTH_SHORT).show();
 							}
-
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
@@ -495,7 +478,6 @@ public class Engine {
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					Log.i("Organization_Response", "execute: " + obj.toString());
 					if (callback != null) {
 						callback.execute(obj);
 					}
@@ -512,7 +494,6 @@ public class Engine {
 			RequestTemplate.GETJsonRequest(context,url,null,new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					Log.i("Org_profile", "execute: " + obj.toString());
 
 						if(callback!=null){
 							callback.execute(obj);
@@ -540,7 +521,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj!=null){
-						Log.i("get_event", obj.toString());
 					}
 					if (callback!=null){
 						callback.execute(obj);
@@ -568,7 +548,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if(obj!=null){
-						Log.i("getGroupEvent",obj.toString());
 					}if(callback!=null){
 						callback.execute(obj);
 					}
@@ -602,7 +581,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj!=null){
-						Log.i("change_rsvp", obj.toString());
 					}
 					if (callback!=null){
 						callback.execute(obj);
@@ -640,7 +618,6 @@ public class Engine {
 					if (obj!=null){
 
 						try {
-							Log.i("create_poll", obj.toString());
 							sendMessage(context,idThread,User.getUser().getName()+" create a poll", obj.getJSONObject("data").getString("id"),"poll",callback);
 						} catch (JSONException e) {
 							e.printStackTrace();
@@ -730,7 +707,6 @@ public class Engine {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		Log.i("postPollAnswer", params.toString());
 
 		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
 			reLogin(context, new RequestTemplate.ServiceCallback() {
@@ -744,7 +720,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj!=null){
-						Log.i("post_poll_answer", obj.toString());
 					}
 					if (callback!=null){
 						callback.execute(obj);
@@ -772,7 +747,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj!=null){
-						Log.i("get_poll", obj.toString());
 					}
 					if (callback!=null){
 						callback.execute(obj);
@@ -798,7 +772,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if(obj!=null){
-						Log.i("get", "execute: "+obj);
 					}if(callback!=null){
 						callback.execute(obj);
 					}
@@ -833,7 +806,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if(obj!=null){
-						Log.i("PUT NAME", "execute" + obj);
 					}if(callback!=null){
 						callback.execute(obj);
 					}
@@ -855,7 +827,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if(obj!=null){
-						Log.i("get", "execute: "+obj);
 					}if(callback!=null){
 						callback.execute(obj);
 					}
@@ -878,7 +849,7 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj != null) {
-						Log.i("get", "execute: " + obj);
+
 					}
 					if (callback != null) {
 						callback.execute(obj);
@@ -921,7 +892,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if(obj!=null){
-						Log.i("get", "execute: "+obj);
 					}if(callback!=null){
 						callback.execute(obj);
 					}
@@ -945,7 +915,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if(obj!=null){
-						Log.i("get", "execute: "+obj);
 					}if(callback!=null){
 						callback.execute(obj);
 					}
@@ -975,7 +944,7 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if (obj!=null){
-						Log.i("put notification", obj.toString());
+
 					}
 					if (callback!=null){
 						callback.execute(obj);
@@ -1001,7 +970,6 @@ public class Engine {
 				@Override
 				public void execute(JSONObject obj) {
 					if(obj!=null){
-						Log.i("get", "execute: "+obj);
 					}if(callback!=null){
 						callback.execute(obj);
 					}

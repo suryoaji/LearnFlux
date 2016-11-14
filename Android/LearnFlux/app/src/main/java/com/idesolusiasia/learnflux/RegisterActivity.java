@@ -87,7 +87,10 @@ public class RegisterActivity extends AppCompatActivity {
 				@Override
 				public void execute(JSONObject obj) {
 					Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
-					i.putExtra("username", tvUsername.getText().toString().trim());
+					SharedPreferences prefs = getSharedPreferences("com.idesolusiasia.learnflux",0);
+					SharedPreferences.Editor editor = prefs.edit();
+					editor.putString("email",tvUsername.getText().toString().trim());
+					editor.apply();
 					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
 					startActivity(i);
 				}

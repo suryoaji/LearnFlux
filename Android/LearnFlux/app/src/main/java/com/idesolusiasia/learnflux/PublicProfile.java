@@ -2,12 +2,13 @@ package com.idesolusiasia.learnflux;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,7 +17,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.adapter.ChildrenAdapter;
-import com.idesolusiasia.learnflux.adapter.MyProfileAdapter;
+import com.idesolusiasia.learnflux.adapter.MyProfileOrganizationAdapter;
 import com.idesolusiasia.learnflux.adapter.MyProfileInterestAdapter;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 public class PublicProfile extends BaseActivity {
     MyProfileInterestAdapter myProfileInterestAdapter;
     ChildrenAdapter childAdapter;
-    MyProfileAdapter rcAdapter;
+    MyProfileOrganizationAdapter rcAdapter;
     ArrayList<Contact> childList;
     ArrayList<Group> groupContact;
     ArrayList<String>interestUser;
@@ -61,12 +62,14 @@ public class PublicProfile extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_public_profile);
+        setContentView(R.layout.activity_base);
         super.onCreateDrawer(savedInstanceState);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        final FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
+        final LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View childLayout = layoutInflater.inflate(
+                R.layout.activity_public_profile, null);
+        parentLayout.addView(childLayout);
 
         final ImageView addProfile= (ImageView) findViewById(R.id.addProfile);
         work = (TextView)findViewById(R.id.work);
@@ -98,6 +101,7 @@ public class PublicProfile extends BaseActivity {
 
 
         affilatedOrganizationRecycler = (RecyclerView)findViewById(R.id.organizationRecycler);
+        final LinearLayout showAll = (LinearLayout)findViewById(R.id.publicShowAll);
         emptyOrgs = (TextView)findViewById(R.id.emptyViewOrg);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         affilatedOrganizationRecycler.setLayoutManager(linearLayoutManager);
@@ -108,66 +112,88 @@ public class PublicProfile extends BaseActivity {
                 try {
                     Contact c = Converter.convertContact(obj);
                     txtParent.setText(c.getFirst_name()+" "+c.getLast_name());
-                    work.setText(c.getWork());
-                    from.setText(c.getLocation());
+                    if(c.getWork()!=null) {
+                        work.setText(c.getWork());
+                    }else{
+                        work.setText("-");
+                    }
+                    if(c.getLocation()!=null){
+                        from.setText(c.getLocation());
+                    }else{
+                        from.setText("-");
+                    }
                     if(c.get_links().getProfile_picture()!=null) {
                         parent.setImageUrl(url + c.get_links().getProfile_picture().getHref(), imageLoader);
                     }else{
                         parent.setDefaultImageResId(R.drawable.user_profile);
                     }
-                    JSONArray mt = obj.getJSONArray("mutual");
-                    for(int i=0;i<mt.length();i++){
-                        if(c.getMutual().get(i).get_links().getProfile_picture()!=null) {
-                            mutualImages.setImageUrl(url + c.getMutual().get(i).get_links().getProfile_picture().getHref(), imageLoader);
-                        }else{
-                            mutualImages.setDefaultImageResId(R.drawable.user_profile);
+
+                    //MUTUAL FRIEND
+                        JSONArray mt = obj.getJSONArray("mutual");
+                        for (int i = 0; i < mt.length(); i++) {
+                            if (c.getMutual().get(i).get_links().getProfile_picture() != null) {
+                                mutualImages.setImageUrl(url + c.getMutual().get(0).get_links().getProfile_picture().getHref(), imageLoader);
+                            } else {
+                                mutualImages.setDefaultImageResId(R.drawable.user_profile);
+                            }
+                            StringBuilder sb = new StringBuilder();
+                            ArrayList<String> collectionString = new ArrayList<String>();
+                            collectionString.add(c.getMutual().get(i).getFirst_name() + " " + c.getMutual().get(i).getLast_name());
+                            for (String string : collectionString) {
+                                sb.append("Mutual friend of " + string + " ");
+                                sb.append(",");
+                                mutual.setText(sb.length() > 0 ? sb.substring(0, sb.length() - 1) : " ");
+                            }
                         }
-                        StringBuilder sb = new StringBuilder();
-                        ArrayList<String>collectionString = new ArrayList<String>();
-                        collectionString.add(c.getMutual().get(i).getFirst_name() + c.getMutual().get(i).getLast_name());
-                        for(String string : collectionString){
-                            sb.append("Mutual friend of "+ string+ " ");
-                            sb.append(",");
-                            mutual.setText(sb.length() > 0 ? sb.substring(0, sb.length() - 1): " ");
-                        }
-                    }
+
+                    //CHILDREN
                      JSONObject embedded = obj.getJSONObject("_embedded");
-                     JSONArray child = embedded.getJSONArray("children");
-                     for(int j=0;j<child.length();j++){
-                         Contact ch = Converter.convertContact(child.getJSONObject(j));
-                         childList.add(ch);
+                     if(embedded.has("children")) {
+                         JSONArray child = embedded.getJSONArray("children");
+                         if (child != null) {
+                             for (int j = 0; j < child.length(); j++) {
+                                 Contact ch = Converter.convertContact(child.getJSONObject(j));
+                                 childList.add(ch);
+                             }
+                             recyclerChildren.setVisibility(View.VISIBLE);
+                             childrenEmptyView.setVisibility(View.GONE);
+                             childAdapter = new ChildrenAdapter(getApplicationContext(), childList);
+                             recyclerChildren.setAdapter(childAdapter);
+                             recyclerChildren.refreshDrawableState();
+                         }
                      }
-                        recyclerChildren.setVisibility(View.VISIBLE);
-                        childrenEmptyView.setVisibility(View.GONE);
-                        childAdapter = new ChildrenAdapter(getApplicationContext(),childList);
-                        recyclerChildren.setAdapter(childAdapter);
-                        recyclerChildren.refreshDrawableState();
 
-                    JSONArray interest = obj.getJSONArray("interests");
-                    for(int it=0;it<interest.length();it++){
-                        interestUser = new ArrayList<String>();
-                        interestUser.add(interest.get(it).toString());
-                    }
-                    emptyRecycler.setVisibility(View.GONE);
-                    myProfileInterest.setVisibility(View.VISIBLE);
-                    myProfileInterestAdapter = new MyProfileInterestAdapter(interestUser);
-                    myProfileInterest.setAdapter(myProfileInterestAdapter);
-                    myProfileInterest.refreshDrawableState();
+                    //INTEREST
+                        if(obj.has("interests")) {
+                            JSONArray interest = obj.getJSONArray("interests");
+                            for (int it = 0; it < interest.length(); it++) {
+                                interestUser = new ArrayList<String>();
+                                interestUser.add(interest.get(it).toString());
+                            }
+                            emptyRecycler.setVisibility(View.GONE);
+                            myProfileInterest.setVisibility(View.VISIBLE);
+                            myProfileInterestAdapter = new MyProfileInterestAdapter(interestUser);
+                            myProfileInterest.setAdapter(myProfileInterestAdapter);
+                            myProfileInterest.refreshDrawableState();
+                        }
 
+                    //ORGANIZATION
 
-                    JSONArray group = embedded.getJSONArray("groups");
-                    for(int g=0;g<group.length();g++){
-                        Group grops = Converter.convertGroup(group.getJSONObject(g));
-                        groupContact.add(grops);
-                    }
-                    if(groupContact.isEmpty()){
-                        affilatedOrganizationRecycler.setVisibility(View.GONE);
-                        emptyOrgs.setVisibility(View.VISIBLE);
-                    }else {
-                        rcAdapter = new MyProfileAdapter(getApplicationContext(), groupContact);
-                        affilatedOrganizationRecycler.setAdapter(rcAdapter);
-                        emptyOrgs.setVisibility(View.GONE);
-                    }
+                        JSONArray group = embedded.getJSONArray("groups");
+                        for (int g = 0; g < group.length(); g++) {
+                            Group grops = Converter.convertGroup(group.getJSONObject(g));
+                            groupContact.add(grops);
+                        }
+                        if (groupContact.isEmpty()) {
+                            affilatedOrganizationRecycler.setVisibility(View.GONE);
+                            emptyOrgs.setVisibility(View.VISIBLE);
+                        } else {
+                            rcAdapter = new MyProfileOrganizationAdapter(getApplicationContext(), groupContact);
+                            affilatedOrganizationRecycler.setAdapter(rcAdapter);
+                            affilatedOrganizationRecycler.setVisibility(View.VISIBLE);
+                            emptyOrgs.setVisibility(View.GONE);
+
+                        }
 
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -178,16 +204,14 @@ public class PublicProfile extends BaseActivity {
         addProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                if(User.getUser().getID()== id){
-                    Functions.showAlert(v.getContext(), "Message", "You cannot add yourself");
-                } else {
                     Engine.getUserFriend(v.getContext(), id, new RequestTemplate.ServiceCallback() {
                         @Override
                         public void execute(JSONObject obj) {
                             Toast.makeText(v.getContext(), "Successfully adding a friend", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(PublicProfile.this, MyProfileActivity.class);
+                            startActivity(i);
                         }
                     });
-                }
             }
         });
 

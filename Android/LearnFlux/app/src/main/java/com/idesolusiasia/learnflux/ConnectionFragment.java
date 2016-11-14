@@ -20,6 +20,7 @@ import android.widget.ListView;
 
 import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
+import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.User;
@@ -137,8 +138,30 @@ public class ConnectionFragment extends Fragment {
 		}
 		return view;
 	}
-	void getFriend(){
-		Engine.getMyFriend(getContext(), new RequestTemplate.ServiceCallback() {
+	void getFriend() {
+		Engine.getMeWithRequest(getContext(), "friends", new RequestTemplate.ServiceCallback() {
+			@Override
+			public void execute(JSONObject obj) {
+				try {
+					JSONArray friends = obj.getJSONArray("friends");
+					ArrayList<Participant> p = new ArrayList<Participant>();
+					for (int i = 0; i < friends.length(); i++) {
+						Participant participant = Converter.convertPeople(friends.getJSONObject(i));
+						if (participant.getId() != User.getUser().getID()) {
+							p.add(participant);
+						}
+					}
+					if (p.size() > 0) {
+						adap = new PeopleAdapter(getContext(), p);
+						listView.setAdapter(adap);
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	/*	Engine.getMyFriend(getContext(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try {
@@ -162,7 +185,7 @@ public class ConnectionFragment extends Fragment {
 
 			}
 		});
-	}
+	}*/
 
 
 	public void showInputGroupName(){

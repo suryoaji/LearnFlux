@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:background="@drawable/relative_border"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <ImageView
+                android:id="@+id/networkImageBottom"
+                android:src="@drawable/company2"
+                android:scaleType="fitCenter"
+                android:layout_margin="10dp"
+                android:layout_width="60dp"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:textColor="#8bc34a"
+                android:text="The National Association for the Educational of Young Children"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:id="@+id/textView33"
+                android:layout_below="@+id/titleBottom"
+                android:layout_toRightOf="@+id/networkImageBottom"
+                android:layout_toEndOf="@+id/networkImageBottom" />
+
+            <TextView
+                android:id="@+id/titleBottom"  android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="#000000"
+                android:text="Early Childhood Education" android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/networkImageBottom"
+                android:layout_toEndOf="@+id/networkImageBottom" />
+
+            <TextView
+                android:textColor="#8bc34a"
+                android:text="370 Members" android:textSize="12sp"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:layout_below="@+id/textView33"
+                android:layout_toRightOf="@+id/networkImageBottom"
+                android:layout_toEndOf="@+id/networkImageBottom" />
+        </RelativeLayout>
+</LinearLayout>

@@ -15,7 +15,7 @@ public class Participant {
 	@SerializedName("profile_picture")
 	private String photo="";
 	private String type;
-	private String link;
+	private Links _links;
 
 	public int getId() {
 		return id;
@@ -56,13 +56,92 @@ public class Participant {
 		this.type = type;
 	}
 
+	public Links get_links() {
+		return _links;
+	}
+
+	public void set_links(Links _links) {
+		this._links = _links;
+	}
 	@Override
 	public String toString() {
 		return super.toString();
 	}
 
-	public void setLink(String link) {
-		this.link = link;
+	public class Links {
+		public Links(){
+
+		}
+		private Self self;
+		private profilePicture profile_picture;
+		private Frnd friends;
+
+
+		public profilePicture getProfile_picture() {
+			return profile_picture;
+		}
+
+		public void setProfile_picture(profilePicture profile_picture) {
+			this.profile_picture = profile_picture;
+		}
+
+		public Frnd getFriend() {
+			return friends;
+		}
+
+		public void setFriend(Frnd friends) {
+			this.friends = friends;
+		}
+
+		public Self getSelf() {
+			return self;
+		}
+
+		public void setSelf(Self self) {
+			this.self = self;
+		}
+
+		public class Self{
+			public Self(){
+
+			}
+			private String href;
+			public String getHref() {
+				return href;
+			}
+
+			public void setHref(String href) {
+				this.href = href;
+			}
+
+		}
+		public class profilePicture{
+			public profilePicture(){
+
+			}
+			private String href;
+			public String getHref() {
+				return href;
+			}
+
+			public void setHref(String href) {
+				this.href = href;
+			}
+		}
+		public class Frnd{
+			public Frnd(){
+
+			}
+			private String href;
+			public String getHref() {
+				return href;
+			}
+
+			public void setHref(String href) {
+				this.href = href;
+			}
+		}
+
 	}
 
 }

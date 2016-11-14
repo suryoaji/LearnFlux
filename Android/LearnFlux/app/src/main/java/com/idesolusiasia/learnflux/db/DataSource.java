@@ -84,11 +84,13 @@ public class DataSource {
 		ContentValues values= new ContentValues();
 		values.put(DatabaseHelper.COLUMN_THREAD_ID,t.getId());
 		values.put(DatabaseHelper.COLUMN_THREAD_TITLE,t.getTitle());
-		values.put(DatabaseHelper.COLUMN_THREAD_IMAGE,t.getImage());
-
 		if (t.getGroup()!=null){
+			values.put(DatabaseHelper.COLUMN_THREAD_IMAGE,t.getGroup().getImage());
 			values.put(DatabaseHelper.COLUMN_THREAD_REFID, t.getGroup().getId());
 			values.put(DatabaseHelper.COLUMN_THREAD_REFTYPE, t.getGroup().getType());
+		}else {
+			values.put(DatabaseHelper.COLUMN_THREAD_IMAGE,"");
+
 		}
 
 		db.beginTransaction();
@@ -158,6 +160,7 @@ public class DataSource {
 	}
 	private Thread cursorToThread(Cursor cursor) {
 		Thread t = new Thread();
+        List<Participant>p = new ArrayList<>();
 		t.setId(cursor.getString(0));
 		t.setTitle(cursor.getString(1));
 		t.setImage(cursor.getString(2));

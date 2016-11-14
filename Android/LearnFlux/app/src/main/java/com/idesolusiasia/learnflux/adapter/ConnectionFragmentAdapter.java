@@ -44,7 +44,11 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
     public void onBindViewHolder(OrgTileHolder holder, int position) {
         final Group org= organizations.get(position);
         String url = "http://lfapp.learnflux.net/v1/image?key="+org.getImage();
-        holder.image.setImageUrl(url, imageLoader);
+        if(org.getImage()== null){
+            holder.image.setDefaultImageResId(R.drawable.company1);
+        }else {
+            holder.image.setImageUrl(url, imageLoader);
+        }
         holder.txt1.setText(org.getName());
         holder.txt2.setText(org.getAccess());
         holder.add.setVisibility(View.GONE);
@@ -75,6 +79,7 @@ public class ConnectionFragmentAdapter extends RecyclerView.Adapter<ConnectionFr
                     l.putExtra("id", organizations.get(pos).getId());
                     l.putExtra("title",organizations.get(pos).getName());
                     l.putExtra("type", organizations.get(pos).getType());
+                    l.putExtra("img", organizations.get(pos).getImage());
                     l.putExtra("color", Functions.generateRandomPastelColor());
                     view.getContext().startActivity(l);
                 }

@@ -72,6 +72,7 @@ public class SearchInterestGroup extends RecyclerView.Adapter<SearchInterestGrou
                     i.putExtra("clickOrganization", "Default");
                     i.putExtra("title",groups.get(pos).getName());
                     i.putExtra("type", groups.get(pos).getType());
+                    i.putExtra("img", groups.get(pos).getImage());
                     v.getContext().startActivity(i);
                 }
             });

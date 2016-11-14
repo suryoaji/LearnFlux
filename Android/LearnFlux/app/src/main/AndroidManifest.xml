@@ -43,11 +43,7 @@
             android:name=".ChatsActivity"
             android:label="@string/title_activity_chat"
             android:screenOrientation="portrait"
-            android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity"/>
         </activity>
         <activity
             android:name=".ChattingActivity"
@@ -81,11 +77,7 @@
         <activity
             android:name=".MyProfileActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity"/>
         </activity>
         <activity
             android:name=".GroupDetailActivity"
@@ -99,9 +91,6 @@
         <activity android:name=".InterestGroup"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity"/>
         </activity>
         <activity android:name=".NewInterestGroup"
             android:screenOrientation="portrait"
@@ -114,11 +103,7 @@
         <activity
             android:name=".PublicProfile"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity"/>
         </activity>
     </application>
 

@@ -42,14 +42,7 @@
             android:id="@+id/addNotification"
             android:layout_gravity="center"
             android:src="@drawable/add_friend"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
     </LinearLayout>
-
-    <Button
-        android:text="see ALL"
-        android:textColor="#FFFFFF"
-        android:background="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </LinearLayout>

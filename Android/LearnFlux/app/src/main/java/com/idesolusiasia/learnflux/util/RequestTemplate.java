@@ -48,7 +48,7 @@ public class RequestTemplate {
 					}
 				}*/
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
-					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
+					Toast.makeText(context,"You have no connection",Toast.LENGTH_SHORT).show();
 				}else {
 					Log.i(TAG, error.getMessage());
 					if (errorCallback!=null){
@@ -77,7 +77,7 @@ public class RequestTemplate {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
-					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
+					Toast.makeText(context,"You have no connection",Toast.LENGTH_SHORT).show();
 				}else {
 					Log.i(TAG, error.getMessage());
 					if(error.getMessage().contains("token")){
@@ -132,7 +132,7 @@ public class RequestTemplate {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
-					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
+					Toast.makeText(context,"You have no connection",Toast.LENGTH_SHORT).show();
 				}else {
 					Log.i(TAG, error.getMessage());
 					if (error.networkResponse!=null){
@@ -177,7 +177,7 @@ public class RequestTemplate {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
-					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
+					Toast.makeText(context,"You have no connection",Toast.LENGTH_SHORT).show();
 				}else {
 					Log.i(TAG, error.getMessage());
 					if(error.getMessage().contains("token")){
@@ -234,7 +234,7 @@ public class RequestTemplate {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
-					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
+					Toast.makeText(context,"You have no connection",Toast.LENGTH_SHORT).show();
 				}else {
 					Log.i(TAG, error.getMessage());
 					if(error.getMessage().contains("token")){
@@ -288,7 +288,7 @@ public class RequestTemplate {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
-					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
+					Toast.makeText(context,"You have no connection",Toast.LENGTH_SHORT).show();
 				}else {
 					Log.i(TAG, error.getMessage());
 					if(error.getMessage().contains("token")){
@@ -340,7 +340,7 @@ public class RequestTemplate {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				if(error instanceof TimeoutError || error instanceof NoConnectionError){
-					Toast.makeText(context,"Connection Timeout",Toast.LENGTH_SHORT).show();
+					Toast.makeText(context,"You have no connection",Toast.LENGTH_SHORT).show();
 				}else {
 					Log.i(TAG, error.getMessage());
 					if(error.getMessage().contains("token")){

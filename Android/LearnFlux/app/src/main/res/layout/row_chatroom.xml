@@ -5,7 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content" android:paddingBottom="10dp"
               android:paddingTop="10dp">
-    <com.idesolusiasia.learnflux.component.RoundedImageView
+    <com.idesolusiasia.learnflux.component.CircularNetworkImageView
         android:layout_width="50dp"
         android:layout_height="50dp" android:src="@drawable/abc_ic_star_black_16dp" android:id="@+id/ivRoundPic"/>
     <LinearLayout

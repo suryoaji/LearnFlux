@@ -16,19 +16,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:clickable="true" android:focusable="true"
         android:id="@+id/titleLayout">
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageView2" android:layout_alignParentTop="true"
+            android:id="@+id/imageOrgDetail" android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-            android:src="@drawable/ic_attendance_24dp" android:clickable="false"
+            android:clickable="false"
             android:focusable="false"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Young Men&apos;s Christian Association"
-            android:id="@+id/textView14"
+            android:id="@+id/titleOrgDetails"
             android:layout_alignParentTop="true" android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp" android:gravity="center_horizontal"
@@ -71,23 +71,23 @@
                 android:visibility="visible"/>
         </LinearLayout>
         <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:clickable="true" android:focusable="true"
-                      android:id="@+id/tabEvents" android:layout_marginLeft="10dp"
-                      android:layout_marginRight="10dp">
+            android:orientation="vertical"
+            android:clickable="true" android:focusable="true"
+            android:id="@+id/tabEvents" android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
             <FrameLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
                 <ImageView android:layout_width="45dp" android:layout_height="45dp"
-                           android:id="@+id/imageView14" android:src="@drawable/icon_events"
-                           android:layout_alignParentTop="true"
-                           android:layout_alignParentLeft="true"
-                           android:layout_alignParentStart="true"
-                           android:layout_gravity="center_horizontal"/>
+                    android:id="@+id/imageView14" android:src="@drawable/icon_events"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="center_horizontal"/>
 
             </FrameLayout>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:textAppearance="?android:attr/textAppearanceSmall"
-                      android:text="Events" android:id="@+id/textView28" android:textSize="12dp"
-                      android:layout_gravity="center_horizontal"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Events" android:id="@+id/textView28" android:textSize="12dp"
+                android:layout_gravity="center_horizontal"/>
             <View
                 android:layout_width="40dp"
                 android:layout_height="4dp" android:background="@color/colorPrimary"
@@ -96,22 +96,22 @@
                 android:visibility="gone"/>
         </LinearLayout>
         <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:clickable="true" android:focusable="true"
-                      android:orientation="vertical"
-                      android:id="@+id/tabActivities">
+            android:clickable="true" android:focusable="true"
+            android:orientation="vertical"
+            android:id="@+id/tabActivities">
             <FrameLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
                 <ImageView android:layout_width="45dp" android:layout_height="45dp"
-                           android:id="@+id/imageView12" android:src="@drawable/icon_activities"
-                           android:layout_alignParentTop="true"
-                           android:layout_alignParentLeft="true"
-                           android:layout_alignParentStart="true"
-                           android:layout_gravity="center_horizontal"/>
+                    android:id="@+id/imageView12" android:src="@drawable/icon_activities"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="center_horizontal"/>
 
             </FrameLayout>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:textAppearance="?android:attr/textAppearanceSmall"
-                      android:text="Activities" android:id="@+id/textView29"
-                      android:textSize="12dp" android:layout_gravity="center_horizontal"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Activities" android:id="@+id/textView29"
+                android:textSize="12dp" android:layout_gravity="center_horizontal"/>
             <View
                 android:layout_width="40dp"
                 android:layout_height="4dp" android:background="@color/colorPrimary"

@@ -5,36 +5,35 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.Participant;
-import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
+import com.idesolusiasia.learnflux.util.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,29 +52,87 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 	public Group group=null;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
-	public String name, id, reTitle, details, type, location;
+	public String name, id, reTitle, details, type, location,img;
 	TextView tvNotifActivities, tvNotifEvents;
 	static final int ITEMS = 3;
+	NetworkImageView imageGroup;
+	ImageView ivAdd;
+	ImageLoader imageLoader = VolleySingleton.getInstance(GroupDetailActivity.this).getImageLoader();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_base);
 		super.onCreateDrawer(savedInstanceState);
 
-		FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
+		final FrameLayout parentLayout = (FrameLayout) findViewById(R.id.activity_layout);
 		final LayoutInflater layoutInflater = LayoutInflater.from(this);
 		View childLayout = layoutInflater.inflate(
-				R.layout.activity_group_detail, null);
+				R.layout.activity_group_details, null);
 		parentLayout.addView(childLayout);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
 
+
+		String url="http://lfapp.learnflux.net/v1/image?key=";
 		id = getIntent().getStringExtra("id");
 		type = getIntent().getStringExtra("type");
 		Log.i("IDS", "onCreate: " +id);
 		name = getIntent().getStringExtra("title");
 		color = getIntent().getIntExtra("color",1);
+		img = getIntent().getStringExtra("img");
+
 		///////////////////////////finish Base Init///
+		imageGroup = (NetworkImageView)findViewById(R.id.imageOfGroupDetail);
+
+		if(img!=null) {
+			imageGroup.setImageUrl(url + img, imageLoader);
+		}
+		imageGroup.setDefaultImageResId(R.drawable.company1);
+		ivAdd = (ImageView)findViewById(R.id.ivAdd);
+		final String name = getIntent().getStringExtra("title");
+		String joinButton = getIntent().getStringExtra("plusButton");
+		if(joinButton.equalsIgnoreCase("hide")){
+			ivAdd.setVisibility(View.GONE);
+		}else if(joinButton.equalsIgnoreCase("show")) {
+			ivAdd.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(final View view) {
+					Engine.getMeWithRequest(view.getContext(), "details", new RequestTemplate.ServiceCallback() {
+						@Override
+						public void execute(JSONObject obj) {
+							try {
+								JSONObject embedded = obj.getJSONObject("_embedded");
+								if(embedded.has("groups")) {
+									JSONArray group = embedded.getJSONArray("groups");
+									ArrayList<String> arrayId = new ArrayList<String>();
+									for(int i=0;i<group.length();i++){
+									JSONObject data = group.getJSONObject(i);
+									String ids = data.getString("id");
+										arrayId.add(ids);
+									}
+									if(arrayId.contains(id)){
+										Functions.showAlert(view.getContext(), "Message", "You already member on this group");
+									}else{
+										Engine.joinGroup(view.getContext(), id, "join", new RequestTemplate.ServiceCallback() {
+											@Override
+											public void execute(JSONObject obj) {
+											Toast.makeText(view.getContext(),"Request to connect to "+ name +" sent", Toast.LENGTH_LONG).show();
+												Intent i= new Intent(getApplicationContext(), InterestGroup.class);
+												startActivity(i);
+
+											}
+										});
+									}
+
+								}
+
+
+							}catch (JSONException e){
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+			});
+		}
 		title = (TextView)findViewById(R.id.tvGroupTitle);
 		title.setText(name);
 		title.setBackgroundColor(Integer.valueOf(color));
@@ -228,17 +285,45 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		btnAdd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Engine.createEvent(getApplicationContext(), true, etTitle.getText().toString(), etDesc.getText().toString(),
-						etLocation.getText().toString(), calStart.getTimeInMillis() / 1000, null, id, type, new RequestTemplate.ServiceCallback() {
-					@Override
-					public void execute(JSONObject obj) {
-						Log.i("Data Event", "execute: "+ title+", "+location+", "+id+", "+type);
-						Toast.makeText(getApplicationContext(),"successfully send the data", Toast.LENGTH_SHORT).show();
-						dialog.dismiss();
-						finish();
-						startActivity(getIntent());
-					}
-				});
+				boolean pass = true;
+				if (etTitle.getText().toString().isEmpty()) {
+					pass = false;
+					etTitle.requestFocus();
+					etTitle.setError("You need to have a title");
+				}
+				if (etDesc.getText().toString().isEmpty()) {
+					pass = false;
+					etDesc.requestFocus();
+					etDesc.setError("You need to have a description");
+				}
+				if (etLocation.getText().toString().isEmpty()) {
+					pass = false;
+					etLocation.requestFocus();
+					etLocation.setError("You need to have a location");
+				}
+				if (etDate.getText().toString().isEmpty()) {
+					pass = false;
+					etDate.requestFocus();
+					etDate.setError("You need to have a date");
+				}
+				if (etStart.getText().toString().isEmpty()) {
+					pass = false;
+					etStart.requestFocus();
+					etStart.setError("You need to set the time");
+				}
+				if (pass) {
+					Engine.createEvent(getApplicationContext(), true, etTitle.getText().toString(), etDesc.getText().toString(),
+							etLocation.getText().toString(), calStart.getTimeInMillis() / 1000, null, id, type, new RequestTemplate.ServiceCallback() {
+								@Override
+								public void execute(JSONObject obj) {
+									Log.i("Data Event", "execute: " + title + ", " + location + ", " + id + ", " + type);
+									Toast.makeText(getApplicationContext(), "successfully send the data", Toast.LENGTH_SHORT).show();
+									dialog.dismiss();
+									finish();
+									startActivity(getIntent());
+								}
+							});
+				}
 			}
 		});
 		dialog.show();

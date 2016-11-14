@@ -1,52 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawer_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".InterestGroup">
 
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-        </android.support.design.widget.AppBarLayout>
-
-        <FrameLayout
+        android:layout_height="match_parent">
+        <include
+            android:visibility="gone"
+            android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:id="@+id/activity_layout">
+            layout="@layout/search_bar" />
+        <LinearLayout
+            android:id="@+id/linearInterest"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:background="#106571"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#8bc34a"
+                    android:padding="5dp"
+                    android:textSize="16sp"
+                    android:text="Interest groups"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp" />
 
-            <include layout="@layout/group_interest"/>
+                <ImageButton
+                    android:id="@+id/searchInterest"
+                    android:layout_marginLeft="160dp"
+                    android:src="@drawable/ic_search"
+                    android:background="@android:color/transparent"
+                    android:layout_width="32dp"
+                    android:layout_height="50dp" />
+                <ImageButton
+                    android:src="@drawable/ic_add"
+                    android:background="@android:color/transparent"
+                    android:layout_width="30dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/imageButtonAdd" />
+            </LinearLayout>
 
-        </FrameLayout>
-    </android.support.design.widget.CoordinatorLayout>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:id="@+id/recycler_group_interest"
+                android:layout_margin="5dp"
+                android:clipToPadding="false">
+            </android.support.v7.widget.RecyclerView>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        android:background="#E0E0E0"
-        app:headerLayout="@layout/nav_header_drawer"
-        app:menu="@menu/activity_home_drawer"/>
+            <TextView
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="no data available" />
+            <Button
+                android:layout_marginTop="10dp"
+                android:background="#8bc34a"
+                android:textColor="#FFFFFF"
+                android:text="See all"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+            <TextView
+                android:layout_marginTop="5dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:text="Interest Groups you might interested"
+                android:textColor="#000"
+                android:background="#E0E0E0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-</android.support.v4.widget.DrawerLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/recycler_groupYouMayKnow"
+                    android:layout_margin="10dp"
+                    android:clipToPadding="false">
+                </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/emptyGroupYouMayKnow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="no data available" />
+            </FrameLayout>
+            <Button
+                android:background="#8bc34a"
+                android:textColor="#FFFFFF"
+                android:text="See all"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

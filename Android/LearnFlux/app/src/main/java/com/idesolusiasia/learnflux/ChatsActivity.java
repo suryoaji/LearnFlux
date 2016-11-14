@@ -14,11 +14,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 
 import org.json.JSONArray;
@@ -56,9 +59,7 @@ public class ChatsActivity extends BaseActivity {
 
 
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -72,21 +73,13 @@ public class ChatsActivity extends BaseActivity {
 		}
 		else if(i.equalsIgnoreCase("chat")){
 			mViewPager.setCurrentItem(2);
+		}else if(i.equalsIgnoreCase("")){
+			mViewPager.setCurrentItem(1);
 		}
 
 
 		TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 		tabLayout.setupWithViewPager(mViewPager);
-
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-						.setAction("Action", null).show();
-			}
-		});
-		fab.hide();
 		invalidateOptionsMenu();
 	}
 
@@ -183,7 +176,19 @@ public class ChatsActivity extends BaseActivity {
 			public void onClick(View view) {
 				name = groupName.getText().toString().trim();
 				desc = groupDesc.getText().toString().trim();
-				OpenDialog2(type);
+				boolean pass = true;
+				if(name.isEmpty()){
+					pass = false;
+					groupName.requestFocus();
+					groupName.setError("Title cannot be empty");
+				}if(desc.isEmpty()){
+					pass = false;
+					groupDesc.requestFocus();
+					groupDesc.setError("This field is required");
+				}
+				if(pass) {
+					OpenDialog2(type);
+				}
 			}
 		});
 		cancel.setOnClickListener(new View.OnClickListener() {
@@ -215,18 +220,25 @@ public class ChatsActivity extends BaseActivity {
 				for(int i=0; i<a.size();i++){
 					ids[i]=a.get(i).intValue();
 				}
-				Engine.createGroup(getApplicationContext(), ids, name, desc, null,
-						type, new RequestTemplate.ServiceCallback() {
-							@Override
-							public void execute(JSONObject obj) {
-								Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
-								dial.dismiss();
-								finish();
-								Intent i = getIntent();
-								i.putExtra("chatroom", "org");
-								startActivity(i);
-							}
-						});
+					Engine.createGroup(getApplicationContext(), ids, name, desc, null,
+							type, new RequestTemplate.ServiceCallback() {
+								@Override
+								public void execute(JSONObject obj) {
+									Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_SHORT).show();
+									Engine.getThreads(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+										@Override
+										public void execute(JSONObject obj) {
+											dial.dismiss();
+											finish();
+											Intent i = getIntent();
+											i.putExtra("chatroom", "org");
+											startActivity(i);
+										}
+									});
+
+								}
+							});
+
 			}
 		});
 		cancel.setOnClickListener(new View.OnClickListener() {
