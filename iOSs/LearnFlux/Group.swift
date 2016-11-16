@@ -56,7 +56,14 @@ class Group{
         if let s = data[keyGroupName.message] as? dictType { thread = Thread(dict: s)}
         if let s = data[keyGroupName.child] { child = Group.convertFromArr(s); }
         if let s = data[keyGroupName.image] as? String { imageString = s; loadImage(imageHasLoaded) }
-        if let s = data[keyGroupName.role] as? String { role = s }
+        if let s = data[keyGroupName.role] as? String {
+            role = s
+            if child != nil{
+                for i in 0..<child!.count{
+                    child![i].role = role
+                }
+            }
+        }
     }
     
     func loadImage(callback: ((type: Int, id: String, status: Bool) -> Void)?){
@@ -76,7 +83,14 @@ class Group{
     func update(dict: Dictionary<String, AnyObject>){
         if let s = dict[keyGroupName.description] as? String { description = s }
         if let s = dict[keyGroupName.message] as? dictType { thread = Thread(dict: s) }
-        if let s = dict[keyGroupName.child] as? Array<Dictionary<String, AnyObject>> { child = Group.convertFromArr(s) }
+        if let s = dict[keyGroupName.child] as? Array<Dictionary<String, AnyObject>> {
+            child = Group.convertFromArr(s)
+            if role != nil{
+                for i in 0..<child!.count{
+                    child![i].role = role
+                }
+            }
+        }
     }
     
     static func convertFromArr(arr: AnyObject?) -> [Group]? {

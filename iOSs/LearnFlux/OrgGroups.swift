@@ -128,14 +128,7 @@ class OrgGroups : UIViewController, UICollectionViewDelegate, UICollectionViewDa
         guard let data = groups else { return; }
         let vc = Util.getViewControllerID("GroupDetails") as! GroupDetails;
         vc.initFromCall(data[indexPath.row]);
-        if pushDelegate == nil{
-            Engine.getGroupInfo(groupId: data[indexPath.row].id){status, group in
-                if let group = group where status == .Success{
-                    vc.initFromCall(group)
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }
-            }
-        }else{
+        if pushDelegate != nil{
             vc.initFromCall(data[indexPath.row]);
             pushDelegate.pushViewController(vc, animated: true);
         }

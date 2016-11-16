@@ -16,8 +16,10 @@ class InterestGroups: UIViewController {
     let clientData = Engine.clientData
     @IBOutlet weak var collectionViewGroups: UICollectionView!
     @IBOutlet weak var tableViewSuggestGroups: UITableView!
+    @IBOutlet weak var tableViewSearchResult: UITableView!
     @IBOutlet weak var imageViewNoGroup: UIImageView!
     @IBOutlet weak var buttonSeeAllInterestGroup: UIButton!
+    @IBOutlet weak var textfieldSearch: UITextField!
     var suggestGroups = [["name" : "Early Childhood Education",
                           "details" : "The National Association for the Education of Young Children",
                           "members" : "370",
@@ -26,6 +28,13 @@ class InterestGroups: UIViewController {
                           "details" : "The National Association for the Education of Young Children",
                           "members" : "280",
                           "logo" : "company2.png"]]
+    var searchResult = [Group](){
+        didSet{
+//            getImageSearchResult(&searchResult)
+            tableViewSearchResult.reloadData()
+//            loadImageResult(searchResult)
+        }
+    }
     
     @IBAction func buttonAddNewInterestGroupTapped(sender: UIButton) {
         performSegueWithIdentifier("NewGroups", sender: nil)
@@ -88,27 +97,86 @@ class InterestGroups: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    var doSearch = false{
+        didSet{
+            if doSearch{
+                viewResultSearch.hidden = false
+                Engine.requestSearch(keySearch: textfieldSearch.text!){ data in
+                    var groups = data.2
+                    for i in 0..<groups.count{
+                        if let index = self.clientData.getGroups(.Group).indexOf({ $0.id == groups[i].id }){
+                            groups[i] = self.clientData.getGroups()[index]
+                        }
+                    }
+                    self.searchResult = groups
+                }
+            }else{
+                viewResultSearch.hidden = true
+            }
+        }
+    }
 
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var middleView: UIView!
     @IBOutlet weak var lowerView: UIView!
+    @IBOutlet weak var viewSearch: UIView!
+    @IBOutlet weak var buttonSearchHeader: UIButton!
+    @IBOutlet weak var viewResultSearch: NotificationView!
+    
+    @IBAction func buttonSearchHeaderTapped(sender: UIButton) {
+        viewSearch.alpha = 1.0
+        textfieldSearch.becomeFirstResponder()
+    }
+    
+    @IBAction func textfieldSearchChanged(sender: UITextField) {
+        if sender.text!.isEmpty{
+            doSearch = false
+        }else{
+            doSearch = true
+        }
+    }
+    
+    @IBAction func buttonBackSearch(sender: UIButton) {
+        viewSearch.alpha = 0
+        textfieldSearch.resignFirstResponder()
+        doSearch = false
+    }
 }
 
 // - MARK Table View
 extension InterestGroups: UITableViewDataSource, UITableViewDelegate{
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        return 2
+        switch tableView {
+        case tableViewSuggestGroups:
+            return numberOfRowTableViewSuggestGroups(section)
+        case tableViewSearchResult:
+            return numberOfRowTableViewSearchResult(section)
+        default: return 0
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as! IGSuggestCell
-        cell.setValues(suggestGroups[indexPath.row])
-        
-        return cell
+        switch tableView {
+        case tableViewSuggestGroups:
+            return cellForRowTableViewSuggestGroups(indexPath)
+        case tableViewSearchResult:
+            return cellForRowTableViewSearchResult(indexPath)
+        default: return UITableViewCell()
+        }
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
-        return tableView.frame.height / 2
+        var cell = UITableViewCell()
+        switch tableView {
+        case tableViewSuggestGroups:
+            cell.frame.size.height = tableView.frame.height / 2
+        case tableViewSearchResult:
+            cell = cellForRowTableViewSearchResult(indexPath)
+        default:
+            cell.frame.size.height = 0
+        }
+        return cell.frame.height
     }
 }
 
@@ -134,6 +202,38 @@ extension InterestGroups: UICollectionViewDelegate, UICollectionViewDataSource, 
     }
 }
 
+// - MARK TableView Helper
+extension InterestGroups{
+    func numberOfRowTableViewSearchResult(section: Int) -> Int{
+        return searchResult.count
+    }
+    
+    func cellForRowTableViewSearchResult(indexPath: NSIndexPath) -> UITableViewCell{
+        var cell = UITableViewCell()
+        let groupCell = tableViewSearchResult.dequeueReusableCellWithIdentifier("Group") as! GroupCell
+        let group = searchResult[indexPath.row]
+//        groupCell.delegate = self
+        if let index = clientData.getGroups(.Group).indexOf({ $0.id == group.id }){
+            groupCell.setValues(indexPath, group: clientData.getGroups(.Group)[index], forSearch: true)
+        }else{
+            groupCell.setValues(indexPath, group: group, type: 1, forSearch: true)
+        }
+        cell = groupCell
+        return cell
+    }
+    
+    func numberOfRowTableViewSuggestGroups(section: Int) -> Int{
+        return 2
+    }
+    
+    func cellForRowTableViewSuggestGroups(indexPath: NSIndexPath) -> UITableViewCell{
+        let cell = tableViewSuggestGroups.dequeueReusableCellWithIdentifier("Cell")! as! IGSuggestCell
+        cell.setValues(suggestGroups[indexPath.row])
+        
+        return cell
+    }
+}
+
 // - MARK Mock Up
 extension InterestGroups{
     func mockUp(){
@@ -154,6 +254,8 @@ extension InterestGroups{
             }
             collectionViewGroups.reloadData()
         }
+        viewSearch.alpha = 0
+        viewResultSearch.customInit(self, viewIndicator: viewSearch, type: .SearchHeader)
     }
     
     func setAccNavBar(){

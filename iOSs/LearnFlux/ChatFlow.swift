@@ -325,7 +325,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
                 userInfo["lastSync"] = NSDate().timeIntervalSince1970
             }
         }
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
+        timer = NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
     }
     
     func getNewMessages(timer: NSTimer?){
@@ -335,13 +335,14 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         }else{
             lastSync = NSDate().timeIntervalSince1970
         }
-        Engine.getNewMessages(self, indexpath: clientData.getMyThreads()![rowIndexPathFromThread].normalIndex, lastSync: lastSync){status, newMessage, lastSync in
+        Engine.getNewMessages(self, indexpath: clientData.getMyThreads()![rowIndexPathFromThread].normalIndex, lastSync: lastSync){[weak self]status, newMessage, lastSync in
+            guard let s = self else{ return }
             print(status, newMessage, lastSync)
             if let conNewMessage = newMessage{
                 func filterNewMessage(con: Array<Thread.ThreadMessage>) -> Array<Thread.ThreadMessage>{
                     var message : Array<Thread.ThreadMessage> = []
                     for each in con{
-                        if each.message.senderId == String(self.clientData.cacheSelfId()) && each.meta["type"] as! String == "chat"{
+                        if each.message.senderId == String(s.clientData.cacheSelfId()) && each.meta["type"] as! String == "chat"{
                             continue
                         }
                         message.append(each)
@@ -349,12 +350,12 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
                     return message
                 }
                 let filteredMessage = filterNewMessage(conNewMessage)
-                self.messages += filteredMessage
-                Engine.clientData.getMyThreads()![self.rowIndexPathFromThread].addMessages(filteredMessage)
-                self.finishSendingMessageAnimated(true)
+                s.messages += filteredMessage
+                Engine.clientData.getMyThreads()![s.rowIndexPathFromThread].addMessages(filteredMessage)
+                s.finishSendingMessageAnimated(true)
             }
-            self.lastTimestampToRequestNewMessage = lastSync
-            self.callGetNewMessages(self.lastTimestampToRequestNewMessage)
+            s.lastTimestampToRequestNewMessage = lastSync
+            s.callGetNewMessages(s.lastTimestampToRequestNewMessage)
         }
     }
     

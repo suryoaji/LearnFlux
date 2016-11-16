@@ -26,8 +26,7 @@ class Menu : UITableViewController {
     }
     
     func checkLastViewController() -> NSIndexPath?{
-        if self.revealController.frontViewController.isKindOfClass(NavController){
-            let navController = self.revealController.frontViewController as! NavController
+        if let navController = self.revealController.frontViewController as? NavController{
             return getIndexPathOf(navController.viewControllers.last!)
         }
         return nil

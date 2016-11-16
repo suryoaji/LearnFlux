@@ -180,11 +180,6 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
         
         self.orgImageViewLogo.image = clientData.getGroups().filter({ $0.id == orgId }).first!.image ?? nil
         
-        refreshData() {
-            self.createScrollView()
-            self.propagateData();
-        }
-        
         let menuTitle = ["Edit Organisation...", "Create Official Group...", "Manage Official Group..."];
         menu = AZDropdownMenu(titles: menuTitle)
         self.lblTitle.text = self.orgTitle
@@ -195,6 +190,10 @@ class OrgDetails: UIViewController, PushDelegate, RefreshDelegate {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        refreshData() {
+            self.createScrollView()
+            self.propagateData();
+        }
         NSNotificationCenter.defaultCenter().postNotificationName("OrgDetailAppearNotification", object: nil)
     }
     

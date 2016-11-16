@@ -794,10 +794,27 @@ class Engine : NSObject {
                 if callback != nil { callback!(status, nil) }
                 return
             }
-            if let index = clientData.getGroups().indexOf({ $0.id == data[keyGroupName.id] as! String }){
-                clientData.getGroups()[index].update(data)
-                if callback != nil { callback!(status, clientData.getGroups()[index]) }
+            
+            let index = clientData.getGroups().indexOf({ a in
+                if a.id == data[keyGroupName.id] as! String{
+                    return true
+                }
+                if a.child != nil && a.child!.contains({ $0.id == data[keyGroupName.id] as! String }){
+                    return true
+                }
+                return false
+            })
+            if index != nil{
+                if clientData.getGroups()[index!].id == data[keyGroupName.id] as! String{
+                    clientData.getGroups()[index!].update(data)
+                    if callback != nil { callback!(status, clientData.getGroups()[index!]) }
+                }else if let indexChild = clientData.getGroups()[index!].child!.indexOf({ $0.id == data[keyGroupName.id] as! String }){
+                    clientData.getGroups()[index!].child![indexChild].update(data)
+                    if callback != nil { callback!(status, clientData.getGroups()[index!].child![indexChild]) }
+                }
             }else{
+                //butuh perubahan. karena setiap buat group akan men load image jika group memiliki link image
+                print("sendGroupbaru. Func in Engine")
                 if callback != nil { callback!(status, Group(dict: data)) }
             }
         }
