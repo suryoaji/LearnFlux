@@ -75,87 +75,83 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         self.openedBy = from
     }
     
-    func updateChatView(JSON : AnyObject? = nil){
-        let oldCount = localChat.count;
-        
-        if (JSON == nil) {
-            if (Engine.clientData.defaults.valueForKey(chatId) != nil) {
-                localChat = Engine.clientData.defaults.valueForKey(chatId)! as! Array<AnyObject>
-            }
-        }
-        else {
-            let data = JSON!.valueForKey("data")!;
-//            print (data);
-            let messages = data.valueForKey("messages")!;
-//            print(messages);
-            if (messages.isKindOfClass(NSArray)) {
-                self.localChat = messages as! Array<AnyObject>;
-            }
-        }
-        var newMessageCount = 0;
-        
-        if localChat.count > oldCount {
-            for i in oldCount..<localChat.count {
-                newMessageCount += 1
-                
-                let curChat = localChat[i] as! NSDictionary;
-                let senderWrapper = curChat.valueForKey("sender")! as! NSDictionary;
-                let senderId = senderWrapper.valueForKey("id")! as! Int;
-                let messageBody = curChat.valueForKey("body")! as! String;
-                let timeStamp = curChat.valueForKey("created_at")! as! Double;
-                
-                if (String(senderId) == self.senderId) {
-                    if (ownMessagePendingCount > 0) {
-                        ownMessagePendingCount = ownMessagePendingCount - 1;
-                    }
-                    else {
-                        addMessage("\(senderId)", text: messageBody, timeInterval: timeStamp);
-                    }
-                }
-                else {
-                    addMessage("\(senderId)", text: messageBody, timeInterval: timeStamp);
-                }
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                var temp = "";
-                if (self.inputToolbar.contentView.textView.text != nil) {
-                    temp = self.inputToolbar.contentView.textView.text;
-                }
-                
-                if (self.shouldFinishSendingMessage) {
-                    self.finishSendingMessage();
-                    self.pendingMessageCount = 0;
-                }
-                else {
-                    self.pendingMessageCount += newMessageCount;
-                }
-                
-                self.inputToolbar.contentView.textView.text = temp;
-                self.inputToolbar.toggleSendButtonEnabled();
-            }
-        }
-        
-        if (pendingMessageCount > 0) {
-//            print ("Have Pending Message (\(self.pendingMessageCount))!");
-        }
-        
-        if (pendingMessageCount > 0 && self.shouldFinishSendingMessage) {
-            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                var temp = "";
-                if (self.inputToolbar.contentView.textView.text != nil) {
-                    temp = self.inputToolbar.contentView.textView.text;
-                }
-                
-                self.finishSendingMessage();
-                self.pendingMessageCount = 0;
-                
-                self.inputToolbar.contentView.textView.text = temp;
-                self.inputToolbar.toggleSendButtonEnabled();
-            }
-        }
-
-    }
+//    func updateChatView(JSON : AnyObject? = nil){
+//        let oldCount = localChat.count;
+//        
+//        if (JSON == nil) {
+//            if (Engine.clientData.defaults.valueForKey(chatId) != nil) {
+//                localChat = Engine.clientData.defaults.valueForKey(chatId)! as! Array<AnyObject>
+//            }
+//        }
+//        else {
+//            let data = JSON!.valueForKey("data")!;
+////            print (data);
+//            let messages = data.valueForKey("messages")!;
+////            print(messages);
+//            if (messages.isKindOfClass(NSArray)) {
+//                self.localChat = messages as! Array<AnyObject>;
+//            }
+//        }
+//        var newMessageCount = 0;
+//        
+//        if localChat.count > oldCount {
+//            for i in oldCount..<localChat.count {
+//                newMessageCount += 1
+//                
+//                let curChat = localChat[i] as! NSDictionary;
+//                let senderWrapper = curChat.valueForKey("sender")! as! NSDictionary;
+//                let senderId = senderWrapper.valueForKey("id")! as! Int;
+//                let messageBody = curChat.valueForKey("body")! as! String;
+//                let timeStamp = curChat.valueForKey("created_at")! as! Double;
+//                
+//                if (String(senderId) == self.senderId) {
+//                    if (ownMessagePendingCount > 0) {
+//                        ownMessagePendingCount = ownMessagePendingCount - 1;
+//                    }
+//                    else {
+//                        addMessage("\(senderId)", text: messageBody, timeInterval: timeStamp);
+//                    }
+//                }
+//                else {
+//                    addMessage("\(senderId)", text: messageBody, timeInterval: timeStamp);
+//                }
+//            }
+//            
+//            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+//                var temp = "";
+//                if (self.inputToolbar.contentView.textView.text != nil) {
+//                    temp = self.inputToolbar.contentView.textView.text;
+//                }
+//                
+//                if (self.shouldFinishSendingMessage) {
+//                    self.finishSendingMessage();
+//                    self.pendingMessageCount = 0;
+//                }
+//                else {
+//                    self.pendingMessageCount += newMessageCount;
+//                }
+//                
+//                self.inputToolbar.contentView.textView.text = temp;
+//                self.inputToolbar.toggleSendButtonEnabled();
+//            }
+//        }
+//        
+//        if (pendingMessageCount > 0 && self.shouldFinishSendingMessage) {
+//            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+//                var temp = "";
+//                if (self.inputToolbar.contentView.textView.text != nil) {
+//                    temp = self.inputToolbar.contentView.textView.text;
+//                }
+//                
+//                self.finishSendingMessage();
+//                self.pendingMessageCount = 0;
+//                
+//                self.inputToolbar.contentView.textView.text = temp;
+//                self.inputToolbar.toggleSendButtonEnabled();
+//            }
+//        }
+//
+//    }
     
     override func scrollViewDidScroll(aScrollView: UIScrollView) {
         let offset: CGPoint = aScrollView.contentOffset
@@ -164,21 +160,8 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         let inset: UIEdgeInsets = aScrollView.contentInset
         let y: CGFloat = offset.y + bounds.size.height - inset.bottom
         let h: CGFloat = size.height
-        // NSLog(@"offset: %f", offset.y);
-        // NSLog(@"content.height: %f", size.height);
-        // NSLog(@"bounds.height: %f", bounds.size.height);
-        // NSLog(@"inset.top: %f", inset.top);
-        // NSLog(@"inset.bottom: %f", inset.bottom);
-        // NSLog(@"pos: %f of %f", y, h);
-//        print ("pos \(round(y)) of \(round(h))");
         let reload_distance: CGFloat = 50
-        if y > h - reload_distance {
-            shouldFinishSendingMessage = true;
-        }
-        else {
-            shouldFinishSendingMessage = false;
-        }
-//        print ("should finish sending message? \(shouldFinishSendingMessage)");
+        shouldFinishSendingMessage = y > h-reload_distance ? true : false
     }
     
     func setButtonAttachmentNImportantChatToolbar(){
@@ -196,13 +179,9 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         importantButton.frame = CGRectMake(30, 0, 25, height)
         importantButton.tag = 11;
         self.inputToolbar.contentView.leftBarButtonItemWidth = 55
-        //        self.inputToolbar.contentView.rightBarButtonItemWidth = 50
         self.inputToolbar.contentView.leftBarButtonContainerView.addSubview(attachButton)
         self.inputToolbar.contentView.leftBarButtonContainerView.addSubview(importantButton)
-        //        self.inputToolbar.contentView.rightBarButtonItem.setImage(UIImage(named: "sendButton"), forState: .Normal)
-        //        self.inputToolbar.contentView.rightBarButtonItem.setTitle("", forState: .Normal)
         self.inputToolbar.contentView.leftBarButtonItem.hidden = true
-        //        self.inputToolbar.contentView.rightBarButtonItem.hidden = false;
     }
     
     func initAttachmentPanel() {
@@ -254,8 +233,7 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         let messages = clientData.getMyThreads()![rowIndexPathFromThread].messages
         let participants = clientData.getMyThreads()![rowIndexPathFromThread].participants
         let titleMessage = self.title!.lowercaseString
-        
-        if participants.count == 2 && (messages == nil || messages!.isEmpty){
+        if participants.count == 1 && (messages == nil || messages!.isEmpty){
             let theParticipant = participants.filter({ $0.user!.userId! != clientData.cacheSelfId() }).first!
             if titleMessage.containsString(theParticipant.user!.firstName!.lowercaseString){
                 Engine.removeThread(threadId: self.chatId){status, JSON in }
@@ -265,67 +243,48 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     }
     
     func initParticipantsPanel(){
-        var textParticipants = ""
-        let arrIdParticipants = clientData.getMyThreads()![rowIndexPathFromThread].participants
-        var conArr : Array<Int>= []
-        loopCheck : for i in arrIdParticipants{
-            for x in conArr{
-                if x == i.user?.userId{ continue loopCheck }
-            }
-            if let userId = i.user!.userId{
-                if userId == clientData.cacheSelfId(){
-                    continue loopCheck
-                }
-            }
-            conArr.append((i.user?.userId)!)
-        }
-        for i in 0..<conArr.count{
-            if i != conArr.count - 1{
-                textParticipants += "\(conArr[i]), "
-            }else{
-                textParticipants += "\(conArr[i])"
-            }
-        }
+        let arrParticipants = clientData.getMyThreads()![rowIndexPathFromThread].participants
         self.participantsPanel.frame.size.width = self.view.frame.size.width
-        self.labelPartipicants.text = textParticipants
+        self.labelPartipicants.text = arrParticipants.map({ "\($0.user!.userId!)" }).joinWithSeparator(", ")
         self.view.addSubview(self.participantsPanel)
     }
     
     func setChatRoomInfo(){
-        self.title = Engine.generateThreadName(Engine.clientData.getMyThreads()![self.rowIndexPathFromThread])
+        self.title = Engine.generateThreadName(Engine.clientData.getMyThreads()![self.rowIndexPathFromThread]).capitalizedString
         self.thisChatType = "chat"
         self.thisChatMetadata = ["title" : title!]
         if let me = Engine.clientData.cacheMe(){
             self.senderId = String(me["id"] as! Int)
         }
-        self.senderDisplayName = "";
-        
+        self.senderDisplayName = ""
         initRightBarButton()
         initTitleBarButton()
         initParticipantsPanel()
     }
     
     var timer = NSTimer()
+    var shouldReloadMessage = true
     func loadMessages(){
-//        self.messages = getJSQMessages(self.chatId)
         if let messages = Engine.clientData.getMyThreads()![rowIndexPathFromThread].messages{
             self.messages = messages
         }
-        self.updateChatView()
+//        self.updateChatView()
     }
     
     func callGetNewMessages(lastSync: Double? = nil){
-        var userInfo : Dictionary<String, AnyObject> = [:]
-        if lastSync != nil{
-            userInfo["lastSync"] = lastSync
-        }else{
-            if let cacheLastSync = Engine.clientData.cacheLastSyncThreads(){
-                userInfo["lastSync"] = cacheLastSync
+        if shouldReloadMessage{
+            var userInfo : Dictionary<String, AnyObject> = [:]
+            if lastSync != nil{
+                userInfo["lastSync"] = lastSync
             }else{
-                userInfo["lastSync"] = NSDate().timeIntervalSince1970
+                if let cacheLastSync = Engine.clientData.cacheLastSyncThreads(){
+                    userInfo["lastSync"] = cacheLastSync
+                }else{
+                    userInfo["lastSync"] = NSDate().timeIntervalSince1970
+                }
             }
+            timer = NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
         }
-        timer = NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: #selector(self.getNewMessages), userInfo: userInfo, repeats: false)
     }
     
     func getNewMessages(timer: NSTimer?){
@@ -375,18 +334,8 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        title = "ChatChat"
-//        print ("Chat Flow =======");
-//        print ("Chat ID = \(chatId)");
-//        print ("Chat Participants ID: \(participantsId)");
         self.createLayoutChatRoom()
         self.getIdGroupOfThisThread()
-//        let attachment = UIButton(type: .System);
-//        attachment.setImage(UIImage(named: "clip-18"), forState: UIControlState.Normal);
-//        self.inputToolbar.contentView.leftBarButtonItem = attachment;
-//        // No avatars
-//        collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
-//        collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
     }
     
     func showMenu(){
@@ -397,12 +346,14 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         super.viewWillAppear(animated)
         getNewMessages(nil)
         self.setObserver()
+        self.shouldReloadMessage = true
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         if timer.valid{ timer.invalidate() }
         self.removeAllObserver()
+        self.shouldReloadMessage = false
     }
     
     func setObserver(){
@@ -473,56 +424,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         }
     }
     
-//    func initAttachmentPanelOld() {
-//        let container = attachmentPanel;
-//        var containerHeight:CGFloat = 200;
-//        container.x = 0;
-//        container.y = scrHeight - 200;
-//        container.height = 200 - 43;
-//        container.width = scrWidth;
-//        container.backgroundColor = UIColor.init(red: 230/255, green: 230/255, blue: 230/255, alpha: 1);
-//        self.view.addSubview(container);
-//        
-//        let spacing:CGFloat = 10;
-//        
-//        let btnEvent = UIButton(type: UIButtonType.System);
-//        let btnPoll = UIButton(type: UIButtonType.System);
-//        //        let btnPicture = UIButton();
-//        //        let btnVideo = UIButton();
-//        //        let btnFiles = UIButton();
-//        
-//        btnEvent.frame = CGRectMake(spacing, spacing, (scrWidth - spacing) / 2 - spacing, 44);
-//        btnPoll.frame = CGRectMake((scrWidth + spacing) / 2, spacing, (scrWidth - spacing) / 2 - spacing, 44);
-//        
-//        
-//        btnEvent.setTitle(" Event", forState: .Normal);
-//        btnPoll.setTitle(" Poll", forState: .Normal);
-//        
-//        btnEvent.setImage(UIImage(named: "calendar-24"), forState: .Normal);
-//        btnPoll.setImage(UIImage(named: "line_chart-24"), forState: .Normal);
-//        
-//        btnEvent.titleLabel!.font = UIFont(name: "System", size: 18);
-//        btnPoll.titleLabel!.font = UIFont(name: "System", size: 18);
-//        
-//        btnEvent.backgroundColor = UIColor.init(red: 247/255, green: 247/255, blue: 247/255, alpha: 1);
-//        btnPoll.backgroundColor = UIColor.init(red: 247/255, green: 247/255, blue: 247/255, alpha: 1);
-//        
-//        btnEvent.tag = 1;
-//        btnPoll.tag = 2;
-//        
-//        btnEvent.addTarget(self, action: #selector (self.attachmentClick), forControlEvents: .TouchUpInside);
-//        btnPoll.addTarget(self, action: #selector (self.attachmentClick), forControlEvents: .TouchUpInside);
-//        
-//        container.addSubview(btnEvent);
-//        container.addSubview(btnPoll);
-//        
-//        containerHeight = spacing * 2 + btnEvent.height;
-//        container.height = containerHeight;
-//        container.y = scrHeight - containerHeight - 43;
-//        
-//        container.y = scrHeight;
-//    }
-    
     func isAttachmentPanelVisible () -> Bool {
 //        print ("\(attachmentPanel.x), \(attachmentPanel.y), \(attachmentPanel.width), \(attachmentPanel.height)");
         if self.isKeyboardShown{
@@ -557,8 +458,6 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
         else {
             self.attachmentPanel.frame = CGRectOffset(frame, 0, offsetY)
         }
-//        self.inputToolbar.contentView.textView.resignFirstResponder();
-//        self.view.window?.endEditing(true);
     }
     
     func addMessage(id: String, text: String, date: NSDate = NSDate(), event: NSDictionary? = nil, poll: Dictionary<String, AnyObject>? = nil) {
@@ -724,21 +623,12 @@ class ChatFlow : JSQMessagesViewController, AttachEventReturnDelegate, AttachPol
     }
     
     @IBAction func pulldownClick (sender: AnyObject) {
-//        attachEventTv = AttachEvent();
-//        attachEventTv = Util.getViewControllerID("AttachEvent") as! AttachEvent;
-//        pulldownPanelContent.addSubview(attachEventTv.tableView);
-//        attachEventTv.tableView.frame = pulldownPanelContent.bounds;
-//        attachEventTv.tableView.reloadData();
-//        pulldownPanelContent.clip
-//        self.view.addSubview(pulldownPanelContent);
-        
         if (thisChatType == "event") {
             popupEvent(-2);
         }
         else if (thisChatType == "poll") {
             popupPoll(-2);
         }
-        
     }
     
     func updateRowIndexPathFromThread(){
@@ -781,14 +671,21 @@ extension ChatFlow{
     
     override func collectionView(collectionView: JSQMessagesCollectionView!,
                                  avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
-        return JSQMessagesAvatarImage.initWithSenderId(messages[indexPath.row].message.senderId)
+        let thread = Engine.clientData.getMyThreads()![rowIndexPathFromThread]
+        return JSQMessagesAvatarImage.customInit(thread, indexPathMessage: indexPath)
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
-        if messages[indexPath.row].message.senderId == String(clientData.cacheSelfId()){
+        let thread = Engine.clientData.getMyThreads()![rowIndexPathFromThread]
+        let message = messages[indexPath.row]
+//        let message = thread.messages![indexPath.row]
+        if message.message.senderId == "\(clientData.cacheSelfId())"{
             return NSAttributedString(string: "Pengirim")
+        }else if let sender = thread.participants.filter({ $0.user!.userId! == Int(message.message.senderId)! }).first{
+            return NSAttributedString(string: "\(sender.user!.firstName!.capitalizedString) \(sender.user!.lastName?.capitalizedString ?? "")")
+        }else{
+            return NSAttributedString()
         }
-        return NSAttributedString(string: "Penerima")
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
@@ -970,9 +867,7 @@ extension ChatFlow : CZPickerViewDataSource, CZPickerViewDelegate{
             return "Will you attend this Event?"
         }
         let title = data["title"] as! String
-//        let location = data["location"] as! String
         return "\(title)"
-//        return "\(title) at \(location)"
     }
     
     func rsvpByRow(selectedRow: Int) -> (Int){

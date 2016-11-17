@@ -437,8 +437,18 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+//    override func viewDidAppear(animated: Bool) {
+//        super.viewDidAppear(animated)
+//        mockUpFirstAppear()
+//        originalSizeConnectionTableView = tableViewConnectionLower.frame
+//        
+//        if !shouldEditMyProfile{ tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 4)], withRowAnimation: .None) }
+//        
+//        if type == .Mine{ reloadFriendsTimedly() }
+//    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         mockUpFirstAppear()
         originalSizeConnectionTableView = tableViewConnectionLower.frame
         
@@ -1655,7 +1665,6 @@ extension Profile{
     }
     
     func setScrollView(){
-        
         let yPosition = headerView.frame.origin.y + headerView.frame.height
         let height = self.view.height - yPosition
         containerScrollView.frame.origin.y = yPosition

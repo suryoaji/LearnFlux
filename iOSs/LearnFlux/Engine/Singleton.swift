@@ -134,9 +134,9 @@ class Data : NSObject {
     
     func checkAllDataReady(){
         if threads != nil && groups != nil && events != nil && connection != nil{
-            if groups!.filter({ $0.participants != nil && !$0.participants!.isEmpty }).count == groups!.count{
+//            if groups!.filter({ $0.participants != nil && !$0.participants!.isEmpty }).count == groups!.count{
                 NSNotificationCenter.defaultCenter().postNotificationName("dataSingletonReady", object: nil)
-            }
+//            }
         }
     }
     
@@ -357,7 +357,6 @@ class Data : NSObject {
                 conThreads.append(Thread(dict: arr[i], index: i))
             }
         }
-//        self.threads = !conThreads.isEmpty ? conThreads : nil
         self.threads = conThreads
     }
     

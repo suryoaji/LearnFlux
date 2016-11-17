@@ -106,6 +106,7 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         orgEventsDelegate.setIdGroupOfEvents(idGroup: group!.id)
         orgEventsDelegate.setIsAdminOrNot(isAdmin)
         orgEventsDelegate.setParentController(.GroupDetail)
+        indexActiveTabs = index
         changeView(index)
     }
     

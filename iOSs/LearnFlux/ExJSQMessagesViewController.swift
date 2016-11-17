@@ -81,4 +81,19 @@ extension JSQMessagesAvatarImage{
             return JSQMessagesAvatarImage(avatarImage:img2, highlightedImage: img2, placeholderImage: placeholder)
         }
     }
+    
+    static func customInit(thread: Thread, indexPathMessage: NSIndexPath) -> JSQMessagesAvatarImage?{
+        let message = thread.messages![indexPathMessage.row]
+        if message.message.senderId == "\(Engine.clientData.cacheSelfId())"{
+            return nil
+        }else if let sender = thread.participants.filter({ $0.user!.userId! == Int(message.message.senderId)! }).first{
+            let img = JSQMessagesAvatarImageFactory.circularAvatarImage(sender.user!.photo ?? UIImage(named: "user_male-24"), withDiameter: 48)
+            let placeholder = UIImage(named: "user_male-24")
+            return JSQMessagesAvatarImage(avatarImage:img, highlightedImage: img, placeholderImage: placeholder)
+        }else{
+            let img2 = JSQMessagesAvatarImageFactory.circularAvatarImage(UIImage(named: "male01.png"), withDiameter: 48)
+            let placeholder = UIImage(named: "user_male-24")
+            return JSQMessagesAvatarImage(avatarImage:img2, highlightedImage: img2, placeholderImage: placeholder)
+        }
+    }
 }

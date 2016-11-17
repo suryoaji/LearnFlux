@@ -827,10 +827,10 @@ class Engine : NSObject {
         }
         let param = ["lastSync" : String(lastSync)]
         makeRequestAlamofire(viewController, method: .GET, url: Url.messages, param: param) { status, rawJSON in
-            if (rawJSON != nil) {
-                if (rawJSON!.valueForKey("data") != nil) {
-                    let data = rawJSON!.valueForKey("data")! as! Array<Dictionary<String, AnyObject>>
-                    let newSync = rawJSON!.valueForKey("lastSync") as! Double
+            if let rawJSON = rawJSON where status == .Success{
+                if let data = rawJSON["data"] as? Array<Dictionary<String, AnyObject>>{
+                    let data = data
+                    let newSync = rawJSON["lastSync"] as! Double
                     if data.isEmpty{
                         clientData.saveAllThreads([], lastSync: String(newSync))
                         clientData.setThreads([])

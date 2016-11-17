@@ -9,7 +9,7 @@
 import UIKit
 import JSQMessagesViewController
 
-class Thread: NSObject {
+class Thread {
     typealias secret = (type: Bool, idType: String?, id: String)
     typealias ThreadMessage = (message: JSQMessage, meta: Dictionary<String, AnyObject>, secret: secret?)
     
@@ -24,26 +24,20 @@ class Thread: NSObject {
         }
     }
     var participants : [Participant]!
-    
-    init(id: String, participants: [Participant]) {
-        self.id = id
-        self.participants = participants
-    }
     var lastUpdated: Double!
     var normalIndex: Int!
     
     init(dict: Dictionary<String, AnyObject>, isNew: Bool = false, index: Int? = nil) {
-        super.init()
         self.id = dict["id"] as! String
-        self.participants = Participant.convertFromArr(dict["participants"]); //setPropertyParticipants(dict["participants"] as! Array<Dictionary<String, AnyObject>>)
+        self.participants = Participant.convertFromArr(dict["participants"])
         if let title = dict["title"]{
             self.title = title as? String
         }
         if isNew{
-            self.setPropertyLastUpdated(NSDate().timeIntervalSince1970)
+            self.lastUpdated = NSDate().timeIntervalSince1970
             self.normalIndex = Engine.clientData.getMyThreads()!.count
         }else{
-            self.setPropertyLastUpdated(0)
+            self.lastUpdated = 0
             if index != nil{ self.normalIndex = index! }
         }
         if let rawMessages = dict["messages"]{
@@ -51,15 +45,11 @@ class Thread: NSObject {
         }
     }
     
-    func setPropertyLastUpdated(timestamp: Double){
-        self.lastUpdated = timestamp
-    }
-    
     func setPropertyLastUpdated(arrMessage: [ThreadMessage]){
         if !arrMessage.isEmpty{
-            self.setPropertyLastUpdated(arrMessage[arrMessage.count-1].message.date.timeIntervalSince1970)
+            self.lastUpdated = arrMessage[arrMessage.count-1].message.date.timeIntervalSince1970
         }else{
-            self.setPropertyLastUpdated(0)
+            self.lastUpdated = 0
         }
     }
     
@@ -121,7 +111,7 @@ class Thread: NSObject {
         let rawDate = tRawDate as! Double
         let message = setJSQMessage(String(senderMessage["id"] as! Int),
                                            text     : tText as! String,
-                                           reference: dict["reference"],
+                                           reference: dict["reference"] != nil ? dict : nil,
                                            date     : NSDate(timeIntervalSince1970: rawDate))
         let meta = setMetaMessage(dict["reference"], text: tText as! String)
         let secret = setSecretMessage(tId as! String, reference: dict["reference"])
@@ -150,14 +140,19 @@ class Thread: NSObject {
     }
     
     static func textFromRef(ref: Dictionary<String, AnyObject>) -> (String){
-        if (ref["type"] as! String).lowercaseString == "event"{
-            let title = ref["title"] as! String
-            let rawDate = Util.getDateFromTimestamp(ref["timestamp"] as! Double)
+        guard let reference = ref["reference"] as? Dictionary<String, AnyObject> else{
+            return ""
+        }
+        let sender = ref["sender"] as! Dictionary<String, AnyObject>
+        let name = "\(sender[keyCacheMe.firstName]!) \(sender[keyCacheMe.lastName] != nil ? sender[keyCacheMe.lastName]! : "") ".capitalizedString
+        if (reference["type"] as! String).lowercaseString == "event"{
+            let title = reference["title"] as! String
+            let rawDate = Util.getDateFromTimestamp(reference["timestamp"] as! Double)
             let date = rawDate.date
-            return "📅 \(date.uppercaseString) EVENT\n\nJack Joyce send \(title) invitation. Tap here to interact.\n"
+            return "📅 \(date.uppercaseString) EVENT\n\n\(name)send \(title) invitation. Tap here to interact.\n"
         }else{
-            let title = ref["title"] as! String
-            return "📊 POLL\n\nJack Joyce send \(title) poll. Tap here to interact.\n"
+            let title = reference["title"] as! String
+            return "📊 POLL\n\n\(name)send \(title) poll. Tap here to interact.\n"
         }
     }
     

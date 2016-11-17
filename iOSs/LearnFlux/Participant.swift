@@ -28,7 +28,15 @@ struct Participant {
 
     static func convertFromArr (arr : AnyObject?) -> [Participant]? {
         guard let data = arr as? arrType else { return nil }
-        return data.map({ Participant(dict: $0) }).filter({ $0 != nil })
+        return data.reduce([Participant](), combine: { a, b in
+            if b[keyCacheMe.id] as! Int == Engine.clientData.cacheSelfId(){
+                return a
+            }else if a.contains({ $0.user!.userId! == b[keyCacheMe.id] as! Int }){
+                return a
+            }else{
+                return a + [Participant(dict: b)]
+            }
+        })
     }
     
     static func convertFromDict (dict : AnyObject?) -> Participant? {

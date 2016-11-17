@@ -44,8 +44,8 @@ class InterestGroups: UIViewController {
         super.viewDidLoad()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         mockUp()
     }
     
@@ -167,12 +167,12 @@ extension InterestGroups: UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
-        var cell = UITableViewCell()
+        let cell = UITableViewCell()
         switch tableView {
         case tableViewSuggestGroups:
             cell.frame.size.height = tableView.frame.height / 2
         case tableViewSearchResult:
-            cell = cellForRowTableViewSearchResult(indexPath)
+            cell.frame.size.height = 51
         default:
             cell.frame.size.height = 0
         }

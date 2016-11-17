@@ -75,21 +75,22 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         threadLastMessage.text = self.setThreadLastMessage(indexPath.row)
         let selectedThread = clientData.getMyThreads()![indexPath.row]
-        threadName.text = Engine.generateThreadName(selectedThread);
+        threadName.text = Engine.generateThreadName(selectedThread).capitalizedString
         let pp = cell.viewWithTag(10) as! UIImageView;
         pp.image = nil
         pp.backgroundColor = UIColor.clearColor()
         
         for each in clientData.getMyConnection().friends{
-            if threadName.text!.containsString(each.firstName!){
-                if let photo = each.photo{
-                    pp.image = photo
-                    pp.backgroundColor = UIColor.whiteColor()
-                }
+            if threadName.text!.componentsSeparatedByString(" ").first!.lowercaseString == each.firstName!.lowercaseString{
+                pp.backgroundColor = UIColor(white: 245.0/255, alpha: 1.0)
+                pp.layer.cornerRadius = pp.frame.height / 2
+                pp.image = each.photo ?? UIImage(named: "photo-container.png")
                 break
             }
         }
         if let idGroup = clientData.idGroupByIdThread(clientData.getMyThreads()![indexPath.row].id){
+            pp.layer.cornerRadius = 0
+            pp.backgroundColor = UIColor.whiteColor()
             let index = clientData.getGroups().indexOf({ a in
                 if let childs = a.child{
                     if childs.filter({ $0.id == idGroup }).first != nil{
@@ -99,22 +100,13 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
                 if a.id == idGroup{ return true }
                 return false
             })
-            
             if index != nil{
-                if let image = clientData.getGroups()[index!].image{
-                    pp.image = image
-                    pp.backgroundColor = UIColor.whiteColor()
-                }else{
-                    pp.image = UIImage(named: "company1.png")
-                    pp.backgroundColor = UIColor.whiteColor()
-                }
+                pp.image = clientData.getGroups()[index!].image ?? UIImage(named: "company1.png")
             }else{
                 pp.image = UIImage(named: "company1.png")
-                pp.backgroundColor = UIColor.whiteColor()
             }
         }
         
-        pp.makeRounded();
         let conView = cell.viewWithTag(540)
         if self.deleteState{
             conView?.frame.origin.x = 0
@@ -316,10 +308,8 @@ class Chats : UIViewController, UITableViewDelegate, UITableViewDataSource {
             let cell = sender as! UITableViewCell;
             let indexPath = self.tv.indexPathForCell(cell)!;
             
-            let selectedThread = self.clientData.getMyThreads()![indexPath.row]
             let chatVc = segue.destinationViewController as! ChatFlow
-            
-            let chatId = selectedThread.valueForKey("id")! as! String
+            let chatId = self.clientData.getMyThreads()![indexPath.row].id
             chatVc.initChat(indexPath.row, idThread: chatId, from: ChatFlow.From.OpenChat)
         }
         else if (segue.identifier == "NewGroups") {
