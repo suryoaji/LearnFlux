@@ -30,6 +30,7 @@ class Login: UIViewController, UITextFieldDelegate {
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.Default
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(pushToHomeVC), name: "dataSingletonReady", object: nil)
+        self.clientData.destroyAllData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -86,41 +87,8 @@ class Login: UIViewController, UITextFieldDelegate {
         Util.showIndicatorDarkOverlay(self.view, message: "loading")
         self.isPush = false
         Engine.login(self, username: tfUsername.text!, password: tfPassword.text!) { [unowned self] status, JSON in
-             if status == .Success && JSON != nil{
-                self.clientData.cleanAllCache()
-                Engine.me(self) { status, JSON in
-                    guard status == .Success else{
-                        Util.stopIndicator(self.view)
-                        return
-                    }
-                    guard let dataJSON = JSON as? dictType else{
-                        Util.stopIndicator(self.view)
-                        return
-                    }
-                    if !dataJSON.isEmpty{
-                        Engine.getGroups(){ status in
-                            if !self.clientData.getGroups().isEmpty{
-                                for eachGroup in self.clientData.getGroups(){
-                                    Engine.getGroupInfo(groupId: eachGroup.id)
-                                }
-                            }
-                        }
-                        Engine.getThreads()
-                        Engine.getEvents(){ status, JSON in
-                            if let events = Engine.clientData.getMyEvents(){
-                                for eachEvent in events{
-                                    Engine.getEventDetail(event: eachEvent)
-                                }
-                            }
-                        }
-                        Engine.getConnection()
-                        Engine.clientData.setMyChildrens()
-                        Engine.getImageSelf()
-                    }else{
-                        Util.stopIndicator(self.view)
-                        Util.showMessageInViewController(self, title: "Our apologies.", message: "We sincerely apologize for the inconvenience. Our server is currently in maintenance, but will return shortly. Thank you for your patience", buttonOKTitle: "OK", callback: nil)
-                    }
-                }
+            if status == .Success && JSON != nil{
+                Engine.loadDataAfterLogin(self)
             }else{
                 self.tfUsername.becomeFirstResponder();
                 Util.stopIndicator(self.view)

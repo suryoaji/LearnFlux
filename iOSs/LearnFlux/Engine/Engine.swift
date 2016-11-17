@@ -102,6 +102,57 @@ class Engine : NSObject {
         return result;
     }
     
+    static func autoLogin(refreshToken: String, callback: JSONreturn?){
+        makeToken(param: ["refresh_token" : refreshToken]){ status, JSON in
+            if status == .Success && JSON != nil{
+                loadDataAfterLogin(){ status, JSON in
+                    if callback != nil{ callback!(status, JSON) }
+                }
+            }else{
+                if callback != nil{ callback!(status, JSON) }
+            }
+        }
+    }
+    
+    static func loadDataAfterLogin(viewController: UIViewController? = nil, callback: JSONreturn? = nil){
+        me(viewController) { status, JSON in
+            guard status == .Success else{
+                if let vc = viewController{ Util.stopIndicator(vc.view) }
+                return
+            }
+            guard let dataJSON = JSON as? dictType else{
+                if let vc = viewController{ Util.stopIndicator(vc.view) }
+                return
+            }
+            if !dataJSON.isEmpty{
+                getGroups(){status in
+                    if !self.clientData.getGroups().isEmpty{
+                        for eachGroup in self.clientData.getGroups(){
+                            getGroupInfo(groupId: eachGroup.id)
+                        }
+                    }
+                }
+                getThreads()
+                getEvents(){ status, JSON in
+                    if let events = Engine.clientData.getMyEvents(){
+                        for eachEvent in events{
+                            getEventDetail(event: eachEvent)
+                        }
+                    }
+                }
+                getConnection()
+                clientData.setMyChildrens()
+                getImageSelf()
+            }else{
+                if let vc = viewController{
+                    Util.stopIndicator(vc.view)
+                    Util.showMessageInViewController(vc, title: "Our apologies.", message: "We sincerely apologize for the inconvenience. Our server is currently in maintenance, but will return shortly. Thank you for your patience", buttonOKTitle: "OK", callback: nil)
+                }
+            }
+            if callback != nil{ callback!(status, JSON) }
+        }
+    }
+
     static func updateTokenParam(param: Dictionary<String, AnyObject>?) -> (Dictionary<String, AnyObject>?){
         if let param = param{
             var mparam = param
@@ -132,6 +183,12 @@ class Engine : NSObject {
             if (status == .Success) {
                 dispatch_async(dispatch_get_main_queue(),{ if (callback != nil) { callback! (status, JSON); } } )
             }
+        }
+    }
+    
+    static func stopAllRequests(){
+        Alamofire.Manager.sharedInstance.session.getAllTasksWithCompletionHandler { tasks in
+            tasks.forEach({ $0.cancel() })
         }
     }
     

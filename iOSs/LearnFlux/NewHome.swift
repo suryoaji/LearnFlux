@@ -22,16 +22,11 @@ class NewHome : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad();
-        animateWhenSelfPushed()
-    }
-    
-    func animateWhenSelfPushed(){
-        contentView.alpha = 0.3
-        contentView.frame.origin.x += UIScreen.mainScreen().bounds.width
-        UIView.animateWithDuration(0.23, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.0, options: .CurveEaseIn, animations: {
-            self.contentView.frame.origin.x = 0
-            self.contentView.alpha = 1.0
-            }, completion: nil)
+        if shouldPushAnimated{
+            animateWhenSelfPushed()
+        }else{
+            animate()
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -47,6 +42,7 @@ class NewHome : UIViewController {
         
     }
     
+    var shouldPushAnimated = true
     let mosaicImages = ["mosaic-calendar.jpg", "mosaic-dashboard.jpg", "mosaic-chat.jpg", "mosaic-poll.jpg", "mosaic-favorite.jpg", "mosaic-attandance.jpg", "mosaic-interestgroup.jpg", "mosaic-settings.jpg"]
 }
 
@@ -69,6 +65,22 @@ extension NewHome{
         label.font = UIFont(name: "Helvetica Neue Medium", size: 12.0)
         label.textColor = UIColor.whiteColor()
         self.navigationItem.titleView = label
+    }
+    
+    func animateWhenSelfPushed(){
+        contentView.alpha = 0.3
+        contentView.frame.origin.x += UIScreen.mainScreen().bounds.width
+        UIView.animateWithDuration(0.23, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.0, options: .CurveEaseIn, animations: {
+            self.contentView.frame.origin.x = 0
+            self.contentView.alpha = 1.0
+            }, completion: nil)
+    }
+    
+    func animate(){
+        contentView.alpha = 0
+        UIView.animateWithDuration(0.5, delay: 0, options: .CurveEaseInOut, animations: {
+            self.contentView.alpha = 1.0
+            }, completion: nil)
     }
 }
 

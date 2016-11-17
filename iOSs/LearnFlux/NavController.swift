@@ -18,6 +18,9 @@ class NavController: UINavigationController {
         self.navigationBar.barTintColor = LFColor.blue
         self.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor(), NSFontAttributeName : UIFont(name: "PingFangHK-Medium", size: 18)!]
         self.navigationBar.tintColor = UIColor.whiteColor()
+        if let rootViewController = self.topViewController as? NewHome{
+            rootViewController.shouldPushAnimated = pushNewHomeControllerWithPushAnimated
+        }
     }
     
     override func pushViewController(viewController: UIViewController, animated: Bool) {
@@ -38,4 +41,5 @@ class NavController: UINavigationController {
         // Dispose of any resources that can be recreated.
     }
 
+    var pushNewHomeControllerWithPushAnimated = true
 }

@@ -133,7 +133,7 @@ class Menu : UITableViewController {
                 }else if vc.isKindOfClass(Login){
                     self.revealController.frontViewController = vc
                     self.revealController.showViewController(vc)
-                    clientData.cleanAllCache()
+                    Engine.stopAllRequests()
                 }else{
                     navController.setViewControllers([homeVc, vc], animated: false)
                     self.revealController.showViewController(navController)

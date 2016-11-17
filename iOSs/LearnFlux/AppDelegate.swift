@@ -55,12 +55,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKRevealing {
     
     func setRevealController(){
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        let frontViewController = Util.getViewControllerID("Login");
-        let leftViewController = Util.getViewControllerID("Menu");
-        self.revealController = PKRevealController(frontViewController:frontViewController, leftViewController: leftViewController, rightViewController: nil);
-        self.revealController.delegate = self
-        self.window!.rootViewController = self.revealController
-        self.window!.makeKeyAndVisible()
+        
+        if let refreshToken = Engine.clientData.getRefreshTokenFromCache(){
+            let frontViewController = UIViewController()
+            frontViewController.view.backgroundColor = UIColor.whiteColor()
+            setRevealController(frontViewController, leftViewController: Util.getViewControllerID("Menu"))
+            Engine.autoLogin(refreshToken){status, JSON in
+                if status == .Success{
+                    self.changeFrontRevealController()
+                }else{
+                    self.setRevealController(Util.getViewControllerID("Login"), leftViewController: Util.getViewControllerID("Menu"))
+                }
+            }
+        }else{
+            setRevealController(Util.getViewControllerID("Login"), leftViewController: Util.getViewControllerID("Menu"))
+        }
+    }
+    
+    func changeFrontRevealController(){
+        let leftViewController = Util.getViewControllerID("Menu")
+        let frontViewController = Util.getViewControllerID("NavCon") as! NavController
+        frontViewController.pushNewHomeControllerWithPushAnimated = false
+        setRevealController(frontViewController, leftViewController: leftViewController)
+    }
+    
+    func setRevealController(frontViewController: UIViewController, leftViewController: UIViewController){
+        self.revealController = PKRevealController(frontViewController:frontViewController, leftViewController: leftViewController, rightViewController: nil)
         
         //add corner radius to left controller
         func addLayerToLeftController(){
@@ -71,6 +91,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKRevealing {
             self.revealController.leftViewController.view.layer.addSublayer(layer)
         }
         addLayerToLeftController()
+        self.revealController.delegate = self
+        self.revealController.setMinimumWidth(0, maximumWidth: 0, forViewController: self.revealController.leftViewController)
+        self.window!.rootViewController = self.revealController
+        self.window!.makeKeyAndVisible()
     }
     
 //

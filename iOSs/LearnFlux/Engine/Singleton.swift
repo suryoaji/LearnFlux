@@ -66,6 +66,7 @@ class Data : NSObject {
         static let Me = "me"
         static let Notification = "notifs"
         static let Friends = "friend"
+        static let RefreshToken = "refresh_token"
     }
     
     private let isProduction = false
@@ -74,7 +75,11 @@ class Data : NSObject {
     private let clientSecret = "5d13jtr20js4wcw0488888ck0k0c0sk0kos8c08wo8wsgog8ss";
     private let scope = "internal";
     
-    private var refreshToken : String! = ""
+    private var refreshToken : String! = ""{
+        didSet{
+            defaults.setValue(refreshToken, forKey: cacheName.RefreshToken)
+        }
+    }
     
     private var accessToken : String! = "";
     
@@ -130,6 +135,13 @@ class Data : NSObject {
     
     deinit{
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func getRefreshTokenFromCache() -> String?{
+        if let refreshToken = defaults.stringForKey(cacheName.RefreshToken){
+            return refreshToken
+        }
+        return nil
     }
     
     func checkAllDataReady(){
@@ -515,6 +527,18 @@ class Data : NSObject {
         return nil
     }
     
+    func destroyAllData(){
+        cleanAllCache()
+        childrens = []
+        connection = nil
+        pendingConnections = []
+        requestedConnections = []
+        events = nil
+        threads = nil
+        groups = nil
+        specificEvents = []
+    }
+    
     func cleanAllCache(){
         for key in Array(defaults.dictionaryRepresentation().keys) {
             defaults.removeObjectForKey(key)
@@ -586,7 +610,11 @@ class Data : NSObject {
     }
     
     func cacheSelfId() -> Int{
-        return cacheMe()![keyCacheMe.id] as! Int
+        if cacheMe() != nil{
+            return cacheMe()![keyCacheMe.id] as! Int
+        }else{
+            return -1
+        }
     }
     
     func cacheSelfEmail() -> String{
