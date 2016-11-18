@@ -3,6 +3,7 @@ package com.idesolusiasia.learnflux.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,24 +12,17 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.androidnetworking.AndroidNetworking;
 import com.idesolusiasia.learnflux.ChattingActivity;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
-import com.jakewharton.picasso.OkHttp3Downloader;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 /**
  * Created by NAIT ADMIN on 12/04/2016.
  */
@@ -49,15 +43,23 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 	}
 
 	@Override
-	public void onBindViewHolder(OrgTileHolder holder, int position) {
+	public void onBindViewHolder(final OrgTileHolder holder, int position) {
 		final Group org= organizations.get(position);
+		AndroidNetworking.initialize(context);
 		String url = "http://lfapp.learnflux.net/v1/image?key=";
+		String pos = url+org.getImage();
 		holder.tvName.setText(org.getName());
-		if(org.getImage()==null) {
+		/*if(org.getImage()==null) {
 			holder.ivLogo.setDefaultImageResId(R.drawable.company1);
 		}else{
 			holder.ivLogo.setImageUrl(url+org.getImage(),imageLoader);
-		}
+		}*/
+		Ion.with(context)
+		.load(pos)
+		.addHeader("Authorization", "Bearer "+ User.getUser().getAccess_token())
+		.withBitmap()
+		.intoImageView(holder.ivLogo);
+
 		holder.tvImageMessage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -92,6 +94,7 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 
 	}
 
+
 	@Override
 	public int getItemCount() {
 		if(organizations!=null) {
@@ -103,7 +106,7 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 public class OrgTileHolder extends RecyclerView.ViewHolder {
 	public TextView tvName, tvLastSeen, tvCountMessage, tvCountEvent, tvCountActivities;
 	public ImageView tvImageMessage, tvImageEvent, tvImageActivities;
-	public NetworkImageView ivLogo;
+	public ImageView ivLogo;
 
 	public OrgTileHolder(final View itemView) {
 		super(itemView);
@@ -112,7 +115,7 @@ public class OrgTileHolder extends RecyclerView.ViewHolder {
 		tvCountMessage = (TextView) itemView.findViewById(R.id.tvCountMessage);
 		tvCountEvent = (TextView) itemView.findViewById(R.id.tvCountEvent);
 		tvCountActivities = (TextView) itemView.findViewById(R.id.tvCountActivities);
-		ivLogo = (NetworkImageView) itemView.findViewById(R.id.ivLogo);
+		ivLogo = (ImageView) itemView.findViewById(R.id.ivLogo);
 		tvImageMessage = (ImageView) itemView.findViewById(R.id.imageView4);
 		tvImageEvent = (ImageView) itemView.findViewById(R.id.imageView5);
 		tvImageActivities = (ImageView)itemView.findViewById(R.id.imageView8);

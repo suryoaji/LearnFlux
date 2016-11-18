@@ -9,10 +9,12 @@ import com.idesolusiasia.learnflux.entity.Event;
 import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Friends;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.Member;
 import com.idesolusiasia.learnflux.entity.MessageEvent;
 import com.idesolusiasia.learnflux.entity.MessagePoll;
 import com.idesolusiasia.learnflux.entity.Notification;
 import com.idesolusiasia.learnflux.entity.Participant;
+import com.idesolusiasia.learnflux.entity.PeopleInvite;
 import com.idesolusiasia.learnflux.entity.Poll;
 import com.idesolusiasia.learnflux.entity.Thread;
 
@@ -44,8 +46,8 @@ public class Converter {
 		}
 		return t;
 	}
-	public static BasicItem convertItem(JSONObject obj)throws JSONException{
-		return gson.fromJson(obj.toString(),BasicItem.class);
+	public static PeopleInvite convertInvite(JSONObject obj)throws JSONException{
+		return gson.fromJson(obj.toString(), PeopleInvite.class);
 	}
 	public static Contact convertContact(JSONObject obj)throws JSONException{
 		return gson.fromJson(obj.toString(),Contact.class);
@@ -87,5 +89,8 @@ public class Converter {
 	}
 	public static Friends convertFriends(JSONObject obj)throws  JSONException{
 		return gson.fromJson(obj.toString(), Friends.class);
+	}
+	public static Member convertMember(JSONObject obj)throws JSONException{
+		return gson.fromJson(obj.toString(), Member.class);
 	}
 }

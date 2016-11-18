@@ -97,7 +97,7 @@ public class ChatsActivity extends BaseActivity {
 		if (mViewPager.getCurrentItem()==0){
 			getMenuInflater().inflate(R.menu.group_chat, menu);
 		}else if(mViewPager.getCurrentItem()==2){
-			getMenuInflater().inflate(R.menu.interest_menu_creategroup, menu);
+			getMenuInflater().inflate(R.menu.home, menu);
 		} else{
 			getMenuInflater().inflate(R.menu.org_newgroup, menu);
 		}
@@ -118,7 +118,10 @@ public class ChatsActivity extends BaseActivity {
 		}else if (id == R.id.new_group){
 					createOrganization("group");
 					return true;
-			}
+			}else if( id ==  R.id.action_settings) {
+			Intent i = new Intent(ChatsActivity.this, HomeActivity.class);
+			startActivity(i);
+		}
 
 		return super.onOptionsItemSelected(item);
 	}

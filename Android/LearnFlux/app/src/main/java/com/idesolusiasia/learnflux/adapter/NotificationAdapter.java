@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Network;
+import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.MyProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Notification;
@@ -47,6 +49,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             final Notification n = mNotification.get(position);
             holder.message.setText(n.getMessage());
             holder.from.setText(n.getRef());
+            holder.draw.setDefaultImageResId(R.drawable.company1);
             holder.addNotif.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
@@ -71,11 +74,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public class OrgTileHolder extends RecyclerView.ViewHolder {
         TextView message, from;
         ImageView addNotif;
+        NetworkImageView draw;
         public OrgTileHolder(View itemView) {
             super(itemView);
             message = (TextView)itemView.findViewById(R.id.notifMessage);
             from = (TextView)itemView.findViewById(R.id.notifFrom);
             addNotif = (ImageView)itemView.findViewById(R.id.addNotification);
+            draw = (NetworkImageView)itemView.findViewById(R.id.dialogImage10);
         }
     }
 }

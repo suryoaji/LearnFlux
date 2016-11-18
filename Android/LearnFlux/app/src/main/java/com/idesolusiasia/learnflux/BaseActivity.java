@@ -55,13 +55,16 @@ public class BaseActivity extends AppCompatActivity
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-
+				final ImageLoader imageLoader = VolleySingleton.getInstance(getApplicationContext()).getImageLoader();
 				LinearLayout navigation = (LinearLayout)drawerView.findViewById(R.id.linearNavigation) ;
 				final TextView tvName = (TextView) drawerView.findViewById(R.id.tvDrawerName);
 				final TextView tvEmail = (TextView) drawerView.findViewById(R.id.tvDrawerEmail);
 				final NetworkImageView ivDrawerPic = (NetworkImageView)drawerView.findViewById(R.id.ivDrawerPic);
-				ivDrawerPic.setDefaultImageResId(R.drawable.user_profile);
-				final ImageLoader imageLoader = VolleySingleton.getInstance(getApplicationContext()).getImageLoader();
+				if(User.getUser().getProfile_picture()!=null) {
+					ivDrawerPic.setImageUrl(User.getUser().getProfile_picture(), imageLoader);
+				}else {
+					ivDrawerPic.setDefaultImageResId(R.drawable.user_profile);
+				}
 				Engine.getMeWithRequest(getApplicationContext(), "details",  new RequestTemplate.ServiceCallback() {
 					@Override
 					public void execute(JSONObject obj) {

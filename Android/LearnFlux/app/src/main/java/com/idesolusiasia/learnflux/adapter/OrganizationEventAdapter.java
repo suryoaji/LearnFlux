@@ -179,12 +179,19 @@ public class OrganizationEventAdapter extends RecyclerView.Adapter<OrganizationE
 		return position;
 	}
 
-	public void getChange(Context c, Event e, int rspv, final int pos){
+	public void getChange(final Context c, Event e, int rspv, final int pos){
 		Engine.changeRSVPStatus(c, e.getId(), rspv, new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
-				Toast.makeText(context, "Successful", Toast.LENGTH_SHORT).show();
-				notifyItemChanged(pos);
+
+				Engine.getThreads(c, new RequestTemplate.ServiceCallback() {
+					@Override
+					public void execute(JSONObject obj) {
+						Toast.makeText(c, "success", Toast.LENGTH_LONG).show();
+						notifyItemChanged(pos);
+					}
+				});
+
 				/*Intent intent = ((Activity) context).getIntent();
 				((Activity) context).setResult(((Activity) context).RESULT_OK,
 						intent);

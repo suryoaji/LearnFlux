@@ -107,21 +107,26 @@ public class LoginActivity extends AppCompatActivity{
         } else {
 
 	        Engine.login(this, username, password, new RequestTemplate.ServiceCallback() {
-		        @Override
-		        public void execute(JSONObject obj) {
-			        SharedPreferences.Editor editor = sharedPref.edit();
-			        editor.putString("username",username);
-			        editor.putString("password",password);
-			        editor.commit();
-			        User.getUser().setUsername(username);
-			        User.getUser().setPassword(password);
-			        Engine.getMe(LoginActivity.this);
-			        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
-			        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                @Override
+                public void execute(JSONObject obj) {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("username", username);
+                    editor.putString("password", password);
+                    editor.commit();
+                    User.getUser().setUsername(username);
+                    User.getUser().setPassword(password);
+                    Engine.getMe(LoginActivity.this);
+                    Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     progress.setVisibility(View.GONE);
-			        startActivity(i);
-		        }
-	        },null);
+                    startActivity(i);
+                }
+            }, new RequestTemplate.ErrorCallback() {
+                @Override
+                public void execute(JSONObject error) {
+                    progress.setVisibility(View.GONE);
+                }
+            });
         }
     }
 

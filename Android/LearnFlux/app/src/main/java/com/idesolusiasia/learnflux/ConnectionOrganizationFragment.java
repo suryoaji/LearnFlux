@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
+import com.idesolusiasia.learnflux.adapter.GroupOganizationAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
  */
 
 public class ConnectionOrganizationFragment extends Fragment {
-    ConnectionFragmentAdapter rcAdapter;
+    GroupOganizationAdapter rcAdapter;
     RecyclerView recyclerView;
     TextView emptyView;
     Button seeHide;
@@ -81,7 +82,7 @@ public class ConnectionOrganizationFragment extends Fragment {
                         recyclerView.setVisibility(View.GONE);
                         emptyView.setVisibility(View.VISIBLE);
                     }else {
-                        rcAdapter = new ConnectionFragmentAdapter(getContext(), arrOrg);
+                        rcAdapter = new GroupOganizationAdapter(getContext(), arrOrg);
                         recyclerView.setAdapter(rcAdapter);
                         emptyView.setVisibility(View.GONE);
                     }

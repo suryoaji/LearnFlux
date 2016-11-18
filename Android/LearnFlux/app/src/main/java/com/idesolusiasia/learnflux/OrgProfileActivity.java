@@ -46,8 +46,6 @@ public class OrgProfileActivity extends BaseActivity {
 		View childLayout = layoutInflater.inflate(
 				R.layout.activity_org_profile, null);
 		parentLayout.addView(childLayout);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
 
 		id =  getIntent().getStringExtra("id");
 		type = getIntent().getStringExtra("type");

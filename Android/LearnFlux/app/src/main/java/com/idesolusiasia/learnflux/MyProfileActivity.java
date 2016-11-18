@@ -46,6 +46,7 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
 import com.idesolusiasia.learnflux.adapter.ChildrenAdapter;
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
+import com.idesolusiasia.learnflux.adapter.ContactAdapter;
 import com.idesolusiasia.learnflux.adapter.FriendRequest;
 import com.idesolusiasia.learnflux.adapter.MyProfileOrganizationAdapter;
 import com.idesolusiasia.learnflux.adapter.MyProfileInterestAdapter;
@@ -67,6 +68,7 @@ import com.idesolusiasia.learnflux.util.VolleySingleton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,7 +92,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	ArrayList<String>interestUser;
 	List<Object> searchObject;
 	ArrayList<Group> arrOrg = new ArrayList<Group>();
-	ArrayList<Group> Org = new ArrayList<Group>();
+	ArrayList<Object> Org = new ArrayList<Object>();
 	ArrayList<Notification> notif= new ArrayList<>();
 
 	//RecyclerView
@@ -394,7 +396,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 								startActivity(getIntent());
 							}
 						});
-						saveButton();
 
 					}
 				});
@@ -543,6 +544,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		});
 		mViewPager.setCurrentItem(0);
 
+
 		ConnectionMyProfile = (RecyclerView)findViewById(R.id.recyclerMyProfile);
 		LinearLayoutManager ConnectionLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 		ConnectionMyProfile.setLayoutManager(ConnectionLayout);
@@ -553,23 +555,44 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 	void initConnection(){
 		Org = new ArrayList<>();
-		Engine.getOrganizations(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+		final TextView noConnection = (TextView)findViewById(R.id.emptyConnection);
+		Engine.getMeWithRequest(getApplicationContext(), "friends", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try{
-					JSONArray array = obj.getJSONArray("data");
-					for(int i=0;i<array.length();i++){
-						Group org = Converter.convertOrganizations(array.getJSONObject(i));
-						Org.add(org);
-					}
-						rAdapter = new ConnectionFragmentAdapter(getApplicationContext(), Org);
-					    ConnectionMyProfile.setAdapter(rAdapter);
-						//emptyView.setVisibility(View.GONE);
+					if(obj.has("friends")){
+						JSONArray friends = obj.getJSONArray("friends");
+						Contact c = Converter.convertContact(friends.getJSONObject(0));
+						Org.add(c);
+						Engine.getOrganizations(getApplicationContext(), new RequestTemplate.ServiceCallback() {
+							@Override
+							public void execute(JSONObject obj) {
+								try {
+									JSONArray array = obj.getJSONArray("data");
+									Group g = Converter.convertGroup(array.getJSONObject(0));
+									Org.add(g);
 
+									if(Org.isEmpty()){
+										noConnection.setVisibility(View.VISIBLE);
+										ConnectionMyProfile.setVisibility(View.GONE);
+									}else {
+										noConnection.setVisibility(View.GONE);
+										ConnectionMyProfile.setVisibility(View.VISIBLE);
+										Functions.sortingContact(Org);
+										rAdapter = new ConnectionFragmentAdapter(getApplicationContext(),Org);
+										ConnectionMyProfile.setAdapter(rAdapter);
+										ConnectionMyProfile.refreshDrawableState();
+									}
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+
+							}
+						});
+					}
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
-
 			}
 		});
 	}
@@ -653,18 +676,17 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					if(arrOrg.isEmpty()){
 						affilatedOrganizationRecycler.setVisibility(View.GONE);
 						empty_view.setVisibility(View.VISIBLE);
+						showAllOrganization.setVisibility(View.GONE);
+						affilatedOrganizationButtonMore.setVisibility(View.GONE);
 					}else {
 						rcAdapter = new MyProfileOrganizationAdapter(getApplicationContext(), arrOrg);
 						affilatedOrganizationRecycler.setAdapter(rcAdapter);
-						   if(arrOrg.size()>3){
+						   if(arrOrg.size()>3) {
 							   showAllOrganization.setVisibility(View.VISIBLE);
 							   showAllOrganization.bringToFront();
+						   }
 							   affilatedOrganizationButtonMore.setVisibility(View.VISIBLE);
-                        }else if(arrOrg.size()<3){
-							   showAllOrganization.setVisibility(View.GONE);
-							   affilatedOrganizationButtonMore.setVisibility(View.GONE);
-                        }
-						affilatedOrganizationButtonMore.setOnClickListener(new View.OnClickListener() {
+								affilatedOrganizationButtonMore.setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								showAllOrganization.setVisibility(View.GONE);
@@ -774,6 +796,29 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					String path = getRealPathFromUri(selectedImage);
 					changeImage.setImageBitmap(bitmap);
 					file = new File(path);
+					final String a = "http://lfapp.learnflux.net/v1/me/image?key=profile/"+User.getUser().getID();
+					AndroidNetworking.enableLogging();
+					AndroidNetworking.put(a)
+							.addFileBody(file)
+							.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
+							.setTag("uploadTest")
+							.setPriority(Priority.HIGH)
+							.build()
+							.setUploadProgressListener(new UploadProgressListener() {
+								@Override
+								public void onProgress(long bytesUploaded, long totalBytes) {
+								}
+							})
+							.getAsJSONObject(new JSONObjectRequestListener() {
+								@Override
+								public void onResponse(JSONObject response) {
+
+								}
+								@Override
+								public void onError(ANError error) {
+									// handle error
+								}
+							});
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -879,34 +924,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 	private boolean isGooglePhotosUri(Uri uri) {
 		return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-	}
-	void saveButton(){
-		final String a = "http://lfapp.learnflux.net/v1/me/image?key=profile/"+User.getUser().getID();
-		AndroidNetworking.put(a)
-				.addFileBody(file)
-				.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
-				.setTag("uploadTest")
-				.setPriority(Priority.HIGH)
-				.build()
-				.setUploadProgressListener(new UploadProgressListener() {
-					@Override
-					public void onProgress(long bytesUploaded, long totalBytes) {
-					}
-				})
-				.getAsJSONObject(new JSONObjectRequestListener() {
-					@Override
-					public void onResponse(JSONObject response) {
-						if(response.has("")) {
-							Intent i = getIntent();
-							startActivity(i);
-						}
-					}
-					@Override
-					public void onError(ANError error) {
-						// handle error
-					}
-				});
-
 	}
 	public void searchValue(){
 		searchObject = new ArrayList<>();

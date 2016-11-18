@@ -1,14 +1,18 @@
 package com.idesolusiasia.learnflux;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 
 import junit.framework.Test;
+
+import java.util.Calendar;
 
 public class HomeActivity extends BaseActivity {
 
@@ -37,6 +41,20 @@ public class HomeActivity extends BaseActivity {
 			}
 		});
 		ImageView ivGallery = (ImageView)findViewById(R.id.ivGallery);
+		ImageView ivCalendar = (ImageView)findViewById(R.id.ivCalendar);
+		ivCalendar.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final Calendar c = Calendar.getInstance();
+				DatePickerDialog datePicker = new DatePickerDialog(HomeActivity.this, new DatePickerDialog.OnDateSetListener() {
+					@Override
+					public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+						c.set(year,month,dayOfMonth);
+					}
+				},c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+				datePicker.show();
+			}
+		});
 
 	}
 

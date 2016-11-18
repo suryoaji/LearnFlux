@@ -14,4 +14,8 @@
         android:orderInCategory="100"
         android:title="Invite people"
         app:showAsAction="never"/>
+    <item android:id="@+id/addImagegroup"
+        android:orderInCategory="99"
+        android:title="Add Image"
+        app:showAsAction="never"/>
 </menu>

@@ -354,7 +354,8 @@
                         android:id="@+id/emptyViewOrg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
+                        android:layout_gravity="center"
                         android:visibility="gone"
                         android:text="No Organization or Group Data" />
 
@@ -389,13 +390,18 @@
                     android:paddingLeft="15dp" android:paddingTop="7dp"
                     android:layout_width="match_parent"
                     android:layout_height="30dp" />
+
                 <android.support.v7.widget.RecyclerView
                     android:layout_margin="10dp"
                     android:id="@+id/recyclerMyProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
                 </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:text="No Connection at the moment"
+                    android:id="@+id/emptyConnection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </ScrollView>
         <LinearLayout

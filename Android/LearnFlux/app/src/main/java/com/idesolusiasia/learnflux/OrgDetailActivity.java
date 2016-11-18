@@ -1,13 +1,25 @@
 package com.idesolusiasia.learnflux;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +39,14 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.StringRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
+import com.google.gson.reflect.TypeToken;
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
 import com.idesolusiasia.learnflux.entity.FriendReq;
@@ -42,11 +62,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 public class OrgDetailActivity extends BaseActivity implements View.OnClickListener {
 	ViewPager mViewPager;
@@ -60,7 +83,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents, tvTitle;
 	static final int ITEMS = 3;
-
+	public final int PICK_IMAGE=0;
 	ImageLoader imageLoader = VolleySingleton.getInstance(OrgDetailActivity.this).getImageLoader();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +103,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		View childLayout = layoutInflater.inflate(
 				R.layout.activity_org_details, null);
 		parentLayout.addView(childLayout);
+
 		///////////////////////////finish Base Init///
 		tvTitle = (TextView)findViewById(R.id.titleOrgDetails);
 		imagesOrg = (NetworkImageView)findViewById(R.id.imageOrgDetail);
@@ -205,12 +229,21 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 
 		switch(item.getItemId()){
 			case R.id.invite_people:
+				Intent a = new Intent(OrgDetailActivity.this, InvitePeople.class);
+				a.putExtra("ids", id);
+				startActivity(a);
 				return true;
 			case R.id.new_event:
 				addEventProcess();
 				return true;
 			case R.id.new_group:
 				addInterestNewGroup();
+				return true;
+			case R.id.addImagegroup:
+				Intent intent = new Intent();
+				intent.setType("image/*");
+				intent.setAction(Intent.ACTION_GET_CONTENT);
+				startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE);
 				return true;
 		}
 
@@ -436,6 +469,131 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		});
 		dial.show();
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+			if (ContextCompat.checkSelfPermission(OrgDetailActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+					== PackageManager.PERMISSION_GRANTED) {
+
+					Uri selectedImage = data.getData();
+					//Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+					String path = getRealPathFromUri(selectedImage);
+					File file = new File(path);
+					final String a = "http://lfapp.learnflux.net/v1/groups/"+id+"/image";
+					AndroidNetworking.put(a)
+							.addFileBody(file)
+							.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
+							.setPriority(Priority.HIGH)
+							.setExecutor(Executors.newSingleThreadExecutor())
+							.build();
+
+
+			}
+		}
+	}
+	public String getRealPathFromUri(final Uri uri) {
+		// DocumentProvider
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(getApplicationContext(), uri)) {
+			// ExternalStorageProvider
+			if (isExternalStorageDocument(uri)) {
+				final String docId = DocumentsContract.getDocumentId(uri);
+				final String[] split = docId.split(":");
+				final String type = split[0];
+
+				if ("primary".equalsIgnoreCase(type)) {
+					return Environment.getExternalStorageDirectory() + "/" + split[1];
+				}
+			}
+			// DownloadsProvider
+			else if (isDownloadsDocument(uri)) {
+
+				final String id = DocumentsContract.getDocumentId(uri);
+				final Uri contentUri = ContentUris.withAppendedId(
+						Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+				return getDataColumn(getApplicationContext(), contentUri, null, null);
+			}
+			// MediaProvider
+			else if (isMediaDocument(uri)) {
+				final String docId = DocumentsContract.getDocumentId(uri);
+				final String[] split = docId.split(":");
+				final String type = split[0];
+
+				Uri contentUri = null;
+				if ("image".equals(type)) {
+					contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+				} else if ("video".equals(type)) {
+					contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+				} else if ("audio".equals(type)) {
+					contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+				}
+
+				final String selection = "_id=?";
+				final String[] selectionArgs = new String[]{
+						split[1]
+				};
+
+				return getDataColumn(getApplicationContext(), contentUri, selection, selectionArgs);
+			}
+		}
+		// MediaStore (and general)
+		else if ("content".equalsIgnoreCase(uri.getScheme())) {
+
+			// Return the remote address
+			if (isGooglePhotosUri(uri))
+				return uri.getLastPathSegment();
+
+			return getDataColumn(getApplicationContext(), uri, null, null);
+		}
+		// File
+		else if ("file".equalsIgnoreCase(uri.getScheme())) {
+			return uri.getPath();
+		}
+
+		return null;
+	}
+
+	private String getDataColumn(Context context, Uri uri, String selection,
+								 String[] selectionArgs) {
+
+		Cursor cursor = null;
+		final String column = "_data";
+		final String[] projection = {
+				column
+		};
+
+		try {
+			cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+					null);
+			if (cursor != null && cursor.moveToFirst()) {
+				final int index = cursor.getColumnIndexOrThrow(column);
+				return cursor.getString(index);
+			}
+		} finally {
+			if (cursor != null)
+				cursor.close();
+		}
+		return null;
+	}
+
+	private boolean isExternalStorageDocument(Uri uri) {
+		return "com.android.externalstorage.documents".equals(uri.getAuthority());
+	}
+
+	private boolean isDownloadsDocument(Uri uri) {
+		return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+	}
+
+	private boolean isMediaDocument(Uri uri) {
+		return "com.android.providers.media.documents".equals(uri.getAuthority());
+	}
+
+	private boolean isGooglePhotosUri(Uri uri) {
+		return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume() ;

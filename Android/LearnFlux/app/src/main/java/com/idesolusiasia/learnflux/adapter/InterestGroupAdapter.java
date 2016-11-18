@@ -16,8 +16,10 @@ import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,11 +48,17 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
         final Group org= organizations.get(position);
         final String url = "http://lfapp.learnflux.net/v1/image?key=";
         holder.tvName.setText(org.getName());
-        if(org.getImage()==null) {
+       /* if(org.getImage()==null) {
             holder.ivLogo.setDefaultImageResId(R.drawable.organization);
         }else {
             holder.ivLogo.setImageUrl(url+org.getImage(), imageLoader);
-        }
+        }*/
+        String pos = url+org.getImage();
+        Ion.with(context)
+                .load(pos)
+                .addHeader("Authorization", "Bearer "+ User.getUser().getAccess_token())
+                .withBitmap()
+                .intoImageView(holder.ivLogo);
         holder.tvImageMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,7 +100,7 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
 
     public class OrgTileHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvLastSeen, tvCountMessage, tvCountEvent, tvCountActivities;
-        NetworkImageView ivLogo;
+        ImageView ivLogo;
         ImageView tvImageMessage, tvImageEvent, tvImageActivities;
         public OrgTileHolder(View itemView) {
             super(itemView);
@@ -101,7 +109,7 @@ public class InterestGroupAdapter extends RecyclerView.Adapter<InterestGroupAdap
             tvCountMessage = (TextView) itemView.findViewById(R.id.tvCountMessage);
             tvCountEvent = (TextView) itemView.findViewById(R.id.tvCountEvent);
             tvCountActivities = (TextView) itemView.findViewById(R.id.tvCountActivities);
-            ivLogo = (NetworkImageView) itemView.findViewById(R.id.ivLogo);
+            ivLogo = (ImageView) itemView.findViewById(R.id.ivLogo);
             tvImageMessage = (ImageView) itemView.findViewById(R.id.imageView4);
             tvImageEvent = (ImageView) itemView.findViewById(R.id.imageView5);
             tvImageActivities = (ImageView)itemView.findViewById(R.id.imageView8);

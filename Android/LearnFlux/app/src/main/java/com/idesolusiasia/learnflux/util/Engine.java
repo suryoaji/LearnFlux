@@ -922,21 +922,17 @@ public class Engine {
 			},null);
 		}
 	}
-	public static void putGroupByAdmin(final Context context, final String groupID, final RequestTemplate.ServiceCallback callback){
+	public static void putGroupByAdmin(final Context context, final String groupID, final int[] ids, final RequestTemplate.ServiceCallback callback){
 		String url = context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+
 				context.getString(R.string.URL_GROUP)+"/"+groupID;
+		HashMap<String,int[]> par = new HashMap<>();
+		par.put("include",ids);
 		JSONObject params = new JSONObject();
-		try {
-			params.put("groupID", groupID);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		Log.i("changeRSVPStatus", params.toString());
 		if(User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
 			reLogin(context, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					putGroupByAdmin(context,groupID,callback);
+					putGroupByAdmin(context,groupID,ids,callback);
 				}
 			});
 		}else{

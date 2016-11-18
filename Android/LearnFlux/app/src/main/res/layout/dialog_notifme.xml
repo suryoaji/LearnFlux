@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent" android:padding="2dp"
-    android:layout_height="match_parent" android:background="@drawable/border_black">
+    android:layout_height="match_parent">
 
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:layout_weight="0.3"
-            android:src="@drawable/user_profile"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:id="@+id/dialogImage10" />
@@ -42,7 +41,13 @@
             android:id="@+id/addNotification"
             android:layout_gravity="center"
             android:src="@drawable/add_friend"
-            android:layout_width="25dp"
-            android:layout_height="25dp" />
+            android:layout_width="23dp"
+            android:layout_height="23dp" />
     </LinearLayout>
+    <View
+        android:background="#c2c2c2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp">
+
+    </View>
 </LinearLayout>

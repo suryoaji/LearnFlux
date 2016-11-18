@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -131,15 +132,20 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                vh2.getStats().setText(group.getAccess());
            }
 
-  /*  public String getTextToShowInBubble(int pos) {
-        if (pos < 0 || pos >= mDataArray.size())
+/*    public String getTextToShowInBubble(int pos) {
+        List<String>names = new ArrayList<>();
+        for(Object c : theContact){
+            names.addAll(c.getClass(cont));
+        }
+        if (pos < 0 || pos >= theContact.size())
             return null;
-
-        String name = mDataArray.get(pos);
+        final Contact contact = (Contact) theContact.get(pos);
+        final Group group =(Group)theContact.get(pos);
+        String name = contact.getFirst_name()+group.getName();
         if (name == null || name.length() < 1)
             return null;
 
-        return mDataArray.get(pos).substring(0, 1);
+        return theContact.get(pos).substring(0, 1);
     }*/
     private class ViewHolder1 extends RecyclerView.ViewHolder {
         TextView title; CircularNetworkImageView circular;

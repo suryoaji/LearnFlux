@@ -5,7 +5,7 @@
               android:layout_height="wrap_content" android:padding="5dp"
               android:background="@drawable/border_green">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/ivLogo" android:layout_gravity="center_horizontal"

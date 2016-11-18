@@ -5,12 +5,11 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,7 +27,11 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.idesolusiasia.learnflux.adapter.CheckListPeopleAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.Member;
+import com.idesolusiasia.learnflux.entity.PeopleInvite;
+import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
@@ -42,6 +45,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class GroupDetailActivity extends BaseActivity implements View.OnClickListener {
@@ -231,6 +235,31 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		// as you specify a parent activity in AndroidManifest.xml.
 		switch(item.getItemId()){
 			case R.id.interest_invite_people:
+				Engine.getOrganizationProfile(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
+					@Override
+					public void execute(JSONObject obj) {
+						try{
+							JSONObject data = obj.getJSONObject("data");
+							Group group = Converter.convertOrganizations(data);
+							if(group!=null){
+								if(group.getAdminID()!=-1){
+									if(User.getUser().getID()==group.getAdminID()){
+										Intent people = new Intent(GroupDetailActivity.this, InvitePeople.class);
+										people.putExtra("ids", id);
+										startActivity(people);
+									}else{
+										Functions.showAlert(GroupDetailActivity.this,"Notification", "You do not have this access");
+									}
+								}
+							}
+
+
+						}catch (JSONException e){
+							e.printStackTrace();
+						}
+					}
+				});
+
 				return true;
 			case R.id.interest_new_event:
 				addEventProcess();
