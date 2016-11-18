@@ -30,7 +30,7 @@ class NewHome : UIViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated);
+        super.viewDidAppear(animated)
         mockUp()
         let screenWidth = UIScreen.mainScreen().bounds.width;
         self.revealController.setMinimumWidth(screenWidth * 0.65, maximumWidth: screenWidth * 0.9, forViewController: self.revealController.leftViewController)
@@ -43,7 +43,7 @@ class NewHome : UIViewController {
     }
     
     var shouldPushAnimated = true
-    let mosaicImages = ["mosaic-calendar.jpg", "mosaic-dashboard.jpg", "mosaic-chat.jpg", "mosaic-poll.jpg", "mosaic-favorite.jpg", "mosaic-attandance.jpg", "mosaic-interestgroup.jpg", "mosaic-settings.jpg"]
+    let mosaicImages = ["mosaic-calendar.jpg", "mosaic-dashboard.jpg", "mosaic-chat.jpg", "mosaic-project.jpg", "mosaic-favorite.jpg", "mosaic-attandance.jpg", "mosaic-interestgroup.jpg", "mosaic-settings.jpg"]
 }
 
 
@@ -105,6 +105,8 @@ extension NewHome: UICollectionViewDelegateFlowLayout, UICollectionViewDataSourc
         switch indexPath.row {
         case 2:
             performSegueWithIdentifier("chat", sender: self)
+        case 3:
+            performSegueWithIdentifier("Project", sender: self)
         case 6:
             performSegueWithIdentifier("InterestGroup", sender: self)
         default: break

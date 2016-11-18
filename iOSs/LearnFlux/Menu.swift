@@ -39,7 +39,9 @@ class Menu : UITableViewController {
         case is NewHome:
             return NSIndexPath(forRow: 0, inSection: 2)
         case is InterestGroups:
-            return NSIndexPath(forRow: 5, inSection: 3)
+            return NSIndexPath(forRow: 4, inSection: 3)
+        case is Project:
+            return NSIndexPath(forRow: 6, inSection: 3)
         default:
             return NSIndexPath(forRow: 0, inSection: 0)
         }
@@ -75,22 +77,9 @@ class Menu : UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let code = indexPath.code;
-        let cell = tableView.dequeueReusableCellWithIdentifier(code)!;
-        
-        if (indexPath.isEqualCode("1-0") ||
-            indexPath.isEqualCode("2-0") ||
-            indexPath.isEqualCode("3-5") ||
-            indexPath.isEqualCode("4-0") ||
-            indexPath.isEqualCode("5-0") ||
-            indexPath.isEqualCode("6-0")) {
-            cell.setSeparatorType(CellSeparatorFull);
-        }
-        else {
-            cell.setSeparatorType(CellSeparatorNone);
-        }
-        
-        if indexPath.isEqualCode("1-0"){
+        let cell = tableView.dequeueReusableCellWithIdentifier("\(indexPath.section)-\(indexPath.row)")!
+        switch (indexPath.section, indexPath.row){
+        case (1,0):
             let view = cell.viewWithTag(1)!
             let labelName = cell.viewWithTag(2) as! UILabel
             let labelEmail = cell.viewWithTag(3) as! UILabel
@@ -99,48 +88,52 @@ class Menu : UITableViewController {
             imageViewPhoto.image = clientData.photo
             labelName.text = clientData.cacheFullname().capitalizedString
             labelEmail.text = clientData.cacheSelfEmail()
+        default: break
         }
-        
-        return cell;
+        return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        if lastSelected != indexPath{
-            self.revealController.showViewController(self)
-            var vc : UIViewController?
-            if indexPath.isEqualCode("1-0") {
-                let profileVC = Util.getViewControllerID("Profile") as! Profile
-                profileVC.initViewController(id: clientData.cacheSelfId())
-                vc = profileVC
-            }else if indexPath.isEqualCode("3-0"){
-                let navVc = Util.getViewControllerID("chatTabBarController") as! chatTabBarController
-                navVc.initViewController(2)
-                vc = navVc
-            }else if indexPath.isEqualCode("3-5"){
-                vc = Util.getViewControllerID("InterestGroups")
-            }else if indexPath.isEqualCode("2-0"){
-                vc = Util.getViewControllerID("NewHome")
-            }else if indexPath.isEqualCode("6-0"){
-                vc = Util.getViewControllerID("Login")
-            }
-            if let vc = vc where self.revealController.frontViewController.isKindOfClass(NavController){
-                let navController = self.revealController.frontViewController as! NavController
-                let homeVc = Util.getViewControllerID("NewHome")
-                if vc.isKindOfClass(NewHome){
-                    navController.setViewControllers([vc], animated: false)
-                    self.revealController.showViewController(navController)
-                }else if vc.isKindOfClass(Login){
-                    self.revealController.frontViewController = vc
-                    self.revealController.showViewController(vc)
-                    Engine.stopAllRequests()
-                }else{
-                    navController.setViewControllers([homeVc, vc], animated: false)
-                    self.revealController.showViewController(navController)
-                }
-            }
-            lastSelected = indexPath
+        guard let navCon = revealController.frontViewController as? NavController where lastSelected != indexPath else{
+            return
         }
+        self.revealController.showViewController(self)
+        var vc : UIViewController?
+        switch (indexPath.section, indexPath.row) {
+        case (1,0):
+            let profileVC = Util.getViewControllerID("Profile") as! Profile
+            profileVC.initViewController(id: clientData.cacheSelfId())
+            vc = profileVC
+        case (3,0):
+            let navVc = Util.getViewControllerID("chatTabBarController") as! chatTabBarController
+            navVc.initViewController(2)
+        case (3,4):
+            vc = Util.getViewControllerID("InterestGroups")
+        case (3,6):
+            vc = Util.getViewControllerID("Project")
+        case (2,0):
+            vc = Util.getViewControllerID("NewHome")
+        case (6,0):
+            vc = Util.getViewControllerID("Login")
+        default: break
+        }
+        if let vc = vc{
+            let homeVc = Util.getViewControllerID("NewHome")
+            switch vc {
+            case is NewHome:
+                navCon.setViewControllers([vc], animated: false)
+                self.revealController.showViewController(navCon)
+            case is Login:
+                self.revealController.frontViewController = vc
+                self.revealController.showViewController(vc)
+                Engine.stopAllRequests()
+            default:
+                navCon.setViewControllers([homeVc, vc], animated: false)
+                self.revealController.showViewController(navCon)
+            }
+        }
+        lastSelected = indexPath
     }
     
 }
