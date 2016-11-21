@@ -796,7 +796,7 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
     
 }
 
-// - MARK TableView Helper
+// - MARK: TableView Helper
 extension Profile{
     func numberOfRowTableViewSearchResult(section: Int) -> Int{
         switch section {
@@ -1476,7 +1476,7 @@ extension Profile{
     }
 }
 
-// - MARK Collection View
+// - MARK: Collection View
 extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         switch collectionView.tag {
@@ -1588,7 +1588,7 @@ extension Profile: UICollectionViewDelegate, UICollectionViewDataSource, UIColle
     
 }
 
-// - MARK MOCK UP
+// - MARK: MOCK UP
 extension Profile{
     func mockUpFirstAppear(){
         if shouldMockUp{
@@ -1806,7 +1806,7 @@ extension Profile{
     
 }
 
-// - MARK Perform Segues
+// - MARK: Perform Segues
 extension Profile{
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "OrgSegue"{
@@ -1950,7 +1950,7 @@ extension Profile: GroupRequestCellDelegate{
     }
 }
 
-// - MARK IndividualCell My Profile Delegate
+// - MARK: IndividualCell My Profile Delegate
 extension Profile: IndividualCellDelegate{
     func buttonChatTapped(cell: IndividualCell) {
         if !cell.forSearch{
@@ -1982,7 +1982,7 @@ extension Profile: IndividualCellDelegate{
     }
 }
 
-// - MARK OrganizationCell My Profile Delegate
+// - MARK: OrganizationCell My Profile Delegate
 extension Profile: OrganizationCellDelegate{
     func buttonAddTapped(cell: OrganizationCell) {
         print("testing")

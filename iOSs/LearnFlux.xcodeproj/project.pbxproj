@@ -50,6 +50,7 @@
 		4A5105FB1DA200900026F302 /* InterestGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5105FA1DA200900026F302 /* InterestGroups.swift */; };
 		4A5106001DA24B310026F302 /* IGGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5105FF1DA24B310026F302 /* IGGroupCell.swift */; };
 		4A5106021DA24FA40026F302 /* IGSuggestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5106011DA24FA40026F302 /* IGSuggestCell.swift */; };
+		4A51A15D1DE2853000FA3581 /* ProjectDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A51A15C1DE2853000FA3581 /* ProjectDetail.swift */; };
 		4A52B9FD1DB75AC600C54302 /* RowEditProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A52B9FC1DB75AC600C54302 /* RowEditProfileCell.swift */; };
 		4A5A14F91DA5E3AD00024FE3 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5A14F81DA5E3AD00024FE3 /* NotificationView.swift */; };
 		4A5A15171DA6226700024FE3 /* company4.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A5A150E1DA6226700024FE3 /* company4.png */; };
@@ -504,6 +505,7 @@
 		4A5105FA1DA200900026F302 /* InterestGroups.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterestGroups.swift; sourceTree = "<group>"; };
 		4A5105FF1DA24B310026F302 /* IGGroupCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IGGroupCell.swift; sourceTree = "<group>"; };
 		4A5106011DA24FA40026F302 /* IGSuggestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IGSuggestCell.swift; sourceTree = "<group>"; };
+		4A51A15C1DE2853000FA3581 /* ProjectDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectDetail.swift; sourceTree = "<group>"; };
 		4A52B9FC1DB75AC600C54302 /* RowEditProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RowEditProfileCell.swift; sourceTree = "<group>"; };
 		4A5A14F81DA5E3AD00024FE3 /* NotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		4A5A150E1DA6226700024FE3 /* company4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = company4.png; sourceTree = "<group>"; };
@@ -1152,6 +1154,7 @@
 				5BF4812A1CE07166006930CC /* PollDetails.swift */,
 				4A5FF51B1D700198009818E4 /* PollChart.swift */,
 				4A4AF6B41DDE9815005D96DB /* Project.swift */,
+				4A51A15C1DE2853000FA3581 /* ProjectDetail.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -2136,6 +2139,7 @@
 				5B493CA01D35D7C000FABC67 /* GroupDetails.swift in Sources */,
 				5B0B534D1D0FA81B002FFD4B /* JSQMessageCollectionViewCell+Action.swift in Sources */,
 				5B4F53891D235EA800309BCB /* Chats.swift in Sources */,
+				4A51A15D1DE2853000FA3581 /* ProjectDetail.swift in Sources */,
 				5B09CEBB1CBB4A330042C70B /* LearnFlux.xcdatamodeld in Sources */,
 				5B02556B1D5B247C001CBF15 /* User.swift in Sources */,
 				5B3742641CC0CBAD00AF2897 /* UIView+RoundedRect.m in Sources */,

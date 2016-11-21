@@ -222,8 +222,12 @@ class Engine : NSObject {
                 print("Status Code: \(response.response!.statusCode)")
                 print("JSON: \(json)")
                 if let errorDesc = json["error_description"]! {
-                    Util.showMessageInViewController(viewController, title: "Error", message: errorDesc as! String) {
-                        if (callback != nil) { callback! (restat, json); }
+                    if let viewController = viewController{
+                        Util.showMessageInViewController(viewController, title: "Error", message: errorDesc as! String) {
+                            if callback != nil{ callback! (restat, json) }
+                        }
+                    }else{
+                        if callback != nil{ callback!(restat, json) }
                     }
                 }
                 else {

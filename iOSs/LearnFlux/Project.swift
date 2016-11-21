@@ -90,6 +90,7 @@ class Project: UIViewController {
     }
 }
 
+// - MARK: TableView
 extension Project: UITableViewDelegate, UITableViewDataSource{
     func numberOfSectionsInTableView(tableView: UITableView) -> Int{
         switch screenType {
@@ -122,7 +123,13 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
         case .List:
             return 2
         case .InsideProject:
-            return 1
+            switch section {
+            case 0:
+                return 1
+            case 1:
+                return 3
+            default: return 0
+            }
         }
     }
     
@@ -167,7 +174,7 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
     }
 }
 
-// MARK - Mock Up
+// - MARK: Mock Up
 extension Project{
     func mockUp(){
         setAccNavBar()
