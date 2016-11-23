@@ -127,17 +127,13 @@ class Engine : NSObject {
             if !dataJSON.isEmpty{
                 getGroups(){status in
                     if !self.clientData.getGroups().isEmpty{
-                        for eachGroup in self.clientData.getGroups(){
-                            getGroupInfo(groupId: eachGroup.id)
-                        }
+                        self.clientData.getGroups().forEach({ getGroupInfo(groupId: $0.id) })
                     }
                 }
                 getThreads()
                 getEvents(){ status, JSON in
                     if let events = Engine.clientData.getMyEvents(){
-                        for eachEvent in events{
-                            getEventDetail(event: eachEvent)
-                        }
+                        events.forEach({ getEventDetail(event: $0) })
                     }
                 }
                 getConnection()

@@ -42,6 +42,17 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
+        func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
+            let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
+            label.numberOfLines = 0
+            label.lineBreakMode = NSLineBreakMode.ByCharWrapping
+            label.font = font
+            label.text = text
+            
+            label.sizeToFit()
+            return label.frame.height
+        }
+        
         let cell = UITableViewCell(frame: CGRectZero)
         cell.frame.size.height = 0
         switch (indexPath.section, indexPath.row) {
@@ -56,9 +67,13 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
             switch section {
             case 0:
                 let detailCell = tableView.dequeueReusableCellWithIdentifier("Detail")!
+                let labelDetail = detailCell.viewWithTag(2) as! UILabel
+                detailCell.frame.size.height = heightForView(labelDetail.text!, font: labelDetail.font, width: labelDetail.width) + detailCell.height - labelDetail.height
                 cell.frame.size.height = detailCell.height
             case 1:
                 let missionCell = tableView.dequeueReusableCellWithIdentifier("Mission")!
+                let labelMission = missionCell.viewWithTag(1) as! UILabel
+                missionCell.frame.size.height = heightForView(labelMission.text!, font: labelMission.font, width: labelMission.width) + 10
                 cell.frame.size.height = missionCell.height
             case 2:
                 let goalCell = tableView.dequeueReusableCellWithIdentifier("Goal")!
@@ -93,7 +108,20 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
                 conView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
                 cell = detailCell
             case 1:
+                func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
+                    let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
+                    label.numberOfLines = 0
+                    label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+                    label.font = font
+                    label.text = text
+                    
+                    label.sizeToFit()
+                    return label.frame.height
+                }
+                
                 let missionCell = tableView.dequeueReusableCellWithIdentifier("Mission")!
+                let labelMission = missionCell.viewWithTag(1) as! UILabel
+                missionCell.frame.size.height = heightForView(labelMission.text!, font: UIFont(name: "Helvetica Neue", size: 14.0)!, width: UIScreen.mainScreen().bounds.width / tableView.frame.width * labelMission.width) + 10
                 cell = missionCell
             case 2:
                 let goalCell = tableView.dequeueReusableCellWithIdentifier("Goal")!

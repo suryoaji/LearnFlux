@@ -2348,7 +2348,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.idesolusiasia.learnflux;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1925bb5c-310f-46ca-953f-4dff6de0a8c1";
+				PROVISIONING_PROFILE = "9c9f8b31-f8c1-47c4-a13d-6a59a48ef3cc";
 				SWIFT_OBJC_BRIDGING_HEADER = "LearnFlux/LearnFlux-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -2367,7 +2367,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.idesolusiasia.learnflux;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1925bb5c-310f-46ca-953f-4dff6de0a8c1";
+				PROVISIONING_PROFILE = "9c9f8b31-f8c1-47c4-a13d-6a59a48ef3cc";
 				SWIFT_OBJC_BRIDGING_HEADER = "LearnFlux/LearnFlux-Bridging-Header.h";
 			};
 			name = Release;
