@@ -8,9 +8,17 @@
 
 import UIKit
 
-enum typeScreenProject{
+enum TypeScreenProject{
     case List
     case InsideProject
+    func indicatorHeader() -> Int{
+        switch self {
+        case .List:
+            return 0
+        case .InsideProject:
+            return 1
+        }
+    }
 }
 
 class Project: UIViewController {
@@ -20,6 +28,7 @@ class Project: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         screenType = .List
+        setTitleView(navigationItem.title!)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -42,7 +51,9 @@ class Project: UIViewController {
     @IBOutlet weak var labelNotification: UILabel!
     @IBOutlet weak var viewButtonBroadcast: UIView!
     @IBOutlet weak var buttonSearchHeader: UIButton!
-    @IBOutlet weak var buttonTitleHeader: UIButton!
+    @IBOutlet weak var buttonHeaderList: UIButton!
+    @IBOutlet weak var buttonHeaderProfile: UIButton!
+    @IBOutlet weak var indicatorHeaderView: UIView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var middleView: UIView!
     @IBOutlet weak var viewSearch: UIView!
@@ -51,9 +62,9 @@ class Project: UIViewController {
     @IBOutlet weak var textViewReply: UITextView!
     var titleList = ["Old Folks Home", "Animal Shelter"]
     
-    var screenType = typeScreenProject.List{
+    var screenType = TypeScreenProject.List{
         didSet{
-            setTitleHeaderByScreenType(screenType)
+            indicatorHeader = screenType.indicatorHeader()
             setButtonHeadersByScreenType(screenType)
             buttonCommenting.hidden = screenType == .List ? true : false
             tableView.reloadData()
@@ -88,6 +99,16 @@ class Project: UIViewController {
         textfieldSearch.resignFirstResponder()
         doSearch = false
     }
+    
+    @IBAction func viewListHeaderTapped(sender: UIButton) {
+        screenType = .List
+    }
+    
+    var indicatorHeader : Int = 0{
+        willSet{
+            moveIndicatorView(newValue)
+        }
+    }
 }
 
 // - MARK: TableView
@@ -97,7 +118,7 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
         case .List:
             return 1
         case .InsideProject:
-            return 2
+            return 3
         }
     }
     
@@ -112,6 +133,8 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
                 cell = tableView.dequeueReusableCellWithIdentifier("InsideListCell")!
             case 1:
                 cell = tableView.dequeueReusableCellWithIdentifier("InsideListCommentedCell")!
+            case 2:
+                cell.height = UIScreen.mainScreen().bounds.height - buttonCommenting.frame.origin.y - middleView.frame.origin.y + 5
             default: break
             }
         }
@@ -128,6 +151,8 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
                 return 1
             case 1:
                 return 3
+            case 2:
+                return 1
             default: return 0
             }
         }
@@ -168,8 +193,24 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
         switch screenType {
         case .List:
             screenType = .InsideProject
+            indicatorHeader = 1
         case .InsideProject:
             break
+        }
+    }
+}
+
+// : MARK: Perform Segue
+extension Project{
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let projectDetailVc = segue.destinationViewController as? ProjectDetail{
+            if let sender = sender as? Int{
+                switch sender {
+                case -1:
+                    projectDetailVc.type = .Edit
+                default: break
+                }
+            }
         }
     }
 }
@@ -186,11 +227,6 @@ extension Project{
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.leftBarButtonItem = leftBarButton
         
-        let label = UILabel(frame: CGRectMake(0, 0, self.view.width, 100))
-        label.text = navigationItem.title
-        label.font = UIFont(name: "Helvetica Neue Medium", size: 12.0)
-        label.textColor = UIColor.whiteColor()
-        self.navigationItem.titleView = label
         layoutWithNavBar()
     }
     
@@ -204,39 +240,60 @@ extension Project{
     }
     
     func rightNavigationBarButtonTapped(){
-        
+        let alertController = UIAlertController(title: "", message: "", preferredStyle: .ActionSheet)
+        let createNewProjectAlert = UIAlertAction(title: "Create New Project", style: .Default){ action in
+            self.performSegueWithIdentifier("ProjectDetailSegue", sender: -1)
+        }
+        let cancelAlert = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(createNewProjectAlert)
+        alertController.addAction(cancelAlert)
+        presentViewController(alertController, animated: true, completion: nil)
     }
     
     func revealMenu(){
         revealController.showViewController(self.revealController.leftViewController)
     }
     
-    func setTitleHeaderByScreenType(screenType: typeScreenProject){
-        switch screenType {
-        case .List:
-            buttonTitleHeader.setImage(nil, forState: .Normal)
-            buttonTitleHeader.userInteractionEnabled = false
-        case .InsideProject:
-            buttonTitleHeader.setImage(UIImage(named: "back-24.png"), forState: .Normal)
-            buttonTitleHeader.userInteractionEnabled = true
-        }
+    func setTitleView(title: String){
+        let label = UILabel(frame: CGRectMake(0, 0, self.view.width, 100))
+        label.text = title
+        label.font = UIFont(name: "Helvetica Neue Medium", size: 12.0)
+        label.textColor = UIColor.whiteColor()
+        self.navigationItem.titleView = label
     }
     
-    func setButtonHeadersByScreenType(screenType: typeScreenProject){
+    func moveIndicatorView(position: Int){
+        let button = position == 0 ? buttonHeaderList : buttonHeaderProfile
+        let fromButton = position == 0 ? buttonHeaderProfile : buttonHeaderList
+        UIView.animateWithDuration(0.2, delay: 0, options: .CurveEaseInOut, animations: {
+            self.setPositionIndicatorHeaderView(button, fromButton: fromButton)
+            }, completion: nil)
+    }
+    
+    func setPositionIndicatorHeaderView(toButton: UIButton, fromButton: UIButton? = nil){
+        fromButton?.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        toButton.setTitleColor(LFColor.blue, forState: .Normal)
+        indicatorHeaderView.frame.origin.x = toButton.frame.origin.x
+        indicatorHeaderView.frame.size.width = toButton.bounds.width
+    }
+    
+    func setButtonHeadersByScreenType(screenType: TypeScreenProject){
         switch screenType {
         case .List:
             viewButtonBroadcast.frame.origin.x = view.frame.width - viewButtonBroadcast.frame.width * 2
             buttonSearchHeader.setImage(UIImage(named: "search"), forState: .Normal)
+            buttonHeaderProfile.hidden = true
         case .InsideProject:
             viewButtonBroadcast.frame.origin.x = view.frame.width - viewButtonBroadcast.frame.width * 3
             buttonSearchHeader.setImage(UIImage(named: "add-two-people"), forState: .Normal)
+            buttonHeaderProfile.hidden = false
         }
     }
     
     func hideTextViewReply(notif: NSNotification){
         viewContainerTextViewReply.frame.origin.y = UIScreen.mainScreen().bounds.height - viewContainerTextViewReply.frame.height
         viewContainerTextViewReply.hidden = true
-        tableView.frame.size.height = UIScreen.mainScreen().bounds.height - tableView.frame.origin.y
+        tableView.frame.size.height = UIScreen.mainScreen().bounds.height - middleView.frame.origin.y
     }
     
     func keyboardIsShown(notif: NSNotification){
