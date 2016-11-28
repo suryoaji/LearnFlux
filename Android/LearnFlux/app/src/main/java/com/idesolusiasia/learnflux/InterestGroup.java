@@ -317,11 +317,11 @@ public class InterestGroup extends BaseActivity{
                 dial.dismiss();
             }
         });
-        Engine.getMeWithRequest(getApplicationContext(),"friends", new RequestTemplate.ServiceCallback() {
+        Engine.getMeWithRequest(getApplicationContext(),"Friends", new RequestTemplate.ServiceCallback() {
             @Override
             public void execute(JSONObject obj) {
                 try {
-                    JSONArray array = obj.getJSONArray("friends");
+                    JSONArray array = obj.getJSONArray("Friends");
                     ArrayList<FriendReq>contactReq = new ArrayList<>();
                     for(int i=0;i<array.length();i++){
                         JSONObject ap = array.getJSONObject(i);
@@ -332,7 +332,7 @@ public class InterestGroup extends BaseActivity{
                         adap = new AddGroupAdapter(getApplicationContext(),contactReq);
                         listcontent.setAdapter(adap);
                     }else if(contactReq.size()==0){
-                        Toast.makeText(getApplicationContext(),"You need to have friends", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"You need to have Friends", Toast.LENGTH_LONG).show();
                         finish();
                         Intent i = getIntent();
                         startActivity(i);
@@ -355,15 +355,15 @@ public class InterestGroup extends BaseActivity{
         createRecycler.setLayoutManager(layoutManager);
         createRecycler.setItemAnimator(new DefaultItemAnimator());
         final ArrayList<FriendReq>friendList = new ArrayList<FriendReq>();
-        Engine.getMeWithRequest(dial.getContext(), "friends", new RequestTemplate.ServiceCallback() {
+        Engine.getMeWithRequest(dial.getContext(), "Friends", new RequestTemplate.ServiceCallback() {
             @Override
             public void execute(JSONObject obj) {
                  try{
-                    JSONArray friend = obj.getJSONArray("friends");
+                    JSONArray friend = obj.getJSONArray("Friends");
                      for(int i=0;i<friend.length();i++){
                          JSONObject n = friend.getJSONObject(i);
-                         FriendReq friends = Converter.convertFriendRequest(n);
-                         friendList.add(friends);
+                         FriendReq Friends = Converter.convertFriendRequest(n);
+                         friendList.add(Friends);
                      }
                      CreateGroupAdapter cAdapter = new CreateGroupAdapter(dial.getContext(),friendList);
                      createRecycler.setAdapter(cAdapter);

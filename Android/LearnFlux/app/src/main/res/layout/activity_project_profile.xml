@@ -41,6 +41,7 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp" />
             <ImageView
+                android:id="@+id/inviteCollab"
                 android:src="@drawable/ic_add_peoples"
                 android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
@@ -115,6 +116,7 @@
 
             <ImageView
                 android:src="@drawable/add_two_people"
+                android:id="@+id/Profile_joinGroup"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content" />
             <ImageView

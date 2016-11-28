@@ -82,6 +82,7 @@ public class BaseActivity extends AppCompatActivity
 								Contact contact = gson.fromJson(obj.toString(), Contact.class);
 								tvName.setText(contact.getFirst_name()+ " "+ contact.getLast_name());
 								tvEmail.setText(contact.getEmail());
+								User.getUser().setID(contact.getId());
 								User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
 								User.getUser().setWork(contact.getWork());
 								User.getUser().setLocation(contact.getLocation());

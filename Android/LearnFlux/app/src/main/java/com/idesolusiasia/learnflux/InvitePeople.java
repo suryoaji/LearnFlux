@@ -51,12 +51,12 @@ public class InvitePeople extends BaseActivity{
         peopleRecycler.hasFixedSize();
         peopleRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        Engine.getMeWithRequest(getApplicationContext(), "friends", new RequestTemplate.ServiceCallback() {
+        Engine.getMeWithRequest(getApplicationContext(), "Friends", new RequestTemplate.ServiceCallback() {
             @Override
             public void execute(JSONObject obj) {
                 try{
-                    if(obj.has("friends")){
-                        JSONArray friend = obj.getJSONArray("friends");
+                    if(obj.has("Friends")){
+                        JSONArray friend = obj.getJSONArray("Friends");
                         for(int i=0;i<friend.length();i++) {
                             PeopleInvite people = Converter.convertInvite(friend.getJSONObject(i));
                             participant.add(people);

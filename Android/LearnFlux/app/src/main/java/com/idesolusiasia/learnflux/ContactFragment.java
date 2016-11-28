@@ -57,11 +57,11 @@ public class ContactFragment extends Fragment {
     public void initFriend(){
         theContact = new ArrayList<>();
         theContact.clear();
-        Engine.getMeWithRequest(getContext(), "friends", new RequestTemplate.ServiceCallback() {
+        Engine.getMeWithRequest(getContext(), "Friends", new RequestTemplate.ServiceCallback() {
             @Override
             public void execute(JSONObject obj) {
                 try {
-                    JSONArray friends = obj.getJSONArray("friends");
+                    JSONArray friends = obj.getJSONArray("Friends");
                     for(int i=0;i<friends.length();i++) {
                         Contact c = Converter.convertContact(friends.getJSONObject(i));
                         theContact.add(c);

@@ -866,8 +866,6 @@ public class Engine {
 								JSONObject objs = errors.getJSONObject(i);
 								String details = objs.getString("details");
 								Functions.showAlert(context, "Notification", details);
-
-
 							}
 						}catch (JSONException e) {
 							e.printStackTrace();
@@ -891,12 +889,25 @@ public class Engine {
 			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
 				@Override
 				public void execute(JSONObject obj) {
-					if(obj!=null){
-					}if(callback!=null){
+					if (obj != null) {
+					}
+					if (callback != null) {
 						callback.execute(obj);
 					}
 				}
-			},null);
+			}, new RequestTemplate.ErrorCallback() {
+				@Override
+				public void execute(JSONObject error) {
+					if(error!=null){
+						try {
+							String message = error.getString("message");
+							Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+						}catch (JSONException e){
+							e.printStackTrace();
+						}
+					}
+				}
+			});
 		}
 	}
 	public static void joinGroup(final Context context, final String groupID,

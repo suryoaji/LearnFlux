@@ -129,20 +129,22 @@ public class PublicProfile extends BaseActivity {
                     }
 
                     //MUTUAL FRIEND
-                        JSONArray mt = obj.getJSONArray("mutual");
-                        for (int i = 0; i < mt.length(); i++) {
-                            if (c.getMutual().get(i).get_links().getProfile_picture() != null) {
-                                mutualImages.setImageUrl(url + c.getMutual().get(0).get_links().getProfile_picture().getHref(), imageLoader);
-                            } else {
-                                mutualImages.setDefaultImageResId(R.drawable.user_profile);
-                            }
-                            StringBuilder sb = new StringBuilder();
-                            ArrayList<String> collectionString = new ArrayList<String>();
-                            collectionString.add(c.getMutual().get(i).getFirst_name() + " " + c.getMutual().get(i).getLast_name());
-                            for (String string : collectionString) {
-                                sb.append("Mutual friend of " + string + " ");
-                                sb.append(",");
-                                mutual.setText(sb.length() > 0 ? sb.substring(0, sb.length() - 1) : " ");
+                        if(obj.has("mutual")) {
+                            JSONArray mt = obj.getJSONArray("mutual");
+                            for (int i = 0; i < mt.length(); i++) {
+                                if (c.getMutual().get(i).get_links().getProfile_picture() == null) {
+                                    mutualImages.setDefaultImageResId(R.drawable.user_profile);
+                                } else {
+                                    mutualImages.setImageUrl(url + c.getMutual().get(i).get_links().getProfile_picture().getHref(), imageLoader);
+                                }
+                                StringBuilder sb = new StringBuilder();
+                                ArrayList<String> collectionString = new ArrayList<String>();
+                                collectionString.add(c.getMutual().get(i).getFirst_name() + " " + c.getMutual().get(i).getLast_name());
+                                for (String string : collectionString) {
+                                    sb.append("Mutual friend of " + string + " ");
+                                    sb.append(",");
+                                    mutual.setText(sb.length() > 0 ? sb.substring(0, sb.length() - 1) : " ");
+                                }
                             }
                         }
 

@@ -214,7 +214,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					final List<Friends> mutualFriendReq = new ArrayList<Friends>();
 
 
-					Engine.getMeWithRequest(getApplicationContext(),"friends", new RequestTemplate.ServiceCallback() {
+					Engine.getMeWithRequest(getApplicationContext(),"Friends", new RequestTemplate.ServiceCallback() {
 						@Override
 						public void execute(JSONObject obj) {
 							try {
@@ -563,12 +563,12 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	void initConnection(){
 		Org = new ArrayList<>();
 		final TextView noConnection = (TextView)findViewById(R.id.emptyConnection);
-		Engine.getMeWithRequest(getApplicationContext(), "friends", new RequestTemplate.ServiceCallback() {
+		Engine.getMeWithRequest(getApplicationContext(), "Friends", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try{
-					if(obj.has("friends")){
-						JSONArray friends = obj.getJSONArray("friends");
+					if(obj.has("Friends")){
+						JSONArray friends = obj.getJSONArray("Friends");
 						Contact c = Converter.convertContact(friends.getJSONObject(0));
 						Org.add(c);
 						Engine.getOrganizations(getApplicationContext(), new RequestTemplate.ServiceCallback() {
