@@ -10,7 +10,11 @@ import UIKit
 
 enum TypeScreenProject{
     case List
-    case InsideProject
+    case InsideProject(view: InsideView)
+    enum InsideView{
+        case normal
+        case comment
+    }
     func indicatorHeader() -> Int{
         switch self {
         case .List:
@@ -41,6 +45,7 @@ class Project: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        view.endEditing(true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,13 +65,20 @@ class Project: UIViewController {
     @IBOutlet weak var buttonCommenting: UIButton!
     @IBOutlet weak var viewContainerTextViewReply: UIView!
     @IBOutlet weak var textViewReply: UITextView!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var viewContainerCommentTableView: UIView!
     var titleList = ["Old Folks Home", "Animal Shelter"]
     
     var screenType = TypeScreenProject.List{
         didSet{
             indicatorHeader = screenType.indicatorHeader()
             setButtonHeadersByScreenType(screenType)
-            buttonCommenting.hidden = screenType == .List ? true : false
+            switch screenType {
+            case .List:
+                buttonCommenting.hidden = true
+            default:
+                buttonCommenting.hidden = false
+            }
             tableView.reloadData()
         }
     }
@@ -77,7 +89,11 @@ class Project: UIViewController {
     }
     
     @IBAction func buttonTitleHeaderTapped(sender: UIButton) {
-        screenType = screenType == .InsideProject ? .List : .InsideProject
+        switch screenType {
+        case .InsideProject:
+            screenType = .List
+        default: break
+        }
     }
     
     @IBAction func buttonSearchHeaderTapped(sender: UIButton) {
@@ -86,7 +102,7 @@ class Project: UIViewController {
             viewSearch.alpha = 1.0
             textfieldSearch.becomeFirstResponder()
         case .InsideProject:
-            break
+            performSegueWithIdentifier("ProjectDetailSegue", sender: -2)
         }
     }
     
@@ -102,6 +118,12 @@ class Project: UIViewController {
     
     @IBAction func viewListHeaderTapped(sender: UIButton) {
         screenType = .List
+        changeScrollViewToDefaultOffset()
+    }
+    
+    @IBAction func viewProfileHeaderTapped(sender: UIButton) {
+        screenType = .InsideProject(view: .normal)
+        changeScrollViewToDefaultOffset()
     }
     
     var indicatorHeader : Int = 0{
@@ -178,10 +200,15 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
             case 0:
                 cell = tableView.dequeueReusableCellWithIdentifier("InsideListCell")!
                 let projectView = cell.viewWithTag(1)!
+                let buttonRequestJoin = cell.viewWithTag(2) as! UIButton
                 projectView.layer.borderWidth = 0.6
                 projectView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1).CGColor
+                buttonRequestJoin.addTarget(self, action: #selector(buttonRequestJoinTapped), forControlEvents: .TouchUpInside)
             case 1:
                 cell = tableView.dequeueReusableCellWithIdentifier("InsideListCommentedCell")!
+                let buttonComment = cell.viewWithTag(1) as! UIButton
+                buttonComment.addTarget(self, action: #selector(buttonCommentTapped), forControlEvents: .TouchUpInside)
+                buttonComment.accessibilityIdentifier = "\(indexPath.section)-\(indexPath.row)"
             default: break
             }
         }
@@ -192,7 +219,7 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
         view.endEditing(true)
         switch screenType {
         case .List:
-            screenType = .InsideProject
+            screenType = .InsideProject(view: .normal)
             indicatorHeader = 1
         case .InsideProject:
             break
@@ -207,7 +234,11 @@ extension Project{
             if let sender = sender as? Int{
                 switch sender {
                 case -1:
-                    projectDetailVc.type = .Edit
+                    projectDetailVc.type = .Edit(from: .createNew)
+                case -2:
+                    projectDetailVc.type = .Task(type: .invate)
+                case -3:
+                    projectDetailVc.type = .Task(type: .join)
                 default: break
                 }
             }
@@ -235,6 +266,9 @@ extension Project{
         headerView.frame.origin.y = navigationController!.navigationBar.bounds.height + UIApplication.sharedApplication().statusBarFrame.height
         middleView.frame.origin.y = headerView.frame.origin.y + headerView.frame.height + 14
         middleView.frame.size.height = UIScreen.mainScreen().bounds.height - middleView.frame.origin.y
+        tableView.frame.size.height = UIScreen.mainScreen().bounds.height - middleView.frame.origin.y
+        scrollView.contentSize = CGSizeMake(scrollView.width * 2, scrollView.height)
+        viewContainerCommentTableView.frame.origin.x = scrollView.width
         labelNotification.layer.cornerRadius = labelNotification.frame.width / 2
         viewContainerTextViewReply.hidden = true
     }
@@ -300,6 +334,42 @@ extension Project{
         let keyboardHeight = (notif.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().height
         viewContainerTextViewReply.frame.origin.y = middleView.frame.height - keyboardHeight - viewContainerTextViewReply.frame.height
         tableView.frame.size.height = viewContainerTextViewReply.frame.origin.y
+    }
+    
+    func buttonRequestJoinTapped(sender: UIButton){
+        performSegueWithIdentifier("ProjectDetailSegue", sender: -3)
+    }
+    
+    func buttonCommentTapped(sender: UIButton){
+//        guard let value = sender.accessibilityIdentifier else{
+//            return
+//        }
+//        let val = value.componentsSeparatedByString("-").map({ Int($0)! })
+        screenType = .InsideProject(view: .comment)
+        changeScrollViewOffset(1)
+    }
+    
+    func changeScrollViewOffset(page: Int = 0){
+        UIView.animateWithDuration(0.2, delay: 0, options: .CurveEaseInOut, animations: {
+            self.scrollView.contentOffset = CGPointMake(self.scrollView.width * CGFloat(page), 0)
+            }, completion: nil)
+    }
+    
+    func checkPageOfScrollView() -> Int?{
+        if scrollView.contentOffset.x > 0{
+            let page = Int(scrollView.contentOffset.x / scrollView.width)
+            return page
+        }else{
+            return nil
+        }
+    }
+    
+    func changeScrollViewToDefaultOffset(){
+        if let page = checkPageOfScrollView(){
+            if page != 0{
+                changeScrollViewOffset(0)
+            }
+        }
     }
 }
 

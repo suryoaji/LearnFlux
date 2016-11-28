@@ -8,13 +8,13 @@
 
 import Foundation
 
-protocol AttachEventReturnDelegate {
+protocol AttachEventReturnDelegate: class {
     func sendSelectedEventData (event: Dictionary<String, AnyObject>);
 }
 
 class AttachEvent : UITableViewController, UITextFieldDelegate {
     
-    var delegate : AttachEventReturnDelegate!;
+    weak var delegate : AttachEventReturnDelegate!
     let flow = Flow.sharedInstance
     
     var stringDate: String!

@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc protocol IGGroupCellDelegate{
+protocol IGGroupCellDelegate: class{
     func buttonMessageTapped(cell: IGGroupCell)
     func buttonEventsTapped(cell: IGGroupCell)
     func buttonActivitiesTapped(cell: IGGroupCell)

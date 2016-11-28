@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc protocol GroupCellDelegate{
+protocol GroupCellDelegate: class{
     func buttonActionTapped(cell: GroupCell)
 }
 

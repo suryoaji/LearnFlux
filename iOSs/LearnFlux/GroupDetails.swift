@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc protocol GroupDetailsDelegate {
+protocol GroupDetailsDelegate: class {
     func pushViewController (viewController: UIViewController, animated: Bool)
     func presentViewController (viewController: UIViewController, animated: Bool)
     var viewController : GroupDetails{ get }

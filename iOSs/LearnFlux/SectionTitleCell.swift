@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc protocol SectionTitleCellDelegate{
+protocol SectionTitleCellDelegate: class{
     func editButtonTapped(cell: SectionTitleCell)
 }
 

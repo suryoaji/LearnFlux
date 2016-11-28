@@ -9,11 +9,11 @@
 import Foundation
 import AZDropdownMenu
 
-@objc protocol PushDelegate {
+protocol PushDelegate: class{
     func pushViewController (viewController: UIViewController, animated: Bool);
 }
 
-@objc protocol RefreshDelegate {
+protocol RefreshDelegate: class{
     func refreshData (callback : (()->Void)?);
 }
 

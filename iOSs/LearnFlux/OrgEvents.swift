@@ -10,7 +10,7 @@ import Foundation
 import QuartzCore
 import DropDown
 
-@objc protocol OrgEventsDelegate {
+protocol OrgEventsDelegate: class{
     func setIdGroupOfEvents(idGroup idGroup: String)
     func setIsAdminOrNot(isAdmin: Bool)
     func removeAllNotification()

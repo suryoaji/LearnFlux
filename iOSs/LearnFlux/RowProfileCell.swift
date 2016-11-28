@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc protocol RowProfileCellDelegate{
+protocol RowProfileCellDelegate: class{
     func buttonMoreTapped(cell: RowProfileCell)
 }
 

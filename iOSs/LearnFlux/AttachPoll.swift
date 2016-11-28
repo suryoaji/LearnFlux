@@ -8,12 +8,12 @@
 
 import Foundation
 
-protocol AttachPollReturnDelegate {
+protocol AttachPollReturnDelegate: class {
     func sendSelectedPollData (poll: Dictionary<String, AnyObject>);
 }
 
 class AttachPoll : UITableViewController {
-    var delegate : AttachPollReturnDelegate!;
+    weak var delegate : AttachPollReturnDelegate!;
     
     var question : String = "";
     var answers = [String]();
