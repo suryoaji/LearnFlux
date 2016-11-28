@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,7 +18,9 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Participant;
+import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,26 +73,38 @@ public class PeopleAdapter extends ArrayAdapter<Participant> {
 		String url = "http://lfapp.learnflux.net";
 		if (conView==null){
 			LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			conView= inflater.inflate(R.layout.row_people,null);
+			conView= inflater.inflate(R.layout.row_people,parent,false);
 
 			holder = new PeopleViewHolder(conView);
 			conView.setTag(holder);
 		}else {
 			holder = (PeopleViewHolder) conView.getTag();
 		}
-		ImageLoader imageLoader = VolleySingleton.getInstance(getContext()).getImageLoader();
 		Participant p = participants.get(position);
 		holder.mItem = participants.get(position);
 		holder.tvName.setText(participants.get(position).getFirstName());
 		holder.tvName.setTextColor(Color.parseColor("#000000"));
-		if(p.get_links()!=null) {
+		/*if(p.get_links()!=null) {
 			if (participants.get(position).get_links().getProfile_picture() != null) {
 				holder.ivPhoto.setImageUrl(url + participants.get(position).get_links().getProfile_picture().getHref(), imageLoader);
 			} else {
 				holder.ivPhoto.setDefaultImageResId(R.drawable.user_profile);
 			}
+		}*/
+		if(p.get_links()!=null) {
+			if(p.get_links().getProfile_picture()!=null) {
+				String pos = url + participants.get(position).get_links().getProfile_picture().getHref();
+				Animation animation = AnimationUtils.loadAnimation(getContext(),
+						R.anim.popup_enter);
+				Ion.with(getContext())
+						.load(pos)
+						.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+						.withBitmap().animateLoad(animation)
+						.placeholder(R.drawable.ic_account_box)
+						.error(R.drawable.ic_account_box)
+						.intoImageView(holder.ivPhoto);
+			}
 		}
-
 		holder.ivCheck.setVisibility((selectedParticipant.contains(participants.get(position))) ? View.VISIBLE : View.GONE);
 		holder.relativeLayout.setBackgroundColor((selectedParticipant.contains(participants.get(position))) ? Color.parseColor("#FFCDCDCD") : Color.parseColor("#00ffffff"));
 
@@ -102,7 +118,7 @@ public class PeopleAdapter extends ArrayAdapter<Participant> {
 
 	public class PeopleViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final NetworkImageView ivPhoto;
+        public final ImageView ivPhoto;
         public final TextView tvName;
 		public final ImageView ivCheck;
         public Participant mItem;
@@ -111,7 +127,7 @@ public class PeopleAdapter extends ArrayAdapter<Participant> {
         public PeopleViewHolder(View view) {
             super(view);
             mView = view;
-	        ivPhoto = (NetworkImageView) view.findViewById(R.id.ivPhoto);
+	        ivPhoto = (ImageView) view.findViewById(R.id.ivPhoto);
 	        tvName = (TextView) view.findViewById(R.id.tvName);
 	        ivCheck = (ImageView) view.findViewById(R.id.ivCheck);
 	        relativeLayout = (RelativeLayout) view.findViewById(R.id.relativeLayout);

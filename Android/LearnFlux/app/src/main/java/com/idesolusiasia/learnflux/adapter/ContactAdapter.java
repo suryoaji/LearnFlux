@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,10 +19,12 @@ import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.koushikdutta.ion.Ion;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,8 +45,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
     private final int CONTACT =0 , GROUP=1;
 
-    public ContactAdapter(List<Object>alphabet)
+    public ContactAdapter(Context c, List<Object>alphabet)
     {
+        this.context=c;
         this.theContact=alphabet;
     }
 
@@ -65,6 +70,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+
 
         switch (viewType) {
             case CONTACT:
@@ -118,15 +124,27 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
            }
 
            private void configureViewHolder2(ViewHolder2 vh2, int position) {
-               String url="http://lfapp.learnflux.net/v1/image?key=";
                final Group group =(Group)theContact.get(position);
+               String url="http://lfapp.learnflux.net/v1/image?key=";
                vh2.getAdd().setVisibility(View.GONE);
-               if(group !=null) {
+               /*if(group !=null) {
                    vh2.gettitle2().setText(group.getName());
                    if (group.getImage() == null) {
                        vh2.getcircular2().setDefaultImageResId(R.drawable.company1);
                    } else {
                        vh2.getcircular2().setImageUrl(url + group.getImage(), imageLoader);
+                   }
+               }*/
+               if(group!=null){
+                   vh2.gettitle2().setText(group.getName());
+                   if (group.getImage() == null) {
+                       vh2.getcircular2().setImageResource(R.drawable.company1);
+                   }else{
+                               Ion.with(context)
+                               .load(url+group.getImage())
+                               .addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+                               .withBitmap()
+                               .intoImageView( vh2.getcircular2());
                    }
                }
                vh2.getStats().setText(group.getAccess());
@@ -204,13 +222,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
       }
     }
     private class ViewHolder2 extends RecyclerView.ViewHolder{
-        TextView title2; NetworkImageView circular2;
+        TextView title2; ImageView circular2;
         ImageView add;
         TextView stats;
         public ViewHolder2(View itemView) {
             super(itemView);
             title2 = (TextView)itemView.findViewById(R.id.titleOrgConnection);
-            circular2 = (NetworkImageView)itemView.findViewById(R.id.imageOrgConnection);
+            circular2 = (ImageView)itemView.findViewById(R.id.imageOrgConnection);
             add = (ImageView)itemView.findViewById(R.id.joinGroup);
             stats = (TextView)itemView.findViewById(R.id.StatusOrgConnection);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -245,11 +263,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public void settitle2(TextView title2) {
             this.title2 = title2;
         }
-        public NetworkImageView getcircular2() {
+        public ImageView getcircular2() {
             return circular2;
         }
 
-        public void setcircular2(CircularNetworkImageView circular2) {
+        public void setcircular2(ImageView circular2) {
             this.circular2 = circular2;
         }
 

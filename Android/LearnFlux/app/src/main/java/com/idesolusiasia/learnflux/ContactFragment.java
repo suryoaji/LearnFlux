@@ -2,20 +2,16 @@ package com.idesolusiasia.learnflux;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.ContactAdapter;
-import com.idesolusiasia.learnflux.adapter.SearchAdapter;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
@@ -27,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -107,7 +102,7 @@ public class ContactFragment extends Fragment {
 
     }
     private void bindDataToAdapter(){
-        sc = new ContactAdapter(theContact);
+        sc = new ContactAdapter(getActivity(),theContact);
         rcView.setAdapter(sc);
         rcView.refreshDrawableState();
     }

@@ -3,18 +3,12 @@ package com.idesolusiasia.learnflux;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,20 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
-import com.idesolusiasia.learnflux.adapter.CreateGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.InterestGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.Interest_GroupYouKnow;
-import com.idesolusiasia.learnflux.adapter.SearchAdapter;
 import com.idesolusiasia.learnflux.adapter.SearchInterestGroup;
-import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Participant;
-import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
-import com.idesolusiasia.learnflux.util.Functions;
-import com.idesolusiasia.learnflux.util.ItemOffsetDecoration;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 
 import org.json.JSONArray;
@@ -48,7 +36,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -124,12 +111,12 @@ public class InterestGroup extends BaseActivity{
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            searching();
+
                     }
 
                     @Override
                     public void afterTextChanged(Editable s) {
-
+                        searching();
                     }
                 });
             }

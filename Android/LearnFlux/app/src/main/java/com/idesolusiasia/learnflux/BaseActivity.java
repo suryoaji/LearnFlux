@@ -13,12 +13,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.User;
@@ -27,6 +32,8 @@ import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -55,33 +62,74 @@ public class BaseActivity extends AppCompatActivity
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				final ImageLoader imageLoader = VolleySingleton.getInstance(getApplicationContext()).getImageLoader();
 				LinearLayout navigation = (LinearLayout)drawerView.findViewById(R.id.linearNavigation) ;
 				final TextView tvName = (TextView) drawerView.findViewById(R.id.tvDrawerName);
 				final TextView tvEmail = (TextView) drawerView.findViewById(R.id.tvDrawerEmail);
-				final NetworkImageView ivDrawerPic = (NetworkImageView)drawerView.findViewById(R.id.ivDrawerPic);
-				if(User.getUser().getProfile_picture()!=null) {
-					ivDrawerPic.setImageUrl(User.getUser().getProfile_picture(), imageLoader);
-				}else {
-					ivDrawerPic.setDefaultImageResId(R.drawable.user_profile);
-				}
-				Engine.getMeWithRequest(getApplicationContext(), "details",  new RequestTemplate.ServiceCallback() {
+				final ImageView ivDrawerPic = (ImageView)drawerView.findViewById(R.id.ivDrawerPic);
+				final String url = "http://lfapp.learnflux.net";
+				String getUrl =  url + "/v1"+"/me"+"/details";
+				Ion.with(getApplicationContext()).load(getUrl)
+						.addHeader("Authorization", "Bearer "+User.getUser().getAccess_token())
+						.asJsonObject()
+						.setCallback(new FutureCallback<JsonObject>() {
+							@Override
+							public void onCompleted(Exception e, JsonObject result) {
+								if(e!=null){
+									Toast.makeText(BaseActivity.this, "Something Wrong", Toast.LENGTH_SHORT).show();
+								}
+								JsonObject obj = result.getAsJsonObject();
+								Gson gson = new Gson();
+								Contact contact = gson.fromJson(obj.toString(), Contact.class);
+								tvName.setText(contact.getFirst_name()+ " "+ contact.getLast_name());
+								tvEmail.setText(contact.getEmail());
+								User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
+								User.getUser().setWork(contact.getWork());
+								User.getUser().setLocation(contact.getLocation());
+								Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+										R.anim.popup_enter);
+								if(contact.get_links().getProfile_picture()!=null) {
+									String pic = url+contact.get_links().getProfile_picture().getHref();
+									User.getUser().setProfile_picture(pic);
+									Ion.with(getApplicationContext())
+											.load(pic)
+											.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+											.withBitmap().animateLoad(animation)
+											.intoImageView(ivDrawerPic);
+								}else{
+									ivDrawerPic.setImageResource(R.drawable.user_profile);
+								}
+							}
+						});
+				/*Engine.getMeWithRequest(getApplicationContext(), "details",  new RequestTemplate.ServiceCallback() {
 					@Override
 					public void execute(JSONObject obj) {
 						try{
 							Contact contact= Converter.convertContact(obj);
-							String url = "http://lfapp.learnflux.net/v1/image?key=profile/"+contact.getId();
-							User.getUser().setProfile_picture(url);
+							String url = "http://lfapp.learnflux.net";
+							if(contact.get_links().getProfile_picture()!=null) {
+								String pic = contact.get_links().getProfile_picture().getHref();
+								User.getUser().setProfile_picture(url+pic);
+							}
 							User.getUser().setID(contact.getId());
 							User.getUser().setUsername(contact.getUsername());
 							tvName.setText(contact.getFirst_name()+" "+ contact.getLast_name());
 							tvEmail.setText(contact.getEmail());
-							ivDrawerPic.setImageUrl(url, imageLoader);
+							Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+									R.anim.popup_enter);
+							if(contact.get_links().getProfile_picture()!=null) {
+								Ion.with(getApplicationContext())
+										.load(url+contact.get_links().getProfile_picture().getHref())
+										.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+										.withBitmap().animateLoad(animation)
+										.intoImageView(ivDrawerPic);
+							}else{
+								ivDrawerPic.setImageResource(R.drawable.user_profile);
+							}
 						}catch (JSONException e){
 							e.printStackTrace();
 						}
 					}
-				});
+				});*/
 				navigation.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {

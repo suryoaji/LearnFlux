@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:clickable="true" android:focusable="true"
         android:id="@+id/titleLayout">
-        <com.android.volley.toolbox.NetworkImageView
+        <ImageView
             android:id="@+id/imageOfGroupDetail"
             android:scaleType="fitXY"
             android:padding="5dp"

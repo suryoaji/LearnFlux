@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,8 +16,10 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +48,22 @@ public class GroupOganizationAdapter extends RecyclerView.Adapter<GroupOganizati
     @Override
     public void onBindViewHolder(OrgTileHolder holder, int position) {
         final Group org= organizations.get(position);
-        String url = "http://lfapp.learnflux.net/v1/image?key="+org.getImage();
-        if(org.getImage()== null){
+        String url = "http://lfapp.learnflux.net/v1/image?key=";
+     /*   if(org.getImage()== null){
             holder.image.setDefaultImageResId(R.drawable.company1);
         }else {
             holder.image.setImageUrl(url, imageLoader);
+        }*/
+        Animation animation = AnimationUtils.loadAnimation(context,
+                R.anim.popup_enter);
+        if(org.getImage()!=null) {
+                     Ion.with(context)
+                    .load(url+org.getImage())
+                    .addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+                    .withBitmap().animateLoad(animation)
+                    .intoImageView(holder.image);
+        }else{
+            holder.image.setImageResource(R.drawable.company1);
         }
         holder.txt1.setText(org.getName());
         holder.txt2.setText(org.getAccess());
@@ -61,12 +76,12 @@ public class GroupOganizationAdapter extends RecyclerView.Adapter<GroupOganizati
     }
 
     public class OrgTileHolder extends RecyclerView.ViewHolder {
-        NetworkImageView image;
+        ImageView image;
         TextView txt1, txt2;
         ImageView add;
         public OrgTileHolder(View itemView) {
             super(itemView);
-            image = (NetworkImageView) itemView.findViewById(R.id.imageOrgConnection);
+            image = (ImageView) itemView.findViewById(R.id.imageOrgConnection);
             txt1 = (TextView)itemView.findViewById(R.id.titleOrgConnection);
             txt2 = (TextView)itemView.findViewById(R.id.StatusOrgConnection);
             add = (ImageView)itemView.findViewById(R.id.joinGroup);

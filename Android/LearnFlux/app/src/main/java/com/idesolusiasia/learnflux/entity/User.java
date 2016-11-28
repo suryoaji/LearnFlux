@@ -18,6 +18,9 @@ public class User {
 	private List<User>friend_request;
 	private String children;
 	private String interests;
+	private String work;
+	private String location;
+
 
 	private User(){
 		access_token="57453e293a603f8c168b4567_5gj7ywf0ocsoosw0sc8sgsgk8gckkc80o8co8gg00o08g88c4o";
@@ -29,6 +32,8 @@ public class User {
 		profile_picture="";
 		children="";
 		interests="";
+		work="";
+		location="";
 		ID=0;
 	}
 
@@ -124,6 +129,22 @@ public class User {
 
 	public void setChildren(String children) {
 		this.children = children;
+	}
+
+	public String getWork() {
+		return work;
+	}
+
+	public void setWork(String work) {
+		this.work = work;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

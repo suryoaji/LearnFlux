@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.koushikdutta.ion.Ion;
 
 
 import java.util.List;
@@ -34,8 +37,9 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
     private final int USER=0, GROUP=1;
 
-    public SearchAdapter(List<Object>mSearch){
+    public SearchAdapter(Context c, List<Object>mSearch){
         this.search=mSearch;
+        this.context=c;
     }
 
     @Override
@@ -141,12 +145,12 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public class viewGroup extends RecyclerView.ViewHolder {
-        NetworkImageView image;
+        ImageView image;
         TextView txt1, txt2;
         ImageView joinGrp;
         public viewGroup(View itemView) {
             super(itemView);
-            image = (NetworkImageView) itemView.findViewById(R.id.imageOrgConnection);
+            image = (ImageView) itemView.findViewById(R.id.imageOrgConnection);
             txt1 = (TextView)itemView.findViewById(R.id.titleOrgConnection);
             txt2 = (TextView)itemView.findViewById(R.id.StatusOrgConnection);
             joinGrp = (ImageView)itemView.findViewById(R.id.joinGroup);
@@ -175,11 +179,11 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
 
-        public NetworkImageView getImage() {
+        public ImageView getImage() {
             return image;
         }
 
-        public void setImage(NetworkImageView image) {
+        public void setImage(ImageView image) {
             this.image = image;
         }
 
@@ -211,9 +215,17 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         String url="http://lfapp.learnflux.net/v1/image?key=";
         if(g!=null){
             v22.getTxt1().setText(g.getName());
-            v22.getImage().setImageUrl(url+g.getImage(),imageLoader);
-            v22.getJoinGrp().setVisibility(View.GONE);
+            Animation animation = AnimationUtils.loadAnimation(context,
+                    R.anim.popup_enter);
+            Ion.with(context)
+                    .load(url+g.getImage())
+                    .addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+                    .withBitmap().animateLoad(animation)
+                    .intoImageView(v22.getImage());
+        }else{
+            v22.getImage().setImageResource(R.drawable.company1);
         }
+       
     }
     public void clearData() {
         int size = this.search.size();

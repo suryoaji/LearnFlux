@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:background="@drawable/relative_border"
+        android:orientation="horizontal"
+        android:layout_width="340dp"
+        android:layout_height="70dp">
+
+        <ImageView
+            android:id="@+id/list1"
+            android:src="@drawable/smile"
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp" android:layout_weight="0.2"
+            android:layout_height="25dp" />
+        <TextView
+            android:text="Old Folks Home" android:id="@+id/projectTitle"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/projectFinish"
+            android:src="@drawable/thumb_grey"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/projectRanking"
+            android:src="@drawable/ribbon_grey"
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

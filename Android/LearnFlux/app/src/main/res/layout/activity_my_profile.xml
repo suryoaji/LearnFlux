@@ -43,7 +43,7 @@
             layout="@layout/search_bar" />
         <LinearLayout
             android:id="@+id/LinearTabBar"
-            android:background="#106571"
+            android:background="@color/actionBarMyProfile"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="50dp">
@@ -187,7 +187,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <com.android.volley.toolbox.NetworkImageView
+                        <ImageView
                             android:id="@+id/imageeees"
                             android:scaleType="centerCrop"
                             android:src="@drawable/user_profile"

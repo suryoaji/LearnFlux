@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
@@ -24,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +66,7 @@ import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.koushikdutta.ion.Ion;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,7 +104,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	TextView interest1,interest2, txtParent, txtParentDesc, empty_view, affilatedOrganizationButtonMore , from, work;
 	LinearLayout tabIndividual, tabGroups, tabOrganization, tabContact,showAllOrganization;
 	View indicatorIndividual, indicatorGroups, indicatorOrganization, indicatorContact;
-	NetworkImageView parent;
+	ImageView parent;
 	CircularNetworkImageView child;
 	private ImageView changeImage;
 	ViewPager mViewPager;
@@ -339,12 +342,12 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 					@Override
 					public void onTextChanged(CharSequence s, int start, int before, int count) {
-						searchValue();
+
 					}
 
 					@Override
 					public void afterTextChanged(Editable s) {
-
+						searchValue();
 					}
 				});
 				searchBar.setOnKeyListener(new View.OnKeyListener() {
@@ -422,13 +425,20 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		//Setting the initialization
 		work = (TextView)findViewById(R.id.work);
 		from = (TextView)findViewById(R.id.fromText);
-		parent = (NetworkImageView)findViewById(R.id.imageeees);
+		parent = (ImageView)findViewById(R.id.imageeees);
 		txtParentDesc = (TextView)findViewById(R.id.txtParentDesc);
 		txtParent = (TextView)findViewById(R.id.txtParentTitle);
 		child  = (CircularNetworkImageView)findViewById(R.id.imagesChild);
-		parent.setDefaultImageResId(R.drawable.user_profile);
 		child.setDefaultImageResId(R.drawable.user_profile);
-		Engine.getMeWithRequest(getApplicationContext(),"details", new RequestTemplate.ServiceCallback() {
+		txtParent.setText(User.getUser().getUsername());
+		from.setText(User.getUser().getLocation());
+		work.setText(User.getUser().getWork());
+		Ion.with(getApplicationContext())
+				.load(User.getUser().getProfile_picture())
+				.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+				.withBitmap().placeholder(R.drawable.user_profile).error(R.drawable.user_profile)
+				.intoImageView(parent);
+		/*Engine.getMeWithRequest(getApplicationContext(),"details", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try{
@@ -451,11 +461,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					e.printStackTrace();
 				}
 			}
-		});
-
+		});*/
 		getUserStatus();
-
-
 
 		//dialog children
 		final RecyclerView recyclerChildren = (RecyclerView)findViewById(R.id.childrenRecyclerView);
@@ -948,7 +955,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 							}
 
 							searchObject = Functions.sortingContact(searchObject);
-							id=new SearchAdapter(searchObject);
+							id=new SearchAdapter(getApplicationContext(),searchObject);
 							searchRecycler.setAdapter(id);
 							searchRecycler.refreshDrawableState();
 

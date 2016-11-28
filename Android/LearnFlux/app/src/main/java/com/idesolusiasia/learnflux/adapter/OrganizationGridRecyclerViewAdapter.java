@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,17 +51,15 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 		String url = "http://lfapp.learnflux.net/v1/image?key=";
 		String pos = url+org.getImage();
 		holder.tvName.setText(org.getName());
-		/*if(org.getImage()==null) {
-			holder.ivLogo.setDefaultImageResId(R.drawable.company1);
-		}else{
-			holder.ivLogo.setImageUrl(url+org.getImage(),imageLoader);
-		}*/
+		Animation animation = AnimationUtils.loadAnimation(context,
+				R.anim.popup_enter);
 		Ion.with(context)
-		.load(pos)
-		.addHeader("Authorization", "Bearer "+ User.getUser().getAccess_token())
-		.withBitmap()
-		.intoImageView(holder.ivLogo);
-
+				.load(pos)
+				.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+				.withBitmap().animateLoad(animation)
+				.placeholder(R.drawable.company1)
+				.error(R.drawable.company1)
+				.intoImageView(holder.ivLogo);
 		holder.tvImageMessage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

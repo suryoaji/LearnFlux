@@ -41,9 +41,9 @@
             <ImageView
                 android:layout_width="0dp" android:layout_weight="0.5"
                 android:layout_height="130dp"
-                android:id="@+id/ivPolls"
+                android:id="@+id/ivProject"
                 android:foreground="?attr/selectableItemBackground" android:layout_margin="3dp"
-                android:scaleType="centerCrop" android:src="@drawable/mosaic_poll"
+                android:scaleType="centerCrop" android:src="@drawable/mosaic_project"
                 android:clickable="true"/>
         </LinearLayout>
         <LinearLayout

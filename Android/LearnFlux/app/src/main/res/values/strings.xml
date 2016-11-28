@@ -46,6 +46,15 @@
         collaborations
         with practitioners from other disciplines.
     </string>
+    <string name="mission_text">Curabitur auctor tristique lobortis. Quisque bibendum,
+        ipsum in feugiat pharetra, odio libero malesuada turpis, tempus fermentum augue est sit amet
+        magna. Vestibulum bibendum lectus non mauris porta, sed blandit purus scelerisque.
+        Sed consequat mollis ornare. Sed laoreet id dolor vitae facilisis. Mauris varius orci sed
+        turpis commodo mattis. Cras vel nibh scelerisque urna tincidunt vestibulum accumsan pharetra ex.
+        Proin ullamcorper eros non justo tincidunt lobortis. Ut sapien nisi, bibendum tempor efficitur
+        ultricies, pellentesque interdum diam. Aliquam commodo felis eu urna consectetur, ut semper diam
+        tempor. Etiam eu maximus sapien, a tristique tortor.
+    </string>
     <string name="large_text_1">
         LASALLE College of the Arts provides a supportive, progressive and truly inspiring
         environment for our students.
@@ -74,6 +83,8 @@
         be the pioneers
         who will help to define the future of contemporary arts practice.
     </string>
+    <string name="goal">Curabitur auctor tristique lobortis. Quisque bibendum, ipsum in feugiat pharetra, odio libero malesuada turpis, tempus fermentum augue est sit amet magna. Vestibulum bibendum lectus non mauris porta, sed blandit purus scelerisque. Sed consequat mollis ornare. Sed laoreet id dolor vitae facilisis. Mauris varius orci sed turpis commodo mattis. Cras vel nibh scelerisque urna tincidunt vestibulum accumsan pharetra ex. Proin ullamcorper eros non justo tincidunt lobortis. Ut sapien nisi, bibendum tempor efficitur ultricies, pellentesque interdum diam. Aliquam commodo felis eu urna consectetur, ut semper diam tempor. Etiam eu maximus sapien, a tristique tortor.
+</string>
     <string name="color_primary">#8BC34A</string>
     <string-array name="invitee_status">
         <item>Not Set</item>

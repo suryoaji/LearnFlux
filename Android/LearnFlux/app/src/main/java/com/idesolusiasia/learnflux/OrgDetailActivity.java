@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,10 +29,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -48,6 +53,7 @@ import com.androidnetworking.interfaces.StringRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
 import com.google.gson.reflect.TypeToken;
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
+import com.idesolusiasia.learnflux.component.RoundedImageView;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
 import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Group;
@@ -57,6 +63,8 @@ import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,7 +86,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 	public Group group = null;
 	AddGroupAdapter adap;
 	public String name,desc,title,image;
-	ListView listcontent; NetworkImageView imagesOrg;
+	ListView listcontent; ImageView imagesOrg;
 	LinearLayout tabGroups, tabEvents, tabActivities;
 	View indicatorGroups, indicatorEvents, indicatorAct;
 	TextView tvNotifGroups, tvNotifActivities, tvNotifEvents, tvTitle;
@@ -106,12 +114,20 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 
 		///////////////////////////finish Base Init///
 		tvTitle = (TextView)findViewById(R.id.titleOrgDetails);
-		imagesOrg = (NetworkImageView)findViewById(R.id.imageOrgDetail);
+		imagesOrg = (ImageView)findViewById(R.id.imageOrgDetail);
 		tvTitle.setText(title);
-		if(image!=null){
-			imagesOrg.setImageUrl(url+image, imageLoader);
-		}else{
-			imagesOrg.setDefaultImageResId(R.drawable.company1);
+		Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+				R.anim.popup_enter);
+
+		if(image!=null) {
+			Ion.with(getApplicationContext())
+					.load(url+image)
+					.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+					.withBitmap().animateLoad(animation).fitCenter()
+					.intoImageView(imagesOrg);
+		}
+		else{
+			imagesOrg.setImageResource(R.drawable.company1);
 		}
 		mAdap = new FragmentAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);

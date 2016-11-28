@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -37,6 +39,7 @@ import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
+import com.koushikdutta.ion.Ion;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,7 +62,7 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 	public String name, id, reTitle, details, type, location,img;
 	TextView tvNotifActivities, tvNotifEvents;
 	static final int ITEMS = 3;
-	NetworkImageView imageGroup;
+	ImageView imageGroup;
 	ImageView ivAdd;
 	ImageLoader imageLoader = VolleySingleton.getInstance(GroupDetailActivity.this).getImageLoader();
 	@Override
@@ -78,18 +81,24 @@ public class GroupDetailActivity extends BaseActivity implements View.OnClickLis
 		String url="http://lfapp.learnflux.net/v1/image?key=";
 		id = getIntent().getStringExtra("id");
 		type = getIntent().getStringExtra("type");
-		Log.i("IDS", "onCreate: " +id);
 		name = getIntent().getStringExtra("title");
 		color = getIntent().getIntExtra("color",1);
 		img = getIntent().getStringExtra("img");
 
 		///////////////////////////finish Base Init///
-		imageGroup = (NetworkImageView)findViewById(R.id.imageOfGroupDetail);
-
+		imageGroup = (ImageView)findViewById(R.id.imageOfGroupDetail);
+		Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+				R.anim.popup_enter);
 		if(img!=null) {
-			imageGroup.setImageUrl(url + img, imageLoader);
+			Ion.with(getApplicationContext())
+					.load(url+img)
+					.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+					.withBitmap().animateLoad(animation)
+					.intoImageView(imageGroup);
 		}
-		imageGroup.setDefaultImageResId(R.drawable.company1);
+		else{
+			imageGroup.setImageResource(R.drawable.company1);
+		}
 		ivAdd = (ImageView)findViewById(R.id.ivAdd);
 		final String name = getIntent().getStringExtra("title");
 		String joinButton = getIntent().getStringExtra("plusButton");
