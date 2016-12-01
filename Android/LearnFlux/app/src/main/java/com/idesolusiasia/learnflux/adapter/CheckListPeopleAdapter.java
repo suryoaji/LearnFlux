@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +43,7 @@ public class CheckListPeopleAdapter extends RecyclerView.Adapter<CheckListPeople
             holder.tvName.setText(p.getFirst_name());
             holder.chkSelected.setChecked(p.isSelected());
             holder.chkSelected.setTag(p);
-            holder.chkSelected.setOnClickListener(new View.OnClickListener() {
+           /* holder.chkSelected.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     CheckBox cb = (CheckBox) v;
@@ -50,7 +51,7 @@ public class CheckListPeopleAdapter extends RecyclerView.Adapter<CheckListPeople
                     pi.setSelected(cb.isChecked());
                     p.setSelected(cb.isChecked());
                 }
-            });
+            });*/
     }
 
     @Override
@@ -67,6 +68,20 @@ public class CheckListPeopleAdapter extends RecyclerView.Adapter<CheckListPeople
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             chkSelected = (CheckBox) itemView.findViewById(R.id.chkSelected);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int pos = getAdapterPosition();
+                    PeopleInvite iv = (PeopleInvite)chkSelected.getTag();
+                    chkSelected.setChecked(!chkSelected.isChecked());
+                    iv.setSelected(!chkSelected.isChecked());
+                    people.get(pos).setSelected(chkSelected.isChecked());
+
+                   /* PeopleInvite pi = (PeopleInvite)chkSelected.getTag();
+                    pi.setSelected(chkSelected.isChecked());
+                    people.get(pos).setSelected(chkSelected.isChecked());*/
+                }
+            });
         }
     }
     public List<PeopleInvite> getInvitePeople(){

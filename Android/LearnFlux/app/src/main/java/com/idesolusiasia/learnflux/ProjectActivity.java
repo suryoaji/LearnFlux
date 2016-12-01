@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,11 @@ public class ProjectActivity extends BaseActivity {
         View childLayout = layoutInflater.inflate(
                 R.layout.activity_home_project, null);
         parentLayout.addView(childLayout);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Projects");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         rcView = (RecyclerView)findViewById(R.id.listOfProjectRecycler);
         emptyField = (TextView)findViewById(R.id.emptyProject);

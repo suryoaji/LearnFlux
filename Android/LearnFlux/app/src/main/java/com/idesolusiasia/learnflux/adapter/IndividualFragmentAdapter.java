@@ -78,7 +78,7 @@ public class IndividualFragmentAdapter extends RecyclerView.Adapter<IndividualFr
                 public void onClick(final View v) {
                     final int pos = getAdapterPosition();
                     int []ids = new int[]{Friends.get(pos).getId()};
-                      Engine.createThread(v.getContext(), ids, Friends.get(pos).getFirst_name() ,new RequestTemplate.ServiceCallback() {
+                    Engine.createThread(v.getContext(), ids, Friends.get(pos).getFirst_name() ,new RequestTemplate.ServiceCallback() {
                     @Override
                     public void execute(JSONObject obj) {
                         try {

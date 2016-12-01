@@ -895,19 +895,7 @@ public class Engine {
 						callback.execute(obj);
 					}
 				}
-			}, new RequestTemplate.ErrorCallback() {
-				@Override
-				public void execute(JSONObject error) {
-					if(error!=null){
-						try {
-							String message = error.getString("message");
-							Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-						}catch (JSONException e){
-							e.printStackTrace();
-						}
-					}
-				}
-			});
+			},null);
 		}
 	}
 	public static void joinGroup(final Context context, final String groupID,

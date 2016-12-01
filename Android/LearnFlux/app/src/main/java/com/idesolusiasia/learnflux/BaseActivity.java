@@ -84,15 +84,15 @@ public class BaseActivity extends AppCompatActivity
 								tvEmail.setText(contact.getEmail());
 								User.getUser().setID(contact.getId());
 								User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
+								User.getUser().setName(contact.getUsername());
 								User.getUser().setWork(contact.getWork());
 								User.getUser().setLocation(contact.getLocation());
 								Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
 										R.anim.popup_enter);
 								if(contact.get_links().getProfile_picture()!=null) {
 									String pic = url+contact.get_links().getProfile_picture().getHref();
-									User.getUser().setProfile_picture(pic);
 									Ion.with(getApplicationContext())
-											.load(pic)
+											.load(pic).noCache()
 											.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
 											.withBitmap().animateLoad(animation)
 											.intoImageView(ivDrawerPic);
@@ -195,7 +195,7 @@ public class BaseActivity extends AppCompatActivity
 		else if (id == R.id.nav_logout){
 			SharedPreferences prefs = getSharedPreferences("com.idesolusiasia.learnflux",0);
 			SharedPreferences.Editor editor = prefs.edit();
-			editor.putString("email",User.getUser().getUsername());
+			editor.putString("email",User.getUser().getName());
 			editor.apply();
 			Functions.logout(getApplicationContext());
 

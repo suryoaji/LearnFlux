@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -47,6 +48,10 @@ public class ProjectProfile extends BaseActivity {
                 R.layout.activity_project_profile, null);
         parentLayout.addView(childLayout);
 
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Projects");
+
         comment = (EditText)findViewById(R.id.comment);
         projectProfileDesc = (TextView)findViewById(R.id.descProjectProfile);
         gotoProjectDetails = (Button)findViewById(R.id.gotoProjectDetails);
@@ -81,7 +86,7 @@ public class ProjectProfile extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ProjectProfile.this, JoinInviteStakeHolders.class);
-                i.putExtra("toolbar", "firstTool");
+                i.putExtra("toolbar", "join");
                 startActivity(i);
             }
         });
@@ -89,7 +94,7 @@ public class ProjectProfile extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent o = new Intent(ProjectProfile.this, JoinInviteStakeHolders.class);
-                o.putExtra("toolbar", "secondTool");
+                o.putExtra("toolbar", "invite");
                 startActivity(o);
             }
         });

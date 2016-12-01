@@ -8,7 +8,7 @@
         android:orientation="horizontal"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        android:background="@drawable/relative_border"
+        android:background="@drawable/btn_white"
         android:layout_width="328dp"
         android:layout_height="50dp">
 

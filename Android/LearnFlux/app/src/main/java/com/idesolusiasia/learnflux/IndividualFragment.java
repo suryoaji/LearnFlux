@@ -59,11 +59,11 @@ public class IndividualFragment extends Fragment {
     }
     void initIndividual(){
         ct = new ArrayList<>();
-        Engine.getMeWithRequest(getContext(),"Friends", new RequestTemplate.ServiceCallback() {
+        Engine.getMeWithRequest(getContext(),"friends", new RequestTemplate.ServiceCallback() {
             @Override
             public void execute(JSONObject obj) {
                 try {
-                    JSONArray friends = obj.getJSONArray("Friends");
+                    JSONArray friends = obj.getJSONArray("friends");
                     for (int i=0;i<friends.length();i++){
                         Contact c = Converter.convertContact(friends.getJSONObject(i));
                         ct.add(c);

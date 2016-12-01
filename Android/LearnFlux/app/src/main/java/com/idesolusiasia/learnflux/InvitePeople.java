@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -44,6 +45,11 @@ public class InvitePeople extends BaseActivity{
         View childLayout = layoutInflater.inflate(
                 R.layout.recycler_invite, null);
         parentLayout.addView(childLayout);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Invite People");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 
         final String ids = getIntent().getStringExtra("ids");
         btnSelection = (Button) findViewById(R.id.btnShow);
@@ -51,12 +57,12 @@ public class InvitePeople extends BaseActivity{
         peopleRecycler.hasFixedSize();
         peopleRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        Engine.getMeWithRequest(getApplicationContext(), "Friends", new RequestTemplate.ServiceCallback() {
+        Engine.getMeWithRequest(getApplicationContext(), "friends", new RequestTemplate.ServiceCallback() {
             @Override
             public void execute(JSONObject obj) {
                 try{
-                    if(obj.has("Friends")){
-                        JSONArray friend = obj.getJSONArray("Friends");
+                    if(obj.has("friends")){
+                        JSONArray friend = obj.getJSONArray("friends");
                         for(int i=0;i<friend.length();i++) {
                             PeopleInvite people = Converter.convertInvite(friend.getJSONObject(i));
                             participant.add(people);
@@ -80,13 +86,14 @@ public class InvitePeople extends BaseActivity{
                         .getInvitePeople();
 
                 for (int i = 0; i < stList.size(); i++) {
-                   PeopleInvite singleStudent = stList.get(i);
-                    if (singleStudent.isSelected() == true) {
-                        data = data + "\n" + singleStudent.getId();
-                        a.add(singleStudent.getId());
+                   PeopleInvite participant = stList.get(i);
+                    if (participant.isSelected() == true) {
+                        data = data + "\n" + participant.getId();
+                        Toast.makeText(InvitePeople.this, String.valueOf(participant.getId()), Toast.LENGTH_SHORT).show();
+                        a.add(participant.getId());
                     }
-
                 }
+
                 int[]p = new int[a.size()];
                 for(int b=0;b<a.size();b++){
                     p[b]=a.get(b).intValue();

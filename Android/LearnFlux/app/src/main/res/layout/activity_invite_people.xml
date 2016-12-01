@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:background="@drawable/btn_white"
         android:id="@+id/relativelayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

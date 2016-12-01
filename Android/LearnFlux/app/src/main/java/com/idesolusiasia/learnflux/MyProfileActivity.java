@@ -46,6 +46,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
+import com.google.gson.JsonObject;
 import com.idesolusiasia.learnflux.adapter.ChildrenAdapter;
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
 import com.idesolusiasia.learnflux.adapter.ContactAdapter;
@@ -214,7 +215,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					final List<Friends> mutualFriendReq = new ArrayList<Friends>();
 
 
-					Engine.getMeWithRequest(getApplicationContext(),"Friends", new RequestTemplate.ServiceCallback() {
+					Engine.getMeWithRequest(getApplicationContext(),"friends", new RequestTemplate.ServiceCallback() {
 						@Override
 						public void execute(JSONObject obj) {
 							try {
@@ -240,7 +241,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 								}
 */
 								requestObjList.addAll(contactReq);
-								requestObjList.addAll(mutualFriendReq);
+								//requestObjList.addAll(mutualFriendReq);
 
 								TextView emptyFriend = (TextView)findViewById(R.id.empty_friend);
 								if(requestObjList.isEmpty()) {
@@ -399,7 +400,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 								startActivity(getIntent());
 							}
 						});
-
 					}
 				});
 			}
@@ -430,15 +430,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		txtParent = (TextView)findViewById(R.id.txtParentTitle);
 		child  = (CircularNetworkImageView)findViewById(R.id.imagesChild);
 		child.setDefaultImageResId(R.drawable.user_profile);
-		txtParent.setText(User.getUser().getUsername());
-		from.setText(User.getUser().getLocation());
-		work.setText(User.getUser().getWork());
-		Ion.with(getApplicationContext())
-				.load(User.getUser().getProfile_picture())
-				.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
-				.withBitmap().placeholder(R.drawable.user_profile).error(R.drawable.user_profile)
-				.intoImageView(parent);
-		/*Engine.getMeWithRequest(getApplicationContext(),"details", new RequestTemplate.ServiceCallback() {
+		Engine.getMeWithRequest(getApplicationContext(),"details", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try{
@@ -454,14 +446,19 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					}else {
 						work.setText(ct.getWork());
 					}
-					String prof = User.getUser().getProfile_picture();
-					parent.setImageUrl(prof,imageLoader);
+				String url = "http://lfapp.learnflux.net";
+				String prof = url+ct.get_links().getProfile_picture().getHref();
+				Ion.with(getApplicationContext())
+				.load(prof).noCache()
+				.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+				.withBitmap().placeholder(R.drawable.user_profile).error(R.drawable.user_profile)
+				.intoImageView(parent);
 
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
 			}
-		});*/
+		});
 		getUserStatus();
 
 		//dialog children
@@ -691,15 +688,18 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 						   if(arrOrg.size()>3) {
 							   showAllOrganization.setVisibility(View.VISIBLE);
 							   showAllOrganization.bringToFront();
-						   }
+							   affilatedOrganizationButtonMore.setOnClickListener(new View.OnClickListener() {
+								   @Override
+								   public void onClick(View view) {
+									   showAllOrganization.setVisibility(View.GONE);
+									   affilatedOrganizationButtonMore.setVisibility(View.GONE);
+								   }
+							   });
+						   }else {
 							   affilatedOrganizationButtonMore.setVisibility(View.VISIBLE);
-								affilatedOrganizationButtonMore.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								showAllOrganization.setVisibility(View.GONE);
-								affilatedOrganizationButtonMore.setVisibility(View.GONE);
-							}
-						});
+							   showAllOrganization.setVisibility(View.GONE);
+							   affilatedOrganizationButtonMore.setVisibility(View.GONE);
+						   }
 						/*if(arrOrg.size()>3){
 							affilatedOrganizationButtonMore.setOnClickListener(new View.OnClickListener() {
 								@Override
@@ -795,8 +795,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-			if (ContextCompat.checkSelfPermission(MyProfileActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-					== PackageManager.PERMISSION_GRANTED) {
 				try {
 					Uri selectedImage = data.getData();
 					Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
@@ -804,21 +802,16 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					changeImage.setImageBitmap(bitmap);
 					file = new File(path);
 					final String a = "http://lfapp.learnflux.net/v1/me/image?key=profile/"+User.getUser().getID();
-					AndroidNetworking.enableLogging();
 					AndroidNetworking.put(a)
 							.addFileBody(file)
 							.addHeaders("Authorization", "Bearer " + User.getUser().getAccess_token())
 							.setTag("uploadTest")
 							.setPriority(Priority.HIGH)
 							.build()
-							.setUploadProgressListener(new UploadProgressListener() {
-								@Override
-								public void onProgress(long bytesUploaded, long totalBytes) {
-								}
-							})
 							.getAsJSONObject(new JSONObjectRequestListener() {
 								@Override
 								public void onResponse(JSONObject response) {
+										Toast.makeText(MyProfileActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
 
 								}
 								@Override
@@ -830,7 +823,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					e.printStackTrace();
 				}
 			}
-		}
 	}
 	public String getRealPathFromUri(final Uri uri) {
 		// DocumentProvider

@@ -1,95 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:background="@color/white"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/titleOfJoinProject"
-        android:orientation="horizontal"
-        android:background="@drawable/relative_border"
-        android:padding="4dp"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:src="@drawable/smile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:text="Project Old Folks Home"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <TextView
-        android:layout_marginTop="6dp"
-        android:text="Task"
-        android:textColor="#000"
-        android:paddingLeft="15dp" android:paddingTop="7dp"
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
-    <TextView
-        android:layout_margin="10dp"
-        android:text="Gift Wrapping"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_marginTop="6dp"
-        android:text="Dates"
-        android:textColor="#000"
-        android:paddingLeft="15dp" android:paddingTop="7dp"
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
-    <LinearLayout
-        android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/startJoinProjectTask" android:drawableLeft="@drawable/calendar"
-            android:layout_margin="3dp" android:padding="3dp" android:drawablePadding="3dp"
-            android:layout_width="0dp" android:layout_weight="0.5"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/endJoinProjectTask"
-            android:layout_margin="3dp" android:padding="3dp"
-            android:drawableLeft="@drawable/calendar" android:drawablePadding="3dp"
-            android:layout_width="0dp" android:layout_weight="0.5"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <TextView
-        android:layout_marginTop="6dp"
-        android:text="Duration"
-        android:textColor="#000"
-        android:paddingLeft="15dp" android:paddingTop="7dp"
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
-    <TextView
-        android:text="10 days" android:layout_margin="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_marginTop="6dp"
-        android:text="Remarks"
-        android:textColor="#000"
-        android:paddingLeft="15dp" android:paddingTop="7dp"
-        android:background="#E0E0E0"
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
-    <TextView
-        android:text="@string/mission_text"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
-    </LinearLayout>
     <Button
         android:text="Join Project"
         android:visibility="gone"
@@ -108,4 +25,146 @@
         android:background="@drawable/btn_see_all"
         android:layout_width="match_parent"
         android:layout_height="40dp" />
-</RelativeLayout>
+        <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/add_friend"
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+
+            <ImageView
+                android:id="@+id/editCancel"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/ic_close"
+                android:layout_gravity="right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+        android:id="@+id/titleOfJoinProject"
+        android:orientation="horizontal"
+        android:background="@drawable/relative_border"
+        android:padding="7dp"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+         <ImageView
+            android:src="@drawable/smile"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+         <TextView
+            android:textStyle="bold"
+            android:text="Project Old Folks Home"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+        <include
+            android:visibility="gone"
+            layout="@layout/row_profile_only"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </include>
+        <TextView
+            android:layout_marginTop="6dp"
+            android:text="Task"
+            android:textColor="#000"
+            android:paddingLeft="15dp" android:paddingTop="7dp"
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+        <EditText
+            android:background="@android:color/transparent"
+            android:layout_margin="10dp" android:textSize="14sp"
+            android:hint="Gift Wrapping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="6dp"
+            android:text="Dates"
+            android:textColor="#000"
+            android:paddingLeft="15dp" android:paddingTop="7dp"
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+        <LinearLayout
+            android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/startJoinProjectTask" android:drawableLeft="@drawable/calendar"
+                android:layout_margin="3dp" android:padding="3dp" android:drawablePadding="3dp"
+                android:layout_width="0dp" android:layout_weight="0.5"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/endJoinProjectTask"
+                android:layout_margin="3dp" android:padding="3dp"
+                android:drawableLeft="@drawable/calendar" android:drawablePadding="3dp"
+                android:layout_width="0dp" android:layout_weight="0.5"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginTop="6dp"
+            android:text="Duration"
+            android:textColor="#000"
+            android:paddingLeft="15dp" android:paddingTop="7dp"
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+        <EditText
+            android:background="@android:color/transparent"
+            android:hint="10 days" android:layout_margin="10dp"
+            android:layout_width="wrap_content" android:textSize="14sp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="6dp"
+            android:text="Remarks"
+            android:textColor="#000"
+            android:paddingLeft="15dp" android:paddingTop="7dp"
+            android:background="#E0E0E0"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+        <EditText
+            android:background="@drawable/relative_border"
+            android:gravity="top" android:padding="4dp"
+            android:hint="Remarks here"
+            android:layout_margin="10dp" android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+        <LinearLayout
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:id="@+id/teamMemberLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:layout_marginTop="6dp"
+                android:text="Team Members"
+                android:textColor="#000"
+                android:paddingLeft="15dp" android:paddingTop="7dp"
+                android:background="#E0E0E0"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

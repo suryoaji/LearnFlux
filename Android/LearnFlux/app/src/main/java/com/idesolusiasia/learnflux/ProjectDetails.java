@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -35,6 +36,10 @@ TextView projectStart,projectEnd, projectDuration;
         View childLayout = layoutInflater.inflate(
                 R.layout.activity_project_details, null);
         parentLayout.addView(childLayout);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("New Project");
 
         projectStart = (TextView)findViewById(R.id.startProject);
         projectEnd = (TextView)findViewById(R.id.endProject);

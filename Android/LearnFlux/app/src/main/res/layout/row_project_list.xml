@@ -4,8 +4,9 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:background="@drawable/relative_border"
+        android:background="@drawable/btn_white"
         android:orientation="horizontal"
+        android:layout_marginBottom="3dp"
         android:layout_width="340dp"
         android:layout_height="70dp">
 

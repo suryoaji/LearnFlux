@@ -3,6 +3,7 @@ package com.idesolusiasia.learnflux;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -33,6 +34,10 @@ public class ProjectEdit extends BaseActivity {
         View childLayout = layoutInflater.inflate(
                 R.layout.activity_project_edit, null);
         parentLayout.addView(childLayout);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("New Project");
 
         start = (EditText)findViewById(R.id.editStartDate);
         end = (EditText)findViewById(R.id.editEndDate);
