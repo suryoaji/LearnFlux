@@ -43,7 +43,7 @@ class NewHome : UIViewController {
     }
     
     var shouldPushAnimated = true
-    let mosaicImages = ["mosaic-calendar.jpg", "mosaic-dashboard.jpg", "mosaic-chat.jpg", "mosaic-project.jpg", "mosaic-favorite.jpg", "mosaic-attandance.jpg", "mosaic-interestgroup.jpg", "mosaic-settings.jpg"]
+    let mosaicImages = ["mosaic-calendar.jpg", "mosaic-dashboard.jpg", "mosaic-chat.jpg", "mosaic-poll.jpg", "mosaic-project.jpg", "mosaic-interestgroup.jpg", "mosaic-favorite.jpg", "mosaic-attandance.jpg", "mosaic_gallery.png", "mosaic-settings.jpg"]
 }
 
 
@@ -105,9 +105,9 @@ extension NewHome: UICollectionViewDelegateFlowLayout, UICollectionViewDataSourc
         switch indexPath.row {
         case 2:
             performSegueWithIdentifier("chat", sender: self)
-        case 3:
+        case 4:
             performSegueWithIdentifier("Project", sender: self)
-        case 6:
+        case 5:
             performSegueWithIdentifier("InterestGroup", sender: self)
         default: break
         }

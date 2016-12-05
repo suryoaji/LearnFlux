@@ -25,12 +25,12 @@ class Connections : UITableViewController {
         if let activeFlow = flow.activeFlow() {
             if activeFlow == .NewGroup || activeFlow == .NewOrganization{
                 self.title = "Invite Participants"
-                setupDoneButton();
-            }
-            else if flow.activeFlow() == .NewThread || flow.activeFlow() == .NewInterestGroup{
+            }else if flow.activeFlow() == .NewThread || flow.activeFlow() == .NewInterestGroup{
                 self.title = "Select Participants";
-                setupDoneButton()
+            }else if flow.activeFlow() == .NewProject{
+                self.title = ""
             }
+            setupDoneButton(activeFlow)
         }else{
             
         }
@@ -52,12 +52,18 @@ class Connections : UITableViewController {
         self.tableView.reloadData()
     }
     
-    lazy var flowDirection : String! = "";
-    lazy var flowData : NSMutableDictionary! = [:];
+//    lazy var flowDirection : String! = "";
+//    lazy var flowData : NSMutableDictionary! = [:];
     
-    func setupDoneButton () {
+    func setupDoneButton(flowName: FlowName) {
         buttonDone = UIBarButtonItem()
-        buttonDone.title = "Done"
+        switch flowName {
+        case .NewProject:
+            buttonDone.title = ""
+            buttonDone.image = UIImage(named: "right-arrow-box")
+        default:
+            buttonDone.title = "Done"
+        }
         buttonDone.action = #selector(self.buttonDoneTapped)
         buttonDone.target = self
         buttonDone.enabled = false
@@ -82,6 +88,33 @@ class Connections : UITableViewController {
         }
     }
     
+    func buttonDoneShouldEnable(){
+        buttonDone.enabled = !selectedConnect.isEmpty ? !selectedConnect.filter({ $0==true }).isEmpty ? true : false : false
+    }
+    
+    func setTitleForFlowNewProject(){
+        let totalPersons = selectedConnect.reduce(0, combine: { a, b -> Int in
+            if b { return a + 1 }else{ return a }
+        })
+        let title = totalPersons < 1 ? "" : "\(totalPersons) person\(selectedConnect.count < 2 ? "" : "s")"
+        navigationItem.title = title
+    }
+}
+
+// - MARK: PrepareForSegue
+extension Connections{
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "InitiateChat") {
+            let chatVC = segue.destinationViewController as! ChatFlow;
+            let thread = sender as! Dictionary<String, AnyObject>
+            
+            chatVC.initChat(thread["index"] as! Int, idThread: (thread["thread"] as! Thread).id, from: .OpenChat)
+        }
+    }
+}
+
+// - MARK: TableView
+extension Connections{
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2;
     }
@@ -122,10 +155,16 @@ class Connections : UITableViewController {
         tableView.deselectRowAtIndexPath(indexPath, animated: false);
         let flow = Flow.sharedInstance;
         
-        if (flow.activeFlow() != nil) {
+        if let flowName = flow.activeFlow() {
             selectedConnect[indexPath.row] = !selectedConnect[indexPath.row];
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None);
             buttonDoneShouldEnable()
+            
+            switch flowName {
+            case .NewProject:
+                setTitleForFlowNewProject()
+            default: break
+            }
         }else{
             let user = clientData.getMyConnection().friends[indexPath.row]
             var arrUserId = Array<Int>();
@@ -135,19 +174,6 @@ class Connections : UITableViewController {
                     self.performSegueWithIdentifier("InitiateChat", sender: ["index" : thread.index, "thread" : thread.thread])
                 }
             }
-        }
-    }
-    
-    func buttonDoneShouldEnable(){
-        buttonDone.enabled = !selectedConnect.isEmpty ? !selectedConnect.filter({ $0==true }).isEmpty ? true : false : false
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "InitiateChat") {
-            let chatVC = segue.destinationViewController as! ChatFlow;
-            let thread = sender as! Dictionary<String, AnyObject>
-            
-            chatVC.initChat(thread["index"] as! Int, idThread: (thread["thread"] as! Thread).id, from: .OpenChat)
         }
     }
 }

@@ -40,12 +40,33 @@ class ProjectDetail: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    @IBAction func buttonActionTapped(sender: UIButton) {
+        switch type {
+        case .Task(type: let type):
+            if type == .invate{
+                performSegueWithIdentifier("ConnectionSegue", sender: self)
+            }
+        default: break
+        }
+    }
 
     let sectionDetailTitle = ["", "Mission", "Goal", "Dates", "Duration"]
     let sectionTaskTitle = ["", "Task", "Dates", "Duration", "Remarks"]
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var editView: UIView!
     @IBOutlet weak var buttonActionTask: UIButton!
+}
+
+// - MARK: PrepareForSegue
+extension ProjectDetail{
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let connectionVC = segue.destinationViewController as? Connections{
+            connectionVC
+            let flow = Flow.sharedInstance
+            flow.begin(FlowName.NewProject)
+        }
+    }
 }
 
 // - MARK: Table View

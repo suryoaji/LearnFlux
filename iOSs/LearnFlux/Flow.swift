@@ -14,6 +14,7 @@ enum FlowName{
     case NewInterestGroup
     case NewEvent
     case NewOrganization
+    case NewProject
     case None
 }
 

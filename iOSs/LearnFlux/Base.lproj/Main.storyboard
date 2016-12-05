@@ -588,9 +588,15 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log out" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="de3-Q7-PBa">
-                                            <rect key="frame" x="13" y="12" width="64" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Pj5-OE-HEd">
+                                            <rect key="frame" x="35" y="10" width="24" height="24"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <state key="normal" image="logout"/>
+                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log out" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NUZ-aa-xWU">
+                                            <rect key="frame" x="83" y="11" width="229" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -3088,6 +3094,7 @@ Coming soon</string>
         <image name="learnflux-logo.png" width="216" height="63"/>
         <image name="line_chart-24.png" width="24" height="24"/>
         <image name="location-24.png" width="24" height="24"/>
+        <image name="logout" width="24" height="24"/>
         <image name="male01.png" width="512" height="512"/>
         <image name="messages-70.png" width="70" height="70"/>
         <image name="photo-container.png" width="85" height="85"/>
@@ -3098,7 +3105,7 @@ Coming soon</string>
         <image name="trash" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="Guw-pm-99z"/>
         <segue reference="a7B-So-2Yt"/>
-        <segue reference="oWU-JU-478"/>
     </inferredMetricsTieBreakers>
 </document>

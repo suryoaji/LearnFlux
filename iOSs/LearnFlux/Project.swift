@@ -26,8 +26,9 @@ enum TypeScreenProject{
 }
 
 class Project: UIViewController {
-    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var textfieldSearch: UITextField!
+    @IBOutlet weak var tableViewMain: UITableView!
+    let clientData = Engine.clientData
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,35 +53,17 @@ class Project: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    var doSearch = false
-    @IBOutlet weak var labelNotification: UILabel!
-    @IBOutlet weak var viewButtonBroadcast: UIView!
-    @IBOutlet weak var buttonSearchHeader: UIButton!
-    @IBOutlet weak var buttonHeaderList: UIButton!
-    @IBOutlet weak var buttonHeaderProfile: UIButton!
-    @IBOutlet weak var indicatorHeaderView: UIView!
-    @IBOutlet weak var headerView: UIView!
-    @IBOutlet weak var middleView: UIView!
-    @IBOutlet weak var viewSearch: UIView!
-    @IBOutlet weak var buttonCommenting: UIButton!
-    @IBOutlet weak var viewContainerTextViewReply: UIView!
-    @IBOutlet weak var textViewReply: UITextView!
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var viewContainerCommentTableView: UIView!
-    var titleList = ["Old Folks Home", "Animal Shelter"]
-    
-    var screenType = TypeScreenProject.List{
-        didSet{
-            indicatorHeader = screenType.indicatorHeader()
-            setButtonHeadersByScreenType(screenType)
-            switch screenType {
-            case .List:
-                buttonCommenting.hidden = true
-            default:
-                buttonCommenting.hidden = false
-            }
-            tableView.reloadData()
-        }
+    @IBAction func buttonPostTapped(sender: UIButton) {
+        dummyGlobalComments.append(["name"      : clientData.cacheFullname(),
+                                    "photo"     : clientData.photo,
+                                    "date"      : "just now",
+                                    "comment"   : textViewReply.text,
+                                    "likes"     : 0,
+                                    "commented" : 0])
+        tableViewMain.reloadData()
+        view.endEditing(true)
+        textViewReply.text = "type comment . . ."
+        tableViewMain.scrollToRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 2), atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
     }
     
     @IBAction func buttonCommentingTapped(sender: UIButton) {
@@ -126,6 +109,56 @@ class Project: UIViewController {
         changeScrollViewToDefaultOffset()
     }
     
+    var doSearch = false
+    @IBOutlet weak var labelNotification: UILabel!
+    @IBOutlet weak var viewButtonBroadcast: UIView!
+    @IBOutlet weak var buttonSearchHeader: UIButton!
+    @IBOutlet weak var buttonHeaderList: UIButton!
+    @IBOutlet weak var buttonHeaderProfile: UIButton!
+    @IBOutlet weak var indicatorHeaderView: UIView!
+    @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var middleView: UIView!
+    @IBOutlet weak var viewSearch: UIView!
+    @IBOutlet weak var buttonCommenting: UIButton!
+    @IBOutlet weak var viewContainerTextViewReply: UIView!
+    @IBOutlet weak var textViewReply: UITextView!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var viewContainerCommentTableView: UIView!
+    var titleList = ["Old Folks Home", "Animal Shelter"]
+    var dummyGlobalComments : Array<Dictionary<String, AnyObject>> =
+        [["name"      : "Grace Chong",
+          "photo"     : UIImage(named: "female07.png")!,
+          "date"      : "1 hr ago",
+          "comment"   : "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
+          "likes"     : 20,
+          "commented" : 3],
+         ["name"      : "Grace Chong",
+          "photo"     : UIImage(named: "female07.png")!,
+          "date"      : "1 hr ago",
+          "comment"   : "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
+          "likes"     : 20,
+          "commented" : 3],
+         ["name"      : "Grace Chong",
+          "photo"     : UIImage(named: "female07.png")!,
+          "date"      : "1 hr ago",
+          "comment"   : "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
+          "likes"     : 20,
+          "commented" : 3]]
+    
+    var screenType = TypeScreenProject.List{
+        didSet{
+            indicatorHeader = screenType.indicatorHeader()
+            setButtonHeadersByScreenType(screenType)
+            switch screenType {
+            case .List:
+                buttonCommenting.hidden = true
+            default:
+                buttonCommenting.hidden = false
+            }
+            tableViewMain.reloadData()
+        }
+    }
+    
     var indicatorHeader : Int = 0{
         willSet{
             moveIndicatorView(newValue)
@@ -145,6 +178,16 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat{
+        func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
+            let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
+            label.numberOfLines = 0
+            label.lineBreakMode = NSLineBreakMode.ByCharWrapping
+            label.font = font
+            label.text = text
+            label.sizeToFit()
+            return label.frame.height
+        }
+        
         var cell = UITableViewCell()
         switch screenType {
         case .List:
@@ -155,6 +198,8 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
                 cell = tableView.dequeueReusableCellWithIdentifier("InsideListCell")!
             case 1:
                 cell = tableView.dequeueReusableCellWithIdentifier("InsideListCommentedCell")!
+                let labelComment = cell.viewWithTag(4) as! UILabel
+                cell.frame.size.height = heightForView(dummyGlobalComments[indexPath.row]["comment"] as! String, font: labelComment.font, width: tableView.width) + 90
             case 2:
                 cell.height = UIScreen.mainScreen().bounds.height - buttonCommenting.frame.origin.y - middleView.frame.origin.y + 5
             default: break
@@ -172,7 +217,7 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
             case 0:
                 return 1
             case 1:
-                return 3
+                return dummyGlobalComments.count
             case 2:
                 return 1
             default: return 0
@@ -206,7 +251,20 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
                 buttonRequestJoin.addTarget(self, action: #selector(buttonRequestJoinTapped), forControlEvents: .TouchUpInside)
             case 1:
                 cell = tableView.dequeueReusableCellWithIdentifier("InsideListCommentedCell")!
-                let buttonComment = cell.viewWithTag(1) as! UIButton
+                let imageView = cell.viewWithTag(1) as! UIImageView
+                let labelName = cell.viewWithTag(2) as! UILabel
+                let labelDate = cell.viewWithTag(3) as! UILabel
+                let labelComment = cell.viewWithTag(4) as! UILabel
+                let labelLikes = cell.viewWithTag(5) as! UILabel
+                let labelCommented = cell.viewWithTag(6) as! UILabel
+                let buttonComment = cell.viewWithTag(7) as! UIButton
+                let commentData = dummyGlobalComments[indexPath.row]
+                imageView.image = commentData["photo"] as? UIImage
+                labelName.text = commentData["name"] as? String
+                labelDate.text = commentData["date"] as? String
+                labelComment.text = commentData["comment"] as? String
+                labelLikes.text = "\(commentData["likes"]!)"
+                labelCommented.text = "\(commentData["commented"]!)"
                 buttonComment.addTarget(self, action: #selector(buttonCommentTapped), forControlEvents: .TouchUpInside)
                 buttonComment.accessibilityIdentifier = "\(indexPath.section)-\(indexPath.row)"
             default: break
@@ -266,7 +324,7 @@ extension Project{
         headerView.frame.origin.y = navigationController!.navigationBar.bounds.height + UIApplication.sharedApplication().statusBarFrame.height
         middleView.frame.origin.y = headerView.frame.origin.y + headerView.frame.height + 14
         middleView.frame.size.height = UIScreen.mainScreen().bounds.height - middleView.frame.origin.y
-        tableView.frame.size.height = UIScreen.mainScreen().bounds.height - middleView.frame.origin.y
+        tableViewMain.frame.size.height = UIScreen.mainScreen().bounds.height - middleView.frame.origin.y
         scrollView.contentSize = CGSizeMake(scrollView.width * 2, scrollView.height)
         viewContainerCommentTableView.frame.origin.x = scrollView.width
         labelNotification.layer.cornerRadius = labelNotification.frame.width / 2
@@ -327,13 +385,13 @@ extension Project{
     func hideTextViewReply(notif: NSNotification){
         viewContainerTextViewReply.frame.origin.y = UIScreen.mainScreen().bounds.height - viewContainerTextViewReply.frame.height
         viewContainerTextViewReply.hidden = true
-        tableView.frame.size.height = UIScreen.mainScreen().bounds.height - middleView.frame.origin.y
+        tableViewMain.frame.size.height = UIScreen.mainScreen().bounds.height - middleView.frame.origin.y
     }
     
     func keyboardIsShown(notif: NSNotification){
         let keyboardHeight = (notif.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue().height
         viewContainerTextViewReply.frame.origin.y = middleView.frame.height - keyboardHeight - viewContainerTextViewReply.frame.height
-        tableView.frame.size.height = viewContainerTextViewReply.frame.origin.y
+        tableViewMain.frame.size.height = viewContainerTextViewReply.frame.origin.y
     }
     
     func buttonRequestJoinTapped(sender: UIButton){
