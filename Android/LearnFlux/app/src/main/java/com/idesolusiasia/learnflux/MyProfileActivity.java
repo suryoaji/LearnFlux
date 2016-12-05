@@ -879,7 +879,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			return getDataColumn(getApplicationContext(), uri, null, null);
 		}
 		// File
-		else if ("file".equalsIgnoreCase(uri.getScheme())) {
+		else if ("ic_file".equalsIgnoreCase(uri.getScheme())) {
 			return uri.getPath();
 		}
 

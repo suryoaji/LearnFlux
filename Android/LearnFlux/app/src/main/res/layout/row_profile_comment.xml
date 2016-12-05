@@ -26,6 +26,7 @@
             android:layout_below="@id/titleUserProject"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/rowComment"
             android:text="Morbi pretium nulla vel risus pretium porttitor.Ut dictum nulla quis mauris gravida, ac lobortis enim lacinia."
             android:layout_below="@id/projectUserProfile"
             android:layout_margin="10dp"
