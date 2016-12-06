@@ -152,7 +152,10 @@ class Project: UIViewController {
             switch screenType {
             case .List:
                 buttonCommenting.hidden = true
-            default:
+            case .InsideProject(view: let type):
+                if type == .comment{
+                    setLeftNavBarButtonBack()
+                }
                 buttonCommenting.hidden = false
             }
             tableViewMain.reloadData()
@@ -344,6 +347,17 @@ extension Project{
     
     func revealMenu(){
         revealController.showViewController(self.revealController.leftViewController)
+    }
+    
+    func setLeftNavBarButtonBack(){
+        let leftBarButton = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(leftNavBarButtonBackTapped))
+        navigationItem.leftBarButtonItem = leftBarButton
+    }
+    
+    func leftNavBarButtonBackTapped(){
+        let leftBarButton = UIBarButtonItem(image: UIImage(named: "menu-1.png"), style: .Plain, target: self, action: #selector(revealMenu))
+        self.navigationItem.leftBarButtonItem = leftBarButton
+        viewProfileHeaderTapped(UIButton())
     }
     
     func setTitleView(title: String){

@@ -407,6 +407,7 @@ extension ProjectDetail{
             containerView.hidden = false
             editView.hidden = true
             buttonActionTask.hidden = true
+            tableViewDetail.frame.size.height = view.height
         case .Edit:
             containerView.hidden = true
             editView.hidden = false
@@ -421,6 +422,7 @@ extension ProjectDetail{
             case .join:
                 buttonActionTask.setTitle("Join Project", forState: .Normal)
             }
+            tableViewDetail.frame.size.height = view.height - buttonActionTask.height - UIApplication.sharedApplication().statusBarFrame.height
         }
     }
     
