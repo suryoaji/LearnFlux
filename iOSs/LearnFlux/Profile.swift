@@ -1985,7 +1985,6 @@ extension Profile: IndividualCellDelegate{
 // - MARK: OrganizationCell My Profile Delegate
 extension Profile: OrganizationCellDelegate{
     func buttonAddTapped(cell: OrganizationCell) {
-        print("testing")
         if cell.forSearch!{
             let organization = searchResult.organizations[cell.indexPath.row - 1]
             Engine.requestJoinGroup(idGroup: organization.id){status in

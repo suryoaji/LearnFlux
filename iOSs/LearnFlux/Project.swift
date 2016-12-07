@@ -100,11 +100,13 @@ class Project: UIViewController {
     }
     
     @IBAction func viewListHeaderTapped(sender: UIButton) {
+        setLeftNavBarButtonMenu()
         screenType = .List
         changeScrollViewToDefaultOffset()
     }
     
     @IBAction func viewProfileHeaderTapped(sender: UIButton) {
+        setLeftNavBarButtonMenu()
         screenType = .InsideProject(view: .normal)
         changeScrollViewToDefaultOffset()
     }
@@ -350,13 +352,16 @@ extension Project{
     }
     
     func setLeftNavBarButtonBack(){
-        let leftBarButton = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(leftNavBarButtonBackTapped))
+        let leftBarButton = UIBarButtonItem(image: UIImage(named: "back-default"), style: .Plain, target: self, action: #selector(leftNavBarButtonBackTapped))
+        navigationItem.leftBarButtonItem = leftBarButton
+    }
+    
+    func setLeftNavBarButtonMenu(){
+        let leftBarButton = UIBarButtonItem(image: UIImage(named: "menu-1.png"), style: .Plain, target: self, action: #selector(revealMenu))
         navigationItem.leftBarButtonItem = leftBarButton
     }
     
     func leftNavBarButtonBackTapped(){
-        let leftBarButton = UIBarButtonItem(image: UIImage(named: "menu-1.png"), style: .Plain, target: self, action: #selector(revealMenu))
-        self.navigationItem.leftBarButtonItem = leftBarButton
         viewProfileHeaderTapped(UIButton())
     }
     

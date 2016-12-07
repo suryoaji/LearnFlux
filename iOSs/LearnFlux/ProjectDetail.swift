@@ -19,6 +19,21 @@ enum ProjectDetailType{
     enum taskType{
         case join
         case invate
+        case detail
+    }
+    func getSectionTitle() -> Array<String>{
+        switch self {
+        case .Detail:
+            return ["", "Mission", "Goal", "Dates", "Duration"]
+        case .Task(type: let type):
+            switch type {
+            case .detail:
+                return ["", "", "Task", "Dates", "Duration", "Remarks", "Team Members"]
+            default:
+                return ["", "Task", "Dates", "Duration", "Remarks"]
+            }
+        default: return []
+        }
     }
 }
 
@@ -51,8 +66,6 @@ class ProjectDetail: UIViewController {
         }
     }
 
-    let sectionDetailTitle = ["", "Mission", "Goal", "Dates", "Duration"]
-    let sectionTaskTitle = ["", "Task", "Dates", "Duration", "Remarks"]
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var editView: UIView!
     @IBOutlet weak var buttonActionTask: UIButton!
@@ -74,13 +87,7 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
     func numberOfSectionsInTableView(tableView: UITableView) -> Int{
         switch tableView {
         case tableViewDetail:
-            switch type {
-            case .Detail:
-                return numberOfSectionTableViewDetail()
-            case .Task:
-                return numberOfSectionTableViewTask()
-            default: return 0
-            }
+            return type.getSectionTitle().count
         case tableViewEdit:
             return numberOfSectionTableViewEdit()
         default: return 0
@@ -103,8 +110,13 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
             switch type {
             case .Detail:
                 return heightForRowTableViewDetail(indexPath)
-            case .Task:
-                return heightForRowTableViewTask(indexPath)
+            case .Task(type: let type):
+                switch type {
+                case .detail:
+                    return heightForRowTableViewTaskDetail(indexPath)
+                default:
+                    return heightForRowTableViewTask(indexPath)
+                }
             default: return 0
             }
         case tableViewEdit:
@@ -119,8 +131,13 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
             switch type {
             case .Detail:
                 return cellForRowTableViewDetail(indexPath)
-            case .Task:
-                return cellForRowTableViewTask(indexPath)
+            case .Task(type: let type):
+                switch type {
+                case .detail:
+                    return cellForRowTableViewTaskDetail(indexPath)
+                default:
+                    return cellForRowTableViewTask(indexPath)
+                }
             default: return UITableViewCell()
             }
         case tableViewEdit:
@@ -129,12 +146,18 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
         }
     }
     
-    func numberOfSectionTableViewDetail() -> Int{
-        return sectionDetailTitle.count
-    }
-    
     func numberOfRowTableViewDetail(section: Int) -> Int{
-        return 2
+        switch type {
+        case .Task(type: let type):
+            switch type {
+            case .detail:
+                return section == 6 ? 4 + 2 : 2
+            default:
+                return 2
+            }
+        default:
+            return 2
+        }
     }
     
     func heightForRowTableViewDetail(indexPath: NSIndexPath) -> CGFloat{
@@ -152,7 +175,7 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
         cell.frame.size.height = 0
         switch (indexPath.section, indexPath.row) {
         case (let section, 0):
-            if sectionDetailTitle[section].isEmpty{
+            if type.getSectionTitle()[section].isEmpty{
                 cell.frame.size.height = 0
             }else{
                 let sectionCell = tableViewDetail.dequeueReusableCellWithIdentifier("SectionTitle")!
@@ -194,7 +217,7 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
         case (let section, 0):
             let sectionCell = tableViewDetail.dequeueReusableCellWithIdentifier("SectionTitle")!
             let labelTitle = sectionCell.viewWithTag(1) as! UILabel
-            labelTitle.text = sectionDetailTitle[section]
+            labelTitle.text = type.getSectionTitle()[section]
             cell = sectionCell
         case (let section, 1):
             switch section {
@@ -274,10 +297,6 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
         return cell
     }
     
-    func numberOfSectionTableViewTask() -> Int{
-        return sectionTaskTitle.count
-    }
-    
     func heightForRowTableViewTask(indexPath: NSIndexPath) -> CGFloat{
         func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
             let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
@@ -293,7 +312,7 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
         cell.frame.size.height = 0
         switch (indexPath.section, indexPath.row) {
         case (let section, 0):
-            if sectionDetailTitle[section].isEmpty{
+            if type.getSectionTitle()[section].isEmpty{
                 cell.frame.size.height = 0
             }else{
                 let sectionCell = tableViewDetail.dequeueReusableCellWithIdentifier("SectionTitle")!
@@ -335,7 +354,7 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
         case (let section, 0):
             let sectionCell = tableViewDetail.dequeueReusableCellWithIdentifier("SectionTitle")!
             let labelTitle = sectionCell.viewWithTag(1) as! UILabel
-            labelTitle.text = sectionTaskTitle[section]
+            labelTitle.text = type.getSectionTitle()[section]
             cell = sectionCell
         case (let section, 1):
             switch section {
@@ -363,6 +382,118 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
             default: break
             }
         default: break
+        }
+        return cell
+    }
+    
+    func heightForRowTableViewTaskDetail(indexPath: NSIndexPath) -> CGFloat{
+        func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
+            let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
+            label.numberOfLines = 0
+            label.lineBreakMode = NSLineBreakMode.ByCharWrapping
+            label.font = font
+            label.text = text
+            label.sizeToFit()
+            return label.frame.height
+        }
+        
+        let cell = UITableViewCell(frame: CGRectZero)
+        cell.frame.size.height = 0
+        switch (indexPath.section, indexPath.row) {
+        case (let section, let row):
+            switch row {
+            case 0:
+                if type.getSectionTitle()[section].isEmpty{
+                    cell.frame.size.height = 0
+                }else{
+                    let sectionCell = tableViewDetail.dequeueReusableCellWithIdentifier("SectionTitle")!
+                    cell.frame.size.height = sectionCell.height
+                }
+            default:
+                switch section {
+                case 0:
+                    let titleCell = tableViewDetail.dequeueReusableCellWithIdentifier("Title")!
+                    cell.height = titleCell.height
+                case 1:
+                    let ownerCell = tableViewDetail.dequeueReusableCellWithIdentifier("Owner")!
+                    cell.height = ownerCell.height
+                case 2:
+                    let taskCell = tableViewDetail.dequeueReusableCellWithIdentifier("Task")!
+                    let labelTask = taskCell.viewWithTag(1) as! UILabel
+                    taskCell.frame.size.height = heightForView(labelTask.text!, font: labelTask.font, width: UIScreen.mainScreen().bounds.width / taskCell.width * labelTask.width) + 20
+                    cell.frame.size.height = taskCell.height
+                case 3:
+                    let datesCell = tableViewDetail.dequeueReusableCellWithIdentifier("Dates")!
+                    cell.frame.size.height = datesCell.height
+                case 4:
+                    let durationCell = tableViewDetail.dequeueReusableCellWithIdentifier("Duration")!
+                    cell.frame.size.height = durationCell.height
+                case 5:
+                    let goalCell = tableViewDetail.dequeueReusableCellWithIdentifier("Goal")!
+                    let labelGoal = goalCell.viewWithTag(1) as! UILabel
+                    goalCell.frame.size.height = heightForView(labelGoal.text!, font: labelGoal.font, width: UIScreen.mainScreen().bounds.width / goalCell.width * labelGoal.width) + 10
+                    cell.frame.size.height = goalCell.height
+                case 6:
+                    if row == 5 || row == 1{
+                        cell.height = 10
+                    }else{
+                        let memberCell = tableViewDetail.dequeueReusableCellWithIdentifier("Member")!
+                        cell.height = memberCell.height
+                    }
+                default: break
+                }
+            }
+        }
+        return cell.height
+    }
+    
+    func cellForRowTableViewTaskDetail(indexPath: NSIndexPath) -> UITableViewCell{
+        var cell = UITableViewCell(frame: CGRectZero)
+        switch (indexPath.section, indexPath.row) {
+        case (let section, let row):
+            switch row {
+            case 0:
+                let sectionCell = tableViewDetail.dequeueReusableCellWithIdentifier("SectionTitle")!
+                let labelTitle = sectionCell.viewWithTag(1) as! UILabel
+                labelTitle.text = type.getSectionTitle()[section]
+                cell = sectionCell
+            default:
+                switch section {
+                case 0:
+                    let titleCell = tableViewDetail.dequeueReusableCellWithIdentifier("Title")!
+                    let conView = titleCell.viewWithTag(1)!
+                    conView.layer.borderWidth = 0.6
+                    conView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
+                    cell = titleCell
+                case 1:
+                    let ownerCell = tableViewDetail.dequeueReusableCellWithIdentifier("Owner")!
+                    let conView = ownerCell.viewWithTag(1)!
+                    conView.layer.borderWidth = 0.6
+                    conView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
+                    cell = ownerCell
+                case 2:
+                    let taskCell = tableViewDetail.dequeueReusableCellWithIdentifier("Task")!
+                    cell = taskCell
+                case 3:
+                    let datesCell = tableViewDetail.dequeueReusableCellWithIdentifier("Dates")!
+                    cell = datesCell
+                case 4:
+                    let durationCell = tableViewDetail.dequeueReusableCellWithIdentifier("Duration")!
+                    cell = durationCell
+                case 5:
+                    let goalCell = tableViewDetail.dequeueReusableCellWithIdentifier("Goal")!
+                    cell = goalCell
+                case 6:
+                    if indexPath.row != 1 && indexPath.row != 5{
+                        let memberCell = tableViewDetail.dequeueReusableCellWithIdentifier("Member")!
+                        let conView = memberCell.viewWithTag(1)!
+                        conView.layer.borderWidth = 0.6
+                        conView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
+                        cell = memberCell
+                    }
+                default: break
+                }
+            }
         }
         return cell
     }
@@ -407,7 +538,6 @@ extension ProjectDetail{
             containerView.hidden = false
             editView.hidden = true
             buttonActionTask.hidden = true
-            tableViewDetail.frame.size.height = view.height
         case .Edit:
             containerView.hidden = true
             editView.hidden = false
@@ -415,14 +545,19 @@ extension ProjectDetail{
         case .Task(type: let type):
             containerView.hidden = false
             editView.hidden = true
-            buttonActionTask.hidden = false
             switch type {
             case .invate:
+                buttonActionTask.hidden = false
                 buttonActionTask.setTitle("Select collaborator from Contact Book", forState: .Normal)
+                tableViewDetail.frame.size.height = view.height - buttonActionTask.height - UIApplication.sharedApplication().statusBarFrame.height
             case .join:
+                buttonActionTask.hidden = false
                 buttonActionTask.setTitle("Join Project", forState: .Normal)
+                tableViewDetail.frame.size.height = view.height - buttonActionTask.height - UIApplication.sharedApplication().statusBarFrame.height
+            case .detail:
+                buttonActionTask.hidden = true
+                tableViewDetail.frame.size.height = view.height - UIApplication.sharedApplication().statusBarFrame.height
             }
-            tableViewDetail.frame.size.height = view.height - buttonActionTask.height - UIApplication.sharedApplication().statusBarFrame.height
         }
     }
     
@@ -433,9 +568,10 @@ extension ProjectDetail{
     func cancelEditTapped(sender: UIBarButtonItem){
         switch type {
         case .Edit(from: let from):
-            if from == ProjectDetailType.editFrom.createNew{
+            switch from {
+            case .createNew:
                 popNavCon()
-            }else if from == ProjectDetailType.editFrom.editDetail{
+            case .editDetail:
                 showView(.Detail)
             }
         default:

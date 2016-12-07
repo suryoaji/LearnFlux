@@ -53,6 +53,15 @@ class ProjectManifest: UIViewController {
     var dummyComments : Array<Dictionary<String, AnyObject>> = [["shouldMore" : false, "checked" : false], ["shouldMore" : false, "checked" : false]]
 }
 
+// - MARK: PrepareForSegue
+extension ProjectManifest{
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let projectDetailVC = segue.destinationViewController as? ProjectDetail{
+            projectDetailVC.type = .Task(type: .detail)
+        }
+    }
+}
+
 // - MARK: TableView
 extension ProjectManifest: UITableViewDelegate, UITableViewDataSource{
     func numberOfSectionsInTableView(tableView: UITableView) -> Int{
@@ -140,9 +149,14 @@ extension ProjectManifest: UITableViewDelegate, UITableViewDataSource{
         return cell
     }
     
-//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
-//        
-//    }
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
+        switch (indexPath.section, indexPath.row) {
+        case (1, let row):
+            row
+            performSegueWithIdentifier("ProjectDetailSegue", sender: self)
+        default: break
+        }
+    }
 }
 
 // - MARK: Mock Up
