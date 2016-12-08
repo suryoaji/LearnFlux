@@ -19,8 +19,17 @@ class NewGroups : UIViewController {
     @IBOutlet weak var lblImgGroup: UILabel!
     @IBOutlet var viewDesc : UIView!;
     @IBOutlet var tvDesc : UITextView!;
-    
     var popTip = AMPopTip();
+    
+    override func viewDidLoad() {
+        super.viewDidLoad();
+        mockUpDidLoad()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        mockUpWillAppear()
+    }
     
     @IBAction func imageViewGroupTapped(sender: UIButton) {
         if UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary){
@@ -32,42 +41,58 @@ class NewGroups : UIViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad();
+    @IBAction func titleChanged (sender: AnyObject) {
+        let maxChar = 40
+        let remaining = maxChar - tfTitle.text!.characters.count
+        lblCount.text = "\(remaining)"
+        lblCount.textColor = remaining < 0 ? UIColor(red: 1, green: 136.0/255, blue: 81.0/255, alpha: 1) : UIColor.lightGrayColor()
         
-        let right:UIBarButtonItem! = UIBarButtonItem();
-        right.title = "Next";
-        right.action = #selector(self.next);
-        right.target = self;
-        self.navigationItem.rightBarButtonItem = right;
-        
+        if let rightBarButton = navigationItem.rightBarButtonItem{
+            rightBarButton.enabled = remaining == maxChar ? false : true
+        }
+    }
+}
+
+// - MARK: Picker Controller Delegate
+extension NewGroups: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]){
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage{
+            imgGroup.image = pickedImage.size.width > 350 ? Util.resizeImage(pickedImage, newWidth: 350) : pickedImage
+            lblImgGroup.hidden = true
+        }
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
+// - MARK: Mock Up
+extension NewGroups{
+    func mockUpDidLoad(){
+        setRightNavBarButtonNext()
         viewImage.makeViewRounded();
         
         tvDesc.text = "";
-        
         viewDesc.layer.borderWidth = 1;
         viewDesc.layer.borderColor = UIColor.lightGrayColor().CGColor;
         viewDesc.makeViewRoundedRectWithCornerRadius(5);
         viewDesc.backgroundColor = UIColor.clearColor();
-        
         viewTitle.layer.borderWidth = 1;
         viewTitle.layer.borderColor = UIColor.lightGrayColor().CGColor;
         viewTitle.makeViewRoundedRectWithCornerRadius(5);
         viewTitle.backgroundColor = UIColor.clearColor();
     }
     
-    @IBAction func titleChanged (sender: AnyObject) {
-        let remaining = 25 - tfTitle.text!.characters.count;
-        lblCount.text = "\(remaining)";
-        if (remaining < 0) {
-            lblCount.textColor = UIColor(red: 1, green: 136/255, blue: 81/255, alpha: 1);
-        }
-        else {
-            lblCount.textColor = UIColor(red: 170/255, green: 170/255, blue: 170/255, alpha: 1);
+    func mockUpWillAppear(){
+        if let rightBarButton = navigationItem.rightBarButtonItem{
+            rightBarButton.enabled = tfTitle.text!.isEmpty ? false : true
         }
     }
     
-    @IBAction func next (sender: AnyObject) {
+    func setRightNavBarButtonNext(){
+        let rightBarButton = UIBarButtonItem(title: "Next", style: .Plain, target: self, action: #selector(rightNavBarButtonTapped))
+        self.navigationItem.rightBarButtonItem = rightBarButton
+    }
+    
+    func rightNavBarButtonTapped(sender: AnyObject) {
         let remaining = 40 - tfTitle.text!.characters.count;
         if (remaining < 0) {
             self.popTip.showText("The Group's subject is too long.", direction: AMPopTipDirection.Up, maxWidth: 200, inView: self.view, fromFrame: self.tfTitle.frame);
@@ -83,12 +108,21 @@ class NewGroups : UIViewController {
     }
 }
 
-extension NewGroups: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]){
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage{
-            imgGroup.image = pickedImage.size.width > 350 ? Util.resizeImage(pickedImage, newWidth: 350) : pickedImage
-            lblImgGroup.hidden = true
-        }
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

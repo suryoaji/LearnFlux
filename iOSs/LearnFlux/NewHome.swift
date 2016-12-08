@@ -43,7 +43,7 @@ class NewHome : UIViewController {
     }
     
     var shouldPushAnimated = true
-    let mosaicImages = ["mosaic-calendar.jpg", "mosaic-dashboard.jpg", "mosaic-chat.jpg", "mosaic-poll.jpg", "mosaic-project.jpg", "mosaic-interestgroup.jpg", "mosaic-favorite.jpg", "mosaic-attandance.jpg", "mosaic-gallery.jpg", "mosaic-settings.jpg"]
+    let mosaicImages = ["mosaic-calendar.jpg", "mosaic-dashboard.jpg", "mosaic-chat.jpg", "mosaic-poll.jpg", "mosaic-project.jpg", "mosaic-interestgroup.jpg", "mosaic-favorite.jpg", "mosaic-growth.png", "mosaic-attandance.jpg", "mosaic-gallery.jpg", "mosaic-settings.jpg", ""]
 }
 
 

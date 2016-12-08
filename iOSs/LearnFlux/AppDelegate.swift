@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKRevealing {
         //add corner radius to left controller
         func addLayerToLeftController(){
             let layer = CALayer()
-            layer.frame = CGRectMake(-2, 0, UIScreen.mainScreen().bounds.width * 0.65 + 2, UIScreen.mainScreen().bounds.height + 2)
+            layer.frame = CGRectMake(-2, 0, UIScreen.mainScreen().bounds.width * 0.65 + 2, 2500)
             layer.borderWidth = 2.0
             layer.borderColor = LFColor.blue.CGColor
             self.revealController.leftViewController.view.layer.addSublayer(layer)

@@ -437,16 +437,6 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         }
     }
     
-//    override func viewDidAppear(animated: Bool) {
-//        super.viewDidAppear(animated)
-//        mockUpFirstAppear()
-//        originalSizeConnectionTableView = tableViewConnectionLower.frame
-//        
-//        if !shouldEditMyProfile{ tableViewMyProfile.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 4)], withRowAnimation: .None) }
-//        
-//        if type == .Mine{ reloadFriendsTimedly() }
-//    }
-    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         mockUpFirstAppear()
@@ -630,12 +620,13 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
         }
     }
     
-    func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]?{
-        if tableView == tableViewConnectionUpper && indicatorAccConnection == 3{
-            return allContactsSectionIndex
-        }
-        return nil
-    }
+    //function tableView "memperlihatkan index di tableView Catalog/Contact di tab Connection"
+//    func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]?{
+//        if tableView == tableViewConnectionUpper && indicatorAccConnection == 3{
+//            return allContactsSectionIndex
+//        }
+//        return nil
+//    }
     
     var doSearch = false{
         didSet{
@@ -1452,7 +1443,6 @@ extension Profile{
             tableViewListInterests.reloadDataSection(0, animate: false)
         default: break
         }
-        
     }
     
     func didSelectRowTableViewConnectionLower(indexPath: NSIndexPath){

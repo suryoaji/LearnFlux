@@ -80,7 +80,13 @@ class User {
             }
         }
         if let s = data[keyCacheMe.mutualFriends] as? Array<Dictionary<String, AnyObject>>{
-            self.mutualFriend = s.filter({ $0[keyCacheMe.id] as! Int != self.userId! }).map({ $0[keyCacheMe.id] as! Int })
+            self.mutualFriend = s.filter({ value in
+                if value[keyCacheMe.id] as! Int == self.userId! || value[keyCacheMe.id] as! Int == Engine.clientData.cacheSelfId(){
+                    return false
+                }else{
+                    return true
+                }
+            }).map({ $0[keyCacheMe.id] as! Int })
         }
     }
     

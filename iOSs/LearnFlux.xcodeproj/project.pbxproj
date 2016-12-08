@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1BCD17953F518A916F46C9F2 /* Pods_LearnFlux.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E20C6689FC19B0356776C34 /* Pods_LearnFlux.framework */; };
+		4A36669C1DF9197200A4C7D0 /* mosaic-growth.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A36669B1DF9197200A4C7D0 /* mosaic-growth.png */; };
+		4A36669E1DF9197A00A4C7D0 /* icon-growth.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A36669D1DF9197A00A4C7D0 /* icon-growth.png */; };
 		4A368BD61D66A0D500E38942 /* NavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A368BD51D66A0D500E38942 /* NavController.swift */; };
 		4A382AC91D9CCD5D00E12BFE /* SectionTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A382AC81D9CCD5D00E12BFE /* SectionTitleCell.swift */; };
 		4A382ACB1D9CD18A00E12BFE /* RowProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A382ACA1D9CD18A00E12BFE /* RowProfileCell.swift */; };
@@ -465,6 +467,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4A36669B1DF9197200A4C7D0 /* mosaic-growth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mosaic-growth.png"; sourceTree = "<group>"; };
+		4A36669D1DF9197A00A4C7D0 /* icon-growth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-growth.png"; sourceTree = "<group>"; };
 		4A368BD51D66A0D500E38942 /* NavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavController.swift; sourceTree = "<group>"; };
 		4A382AC81D9CCD5D00E12BFE /* SectionTitleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionTitleCell.swift; sourceTree = "<group>"; };
 		4A382ACA1D9CD18A00E12BFE /* RowProfileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RowProfileCell.swift; sourceTree = "<group>"; };
@@ -1205,6 +1209,7 @@
 				5B02264E1CEAFB7200C5E8EE /* mosaic_calendar.png */,
 				5B02264F1CEAFB7200C5E8EE /* mosaic_chat.png */,
 				5B0226501CEAFB7200C5E8EE /* mosaic_favourite.png */,
+				4A36669B1DF9197200A4C7D0 /* mosaic-growth.png */,
 				5B0226511CEAFB7200C5E8EE /* mosaic_gallery.png */,
 				5B0226521CEAFB7200C5E8EE /* mosaic_interestgroup.png */,
 				5B0226531CEAFB7200C5E8EE /* mosaic_polls.png */,
@@ -1341,6 +1346,7 @@
 				4A6752571DB0B54F0090C8B4 /* icon-calendar.png */,
 				4A6752581DB0B54F0090C8B4 /* icon-attandance.png */,
 				4A6752591DB0B54F0090C8B4 /* icon-poll.png */,
+				4A36669D1DF9197A00A4C7D0 /* icon-growth.png */,
 				4A67525A1DB0B54F0090C8B4 /* icon-gallery.png */,
 				4A67525B1DB0B54F0090C8B4 /* icon-interestgroup.png */,
 				4A67525C1DB0B54F0090C8B4 /* icon-setting.png */,
@@ -1827,6 +1833,7 @@
 				5B3744441CC0CBFD00AF2897 /* trash2-16.png in Resources */,
 				4A62B9C51DAB352000E32D50 /* org-container-45.png in Resources */,
 				5B3743701CC0CBFD00AF2897 /* caution_sign-512.png in Resources */,
+				4A36669C1DF9197200A4C7D0 /* mosaic-growth.png in Resources */,
 				4A47F2D21D9DFB5D00225FB6 /* organizations-85.png in Resources */,
 				5B37439D1CC0CBFD00AF2897 /* clock-24@2x.png in Resources */,
 				5B0514471CE2DC1C006F5C7E /* calendar2-24@2x.png in Resources */,
@@ -1942,6 +1949,7 @@
 				5B37437B1CC0CBFD00AF2897 /* home_background7.jpg in Resources */,
 				5B3743801CC0CBFD00AF2897 /* home_background12.jpg in Resources */,
 				5B37441B1CC0CBFD00AF2897 /* user_male-24@2x.png in Resources */,
+				4A36669E1DF9197A00A4C7D0 /* icon-growth.png in Resources */,
 				5B37441E1CC0CBFD00AF2897 /* user_male2-24@2x.png in Resources */,
 				4A47F2D01D9DFB5D00225FB6 /* individual-85.png in Resources */,
 				5B3743DA1CC0CBFD00AF2897 /* line_chart-24@3x.png in Resources */,
