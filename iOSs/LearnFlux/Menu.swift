@@ -1,73 +1,122 @@
 //
-//  Menu.swift
+//  NewMenu.swift
 //  LearnFlux
 //
-//  Created by Martin Darma Kusuma Tjandra on 4/11/16.
+//  Created by ISA on 12/9/16.
 //  Copyright © 2016 Martin Darma Kusuma Tjandra. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-class Menu : UITableViewController {
-    let clientData = Engine.clientData
-    var lastSelected = NSIndexPath(forRow: 0, inSection: 2)
+enum MenuList{
+    case ProfileMenu
+    case HomeMenu
+    case ToolsMenu(indexPath: NSIndexPath)
     
-    override func viewDidLoad () {
-        super.viewDidLoad();
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        updateFirstSectionTableView()
-        
-        if let lastVC = checkLastViewController(){
-            lastSelected = lastVC
-        }
-    }
-    
-    func checkLastViewController() -> NSIndexPath?{
-        if let navController = self.revealController.frontViewController as? NavController{
-            return getIndexPathOf(navController.viewControllers.last!)
-        }
-        return nil
-    }
-    
-    func getIndexPathOf(lastVc: UIViewController) -> NSIndexPath{
+    init(lastVc: UIViewController){
         switch lastVc {
-        case is Profile:
-            return NSIndexPath(forRow: 0, inSection: 1)
-        case is NewHome:
-            return NSIndexPath(forRow: 0, inSection: 2)
         case is InterestGroups:
-            return NSIndexPath(forRow: 4, inSection: 3)
+            self = .ToolsMenu(indexPath: NSIndexPath(forRow: 5, inSection: 0))
         case is Project:
-            return NSIndexPath(forRow: 6, inSection: 3)
+            self = .ToolsMenu(indexPath: NSIndexPath(forRow: 6, inSection: 0))
+        case is Profile:
+            self = .ProfileMenu
+        case is NewHome:
+            self = .HomeMenu
         default:
-            return NSIndexPath(forRow: 0, inSection: 0)
+            self = .HomeMenu
         }
     }
     
-    func updateFirstSectionTableView(){
-        tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: .None)
-    }
-    
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch (section) {
-        case 1: return 1;
-        case 2: return 1;
-        case 3: return 9;
-        case 4: return 1;
-        case 5: return 1;
-        case 6: return 1;
-        default: return 0;
+    var rawValue : Int {
+        switch self {
+        case .HomeMenu:
+            return 0
+        case .ProfileMenu:
+            return 1
+        case .ToolsMenu(indexPath: let indexPath):
+            let section = indexPath.section + 1
+            let row = indexPath.row
+            return Int("\(section)\(row)")!
         }
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 7;
+    var viewController: UIViewController?{
+        switch self {
+        case .HomeMenu:
+            return Util.getViewControllerID("NewHome")
+        case .ProfileMenu:
+            let profileVC = Util.getViewControllerID("Profile") as! Profile
+            profileVC.initViewController(id: Engine.clientData.cacheSelfId())
+            return profileVC
+        case .ToolsMenu(indexPath: let indexPath):
+            switch (indexPath.section, indexPath.row) {
+            case (0,0):
+                let navVc = Util.getViewControllerID("chatTabBarController") as! chatTabBarController
+                navVc.initViewController(2)
+                return navVc
+            case (0,5):
+                return Util.getViewControllerID("InterestGroups")
+            case (0,6):
+                return Util.getViewControllerID("Project")
+            case (1,2):
+                return Util.getViewControllerID("Login")
+            default: return nil
+            }
+        }
+    }
+}
+
+class Menu: UIViewController {
+    let clientData = Engine.clientData
+    var lastMenu : MenuList = .HomeMenu
+    @IBOutlet weak var imageViewPhoto: UIImageView!
+    @IBOutlet weak var labelFullName: UILabel!
+    @IBOutlet weak var labelEmail: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        setViewData()
+        if let lastVC = checkLastViewController(){
+            lastMenu = lastVC
+        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func buttonProfileTapped(sender: UIButton) {
+        setShowRevealControllerWhenButtonTapped(.ProfileMenu)
+    }
+    
+    @IBAction func buttonHomeTapped(sender: UIButton) {
+        setShowRevealControllerWhenButtonTapped(.HomeMenu)
+    }
+
+}
+
+// - MARK: Table View
+extension Menu: UITableViewDelegate, UITableViewDataSource{
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int{
+        return 2
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+        switch section {
+        case 0:
+            return 9
+        case 1:
+            return 3
+        default: return 0
+        }
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch indexPath.section {
         case 1:
             return tableView.dequeueReusableCellWithIdentifier(indexPath.code)!.height
@@ -76,48 +125,38 @@ class Menu : UITableViewController {
         }
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("\(indexPath.section)-\(indexPath.row)")!
-        switch (indexPath.section, indexPath.row){
-        case (1,0):
-            let view = cell.viewWithTag(1)!
-            let labelName = cell.viewWithTag(2) as! UILabel
-            let labelEmail = cell.viewWithTag(3) as! UILabel
-            let imageViewPhoto = cell.viewWithTag(4) as! UIImageView
-            view.frame.size.width = UIScreen.mainScreen().bounds.width * 0.65 - 4.0
-            imageViewPhoto.image = clientData.photo
-            labelName.text = clientData.cacheFullname().capitalizedString
-            labelEmail.text = clientData.cacheSelfEmail()
-        default: break
-        }
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        guard let navCon = revealController.frontViewController as? NavController where lastSelected != indexPath else{
+        setShowRevealControllerWhenButtonTapped(.ToolsMenu(indexPath: indexPath))
+    }
+}
+
+// - MARK: Helper
+extension Menu{
+    func setViewData(){
+        imageViewPhoto.image = clientData.photo
+        labelFullName.text = clientData.cacheFullname().capitalizedString
+        labelEmail.text = clientData.cacheSelfEmail()
+    }
+    
+    func checkLastViewController() -> MenuList?{
+        if let navController = self.revealController.frontViewController as? NavController{
+            return MenuList(lastVc: navController.viewControllers.last!)
+        }
+        return nil
+    }
+    
+    func setShowRevealControllerWhenButtonTapped(menu: MenuList){
+        guard let navCon = revealController.frontViewController as? NavController where lastMenu.rawValue != menu.rawValue else{
             return
         }
-        self.revealController.showViewController(self)
-        var vc : UIViewController?
-        switch (indexPath.section, indexPath.row) {
-        case (1,0):
-            let profileVC = Util.getViewControllerID("Profile") as! Profile
-            profileVC.initViewController(id: clientData.cacheSelfId())
-            vc = profileVC
-        case (3,0):
-            let navVc = Util.getViewControllerID("chatTabBarController") as! chatTabBarController
-            navVc.initViewController(2)
-        case (3,4):
-            vc = Util.getViewControllerID("InterestGroups")
-        case (3,6):
-            vc = Util.getViewControllerID("Project")
-        case (2,0):
-            vc = Util.getViewControllerID("NewHome")
-        case (6,0):
-            vc = Util.getViewControllerID("Login")
-        default: break
-        }
+        revealController.showViewController(self)
+        let vc = menu.viewController
         if let vc = vc{
             let homeVc = Util.getViewControllerID("NewHome")
             switch vc {
@@ -133,7 +172,29 @@ class Menu : UITableViewController {
                 self.revealController.showViewController(navCon)
             }
         }
-        lastSelected = indexPath
+//        lastMenu = menu
     }
-    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

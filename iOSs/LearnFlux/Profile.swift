@@ -612,6 +612,8 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             didSelectRowTableViewConnectionLower(indexPath)
         case tableViewListInterests:
             didSelectRowTableViewListInterests(indexPath)
+        case tableViewSearchResult:
+            didSelectRowTableViewSearchResult(indexPath)
         default:
             if tableView.tag == 1{
                 didSelectRowTableViewConnectionMyProfile(tableView, indexPath: indexPath)
@@ -1464,6 +1466,33 @@ extension Profile{
             }
         }
     }
+    
+    func didSelectRowTableViewSearchResult(indexPath: NSIndexPath){
+        tableViewSearchResult.deselectRowAtIndexPath(indexPath, animated: false)
+        switch (indexPath.section, indexPath.row) {
+        case (let section, let row):
+            if row != 0{
+                switch section {
+                case 0:
+                    let user = searchResult.users[row - 1]
+                    let cell = tableViewSearchResult.cellForRowAtIndexPath(indexPath) as! IndividualCell
+                    switch cell.type! {
+                    case .Friend:
+                        let vc = Util.getViewControllerID("Profile") as! Profile
+                        vc.initViewController(.Public, id: user.userId!)
+                        showViewController(vc, sender: self)
+                    case .NotFriend, .Pending:
+                        if let image = conImageResult.filter({ $0.id == String(user.userId!) }).first{
+                            user.photo = image.image
+                        }
+                        self.performSegueWithIdentifier("PublicProfileSegue", sender: user)
+                    }
+                default: break
+                }
+            }
+        }
+    }
+    
 }
 
 // - MARK: Collection View
@@ -1816,6 +1845,10 @@ extension Profile{
             let chatController = segue.destinationViewController as! ChatFlow
             let sender = sender as! Dictionary<String, AnyObject>
             chatController.initChat(sender["index"] as! Int, idThread: (sender["thread"] as! Thread).id, from: .OpenChat)
+        }else if segue.identifier == "PublicProfileSegue"{
+            let publicProfileController = segue.destinationViewController as! PublicProfile
+            let sender = sender as! User
+            publicProfileController.initViewController(sender)
         }
     }
 }

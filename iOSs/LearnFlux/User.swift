@@ -63,6 +63,7 @@ class User {
     
     func update(dict: AnyObject?, imageHasLoaded: ((type: Int, id: String, status: Bool) -> Void)? = nil){
         guard let data = dict else{ return }
+        if let s = data[keyCacheMe.interests] as? Array<String>{ interests = s }
         if let s = data[keyCacheMe.embedded] as? Dictionary<String, AnyObject>{
             if let arrDictChildrens = s[keyCacheMe.children] as? Array<Dictionary<String, AnyObject>>{
                 var childrens = [User]()
