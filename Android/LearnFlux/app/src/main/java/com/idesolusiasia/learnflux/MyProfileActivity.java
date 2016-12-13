@@ -699,7 +699,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 								   }
 							   });
 						   }else {
-							   affilatedOrganizationButtonMore.setVisibility(View.VISIBLE);
 							   showAllOrganization.setVisibility(View.GONE);
 							   affilatedOrganizationButtonMore.setVisibility(View.GONE);
 						   }

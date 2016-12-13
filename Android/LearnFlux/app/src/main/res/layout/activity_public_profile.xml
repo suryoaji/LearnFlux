@@ -169,52 +169,53 @@
                         android:layout_width="0dp"
                         android:layout_height="25dp" />
                 </LinearLayout>
-                <TextView
-                    android:layout_marginTop="6dp"
-                    android:text="My Children"
-                    android:textColor="#000"
-                    android:paddingLeft="15dp" android:paddingTop="7dp"
-                    android:background="#E0E0E0"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" />
+
 
                 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/framePublicMyProfile"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp">
+                    android:layout_height="100dp">
+                    <TextView
+                        android:text="My Children"
+                        android:textColor="#000"
+                        android:paddingLeft="15dp" android:paddingTop="7dp"
+                        android:background="#E0E0E0"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp" />
+
                     <android.support.v7.widget.RecyclerView
+                        android:layout_marginTop="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:id="@+id/childrenRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                     </android.support.v7.widget.RecyclerView>
-                    <TextView
-                        android:id="@+id/childrenEmptyView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:text="No Data Available" />
                 </FrameLayout>
-                <TextView
-                    android:text="Affilated Organization"
-                    android:background="#E0E0E0"
-                    android:textColor="#000"
-                    android:paddingLeft="15dp" android:paddingTop="7dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" />
-                <FrameLayout
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp">
 
+                <FrameLayout
+                    android:visibility="gone"
+                    android:id="@+id/publicAffiliatedOrg"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp">
+
+                    <TextView
+                        android:text="Affilated Organization"
+                        android:background="#E0E0E0"
+                        android:textColor="#000"
+                        android:paddingLeft="15dp" android:paddingTop="7dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp" />
                     <LinearLayout
                         android:id="@+id/publicShowAll"
                         android:background="#FFFFFF"
+                        android:layout_marginTop="35dp"
                         android:layout_marginLeft="240dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="gone">
+                        android:visibility="visible">
                         <TextView
                             android:id="@+id/publicShowMore"
                             android:text="+more"
@@ -224,44 +225,67 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_marginTop="35dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:id="@+id/organizationRecycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp">
+                        </android.support.v7.widget.RecyclerView>
+                </FrameLayout>
+
+                <FrameLayout
+                    android:visibility="gone"
+                    android:id="@+id/interestPublic"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp">
+
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:text="Interest"
+                        android:background="#E0E0E0"
+                        android:textColor="#000"
+                        android:paddingLeft="15dp" android:paddingTop="7dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp" />
+
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/organizationRecycler"
+                        android:padding="5dp"
+                        android:layout_marginTop="35dp"
+                        android:id="@+id/recyclerMyProfileInterest"
+                        android:layout_marginLeft="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="80dp">
                     </android.support.v7.widget.RecyclerView>
-                    <TextView
-                        android:id="@+id/emptyViewOrg"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:visibility="gone"
-                        android:text="No Organization or Group Data" />
-
                 </FrameLayout>
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:text="Interest"
-                    android:background="#E0E0E0"
-                    android:textColor="#000"
-                    android:paddingLeft="15dp" android:paddingTop="7dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" />
-                <android.support.v7.widget.RecyclerView
-                    android:padding="5dp"
-                    android:id="@+id/recyclerMyProfileInterest"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp">
-                </android.support.v7.widget.RecyclerView>
-                <TextView
-                    android:id="@+id/interest_empty"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    android:text="No Interest Data" />
+
+
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
-
+    <LinearLayout
+        android:id="@+id/layoutAcceptDecline"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <Button
+            android:text="Send Request"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_see_all"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonJoinGroup" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:textColor="#FFFFFF"
+            android:text="Cancel"
+            android:id="@+id/cancelButton"
+            android:background="@android:color/holo_red_dark"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </RelativeLayout>

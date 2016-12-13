@@ -32,6 +32,7 @@ import com.idesolusiasia.learnflux.util.VolleySingleton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -47,14 +48,15 @@ public class PublicProfile extends BaseActivity {
     ArrayList<Group> groupContact;
     ArrayList<String>interestUser;
 
+    FrameLayout childrenLayout, affiliatedLayout, interestFrameLayout;
+
     RecyclerView myProfileInterest;
     NetworkImageView parent;
     CircularNetworkImageView mutualImages;
 
     RecyclerView affilatedOrganizationRecycler;
-    TextView emptyOrgs;
 
-    TextView txtParent, txtParentDesc, from, work, mutual;
+    TextView txtParent, txtParentDesc, from, work, mutual, buttonMore;
     public int id;
     String url = "http://lfapp.learnflux.net";
 
@@ -79,30 +81,28 @@ public class PublicProfile extends BaseActivity {
         txtParent = (TextView)findViewById(R.id.txtParentTitle);
         mutual = (TextView)findViewById(R.id.mutualFriend);
         mutualImages = (CircularNetworkImageView)findViewById(R.id.imagesMutual);
-        final TextView emptyRecycler = (TextView)findViewById(R.id.interest_empty);
 
 
         final RecyclerView recyclerChildren = (RecyclerView)findViewById(R.id.childrenRecyclerView);
+        childrenLayout = (FrameLayout)findViewById(R.id.framePublicMyProfile);
         LinearLayoutManager childrenLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerChildren.setLayoutManager(childrenLayoutManager);
         childList = new ArrayList<>();
         groupContact = new ArrayList<>();
-        final TextView childrenEmptyView = (TextView)findViewById(R.id.childrenEmptyView);
-        childrenEmptyView.setVisibility(View.VISIBLE);
-        recyclerChildren.setVisibility(View.GONE);
 
 
         myProfileInterest = (RecyclerView)findViewById(R.id.recyclerMyProfileInterest);
         LinearLayoutManager interestLayout = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,false);
         myProfileInterest.setLayoutManager(interestLayout);
-        emptyRecycler.setVisibility(View.VISIBLE);
-        myProfileInterest.setVisibility(View.GONE);
+        interestFrameLayout = (FrameLayout)findViewById(R.id.interestPublic);
+
         id = getIntent().getIntExtra("id",0);
 
 
         affilatedOrganizationRecycler = (RecyclerView)findViewById(R.id.organizationRecycler);
+        affiliatedLayout =  (FrameLayout)findViewById(R.id.publicAffiliatedOrg);
         final LinearLayout showAll = (LinearLayout)findViewById(R.id.publicShowAll);
-        emptyOrgs = (TextView)findViewById(R.id.emptyViewOrg);
+        buttonMore = (TextView)findViewById(R.id.publicShowMore);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         affilatedOrganizationRecycler.setLayoutManager(linearLayoutManager);
 
@@ -156,11 +156,14 @@ public class PublicProfile extends BaseActivity {
                                  Contact ch = Converter.convertContact(child.getJSONObject(j));
                                  childList.add(ch);
                              }
-                             recyclerChildren.setVisibility(View.VISIBLE);
-                             childrenEmptyView.setVisibility(View.GONE);
-                             childAdapter = new ChildrenAdapter(getApplicationContext(), childList);
-                             recyclerChildren.setAdapter(childAdapter);
-                             recyclerChildren.refreshDrawableState();
+                             if(childList.isEmpty()) {
+                                 childrenLayout.setVisibility(View.GONE);
+                             }else{
+                                 childrenLayout.setVisibility(View.VISIBLE);
+                                 childAdapter = new ChildrenAdapter(getApplicationContext(), childList);
+                                 recyclerChildren.setAdapter(childAdapter);
+                                 recyclerChildren.refreshDrawableState();
+                             }
                      }
 
                     //INTEREST
@@ -170,11 +173,15 @@ public class PublicProfile extends BaseActivity {
                                 interestUser = new ArrayList<String>();
                                 interestUser.add(interest.get(it).toString());
                             }
-                            emptyRecycler.setVisibility(View.GONE);
-                            myProfileInterest.setVisibility(View.VISIBLE);
-                            myProfileInterestAdapter = new MyProfileInterestAdapter(interestUser);
-                            myProfileInterest.setAdapter(myProfileInterestAdapter);
-                            myProfileInterest.refreshDrawableState();
+                            if(interestUser.isEmpty()){
+                                interestFrameLayout.setVisibility(View.GONE);
+                            }else{
+                                myProfileInterestAdapter = new MyProfileInterestAdapter(interestUser);
+                                myProfileInterest.setAdapter(myProfileInterestAdapter);
+                                myProfileInterest.refreshDrawableState();
+                                interestFrameLayout.setVisibility(View.VISIBLE);
+                            }
+
                         }
 
                     //ORGANIZATION
@@ -185,13 +192,25 @@ public class PublicProfile extends BaseActivity {
                             groupContact.add(grops);
                         }
                         if (groupContact.isEmpty()) {
-                            affilatedOrganizationRecycler.setVisibility(View.GONE);
-                            emptyOrgs.setVisibility(View.VISIBLE);
+                            affiliatedLayout.setVisibility(View.GONE);
                         } else {
                             rcAdapter = new MyProfileOrganizationAdapter(getApplicationContext(), groupContact);
                             affilatedOrganizationRecycler.setAdapter(rcAdapter);
-                            affilatedOrganizationRecycler.setVisibility(View.VISIBLE);
-                            emptyOrgs.setVisibility(View.GONE);
+                            affiliatedLayout.setVisibility(View.VISIBLE);
+                            if(groupContact.size()>3){
+                                    showAll.setVisibility(View.VISIBLE);
+                                    showAll.bringToFront();
+                                    buttonMore.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            showAll.setVisibility(View.GONE);
+                                            buttonMore.setVisibility(View.GONE);
+                                        }
+                                    });
+                            }else{
+                                showAll.setVisibility(View.GONE);
+                                buttonMore.setVisibility(View.GONE);
+                            }
 
                         }
 
