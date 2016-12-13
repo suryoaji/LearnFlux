@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,7 +49,7 @@ public class ProjectActivity extends BaseActivity {
     Button gotoProjectDetails;
     FloatingActionButton flbtn;
     ProjectProfileComment ppcAdapter;
-    ImageView joinProject, inviting, btnManifest;
+    ImageView joinProject, inviting, btnManifest, notifProject;
     RelativeLayout lnm;
     ArrayList<String> userComment;
     @Override
@@ -77,6 +78,7 @@ public class ProjectActivity extends BaseActivity {
         rcView = (RecyclerView)findViewById(R.id.listOfProjectRecycler);
         emptyField = (TextView)findViewById(R.id.emptyProject);
         progress = (ProgressBar) findViewById(R.id.progressProject);
+        notifProject = (ImageView)findViewById(R.id.notifProject);
 
         String s = getIntent().getStringExtra("projectAct");
 
@@ -90,6 +92,10 @@ public class ProjectActivity extends BaseActivity {
         title.add("Old Folks Home");
         title.add("Animal Shelter");
 
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(60, 60);
+        LinearLayout.LayoutParams secondParams = new LinearLayout.LayoutParams(60, 60);
+        params.setMargins(260,40,0,0);
+        secondParams.setMargins(150,40,0,0);
         if(title!=null) {
             plAdapter = new ProjectListAdapter(getApplicationContext(), title);
             rcView.setAdapter(plAdapter);
@@ -102,9 +108,11 @@ public class ProjectActivity extends BaseActivity {
             progress.setVisibility(View.VISIBLE);
         }
         if(s.contains("activity")){
+            notifProject.setLayoutParams(params);
             profileTitle.setVisibility(View.INVISIBLE);
             listTitle.setTextColor(Color.parseColor("#8bc34a"));
         }else if(s.contains("profiles")){
+                notifProject.setLayoutParams(secondParams);
                 listTitle.setVisibility(View.VISIBLE);
                 profileTitle.setVisibility(View.VISIBLE);
                 profileTitle.setTextColor(Color.parseColor("#8bc34a"));
@@ -112,7 +120,6 @@ public class ProjectActivity extends BaseActivity {
                 projectProfile.setVisibility(View.VISIBLE);
                 searchProject.setVisibility(View.GONE);
                 actionBar.setVisibility(View.VISIBLE);
-
                 comment = (EditText)findViewById(R.id.comment);
                 projectProfileDesc = (TextView)findViewById(R.id.descProjectProfile);
                 gotoProjectDetails = (Button)findViewById(R.id.gotoProjectDetails);

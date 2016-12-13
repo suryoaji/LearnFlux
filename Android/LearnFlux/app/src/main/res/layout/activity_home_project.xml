@@ -27,7 +27,6 @@
         <ImageView
             android:id="@+id/notifProject"
             android:src="@drawable/broadcast"
-            android:layout_marginLeft="40dp"
             android:layout_gravity="center"
             android:layout_width="30dp"
             android:layout_height="20dp" />
@@ -51,8 +50,8 @@
             android:src="@drawable/file"
             android:clickable="true"
             android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="30dp"
+            android:layout_height="18dp"/>
         <ImageView
             android:id="@+id/inviteCollab"
             android:src="@drawable/addpeople_selector"
@@ -64,6 +63,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout
         android:visibility="visible"
         android:id="@+id/projectListLayout"
