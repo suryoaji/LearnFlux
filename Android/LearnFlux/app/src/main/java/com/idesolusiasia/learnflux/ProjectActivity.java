@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.ProjectListAdapter;
+import com.idesolusiasia.learnflux.adapter.ProjectNotificationAdapter;
 import com.idesolusiasia.learnflux.adapter.ProjectProfileComment;
 
 import java.util.ArrayList;
@@ -35,11 +36,12 @@ import java.util.ArrayList;
 
 public class ProjectActivity extends BaseActivity {
     ProjectListAdapter plAdapter;
-    RecyclerView rcView, recRecycler;
+    RecyclerView rcView, recRecycler, notifRecycler;
     TextView emptyField, profileTitle, listTitle ;
     ImageView searchProject;
     LinearLayout projectList, actionBar;
     ProgressBar progress;   ArrayList<String>title = new ArrayList<>();
+    ProjectNotificationAdapter PNAdapter;
 
 
     //For Project Profile
@@ -85,12 +87,25 @@ public class ProjectActivity extends BaseActivity {
         recRecycler = (RecyclerView)findViewById(R.id.listOfRecommendedProject);
         recRecycler.setLayoutManager(new LinearLayoutManager(this));
 
+        notifRecycler = (RecyclerView)findViewById(R.id.recyclerProject);
+        notifRecycler.setLayoutManager(new LinearLayoutManager(this));
+
         LinearLayoutManager linear = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
         rcView.setLayoutManager(linear);
         //Dummy Data
         progress.setVisibility(View.VISIBLE);
         title.add("Old Folks Home");
         title.add("Animal Shelter");
+
+        notifProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifRecycler.setVisibility(View.VISIBLE);
+                notifRecycler.bringToFront();
+                PNAdapter = new ProjectNotificationAdapter(getApplicationContext());
+                notifRecycler.setAdapter(PNAdapter);
+            }
+        });
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(60, 60);
         LinearLayout.LayoutParams secondParams = new LinearLayout.LayoutParams(60, 60);
@@ -193,7 +208,7 @@ public class ProjectActivity extends BaseActivity {
                         startActivity(manifest);
                     }
                 });
-            listTitle.setOnClickListener(new View.OnClickListener() {
+                listTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     profileTitle.setVisibility(View.INVISIBLE);
@@ -203,6 +218,7 @@ public class ProjectActivity extends BaseActivity {
                     projectList.setVisibility(View.VISIBLE);
                 }
             });
+
         }
 
     }
