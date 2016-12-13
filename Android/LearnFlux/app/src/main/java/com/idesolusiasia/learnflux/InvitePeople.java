@@ -2,6 +2,7 @@ package com.idesolusiasia.learnflux;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.idesolusiasia.learnflux.adapter.CheckListPeopleAdapter;
@@ -33,6 +36,7 @@ public class InvitePeople extends BaseActivity{
     ArrayList<PeopleInvite> participant= new ArrayList<>();
     RecyclerView peopleRecycler;
     Button btnSelection;
+    LinearLayout emptyLayout;
     CheckListPeopleAdapter adaptPeople;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,8 @@ public class InvitePeople extends BaseActivity{
 
         final String ids = getIntent().getStringExtra("ids");
         btnSelection = (Button) findViewById(R.id.btnShow);
-        peopleRecycler = (RecyclerView)findViewById(R.id.my_recycler_view);
+        peopleRecycler = (RecyclerView)findViewById(R.id.recycler_invite);
+        emptyLayout = (LinearLayout)findViewById(R.id.empty_invitePeople);
         peopleRecycler.hasFixedSize();
         peopleRecycler.setLayoutManager(new LinearLayoutManager(this));
 
@@ -67,8 +72,14 @@ public class InvitePeople extends BaseActivity{
                             PeopleInvite people = Converter.convertInvite(friend.getJSONObject(i));
                             participant.add(people);
                         }
-                        adaptPeople = new CheckListPeopleAdapter(getApplicationContext(),participant);
-                        peopleRecycler.setAdapter(adaptPeople);
+                        if(participant.isEmpty()){
+                            emptyLayout.setVisibility(View.VISIBLE);
+                            peopleRecycler.setVisibility(View.GONE);
+                        }else {
+                            emptyLayout.setVisibility(View.GONE);
+                            adaptPeople = new CheckListPeopleAdapter(getApplicationContext(), participant);
+                            peopleRecycler.setAdapter(adaptPeople);
+                        }
 
                     }
                 }catch (JSONException e){

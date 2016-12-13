@@ -188,9 +188,14 @@ public class BaseActivity extends AppCompatActivity
 			i.putExtra("chatroom", "chat");
 			//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(i);
-		}else if(id == R.id.nav_internet_groups){
+		}else if(id == R.id.nav_interest_groups){
 			Intent i= new Intent(BaseActivity.this, InterestGroup.class);
 			startActivity(i);
+		}
+		else if(id == R.id.nav_Project){
+			Intent project = new Intent(BaseActivity.this, ProjectActivity.class);
+			project.putExtra("projectAct", "activity");
+			startActivity(project);
 		}
 		else if (id == R.id.nav_logout){
 			SharedPreferences prefs = getSharedPreferences("com.idesolusiasia.learnflux",0);

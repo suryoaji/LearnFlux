@@ -3,6 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/newProject"
         android:orderInCategory="102"
-        android:title="Add new oproject"
+        android:title="Add new project"
         app:showAsAction="never"/>
 </menu>

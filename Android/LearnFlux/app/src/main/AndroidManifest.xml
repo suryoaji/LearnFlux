@@ -129,6 +129,7 @@
         </activity>
         <activity android:name=".JoinInviteStakeHolders"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">
         </activity>
     </application>

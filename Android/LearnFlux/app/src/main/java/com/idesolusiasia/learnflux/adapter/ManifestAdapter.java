@@ -12,6 +12,7 @@ import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
 import com.bignerdranch.expandablerecyclerview.ViewHolder.ParentViewHolder;
 import com.idesolusiasia.learnflux.R;
+import com.idesolusiasia.learnflux.entity.SubcategoryChildListItem;
 import com.idesolusiasia.learnflux.entity.SubcategoryParentListItem;
 
 import java.util.ArrayList;
@@ -50,8 +51,8 @@ public class ManifestAdapter extends ExpandableRecyclerAdapter<ManifestAdapter.M
 
     @Override
     public void onBindChildViewHolder(ManifestChildrenViewHolder childViewHolder, int position, Object childListItem) {
-        SubcategoryParentListItem.SubcategoryChildListItem subcategoryChildListItem = (SubcategoryParentListItem.SubcategoryChildListItem) childListItem;
-        childViewHolder.remarks.setText(subcategoryChildListItem.title);
+        SubcategoryChildListItem subcategoryChildListItem = (SubcategoryChildListItem) childListItem;
+        childViewHolder.remarks.setText(subcategoryChildListItem.type);
     }
 
     public class ManifestParentViewHolder extends ParentViewHolder{

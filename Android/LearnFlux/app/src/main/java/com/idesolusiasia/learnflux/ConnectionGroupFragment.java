@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
@@ -30,8 +32,9 @@ import java.util.ArrayList;
 public class ConnectionGroupFragment  extends Fragment {
     GroupOganizationAdapter rcAdapter;
     RecyclerView recyclerView;
-    TextView empty;
     Button seeHide;
+    LinearLayout linearLayoutGroup;
+    FrameLayout frameGroup;
     ArrayList<Group> arrOrg = new ArrayList<Group>();
     public static ConnectionGroupFragment newInstance() {
         ConnectionGroupFragment fragment = new ConnectionGroupFragment();
@@ -51,15 +54,18 @@ public class ConnectionGroupFragment  extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_connectiongroup, container, false);
-        empty = (TextView)v.findViewById(R.id.empty_view);
         seeHide = (Button)v.findViewById(R.id.seeHideButton);
+        frameGroup = (FrameLayout)v.findViewById(R.id.frameLayoutGroup);
         seeHide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 seeHide.setVisibility(View.GONE);
+                frameGroup.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             }
         });
-        recyclerView = (RecyclerView)v.findViewById(R.id.recyclerFragmentConnectionOrg);
+        recyclerView = (RecyclerView)v.findViewById(R.id.recyclerFragmentConnectionGroup);
+        linearLayoutGroup = (LinearLayout)v.findViewById(R.id.linearConnectionGroup);
+        frameGroup = (FrameLayout)v.findViewById(R.id.frameLayoutGroup);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         initOrganizations();
@@ -80,11 +86,11 @@ public class ConnectionGroupFragment  extends Fragment {
                     }
                     if(arrOrg.isEmpty()){
                         recyclerView.setVisibility(View.GONE);
-                        empty.setVisibility(View.VISIBLE);
+                        linearLayoutGroup.setVisibility(View.VISIBLE);
                     }else {
                         rcAdapter = new GroupOganizationAdapter(getContext(), arrOrg);
                         recyclerView.setAdapter(rcAdapter);
-                        empty.setVisibility(View.GONE);
+                        linearLayoutGroup.setVisibility(View.GONE);
                     }
                 }catch (JSONException e){
                     e.printStackTrace();

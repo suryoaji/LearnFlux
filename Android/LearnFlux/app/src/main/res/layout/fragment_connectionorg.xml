@@ -17,30 +17,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:id="@+id/recyclerFragmentConnectionOrg"
-        android:layout_width="match_parent"
-        android:layout_height="160dp">
-    </android.support.v7.widget.RecyclerView>
-        <TextView
-            android:id="@+id/empty_view"
+        <FrameLayout
+            android:id="@+id/frameLayoutOrg"
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone"
-            android:text="No Data Available" />
+            android:layout_height="200dp">
 
-    <Button
-        android:id="@+id/seeHideOrg"
-        android:text="see All"
-        android:background="#8bc34a"
-        android:textColor="#FFF"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="40dp" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerFragmentConnectionOrg"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+            <LinearLayout
+                android:id="@+id/linearConnectionOrg"
+                android:visibility="gone"
+                android:layout_gravity="center" android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_no_group"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" android:layout_gravity="center"
+                    android:text="No Data Available" />
+            </LinearLayout>
+        </FrameLayout>
+        <Button
+            android:id="@+id/seeHideOrg"
+            android:text="see All"
+            android:background="#8bc34a"
+            android:textColor="#FFF"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
 
     <TextView
         android:layout_marginTop="5dp"

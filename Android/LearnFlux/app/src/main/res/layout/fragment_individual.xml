@@ -20,22 +20,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-   <android.support.v7.widget.RecyclerView
-       android:id="@+id/recyclerIndividual"
-       android:layout_marginLeft="15dp"
-       android:layout_marginRight="15dp"
-       android:layout_width="match_parent"
-       android:layout_height="150dp">
-   </android.support.v7.widget.RecyclerView>
-        <TextView
-            android:id="@+id/empty_view"
+    <FrameLayout
+        android:id="@+id/frameLayoutParams"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+       <android.support.v7.widget.RecyclerView
+           android:id="@+id/recyclerIndividual"
+           android:layout_marginLeft="15dp"
+           android:layout_marginRight="15dp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+       </android.support.v7.widget.RecyclerView>
+        <LinearLayout
+            android:id="@+id/linearIndividual"
+            android:layout_gravity="center" android:gravity="center"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone"
+            android:layout_height="match_parent">
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@drawable/ic_no_connection"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center" android:layout_gravity="center"
+            android:visibility="visible"
             android:text="No Data Available" />
-    <Button
-        android:text="see All"
+        </LinearLayout>
+    </FrameLayout>
+        <Button
+        android:text="see All" android:id="@+id/seeAllIndividual"
         android:background="#8bc34a"
         android:textColor="#FFF"
         android:layout_marginLeft="15dp"

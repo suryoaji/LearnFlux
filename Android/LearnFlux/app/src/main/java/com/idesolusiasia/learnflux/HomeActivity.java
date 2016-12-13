@@ -60,6 +60,7 @@ public class HomeActivity extends BaseActivity {
 			@Override
 			public void onClick(View view) {
 				Intent i = new Intent(HomeActivity.this, ProjectActivity.class);
+				i.putExtra("projectAct", "activity");
 				startActivity(i);
 			}
 		});

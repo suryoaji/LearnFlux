@@ -152,7 +152,6 @@ public class PublicProfile extends BaseActivity {
                      JSONObject embedded = obj.getJSONObject("_embedded");
                      if(embedded.has("children")) {
                          JSONArray child = embedded.getJSONArray("children");
-                         if (child != null) {
                              for (int j = 0; j < child.length(); j++) {
                                  Contact ch = Converter.convertContact(child.getJSONObject(j));
                                  childList.add(ch);
@@ -162,7 +161,6 @@ public class PublicProfile extends BaseActivity {
                              childAdapter = new ChildrenAdapter(getApplicationContext(), childList);
                              recyclerChildren.setAdapter(childAdapter);
                              recyclerChildren.refreshDrawableState();
-                         }
                      }
 
                     //INTEREST

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.ContactAdapter;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class ContactFragment extends Fragment {
     RecyclerViewFastScroller fastScroller; RecyclerView rcView;
-    TextView empty;
+    LinearLayout contactLinear;
     private List<Object> theContact; ContactAdapter sc;
     public static ContactFragment newInstance() {
         ContactFragment fragment = new ContactFragment();
@@ -47,7 +48,8 @@ public class ContactFragment extends Fragment {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.contact_recyclerview_fastscroller, container, false);
         rcView = (RecyclerView)v.findViewById(R.id.my_recycler_view);
-        empty = (TextView)v.findViewById(R.id.empty_contact);
+        contactLinear = (LinearLayout)v.findViewById(R.id.linearContact);
+
         LinearLayoutManager linearVerticalIndividual = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rcView.setLayoutManager(linearVerticalIndividual);
         fastScroller = (RecyclerViewFastScroller)v.findViewById(R.id.fast_scroller);
@@ -77,10 +79,10 @@ public class ContactFragment extends Fragment {
                                     theContact.add(g);
                                 }
                                 if(theContact.isEmpty()){
-                                    empty.setVisibility(View.VISIBLE);
+                                    contactLinear.setVisibility(View.VISIBLE);
                                     rcView.setVisibility(View.GONE);
                                 }else {
-                                    empty.setVisibility(View.GONE);
+                                    contactLinear.setVisibility(View.GONE);
                                     rcView.setVisibility(View.VISIBLE);
                                     Functions.sortingContact(theContact);
                                     bindDataToAdapter();

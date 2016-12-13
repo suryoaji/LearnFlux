@@ -12,8 +12,8 @@ public class SubcategoryParentListItem implements ParentListItem {
     public String title;
     private List<SubcategoryChildListItem>mChildItemList;
 
-    public SubcategoryParentListItem(){
-        title="SubcategoryParentListItem";
+    public SubcategoryParentListItem(String title){
+        this.title= title;
     }
     @Override
     public List<SubcategoryChildListItem>getChildItemList(){
@@ -25,12 +25,5 @@ public class SubcategoryParentListItem implements ParentListItem {
     @Override
     public boolean isInitiallyExpanded(){
         return false;
-    }
-
-    public class SubcategoryChildListItem{
-        public String title;
-        public SubcategoryChildListItem(){
-            title = "SubcategoryChildListItem";
-        }
     }
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.idesolusiasia.learnflux.ProjectActivity;
 import com.idesolusiasia.learnflux.ProjectProfile;
 import com.idesolusiasia.learnflux.R;
 
@@ -82,7 +83,8 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent s = new Intent(view.getContext(), ProjectProfile.class);
+                    Intent s = new Intent(view.getContext(), ProjectActivity.class);
+                    s.putExtra("projectAct", "profiles");
                     view.getContext().startActivity(s);
                 }
             });

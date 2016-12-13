@@ -171,10 +171,6 @@ public class ChatsActivity extends BaseActivity {
 					pass = false;
 					groupName.requestFocus();
 					groupName.setError("Title cannot be empty");
-				}if(desc.isEmpty()){
-					pass = false;
-					groupDesc.requestFocus();
-					groupDesc.setError("This field is required");
 				}
 				if(pass) {
 					OpenDialog2(type);

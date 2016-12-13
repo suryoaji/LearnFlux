@@ -139,11 +139,11 @@ public class ConnectionFragment extends Fragment {
 		return view;
 	}
 	void getFriend() {
-		Engine.getMeWithRequest(getContext(), "Friends", new RequestTemplate.ServiceCallback() {
+		Engine.getMeWithRequest(getContext(), "friends", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try {
-					JSONArray friends = obj.getJSONArray("Friends");
+					JSONArray friends = obj.getJSONArray("friends");
 					ArrayList<Participant> p = new ArrayList<Participant>();
 					for (int i = 0; i < friends.length(); i++) {
 						Participant participant = Converter.convertPeople(friends.getJSONObject(i));

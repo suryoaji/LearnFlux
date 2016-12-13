@@ -2,11 +2,15 @@ package com.idesolusiasia.learnflux;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.IndividualFragmentAdapter;
@@ -30,7 +34,9 @@ import java.util.ArrayList;
 public class IndividualFragment extends Fragment {
     IndividualFragmentAdapter Individualadap; ArrayList<Contact> ct= new ArrayList<Contact>();
     RecyclerView individualRecycler;
-    TextView noData;
+    LinearLayout individual_empty;
+    FrameLayout params;
+    Button seeAll;
     public static IndividualFragment newInstance() {
         IndividualFragment fragment = new IndividualFragment();
         return fragment;
@@ -51,10 +57,19 @@ public class IndividualFragment extends Fragment {
         View v= inflater.inflate(R.layout.fragment_individual, container, false);
         //set recyclerView for Individual connection
         individualRecycler = (RecyclerView)v.findViewById(R.id.recyclerIndividual);
-        noData = (TextView)v.findViewById(R.id.empty_view);
+        individual_empty = (LinearLayout) v.findViewById(R.id.linearIndividual);
+        params = (FrameLayout)v.findViewById(R.id.frameLayoutParams);
+        seeAll = (Button)v.findViewById(R.id.seeAllIndividual);
         LinearLayoutManager linearVerticalIndividual = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
         individualRecycler.setLayoutManager(linearVerticalIndividual);
         initIndividual();
+        seeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                params.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                seeAll.setVisibility(View.GONE);
+            }
+        });
         return v;
     }
     void initIndividual(){
@@ -70,10 +85,10 @@ public class IndividualFragment extends Fragment {
                     }
                     if(ct.isEmpty()){
                         individualRecycler.setVisibility(View.GONE);
-                        noData.setVisibility(View.VISIBLE);
+                        individual_empty.setVisibility(View.VISIBLE);
                     }else {
                         individualRecycler.setVisibility(View.VISIBLE);
-                        noData.setVisibility(View.GONE);
+                        individual_empty.setVisibility(View.GONE);
                         Individualadap = new IndividualFragmentAdapter(getContext(), ct);
                         individualRecycler.setAdapter(Individualadap);
                     }

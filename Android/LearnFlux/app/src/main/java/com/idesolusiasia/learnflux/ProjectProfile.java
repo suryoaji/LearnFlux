@@ -32,7 +32,7 @@ public class ProjectProfile extends BaseActivity {
     Button gotoProjectDetails;
     FloatingActionButton flbtn;
     ProjectProfileComment ppcAdapter;
-    ImageView joinProject, inviting;
+    ImageView joinProject, inviting, btnManifest;
     RelativeLayout lnm;
     ArrayList<String> userComment;
     @Override
@@ -51,8 +51,6 @@ public class ProjectProfile extends BaseActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle("Projects");
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
         comment = (EditText)findViewById(R.id.comment);
         projectProfileDesc = (TextView)findViewById(R.id.descProjectProfile);
         gotoProjectDetails = (Button)findViewById(R.id.gotoProjectDetails);
@@ -61,6 +59,7 @@ public class ProjectProfile extends BaseActivity {
         inviting = (ImageView)findViewById(R.id.inviteCollab);
         lnm = (RelativeLayout)findViewById(R.id.keyboard);
         postMessage = (TextView)findViewById(R.id.postMessage);
+        btnManifest = (ImageView)findViewById(R.id.btn_manifest);
         final InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         //recyclerview Comment
@@ -86,7 +85,6 @@ public class ProjectProfile extends BaseActivity {
                 inputManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 flbtn.setVisibility(View.VISIBLE);
                 lnm.setVisibility(View.GONE);
-                userComment = new ArrayList<>();
                 String commentUser = comment.getText().toString().trim();
                 userComment.add(commentUser);
                 ppcAdapter = new ProjectProfileComment(getApplicationContext(), userComment);
@@ -115,6 +113,14 @@ public class ProjectProfile extends BaseActivity {
                 Intent o = new Intent(ProjectProfile.this, JoinInviteStakeHolders.class);
                 o.putExtra("toolbar", "invite");
                 startActivity(o);
+            }
+        });
+        btnManifest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent manifest = new Intent (ProjectProfile.this, JoinInviteStakeHolders.class);
+                manifest.putExtra("toolbar", "manifest");
+                startActivity(manifest);
             }
         });
 

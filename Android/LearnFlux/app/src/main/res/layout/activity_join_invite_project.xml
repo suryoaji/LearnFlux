@@ -33,13 +33,13 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
-        android:id="@+id/titleOfJoinProject"
-        android:orientation="horizontal"
-        android:background="@drawable/relative_border"
-        android:padding="7dp"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:id="@+id/titleOfJoinProject"
+            android:orientation="horizontal"
+            android:background="@drawable/relative_border"
+            android:padding="7dp"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
          <ImageView
             android:src="@drawable/smile"
             android:layout_width="15dp"
@@ -53,90 +53,107 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
         <include
+            android:id="@+id/rowProfile"
             android:visibility="gone"
             layout="@layout/row_profile_only"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </include>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/layoutInviteandJoin"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <TextView
-            android:layout_marginTop="6dp"
-            android:text="Task"
-            android:textColor="#000"
-            android:paddingLeft="15dp" android:paddingTop="7dp"
-            android:background="#E0E0E0"
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-        <EditText
-            android:background="@android:color/transparent"
-            android:layout_margin="10dp" android:textSize="14sp"
-            android:hint="Gift Wrapping"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_marginTop="6dp"
-            android:text="Dates"
-            android:textColor="#000"
-            android:paddingLeft="15dp" android:paddingTop="7dp"
-            android:background="#E0E0E0"
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-        <LinearLayout
-            android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+            <TextView
+                android:layout_marginTop="6dp"
+                android:text="Task"
+                android:textColor="#000"
+                android:paddingLeft="15dp" android:paddingTop="7dp"
+                android:background="#E0E0E0"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+            <EditText
+                android:background="@android:color/transparent"
+                android:layout_margin="10dp" android:textSize="14sp"
+                android:hint="Gift Wrapping"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginTop="6dp"
+                android:text="Dates"
+                android:textColor="#000"
+                android:paddingLeft="15dp" android:paddingTop="7dp"
+                android:background="#E0E0E0"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+            <LinearLayout
+                android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/startJoinProjectTask" android:drawableLeft="@drawable/calendar"
+                    android:layout_margin="3dp" android:padding="3dp" android:drawablePadding="3dp"
+                    android:layout_width="0dp" android:layout_weight="0.5"  android:background="@android:color/transparent"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/endJoinProjectTask"
+                    android:layout_margin="3dp" android:padding="3dp"
+                    android:drawableLeft="@drawable/calendar" android:drawablePadding="3dp"
+                    android:layout_width="0dp" android:layout_weight="0.5"  android:background="@android:color/transparent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <TextView
+                android:layout_marginTop="6dp"
+                android:text="Duration"
+                android:textColor="#000"
+                android:paddingLeft="15dp" android:paddingTop="7dp"
+                android:background="#E0E0E0"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+            <EditText
+                android:background="@android:color/transparent"
+                android:hint="10 days" android:layout_margin="10dp"
+                android:layout_width="wrap_content" android:textSize="14sp"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginTop="6dp"
+                android:text="Remarks"
+                android:textColor="#000"
+                android:paddingLeft="15dp" android:paddingTop="7dp"
+                android:background="#E0E0E0"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+            <EditText
+                android:background="@drawable/relative_border"
+                android:gravity="top" android:padding="4dp"
+                android:hint="Remarks here"
+                android:layout_margin="10dp" android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:visibility="gone"
+            android:id="@+id/recyclerExpendable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/startJoinProjectTask" android:drawableLeft="@drawable/calendar"
-                android:layout_margin="3dp" android:padding="3dp" android:drawablePadding="3dp"
-                android:layout_width="0dp" android:layout_weight="0.5"  android:background="@android:color/transparent"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/endJoinProjectTask"
-                android:layout_margin="3dp" android:padding="3dp"
-                android:drawableLeft="@drawable/calendar" android:drawablePadding="3dp"
-                android:layout_width="0dp" android:layout_weight="0.5"  android:background="@android:color/transparent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <TextView
-            android:layout_marginTop="6dp"
-            android:text="Duration"
-            android:textColor="#000"
-            android:paddingLeft="15dp" android:paddingTop="7dp"
-            android:background="#E0E0E0"
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-        <EditText
-            android:background="@android:color/transparent"
-            android:hint="10 days" android:layout_margin="10dp"
-            android:layout_width="wrap_content" android:textSize="14sp"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_marginTop="6dp"
-            android:text="Remarks"
-            android:textColor="#000"
-            android:paddingLeft="15dp" android:paddingTop="7dp"
-            android:background="#E0E0E0"
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-        <EditText
-            android:background="@drawable/relative_border"
-            android:gravity="top" android:padding="4dp"
-            android:hint="Remarks here"
-            android:layout_margin="10dp" android:textSize="14sp"
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
-        </LinearLayout>
+        </android.support.v7.widget.RecyclerView>
         <LinearLayout
             android:visibility="gone"
             android:orientation="vertical"
             android:id="@+id/teamMemberLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <TextView
+            <TextView
                 android:layout_marginTop="6dp"
                 android:text="Team Members"
                 android:textColor="#000"
@@ -144,22 +161,44 @@
                 android:background="#E0E0E0"
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
         </LinearLayout>
+
     </LinearLayout>
+
+</ScrollView>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layoutJoinDecline"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
         <Button
-            android:text="Join Project"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
+            android:text="Approve"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn_see_all"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
             android:id="@+id/buttonJoinGroup" />
         <Button
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:textColor="#FFFFFF"
+            android:text="Decline"
+            android:id="@+id/cancelButton"
+            android:background="@android:color/holo_red_dark"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <Button
             android:text="Select collaborator from contact book"
             android:visibility="gone"
             android:id="@+id/buttonInviteCollaborator"

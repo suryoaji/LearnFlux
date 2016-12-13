@@ -20,7 +20,7 @@
                 android:icon="@drawable/icon_attandance"
                 android:title="Attendance"/>
             <item
-                android:id="@+id/nav_Polls"
+                android:id="@+id/nav_polls"
                 android:icon="@drawable/icon_poll"
                 android:title="Polls"/>
             <item
@@ -28,9 +28,21 @@
                 android:icon="@drawable/icon_gallery"
                 android:title="Gallery"/>
             <item
-                android:id="@+id/nav_internet_groups"
+                android:id="@+id/nav_interest_groups"
                 android:icon="@drawable/icon_interestgroup"
                 android:title="Interest Groups"/>
+            <item
+                android:id="@+id/nav_Project"
+                android:icon="@drawable/project_sidemenu"
+                android:title="Project"/>
+            <item
+                android:id="@+id/nav_Growth"
+                android:icon="@drawable/menu_growth"
+                android:title="Growth"/>
+            <item
+                android:id="@+id/nav_dashboard"
+                android:icon="@drawable/ico_dashboard"
+                android:title="Dashboard"/>
         </menu>
     </item>
     <group
@@ -46,7 +58,7 @@
             android:title="Settings"/>
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_logout"
             android:title="Logout"/>
     </group>
 

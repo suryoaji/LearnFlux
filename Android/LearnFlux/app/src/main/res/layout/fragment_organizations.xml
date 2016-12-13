@@ -12,13 +12,33 @@
         android:layout_margin="15dp"
         android:clipToPadding="false"
         android:padding="@dimen/item_offset">
-
     </android.support.v7.widget.RecyclerView>
-    <TextView
-        android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+
+    <LinearLayout
         android:visibility="gone"
-        android:text="no data available" />
+        android:id="@+id/empty_organization"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ImageView
+        android:src="@drawable/icon_interestgroup"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:padding="5dp"
+        android:visibility="visible"
+        android:text="You have no organization yet" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="visible"
+        android:text="Tap the three dots icon to create new project" />
+    </LinearLayout>
 </FrameLayout>

@@ -103,7 +103,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	public RecyclerView searchRecycler, myProfileInterest, ConnectionMyProfile,affilatedOrganizationRecycler;
 
 	TextView interest1,interest2, txtParent, txtParentDesc, empty_view, affilatedOrganizationButtonMore , from, work;
-	LinearLayout tabIndividual, tabGroups, tabOrganization, tabContact,showAllOrganization;
+	LinearLayout tabIndividual, tabGroups, tabOrganization, tabContact,showAllOrganization,linearTabBar;
 	View indicatorIndividual, indicatorGroups, indicatorOrganization, indicatorContact;
 	ImageView parent;
 	CircularNetworkImageView child;
@@ -112,7 +112,9 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	EditText searchBar;
 	String visible;
 	boolean visible2;
+	ImageView enterSearch;
 	LinearLayoutManager linearLayoutOrg;
+	View includedLayout, includedLayout2, includedLayout3;
 	File file;
 
 	static final int ITEMS = 4;
@@ -153,8 +155,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		ImageButton userNotif = (ImageButton)findViewById(R.id.menotif);
 		final ImageButton search = (ImageButton)findViewById(R.id.searchBar);
 		final ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
-		final View includedLayout = findViewById(R.id.mixLayout);
-		final View includedLayout2 = findViewById(R.id.mixLayout2);
+		includedLayout = findViewById(R.id.mixLayout);
+		includedLayout2 = findViewById(R.id.mixLayout2);
 		scroll3.setVisibility(View.GONE);
 
 		myProfileTab.setOnClickListener(new View.OnClickListener() {
@@ -319,9 +321,9 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		});
 
 		//Layout3 search action bar
-		final LinearLayout linearTabBar = (LinearLayout)findViewById(R.id.LinearTabBar);
-		final View includedLayout3 = (LinearLayout) findViewById(R.id.mixLayout3);
-		final ImageView enterSearh = (ImageView)findViewById(R.id.enterYourPreference);
+		linearTabBar = (LinearLayout)findViewById(R.id.LinearTabBar);
+		includedLayout3 = (LinearLayout) findViewById(R.id.mixLayout3);
+		enterSearch = (ImageView)findViewById(R.id.enterYourPreference);
 		searchBar = (EditText)findViewById(R.id.searchID);
 		final ImageView back = (ImageView)findViewById(R.id.imageBack);
 		searchRecycler = (RecyclerView)findViewById(R.id.recyclerViewSearch);
@@ -330,43 +332,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				linearTabBar.setVisibility(View.GONE);
-				includedLayout3.setVisibility(View.VISIBLE);
-				includedLayout.setVisibility(View.GONE);
-				includedLayout2.setVisibility(View.GONE);
-				visible="none";
-				searchBar.addTextChangedListener(new TextWatcher() {
-					@Override
-					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-					}
-
-					@Override
-					public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-					}
-
-					@Override
-					public void afterTextChanged(Editable s) {
-						searchValue();
-					}
-				});
-				searchBar.setOnKeyListener(new View.OnKeyListener() {
-					@Override
-					public boolean onKey(View v, int keyCode, KeyEvent event) {
-						if((event.getAction()==KeyEvent.ACTION_DOWN)&&(keyCode == KeyEvent.KEYCODE_ENTER)){
-							searchValue();
-							return true;
-						}
-						return false;
-					}
-				});
-				enterSearh.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-					 searchValue();
-					}
-				});
+				search();
 			}
 		});
 		back.setOnClickListener(new View.OnClickListener() {
@@ -447,13 +413,14 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 						work.setText(ct.getWork());
 					}
 				String url = "http://lfapp.learnflux.net";
-				String prof = url+ct.get_links().getProfile_picture().getHref();
-				Ion.with(getApplicationContext())
-				.load(prof).noCache()
-				.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
-				.withBitmap().placeholder(R.drawable.user_profile).error(R.drawable.user_profile)
-				.intoImageView(parent);
-
+				if(ct.get_links().getProfile_picture()!=null) {
+					String prof = url + ct.get_links().getProfile_picture().getHref();
+					Ion.with(getApplicationContext())
+							.load(prof).noCache()
+							.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+							.withBitmap().placeholder(R.drawable.user_profile).error(R.drawable.user_profile)
+							.intoImageView(parent);
+				}
 				}catch (JSONException e){
 					e.printStackTrace();
 				}
@@ -661,9 +628,45 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 			return POSITION_NONE;
 		}
 	}
-	/*void InitializeUser(){
+	void search(){
+		linearTabBar.setVisibility(View.GONE);
+		includedLayout3.setVisibility(View.VISIBLE);
+		includedLayout.setVisibility(View.GONE);
+		includedLayout2.setVisibility(View.GONE);
+		visible="none";
+		searchBar.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-	}*/
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				searchValue();
+			}
+		});
+		searchBar.setOnKeyListener(new View.OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if((event.getAction()==KeyEvent.ACTION_DOWN)&&(keyCode == KeyEvent.KEYCODE_ENTER)){
+					searchValue();
+					return true;
+				}
+				return false;
+			}
+		});
+		enterSearch.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				searchValue();
+			}
+		});
+	}
 	void initOrganizations(){
 		arrOrg = new ArrayList<>();
 		Engine.getOrganizations(getApplicationContext(), new RequestTemplate.ServiceCallback() {
