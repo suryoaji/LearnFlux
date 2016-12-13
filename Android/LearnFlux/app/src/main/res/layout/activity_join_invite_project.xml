@@ -70,6 +70,8 @@
 
         <LinearLayout
             android:visibility="gone"
+            android:focusableInTouchMode="true"
+            android:descendantFocusability="beforeDescendants"
             android:id="@+id/layoutInviteandJoin"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -85,7 +87,7 @@
             <EditText
                 android:background="@android:color/transparent"
                 android:layout_margin="10dp" android:textSize="14sp"
-                android:hint="Gift Wrapping"
+                android:hint="Gift Wrapping" android:id="@+id/taskTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -197,6 +199,14 @@
             android:background="@android:color/holo_red_dark"
             android:layout_height="wrap_content" />
     </LinearLayout>
+    <Button
+        android:id="@+id/requestingToJoin"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/btn_see_all"
+        android:text="Join Project" android:textColor="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
 
     <Button
             android:text="Select collaborator from contact book"

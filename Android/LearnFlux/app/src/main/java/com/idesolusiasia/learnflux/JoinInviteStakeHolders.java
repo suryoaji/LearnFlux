@@ -37,8 +37,8 @@ import java.util.Locale;
  */
 
 public class JoinInviteStakeHolders extends BaseActivity {
-        Button join, inviteCollaborator;
-        EditText projectStart, projectEnd;
+        Button join, inviteCollaborator, requestingToJoin;
+        EditText projectStart, projectEnd, taskTitle;
         LinearLayout linearTeamMember, linearTask, linearButton;
         Toolbar toolbar;
         RecyclerView expendable;
@@ -64,7 +64,10 @@ public class JoinInviteStakeHolders extends BaseActivity {
 
         join = (Button)findViewById(R.id.buttonJoinGroup);
         linearButton = (LinearLayout)findViewById(R.id.layoutJoinDecline);
+
         linearTask = (LinearLayout)findViewById(R.id.layoutInviteandJoin);
+        taskTitle = (EditText)findViewById(R.id.taskTitle);
+
         inviteCollaborator = (Button)findViewById(R.id.buttonInviteCollaborator);
         projectStart = (EditText) findViewById(R.id.startJoinProjectTask);
         projectEnd = (EditText) findViewById(R.id.endJoinProjectTask);
@@ -73,6 +76,8 @@ public class JoinInviteStakeHolders extends BaseActivity {
         projectEnd.setFocusable(false); projectEnd.setClickable(true);
         expendable = (RecyclerView)findViewById(R.id.recyclerExpendable);
         rowProfile = (View)findViewById(R.id.rowProfile);
+        requestingToJoin = (Button)findViewById(R.id.requestingToJoin);
+
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMM yyyy", Locale.US);
         final Calendar calendar = Calendar.getInstance();
         projectStart.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +109,7 @@ public class JoinInviteStakeHolders extends BaseActivity {
         if(a.contains("join")){
             toolbar.setTitle("Join Group");
             linearTask.setVisibility(View.VISIBLE);
-            linearButton.setVisibility(View.VISIBLE);
+            requestingToJoin.setVisibility(View.VISIBLE);
 
         }else if(a.contains("invite")){
             toolbar.setTitle("Invite Collaborators for project");
