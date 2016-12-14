@@ -102,7 +102,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	//RecyclerView
 	public RecyclerView searchRecycler, myProfileInterest, ConnectionMyProfile,affilatedOrganizationRecycler;
 
-	TextView interest1,interest2, txtParent, txtParentDesc, empty_view, affilatedOrganizationButtonMore , from, work;
+	TextView interest1,interest2, txtParent, txtParentDesc,affilatedOrganizationButtonMore , from, work;
 	LinearLayout tabIndividual, tabGroups, tabOrganization, tabContact,showAllOrganization,linearTabBar;
 	View indicatorIndividual, indicatorGroups, indicatorOrganization, indicatorContact;
 	ImageView parent;
@@ -432,10 +432,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		final RecyclerView recyclerChildren = (RecyclerView)findViewById(R.id.childrenRecyclerView);
 		LinearLayoutManager childrenLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 		recyclerChildren.setLayoutManager(childrenLayoutManager);
+		final FrameLayout childFrame = (FrameLayout)findViewById(R.id.myProfileChildrenLayout);
 		childList = new ArrayList<>();
-		final TextView childrenEmptyView = (TextView)findViewById(R.id.childrenEmptyView);
-		childrenEmptyView.setVisibility(View.VISIBLE);
-		recyclerChildren.setVisibility(View.GONE);
 		Engine.getMeWithRequest(getApplicationContext(),"details", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
@@ -448,11 +446,9 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 							childList.add(childrenContact);
 						}
 						if (childList.isEmpty()) {
-							recyclerChildren.setVisibility(View.GONE);
-							childrenEmptyView.setVisibility(View.VISIBLE);
+							childFrame.setVisibility(View.GONE);
 						} else {
-							recyclerChildren.setVisibility(View.VISIBLE);
-							childrenEmptyView.setVisibility(View.GONE);
+							childFrame.setVisibility(View.VISIBLE);
 							childAdapter = new ChildrenAdapter(getApplicationContext(), childList);
 							recyclerChildren.setAdapter(childAdapter);
 							recyclerChildren.refreshDrawableState();
@@ -466,7 +462,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		});
 		//Affilited Organization
 		affilatedOrganizationRecycler = (RecyclerView)findViewById(R.id.organizationRecycler);
-		empty_view = (TextView)findViewById(R.id.emptyViewOrg);
 		showAllOrganization = (LinearLayout)findViewById(R.id.layoutShowAll);
 		affilatedOrganizationButtonMore = (TextView)findViewById(R.id.buttonShowMore);
 		linearLayoutOrg = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
@@ -526,7 +521,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 	void initConnection(){
 		Org = new ArrayList<>();
-		final TextView noConnection = (TextView)findViewById(R.id.emptyConnection);
+		final FrameLayout connectionFrame = (FrameLayout)findViewById(R.id.myProfileConnectionLayout);
 		Engine.getMeWithRequest(getApplicationContext(), "Friends", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
@@ -544,11 +539,9 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 									Org.add(g);
 
 									if(Org.isEmpty()){
-										noConnection.setVisibility(View.VISIBLE);
-										ConnectionMyProfile.setVisibility(View.GONE);
+										connectionFrame.setVisibility(View.GONE);
 									}else {
-										noConnection.setVisibility(View.GONE);
-										ConnectionMyProfile.setVisibility(View.VISIBLE);
+										connectionFrame.setVisibility(View.VISIBLE);
 										Functions.sortingContact(Org);
 										rAdapter = new ConnectionFragmentAdapter(getApplicationContext(),Org);
 										ConnectionMyProfile.setAdapter(rAdapter);
@@ -669,6 +662,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	}
 	void initOrganizations(){
 		arrOrg = new ArrayList<>();
+		final FrameLayout organizationFrame = (FrameLayout)findViewById(R.id.myProfileOrganizationLayout);
 		Engine.getOrganizations(getApplicationContext(), new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
@@ -681,11 +675,11 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 						}
 					}
 					if(arrOrg.isEmpty()){
-						affilatedOrganizationRecycler.setVisibility(View.GONE);
-						empty_view.setVisibility(View.VISIBLE);
+						organizationFrame.setVisibility(View.GONE);
 						showAllOrganization.setVisibility(View.GONE);
 						affilatedOrganizationButtonMore.setVisibility(View.GONE);
 					}else {
+						organizationFrame.setVisibility(View.VISIBLE);
 						rcAdapter = new MyProfileOrganizationAdapter(getApplicationContext(), arrOrg);
 						affilatedOrganizationRecycler.setAdapter(rcAdapter);
 						   if(arrOrg.size()>3) {
@@ -721,9 +715,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	}
 	void getInterest(){
 		interestUser = new ArrayList<>();
-		final TextView emptyRecycler = (TextView)findViewById(R.id.interest_empty);
-		emptyRecycler.setVisibility(View.VISIBLE);
-		myProfileInterest.setVisibility(View.GONE);
+		final FrameLayout interestLayout = (FrameLayout)findViewById(R.id.myProfileInterestLayout);
 		Engine.getMeWithRequest(getApplicationContext(),"details", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
@@ -733,11 +725,14 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 						for (int i = 0; i < interest.length(); i++) {
 							interestUser.add(interest.get(i).toString());
 						}
-						emptyRecycler.setVisibility(View.GONE);
-						myProfileInterest.setVisibility(View.VISIBLE);
-						myProfileInterestAdapter = new MyProfileInterestAdapter(interestUser);
-						myProfileInterest.setAdapter(myProfileInterestAdapter);
-						myProfileInterest.refreshDrawableState();
+						if(interestUser.isEmpty()){
+							interestLayout.setVisibility(View.GONE);
+						}else {
+							interestLayout.setVisibility(View.VISIBLE);
+							myProfileInterestAdapter = new MyProfileInterestAdapter(interestUser);
+							myProfileInterest.setAdapter(myProfileInterestAdapter);
+							myProfileInterest.refreshDrawableState();
+						}
 					}
 				}catch (JSONException e){
 					e.printStackTrace();
