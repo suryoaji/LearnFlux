@@ -1,6 +1,7 @@
 package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.idesolusiasia.learnflux.PublicProfile;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.FriendReq;
@@ -97,11 +99,22 @@ public class FriendRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         TextView titleDialog;
         ImageView acceptReq;
 
-        public viewHolder1(View itemView) {
+        public viewHolder1(final View itemView) {
             super(itemView);
             networkImage = (NetworkImageView)itemView.findViewById(R.id.dialogImagee);
             titleDialog = (TextView)itemView.findViewById(R.id.titleDialog);
             acceptReq = (ImageView)itemView.findViewById(R.id.acceptRequest);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    final FriendReq fr = (FriendReq)theFriend.get(pos);
+                    Intent i =new Intent(itemView.getContext(), PublicProfile.class);
+                    i.putExtra("id", fr.getId());
+                    i.putExtra("public", "friendRequest");
+                    itemView.getContext().startActivity(i);
+                }
+            });
         }
         public ImageView getAcceptReq() {
             return acceptReq;
@@ -184,7 +197,8 @@ public class FriendRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }else{
             v1.getTitleDialog().setText(Pending.getFirst_name());
             v1.getNetworkImage().setImageUrl(url+Pending.getId(), imageLoader);
-            v1.acceptReq.setOnClickListener(new View.OnClickListener() {
+
+            /*v1.acceptReq.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
                     Engine.getUserFriend(view.getContext(), Pending.getId(), new RequestTemplate.ServiceCallback() {
@@ -196,7 +210,7 @@ public class FriendRequest extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         }
                     });
                 }
-            });
+            });*/
         }
     }
     private void configureViewHolder2(viewHolder22 v22, int position){

@@ -55,6 +55,7 @@ public class PublicProfile extends BaseActivity {
     CircularNetworkImageView mutualImages;
 
     RecyclerView affilatedOrganizationRecycler;
+    LinearLayout receiveRequest, sendRequest;
 
     TextView txtParent, txtParentDesc, from, work, mutual, buttonMore;
     public int id;
@@ -81,6 +82,16 @@ public class PublicProfile extends BaseActivity {
         txtParent = (TextView)findViewById(R.id.txtParentTitle);
         mutual = (TextView)findViewById(R.id.mutualFriend);
         mutualImages = (CircularNetworkImageView)findViewById(R.id.imagesMutual);
+
+        receiveRequest = (LinearLayout)findViewById(R.id.layoutRequest);
+        sendRequest = (LinearLayout)findViewById(R.id.layoutAcceptDecline);
+
+        String getData = getIntent().getStringExtra("public");
+        if(getData.equalsIgnoreCase("search")){
+            sendRequest.setVisibility(View.VISIBLE);
+        }else if(getData.equalsIgnoreCase("friendRequest")){
+            receiveRequest.setVisibility(View.VISIBLE);
+        }
 
 
         final RecyclerView recyclerChildren = (RecyclerView)findViewById(R.id.childrenRecyclerView);

@@ -106,6 +106,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     }else {
                         Intent i = new Intent(v.getContext(), PublicProfile.class);
                         i.putExtra("id", ct.getId());
+                        i.putExtra("public", "search");
                         v.getContext().startActivity(i);
                     }
                 }

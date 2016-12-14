@@ -266,6 +266,7 @@
         </ScrollView>
     </LinearLayout>
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/layoutAcceptDecline"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
@@ -285,6 +286,30 @@
             android:textColor="#FFFFFF"
             android:text="Cancel"
             android:id="@+id/cancelButton"
+            android:background="@android:color/holo_red_dark"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/layoutRequest"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <Button
+            android:text="Accept"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_see_all"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonRequest" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:textColor="#FFFFFF"
+            android:text="Decline"
+            android:id="@+id/cancelRequest"
             android:background="@android:color/holo_red_dark"
             android:layout_height="wrap_content" />
     </LinearLayout>
