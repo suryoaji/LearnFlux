@@ -273,18 +273,18 @@
         android:layout_width="match_parent"
         android:layout_height="40dp">
         <Button
-            android:text="Send Request"
+            android:text="Accept"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn_see_all"
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:layout_height="wrap_content"
-            android:id="@+id/buttonJoinGroup" />
+            android:id="@+id/buttonAccept" />
         <Button
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:textColor="#FFFFFF"
-            android:text="Cancel"
+            android:text="Decline"
             android:id="@+id/cancelButton"
             android:background="@android:color/holo_red_dark"
             android:layout_height="wrap_content" />
@@ -297,18 +297,18 @@
         android:layout_width="match_parent"
         android:layout_height="40dp">
         <Button
-            android:text="Accept"
+            android:text="Send Request"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn_see_all"
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:layout_height="wrap_content"
-            android:id="@+id/buttonRequest" />
+            android:id="@+id/button_request" />
         <Button
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:textColor="#FFFFFF"
-            android:text="Decline"
+            android:text="Cancel"
             android:id="@+id/cancelRequest"
             android:background="@android:color/holo_red_dark"
             android:layout_height="wrap_content" />

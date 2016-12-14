@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,6 +62,8 @@ public class PublicProfile extends BaseActivity {
     public int id;
     String url = "http://lfapp.learnflux.net";
 
+    Button btnRequest, btnAccept;
+
     ImageLoader imageLoader = VolleySingleton.getInstance(PublicProfile.this).getImageLoader();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,14 +86,47 @@ public class PublicProfile extends BaseActivity {
         mutual = (TextView)findViewById(R.id.mutualFriend);
         mutualImages = (CircularNetworkImageView)findViewById(R.id.imagesMutual);
 
-        receiveRequest = (LinearLayout)findViewById(R.id.layoutRequest);
-        sendRequest = (LinearLayout)findViewById(R.id.layoutAcceptDecline);
+        receiveRequest = (LinearLayout)findViewById(R.id.layoutAcceptDecline);
+        sendRequest = (LinearLayout)findViewById(R.id.layoutRequest);
+
+
+
+        id = getIntent().getIntExtra("id",0);
+
 
         String getData = getIntent().getStringExtra("public");
         if(getData.equalsIgnoreCase("search")){
             sendRequest.setVisibility(View.VISIBLE);
+            btnRequest = (Button)findViewById(R.id.button_request);
+            btnRequest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                      Engine.getUserFriend(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
+                @Override
+                public void execute(JSONObject obj) {
+                    Toast.makeText(getApplicationContext(), "Successfully adding a friend", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(PublicProfile.this, MyProfileActivity.class);
+                    startActivity(i);
+                }
+            });
+                }
+            });
+
         }else if(getData.equalsIgnoreCase("friendRequest")){
             receiveRequest.setVisibility(View.VISIBLE);
+            btnAccept = (Button)findViewById(R.id.buttonAccept);
+            btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                       Engine.getUserFriend(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
+                @Override
+                public void execute(JSONObject obj) {
+                    Toast.makeText(getApplicationContext(), "Succesfull adding a friend", Toast.LENGTH_SHORT).show();
+                }
+            });
+                }
+            });
+
         }
 
 
@@ -106,8 +142,6 @@ public class PublicProfile extends BaseActivity {
         LinearLayoutManager interestLayout = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL,false);
         myProfileInterest.setLayoutManager(interestLayout);
         interestFrameLayout = (FrameLayout)findViewById(R.id.interestPublic);
-
-        id = getIntent().getIntExtra("id",0);
 
 
         affilatedOrganizationRecycler = (RecyclerView)findViewById(R.id.organizationRecycler);
