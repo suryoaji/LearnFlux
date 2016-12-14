@@ -93,7 +93,9 @@ extension NewHome: UICollectionViewDelegateFlowLayout, UICollectionViewDataSourc
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath)
         let imageViewMosaic = cell.viewWithTag(1) as! UIImageView
-        imageViewMosaic.image = UIImage(named: mosaicImages[indexPath.row])
+        if !mosaicImages[indexPath.row].isEmpty{
+            imageViewMosaic.image = UIImage(named: mosaicImages[indexPath.row])
+        }
         return cell
     }
     

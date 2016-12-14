@@ -19,6 +19,8 @@ enum ProjectDetailType{
     enum taskType{
         case join
         case invate
+        case approving
+        case accepting
         case detail
     }
     func getSectionTitle() -> Array<String>{
@@ -69,6 +71,8 @@ class ProjectDetail: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var editView: UIView!
     @IBOutlet weak var buttonActionTask: UIButton!
+    @IBOutlet weak var buttonAcceptActionTask: UIButton!
+    @IBOutlet weak var viewActionTasks: UIView!
 }
 
 // - MARK: PrepareForSegue
@@ -152,6 +156,8 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
             switch type {
             case .detail:
                 return section == 6 ? 4 + 2 : 2
+            case .accepting:
+                return section == 0 ? 3 : 2
             default:
                 return 2
             }
@@ -318,13 +324,29 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
                 let sectionCell = tableViewDetail.dequeueReusableCellWithIdentifier("SectionTitle")!
                 cell.frame.size.height = sectionCell.height
             }
+            break
+        case (0, let row):
+            switch type {
+            case .Task(type: let type):
+                switch type {
+                case .accepting:
+                    if row == 1{
+                        let titleCell = tableViewDetail.dequeueReusableCellWithIdentifier("Title")!
+                        cell.height = titleCell.height
+                    }else if row == 2{
+                        let ownerCell = tableViewDetail.dequeueReusableCellWithIdentifier("Owner")!
+                        cell.height = ownerCell.height
+                    }
+                default:
+                    let detailCell = tableViewDetail.dequeueReusableCellWithIdentifier("Detail")!
+                    let labelDetail = detailCell.viewWithTag(2) as! UILabel
+                    detailCell.frame.size.height = heightForView(labelDetail.text!, font: labelDetail.font, width: UIScreen.mainScreen().bounds.width / detailCell.width * labelDetail.width) + detailCell.height - labelDetail.height
+                    cell.frame.size.height = detailCell.height
+                }
+            default: break
+            }
         case (let section, 1):
             switch section {
-            case 0:
-                let detailCell = tableViewDetail.dequeueReusableCellWithIdentifier("Detail")!
-                let labelDetail = detailCell.viewWithTag(2) as! UILabel
-                detailCell.frame.size.height = heightForView(labelDetail.text!, font: labelDetail.font, width: UIScreen.mainScreen().bounds.width / detailCell.width * labelDetail.width) + detailCell.height - labelDetail.height
-                cell.frame.size.height = detailCell.height
             case 1:
                 let taskCell = tableViewDetail.dequeueReusableCellWithIdentifier("Task")!
                 let labelTask = taskCell.viewWithTag(1) as! UILabel
@@ -356,17 +378,38 @@ extension ProjectDetail: UITableViewDelegate, UITableViewDataSource{
             let labelTitle = sectionCell.viewWithTag(1) as! UILabel
             labelTitle.text = type.getSectionTitle()[section]
             cell = sectionCell
+            break
+        case (0, let row):
+            switch type {
+            case .Task(type: let type):
+                if type == .accepting{
+                    if row == 1{
+                        let titleCell = tableViewDetail.dequeueReusableCellWithIdentifier("Title")!
+                        let conView = titleCell.viewWithTag(1)!
+                        conView.layer.borderWidth = 0.6
+                        conView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
+                        cell = titleCell
+                    }else if row == 2{
+                        let ownerCell = tableViewDetail.dequeueReusableCellWithIdentifier("Owner")!
+                        let conView = ownerCell.viewWithTag(1)!
+                        conView.layer.borderWidth = 0.6
+                        conView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
+                        cell = ownerCell
+                    }
+                }else{
+                    let detailCell = tableViewDetail.dequeueReusableCellWithIdentifier("Detail")!
+                    let conView = detailCell.viewWithTag(1)!
+                    let editButton = detailCell.viewWithTag(3) as! UIButton
+                    conView.layer.borderWidth = 0.6
+                    conView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
+                    editButton.addTarget(self, action: #selector(editButtonTapped), forControlEvents: .TouchUpInside)
+                    editButton.hidden = true
+                    cell = detailCell
+                }
+            default: break
+            }
         case (let section, 1):
             switch section {
-            case 0:
-                let detailCell = tableViewDetail.dequeueReusableCellWithIdentifier("Detail")!
-                let conView = detailCell.viewWithTag(1)!
-                let editButton = detailCell.viewWithTag(3) as! UIButton
-                conView.layer.borderWidth = 0.6
-                conView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
-                editButton.addTarget(self, action: #selector(editButtonTapped), forControlEvents: .TouchUpInside)
-                editButton.hidden = true
-                cell = detailCell
             case 1:
                 let taskCell = tableViewDetail.dequeueReusableCellWithIdentifier("Task")!
                 cell = taskCell
@@ -537,26 +580,36 @@ extension ProjectDetail{
         case .Detail:
             containerView.hidden = false
             editView.hidden = true
-            buttonActionTask.hidden = true
+            viewActionTasks.hidden = true
         case .Edit:
             containerView.hidden = true
             editView.hidden = false
-            buttonActionTask.hidden = true
+            viewActionTasks.hidden = true
         case .Task(type: let type):
             containerView.hidden = false
             editView.hidden = true
             switch type {
             case .invate:
-                buttonActionTask.hidden = false
+                viewActionTasks.hidden = false
                 buttonActionTask.setTitle("Select collaborator from Contact Book", forState: .Normal)
-                tableViewDetail.frame.size.height = view.height - buttonActionTask.height - UIApplication.sharedApplication().statusBarFrame.height
+                tableViewDetail.frame.size.height = view.height - viewActionTasks.height - UIApplication.sharedApplication().statusBarFrame.height
             case .join:
-                buttonActionTask.hidden = false
+                viewActionTasks.hidden = false
                 buttonActionTask.setTitle("Join Project", forState: .Normal)
-                tableViewDetail.frame.size.height = view.height - buttonActionTask.height - UIApplication.sharedApplication().statusBarFrame.height
+                tableViewDetail.frame.size.height = view.height - viewActionTasks.height - UIApplication.sharedApplication().statusBarFrame.height
             case .detail:
-                buttonActionTask.hidden = true
+                viewActionTasks.hidden = true
                 tableViewDetail.frame.size.height = view.height - UIApplication.sharedApplication().statusBarFrame.height
+            case .approving:
+                viewActionTasks.hidden = false
+                buttonActionTask.hidden = true
+                buttonAcceptActionTask.setTitle("Approve", forState: .Normal)
+                tableViewDetail.frame.size.height = view.height - viewActionTasks.height - UIApplication.sharedApplication().statusBarFrame.height
+            case .accepting:
+                viewActionTasks.hidden = false
+                buttonActionTask.hidden = true
+                buttonAcceptActionTask.setTitle("Joining as task owner", forState: .Normal)
+                tableViewDetail.frame.size.height = view.height - viewActionTasks.height - UIApplication.sharedApplication().statusBarFrame.height
             }
         }
     }

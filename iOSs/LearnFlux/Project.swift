@@ -28,6 +28,7 @@ enum TypeScreenProject{
 class Project: UIViewController {
     @IBOutlet weak var textfieldSearch: UITextField!
     @IBOutlet weak var tableViewMain: UITableView!
+    @IBOutlet weak var tableViewNotification: UITableView!
     let clientData = Engine.clientData
 
     override func viewDidLoad() {
@@ -89,6 +90,10 @@ class Project: UIViewController {
         }
     }
     
+    @IBAction func buttonNotificationHeaderTapped(sender: UIButton) {
+        viewNotification.hidden = !viewNotification.hidden
+    }
+    
     @IBAction func textfieldSearchChanged(sender: UITextField) {
         doSearch = sender.text!.isEmpty ? false : true
     }
@@ -126,6 +131,8 @@ class Project: UIViewController {
     @IBOutlet weak var textViewReply: UITextView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var viewContainerCommentTableView: UIView!
+    @IBOutlet weak var viewNotification: NotificationView!
+    @IBOutlet weak var buttonHeaderBroadcast: UIButton!
     var titleList = ["Old Folks Home", "Animal Shelter"]
     var dummyGlobalComments : Array<Dictionary<String, AnyObject>> =
         [["name"      : "Grace Chong",
@@ -146,6 +153,39 @@ class Project: UIViewController {
           "comment"   : "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
           "likes"     : 20,
           "commented" : 3]]
+    let notifications = [["name"      : "Grace Chong",
+                          "photo"     : "female07.png",
+                          "to"        : "Old Folks Home's Project",
+                          "activity"  : "invite you to join",
+                          "timestamp" : "42 minutes ago",
+                          "icon"      : "notification1.png",
+                          "checked"   : "0"],
+                         ["name"      : "Andrew Chea",
+                          "photo"     : "male09.png",
+                          "to"        : "Old Folks Home's Project",
+                          "activity"  : "wants to join",
+                          "timestamp" : "3 hours ago",
+                          "icon"      : "notification1.png",
+                          "checked"   : "1"],
+                         ["name"      : "John Ang",
+                          "photo"     : "male08.png",
+                          "to"        : "Old Folks Home's Project",
+                          "activity"  : "commented on",
+                          "timestamp" : "6 hours ago",
+                          "icon"      : "notification3.png",
+                          "checked"   : "0"],
+                         ["name"      : "Jean Lee",
+                          "photo"     : "female06.png",
+                          "activity"  : "mentioned you in a comment",
+                          "timestamp" : "9 hours ago",
+                          "icon"      : "notification2.png",
+                          "checked"   : "1"],
+                         ["name"      : "Michelle Leong",
+                          "photo"     : "female05.png",
+                          "activity"  : "replied to a comment that you're tagged in",
+                          "timestamp" : "Yesterday at 00:50",
+                          "icon"      : "notification1.png",
+                          "checked"   : "0"]]
     
     var screenType = TypeScreenProject.List{
         didSet{
@@ -161,6 +201,8 @@ class Project: UIViewController {
                 buttonCommenting.hidden = false
             }
             tableViewMain.reloadData()
+            viewNotification.customInit(self, viewIndicator: buttonHeaderBroadcast)
+            viewNotification.hidden = true
         }
     }
     
@@ -174,11 +216,57 @@ class Project: UIViewController {
 // - MARK: TableView
 extension Project: UITableViewDelegate, UITableViewDataSource{
     func numberOfSectionsInTableView(tableView: UITableView) -> Int{
-        switch screenType {
-        case .List:
+        switch tableView {
+        case tableViewMain:
+            switch screenType {
+            case .List:
+                return 2
+            case .InsideProject:
+                return 3
+            }
+        case tableViewNotification:
             return 1
-        case .InsideProject:
-            return 3
+        default:
+            switch tableView.tag {
+            case 1:
+                return 1
+            default: return 0
+            }
+        }
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+        switch tableView {
+        case tableViewMain:
+            switch screenType {
+            case .List:
+                switch section {
+                case 0:
+                    return 2
+                case 1:
+                    return 2
+                default: break
+                }
+                return 2
+            case .InsideProject:
+                switch section {
+                case 0:
+                    return 1
+                case 1:
+                    return dummyGlobalComments.count
+                case 2:
+                    return 1
+                default: return 0
+                }
+            }
+        case tableViewNotification:
+            return notifications.count
+        default:
+            switch tableView.tag {
+            case 1:
+                return 3
+            default: return 0
+            }
         }
     }
     
@@ -192,49 +280,117 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
             label.sizeToFit()
             return label.frame.height
         }
-        
         var cell = UITableViewCell()
-        switch screenType {
-        case .List:
-            cell = tableView.dequeueReusableCellWithIdentifier("ListCell")!
-        case .InsideProject:
-            switch indexPath.section {
-            case 0:
-                cell = tableView.dequeueReusableCellWithIdentifier("InsideListCell")!
+        
+        switch tableView {
+        case tableViewMain:
+            switch screenType {
+            case .List:
+                switch (indexPath.section, indexPath.row) {
+                case (0, let row):
+                    row
+                    cell = tableView.dequeueReusableCellWithIdentifier("ListCell")!
+                case (1, let row):
+                    switch row {
+                    case 0:
+                        cell = tableView.dequeueReusableCellWithIdentifier("ListSectionTitle")!
+                    case 1:
+                        cell = tableView.dequeueReusableCellWithIdentifier("ListRequestedProjects")!
+                    default: break
+                    }
+                default: break
+                }
+            case .InsideProject:
+                switch indexPath.section {
+                case 0:
+                    cell = tableView.dequeueReusableCellWithIdentifier("InsideListCell")!
+                case 1:
+                    cell = tableView.dequeueReusableCellWithIdentifier("InsideListCommentedCell")!
+                    let labelComment = cell.viewWithTag(4) as! UILabel
+                    cell.frame.size.height = heightForView(dummyGlobalComments[indexPath.row]["comment"] as! String, font: labelComment.font, width: tableView.width) + 90
+                case 2:
+                    cell.height = UIScreen.mainScreen().bounds.height - buttonCommenting.frame.origin.y - middleView.frame.origin.y + 5
+                default: break
+                }
+            }
+            break
+        case tableViewNotification:
+            cell = tableView.dequeueReusableCellWithIdentifier("Cell")!
+        default:
+            switch tableView.tag {
             case 1:
-                cell = tableView.dequeueReusableCellWithIdentifier("InsideListCommentedCell")!
-                let labelComment = cell.viewWithTag(4) as! UILabel
-                cell.frame.size.height = heightForView(dummyGlobalComments[indexPath.row]["comment"] as! String, font: labelComment.font, width: tableView.width) + 90
-            case 2:
-                cell.height = UIScreen.mainScreen().bounds.height - buttonCommenting.frame.origin.y - middleView.frame.origin.y + 5
+                cell = tableView.dequeueReusableCellWithIdentifier("Project")!
+                cell.height = tableView.height / 3
             default: break
             }
         }
+        
         return cell.height
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        switch screenType {
-        case .List:
-            return 2
-        case .InsideProject:
-            switch section {
-            case 0:
-                return 1
-            case 1:
-                return dummyGlobalComments.count
-            case 2:
-                return 1
-            default: return 0
-            }
-        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         var cell = UITableViewCell()
-        switch screenType {
-        case .List:
-            cell = tableView.dequeueReusableCellWithIdentifier("ListCell")!
+        switch tableView {
+        case tableViewMain:
+            switch screenType {
+            case .List:
+                cell = cellForRowTableViewList(indexPath)
+            case .InsideProject:
+                cell = cellForRowTableViewInsideProject(indexPath)
+            }
+            break
+        case tableViewNotification:
+            let notificationCell = tableView.dequeueReusableCellWithIdentifier("Cell") as! NotificationCell
+            notificationCell.setValues(notifications[indexPath.row])
+            cell = notificationCell
+        default:
+            switch tableView.tag {
+            case 1:
+                cell = tableView.dequeueReusableCellWithIdentifier("Project")!
+            default: break
+            }
+        }
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
+        view.endEditing(true)
+        switch tableView {
+        case tableViewMain:
+            switch screenType {
+            case .List:
+                screenType = .InsideProject(view: .normal)
+                indicatorHeader = 1
+            case .InsideProject:
+                break
+            }
+        case tableViewNotification:
+            switch (indexPath.section, indexPath.row) {
+            case (0, let row):
+                switch row {
+                case 0:
+                    self.performSegueWithIdentifier("ProjectDetailSegue", sender: -5)
+                case 1:
+                    self.performSegueWithIdentifier("ProjectDetailSegue", sender: -4)
+                default: break
+                }
+            default: break
+            }
+            break
+        default: break
+        }
+        
+    }
+}
+
+// - MARK: Table View Helper
+extension Project{
+    func cellForRowTableViewList(indexPath: NSIndexPath) -> UITableViewCell{
+        var cell = UITableViewCell()
+        switch (indexPath.section, indexPath.row) {
+        case (0, let row):
+            row
+            cell = tableViewMain.dequeueReusableCellWithIdentifier("ListCell")!
             let buttonIcon = cell.viewWithTag(1) as! UIButton
             let buttonLike = cell.viewWithTag(2) as! UIButton
             let buttonSave = cell.viewWithTag(3) as! UIButton
@@ -245,52 +401,55 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
             buttonSave.tintColor = indexPath.row % 2 == 1 ? UIColor(white: 220.0/255, alpha: 1) : UIColor(red: 1.0, green: 207.0/255, blue: 0, alpha: 1)
             cell.contentView.layer.borderWidth = 0.6
             cell.contentView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1.0).CGColor
-        case .InsideProject:
-            switch indexPath.section{
+        case (1, let row):
+            switch row {
             case 0:
-                cell = tableView.dequeueReusableCellWithIdentifier("InsideListCell")!
-                let projectView = cell.viewWithTag(1)!
-                let buttonRequestJoin = cell.viewWithTag(2) as! UIButton
-                projectView.layer.borderWidth = 0.6
-                projectView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1).CGColor
-                buttonRequestJoin.addTarget(self, action: #selector(buttonRequestJoinTapped), forControlEvents: .TouchUpInside)
+                cell = tableViewMain.dequeueReusableCellWithIdentifier("ListSectionTitle")!
             case 1:
-                cell = tableView.dequeueReusableCellWithIdentifier("InsideListCommentedCell")!
-                let imageView = cell.viewWithTag(1) as! UIImageView
-                let labelName = cell.viewWithTag(2) as! UILabel
-                let labelDate = cell.viewWithTag(3) as! UILabel
-                let labelComment = cell.viewWithTag(4) as! UILabel
-                let labelLikes = cell.viewWithTag(5) as! UILabel
-                let labelCommented = cell.viewWithTag(6) as! UILabel
-                let buttonComment = cell.viewWithTag(7) as! UIButton
-                let commentData = dummyGlobalComments[indexPath.row]
-                imageView.image = commentData["photo"] as? UIImage
-                labelName.text = commentData["name"] as? String
-                labelDate.text = commentData["date"] as? String
-                labelComment.text = commentData["comment"] as? String
-                labelLikes.text = "\(commentData["likes"]!)"
-                labelCommented.text = "\(commentData["commented"]!)"
-                buttonComment.addTarget(self, action: #selector(buttonCommentTapped), forControlEvents: .TouchUpInside)
-                buttonComment.accessibilityIdentifier = "\(indexPath.section)-\(indexPath.row)"
+                cell = tableViewMain.dequeueReusableCellWithIdentifier("ListRequestedProjects")!
+                
             default: break
             }
+        default: break
         }
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
-        view.endEditing(true)
-        switch screenType {
-        case .List:
-            screenType = .InsideProject(view: .normal)
-            indicatorHeader = 1
-        case .InsideProject:
-            break
+    func cellForRowTableViewInsideProject(indexPath: NSIndexPath) -> UITableViewCell{
+        var cell = UITableViewCell()
+        switch indexPath.section{
+        case 0:
+            cell = tableViewMain.dequeueReusableCellWithIdentifier("InsideListCell")!
+            let projectView = cell.viewWithTag(1)!
+            let buttonRequestJoin = cell.viewWithTag(2) as! UIButton
+            projectView.layer.borderWidth = 0.6
+            projectView.layer.borderColor = UIColor(white: 220.0/255, alpha: 1).CGColor
+            buttonRequestJoin.addTarget(self, action: #selector(buttonRequestJoinTapped), forControlEvents: .TouchUpInside)
+        case 1:
+            cell = tableViewMain.dequeueReusableCellWithIdentifier("InsideListCommentedCell")!
+            let imageView = cell.viewWithTag(1) as! UIImageView
+            let labelName = cell.viewWithTag(2) as! UILabel
+            let labelDate = cell.viewWithTag(3) as! UILabel
+            let labelComment = cell.viewWithTag(4) as! UILabel
+            let labelLikes = cell.viewWithTag(5) as! UILabel
+            let labelCommented = cell.viewWithTag(6) as! UILabel
+            let buttonComment = cell.viewWithTag(7) as! UIButton
+            let commentData = dummyGlobalComments[indexPath.row]
+            imageView.image = commentData["photo"] as? UIImage
+            labelName.text = commentData["name"] as? String
+            labelDate.text = commentData["date"] as? String
+            labelComment.text = commentData["comment"] as? String
+            labelLikes.text = "\(commentData["likes"]!)"
+            labelCommented.text = "\(commentData["commented"]!)"
+            buttonComment.addTarget(self, action: #selector(buttonCommentTapped), forControlEvents: .TouchUpInside)
+            buttonComment.accessibilityIdentifier = "\(indexPath.section)-\(indexPath.row)"
+        default: break
         }
+        return cell
     }
 }
 
-// : MARK: Perform Segue
+// - MARK: Perform Segue
 extension Project{
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let projectDetailVc = segue.destinationViewController as? ProjectDetail{
@@ -302,6 +461,10 @@ extension Project{
                     projectDetailVc.type = .Task(type: .invate)
                 case -3:
                     projectDetailVc.type = .Task(type: .join)
+                case -4:
+                    projectDetailVc.type = .Task(type: .approving)
+                case -5:
+                    projectDetailVc.type = .Task(type: .accepting)
                 default: break
                 }
             }
@@ -320,8 +483,9 @@ extension Project{
         let leftBarButton = UIBarButtonItem(image: UIImage(named: "menu-1.png"), style: .Plain, target: self, action: #selector(revealMenu))
         self.navigationItem.rightBarButtonItem = rightBarButton
         self.navigationItem.leftBarButtonItem = leftBarButton
-        
         layoutWithNavBar()
+        
+        viewNotification.customInit(self, viewIndicator: buttonHeaderBroadcast)
     }
     
     func layoutWithNavBar(){
