@@ -127,6 +127,10 @@ public class JoinInviteStakeHolders extends BaseActivity {
             rowProfile.setVisibility(View.VISIBLE);
             linearTask.setVisibility(View.VISIBLE);
             linearTeamMember.setVisibility(View.VISIBLE);
+        }else if(a.contains("notification")){
+            toolbar.setTitle("Join Project");
+            linearButton.setVisibility(View.VISIBLE);
+            linearTask.setVisibility(View.VISIBLE);
         }
         else if(a.contains("manifest")){
             toolbar.setTitle("Project Olds Folks Home");

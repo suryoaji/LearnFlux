@@ -54,6 +54,7 @@ public class ProjectActivity extends BaseActivity {
     ProjectProfileComment ppcAdapter;
     ImageView joinProject, inviting, btnManifest, notifProject;
     RelativeLayout lnm;
+    String visible;
 
     ArrayList<String>Notification;
     ArrayList<String> userComment;
@@ -83,6 +84,7 @@ public class ProjectActivity extends BaseActivity {
         rcView = (RecyclerView)findViewById(R.id.listOfProjectRecycler);
         notifProject = (ImageView)findViewById(R.id.notifProject);
         layoutNotif = (View)findViewById(R.id.layoutNotif);
+        visible = "none";
 
         String s = getIntent().getStringExtra("projectAct");
 
@@ -101,15 +103,21 @@ public class ProjectActivity extends BaseActivity {
         notifProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                layoutNotif.bringToFront();
-                layoutNotif.setVisibility(View.VISIBLE);
-                Notification = new ArrayList<String>();
-                Notification.add("Testing 1");
-                Notification.add("Testing 2");
-                Notification.add("Testing 3");
-                Notification.add("Testing 4");
-                PNAdapter = new ProjectNotificationAdapter(getApplicationContext(), Notification);
-                notifRecycler.setAdapter(PNAdapter);
+                if(visible.equalsIgnoreCase("none")){
+                    layoutNotif.bringToFront();
+                    layoutNotif.setVisibility(View.VISIBLE);
+                    Notification = new ArrayList<String>();
+                    Notification.add("Testing 1");
+                    Notification.add("Testing 2");
+                    Notification.add("Testing 3");
+                    Notification.add("Testing 4");
+                    PNAdapter = new ProjectNotificationAdapter(getApplicationContext(), Notification);
+                    notifRecycler.setAdapter(PNAdapter);
+                    visible = "true";
+                }else{
+                    layoutNotif.setVisibility(View.GONE);
+                    visible="none";
+                }
             }
         });
 
@@ -121,7 +129,6 @@ public class ProjectActivity extends BaseActivity {
             plAdapter = new ProjectListAdapter(getApplicationContext(), title);
             rcView.setAdapter(plAdapter);
             rcView.setVisibility(View.VISIBLE);
-
         }else{
             rcView.setVisibility(View.GONE);
         }
