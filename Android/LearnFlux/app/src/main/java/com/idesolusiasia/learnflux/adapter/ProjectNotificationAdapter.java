@@ -1,12 +1,16 @@
 package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by Kuroko on 12/13/2016.
@@ -14,9 +18,10 @@ import com.idesolusiasia.learnflux.R;
 
 public class ProjectNotificationAdapter extends RecyclerView.Adapter<ProjectNotificationAdapter.NotificationHolder> {
     Context mContext;
-
-    public ProjectNotificationAdapter(Context context){
+    ArrayList<String> notif = new ArrayList<>();
+    public ProjectNotificationAdapter(Context context, ArrayList<String>notify){
         this.mContext =  context;
+        this.notif = notify;
     }
 
     @Override
@@ -28,17 +33,26 @@ public class ProjectNotificationAdapter extends RecyclerView.Adapter<ProjectNoti
 
     @Override
     public void onBindViewHolder(NotificationHolder holder, int position) {
-
+        holder.notifTitle.setText(notif.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return notif.size();
     }
 
     public class NotificationHolder extends RecyclerView.ViewHolder {
+        TextView notifTitle;
         public NotificationHolder(View itemView) {
             super(itemView);
+            notifTitle = (TextView)itemView.findViewById(R.id.projectNotifTitle);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+
+                }
+            });
         }
     }
 }

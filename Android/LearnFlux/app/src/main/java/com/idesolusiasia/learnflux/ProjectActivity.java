@@ -37,11 +37,12 @@ import java.util.ArrayList;
 public class ProjectActivity extends BaseActivity {
     ProjectListAdapter plAdapter;
     RecyclerView rcView, recRecycler, notifRecycler;
-    TextView emptyField, profileTitle, listTitle ;
+    TextView  profileTitle, listTitle ;
     ImageView searchProject;
     LinearLayout projectList, actionBar;
-    ProgressBar progress;   ArrayList<String>title = new ArrayList<>();
+    ArrayList<String>title = new ArrayList<>();
     ProjectNotificationAdapter PNAdapter;
+    View layoutNotif;
 
 
     //For Project Profile
@@ -53,6 +54,8 @@ public class ProjectActivity extends BaseActivity {
     ProjectProfileComment ppcAdapter;
     ImageView joinProject, inviting, btnManifest, notifProject;
     RelativeLayout lnm;
+
+    ArrayList<String>Notification;
     ArrayList<String> userComment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +81,8 @@ public class ProjectActivity extends BaseActivity {
         listTitle = (TextView)findViewById(R.id.projectListTitle);
         profileTitle = (TextView)findViewById(R.id.projectProfileTitle);
         rcView = (RecyclerView)findViewById(R.id.listOfProjectRecycler);
-        emptyField = (TextView)findViewById(R.id.emptyProject);
-        progress = (ProgressBar) findViewById(R.id.progressProject);
         notifProject = (ImageView)findViewById(R.id.notifProject);
+        layoutNotif = (View)findViewById(R.id.layoutNotif);
 
         String s = getIntent().getStringExtra("projectAct");
 
@@ -93,16 +95,20 @@ public class ProjectActivity extends BaseActivity {
         LinearLayoutManager linear = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
         rcView.setLayoutManager(linear);
         //Dummy Data
-        progress.setVisibility(View.VISIBLE);
         title.add("Old Folks Home");
         title.add("Animal Shelter");
 
         notifProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                notifRecycler.setVisibility(View.VISIBLE);
-                notifRecycler.bringToFront();
-                PNAdapter = new ProjectNotificationAdapter(getApplicationContext());
+                layoutNotif.bringToFront();
+                layoutNotif.setVisibility(View.VISIBLE);
+                Notification = new ArrayList<String>();
+                Notification.add("Testing 1");
+                Notification.add("Testing 2");
+                Notification.add("Testing 3");
+                Notification.add("Testing 4");
+                PNAdapter = new ProjectNotificationAdapter(getApplicationContext(), Notification);
                 notifRecycler.setAdapter(PNAdapter);
             }
         });
@@ -115,12 +121,9 @@ public class ProjectActivity extends BaseActivity {
             plAdapter = new ProjectListAdapter(getApplicationContext(), title);
             rcView.setAdapter(plAdapter);
             rcView.setVisibility(View.VISIBLE);
-            emptyField.setVisibility(View.GONE);
-            progress.setVisibility(View.GONE);
+
         }else{
             rcView.setVisibility(View.GONE);
-            emptyField.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.VISIBLE);
         }
         if(s.contains("activity")){
             notifProject.setLayoutParams(params);
@@ -159,7 +162,6 @@ public class ProjectActivity extends BaseActivity {
                         flbtn.setVisibility(View.GONE);
                         lnm.requestFocus();
                         inputManager.toggleSoftInput (InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
                     }
 
                 });
