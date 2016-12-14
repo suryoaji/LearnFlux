@@ -29,6 +29,7 @@ class Project: UIViewController {
     @IBOutlet weak var textfieldSearch: UITextField!
     @IBOutlet weak var tableViewMain: UITableView!
     @IBOutlet weak var tableViewNotification: UITableView!
+    @IBOutlet weak var tableViewComments: UITableView!
     let clientData = Engine.clientData
 
     override func viewDidLoad() {
@@ -194,11 +195,16 @@ class Project: UIViewController {
             switch screenType {
             case .List:
                 buttonCommenting.hidden = true
+                headerView.hidden = false
             case .InsideProject(view: let type):
                 if type == .comment{
                     setLeftNavBarButtonBack()
+                    buttonCommenting.hidden = true
+                    headerView.subviews.forEach({ $0.hidden = true })
+                }else{
+                    buttonCommenting.hidden = false
+                    headerView.subviews.forEach({ $0.hidden = false })
                 }
-                buttonCommenting.hidden = false
             }
             tableViewMain.reloadData()
             viewNotification.customInit(self, viewIndicator: buttonHeaderBroadcast)
@@ -226,6 +232,8 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
             }
         case tableViewNotification:
             return 1
+        case tableViewComments:
+            return 2
         default:
             switch tableView.tag {
             case 1:
@@ -261,6 +269,8 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
             }
         case tableViewNotification:
             return notifications.count
+        case tableViewComments:
+            return 1
         default:
             switch tableView.tag {
             case 1:
@@ -274,12 +284,13 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
         func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
             let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
             label.numberOfLines = 0
-            label.lineBreakMode = NSLineBreakMode.ByCharWrapping
+            label.lineBreakMode = NSLineBreakMode.ByWordWrapping
             label.font = font
             label.text = text
             label.sizeToFit()
             return label.frame.height
         }
+        
         var cell = UITableViewCell()
         
         switch tableView {
@@ -316,6 +327,17 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
             break
         case tableViewNotification:
             cell = tableView.dequeueReusableCellWithIdentifier("Cell")!
+        case tableViewComments:
+            switch indexPath.section {
+            case 0:
+                cell = tableView.dequeueReusableCellWithIdentifier("FirstComment")!
+            case 1:
+                cell = tableView.dequeueReusableCellWithIdentifier("SecondComment")!
+            default: break
+            }
+            let labelComment = cell.viewWithTag(2) as! UILabel
+            let height = heightForView(labelComment.text!, font: labelComment.font, width: view.frame.width / cell.frame.width * labelComment.frame.width)
+            cell.frame.size.height += height - labelComment.frame.height + 16
         default:
             switch tableView.tag {
             case 1:
@@ -343,6 +365,18 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
             let notificationCell = tableView.dequeueReusableCellWithIdentifier("Cell") as! NotificationCell
             notificationCell.setValues(notifications[indexPath.row])
             cell = notificationCell
+        case tableViewComments:
+            switch indexPath.section {
+            case 0:
+                cell = tableView.dequeueReusableCellWithIdentifier("FirstComment")!
+                let buttonReply = cell.viewWithTag(1) as! UIButton
+                buttonReply.addTarget(self, action: #selector(buttonCommentingTapped), forControlEvents: .TouchUpInside)
+            case 1:
+                cell = tableView.dequeueReusableCellWithIdentifier("SecondComment")!
+                let buttonReply = cell.viewWithTag(1) as! UIButton
+                buttonReply.addTarget(self, action: #selector(buttonCommentingTapped), forControlEvents: .TouchUpInside)
+            default: break
+            }
         default:
             switch tableView.tag {
             case 1:
@@ -486,6 +520,8 @@ extension Project{
         layoutWithNavBar()
         
         viewNotification.customInit(self, viewIndicator: buttonHeaderBroadcast)
+    
+        
     }
     
     func layoutWithNavBar(){

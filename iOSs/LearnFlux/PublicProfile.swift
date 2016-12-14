@@ -10,6 +10,7 @@ import UIKit
 
 class PublicProfile: UIViewController {
     @IBOutlet weak var tableView: UITableView!
+    let clientData = Engine.clientData
     var user: User?
     
     func initViewController(user: User){
@@ -29,6 +30,15 @@ class PublicProfile: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func buttonActionTapped(sender: UIButton) {
+        Engine.requestFriend(user: user!){[unowned self]status in
+            if status == .Success{
+                self.buttonAccept.enabled = false
+                self.buttonAccept.backgroundColor = UIColor(white: 220.0/255, alpha: 1.0)
+            }
+        }
     }
     
     var sectionTitles = ["", "My Children", "Affilated Organizations", "Interests"]
@@ -201,6 +211,16 @@ extension PublicProfile{
     func mockUpDidLoad(){
         setHeaderView()
         setTableView()
+        
+        if let user = user{
+            if clientData.getMyConnection().pending.contains({ $0.userId == user.userId! }){
+                buttonAccept.enabled = true
+                buttonAccept.setTitle("Accept", forState: .Normal)
+            }else if clientData.getMyConnection().requested.contains({ $0.userId == user.userId! }){
+                buttonAccept.enabled = false
+                buttonAccept.backgroundColor = UIColor(white: 220.0/255, alpha: 1.0)
+            }
+        }
     }
     
     func setHeaderView(){

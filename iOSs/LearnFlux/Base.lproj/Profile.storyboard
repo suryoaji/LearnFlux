@@ -2542,6 +2542,9 @@
                                 <state key="normal" title="Send Request">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="buttonActionTapped:" destination="tSB-K4-8Zd" eventType="touchUpInside" id="BP9-CL-dqz"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="s0t-5J-Ssl">
                                 <rect key="frame" x="160" y="523" width="160" height="45"/>

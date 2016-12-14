@@ -614,6 +614,8 @@ class Profile : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITa
             didSelectRowTableViewListInterests(indexPath)
         case tableViewSearchResult:
             didSelectRowTableViewSearchResult(indexPath)
+        case tableViewFriendRequest:
+            didSelectRowTableViewFriendRequest(indexPath)
         default:
             if tableView.tag == 1{
                 didSelectRowTableViewConnectionMyProfile(tableView, indexPath: indexPath)
@@ -914,7 +916,7 @@ extension Profile{
                 if user.userId != nil{
                     if let index = clientData.getMyConnection().friends.indexOf({ $0.userId! == user.userId! }){
                         individualCell.setValues(clientData.getMyConnection().friends[index], indexPath: indexPath, type: .Friend, forSearch: true)
-                    }else if clientData.getMyConnection().requested.contains({ $0.userId! == searchResult.users[indexPath.row - 1].userId! }){
+                    }else if clientData.getMyConnection().requested.contains({ $0.userId! == searchResult.users[indexPath.row - 1].userId! }) || clientData.getMyConnection().pending.contains({ $0.userId! == searchResult.users[indexPath.row - 1].userId! }){
                         individualCell.setValues(searchResult.users[indexPath.row - 1], indexPath: indexPath, type: .Pending, forSearch: true)
                     }else{
                         individualCell.setValues(searchResult.users[indexPath.row - 1], indexPath: indexPath, type: .NotFriend, forSearch: true)
@@ -1469,6 +1471,7 @@ extension Profile{
     
     func didSelectRowTableViewSearchResult(indexPath: NSIndexPath){
         tableViewSearchResult.deselectRowAtIndexPath(indexPath, animated: false)
+        buttonBackSearch(UIButton())
         switch (indexPath.section, indexPath.row) {
         case (let section, let row):
             if row != 0{
@@ -1490,6 +1493,16 @@ extension Profile{
                 default: break
                 }
             }
+        }
+    }
+    
+    func didSelectRowTableViewFriendRequest(indexPath: NSIndexPath){
+        switch (indexPath.section, indexPath.row - 1) {
+        case (0, let row):
+            let pendingFriend = clientData.getMyConnection().pending[row]
+            self.performSegueWithIdentifier("PublicProfileSegue", sender: pendingFriend)
+            break
+        default: break
         }
     }
     
