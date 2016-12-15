@@ -233,7 +233,7 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
         case tableViewNotification:
             return 1
         case tableViewComments:
-            return 2
+            return 3
         default:
             switch tableView.tag {
             case 1:
@@ -333,6 +333,8 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
                 cell = tableView.dequeueReusableCellWithIdentifier("FirstComment")!
             case 1:
                 cell = tableView.dequeueReusableCellWithIdentifier("SecondComment")!
+            case 2:
+                cell = tableView.dequeueReusableCellWithIdentifier("ThirdComment")!
             default: break
             }
             let labelComment = cell.viewWithTag(2) as! UILabel
@@ -373,6 +375,10 @@ extension Project: UITableViewDelegate, UITableViewDataSource{
                 buttonReply.addTarget(self, action: #selector(buttonCommentingTapped), forControlEvents: .TouchUpInside)
             case 1:
                 cell = tableView.dequeueReusableCellWithIdentifier("SecondComment")!
+                let buttonReply = cell.viewWithTag(1) as! UIButton
+                buttonReply.addTarget(self, action: #selector(buttonCommentingTapped), forControlEvents: .TouchUpInside)
+            case 2:
+                cell = tableView.dequeueReusableCellWithIdentifier("ThirdComment")!
                 let buttonReply = cell.viewWithTag(1) as! UIButton
                 buttonReply.addTarget(self, action: #selector(buttonCommentingTapped), forControlEvents: .TouchUpInside)
             default: break

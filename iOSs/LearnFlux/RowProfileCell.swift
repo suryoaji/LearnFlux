@@ -89,7 +89,15 @@ class RowProfileCell: UITableViewCell {
                 buttonMore.removeFromSuperview()
             }
         }
-        if let id = values["id"] as? Int where id == Engine.clientData.cacheSelfId(){ buttonOpenChat.hidden = true } else{ buttonOpenChat.hidden = false }
+        if let id = values["id"] as? Int where id == Engine.clientData.cacheSelfId(){
+            buttonOpenChat.hidden = true
+            labelMutuals.hidden = true
+            imageViewMutualPhoto.hidden = true
+        }else{
+            buttonOpenChat.hidden = false
+            labelMutuals.hidden = false
+            imageViewMutualPhoto.hidden = false
+        }
         if stateMore{ resizeLabelRoles(scale) }
     }
 
