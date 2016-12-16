@@ -35,10 +35,6 @@ public class ProjectEdit extends BaseActivity {
                 R.layout.activity_project_edit, null);
         parentLayout.addView(childLayout);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("New Project");
-
         start = (EditText)findViewById(R.id.editStartDate);
         end = (EditText)findViewById(R.id.editEndDate);
         cancel = (ImageView)findViewById(R.id.editCancel);
@@ -77,6 +73,7 @@ public class ProjectEdit extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent a = new Intent(ProjectEdit.this, ProjectActivity.class);
+                a.putExtra("projectAct", "activity");
                 startActivity(a);
             }
         });

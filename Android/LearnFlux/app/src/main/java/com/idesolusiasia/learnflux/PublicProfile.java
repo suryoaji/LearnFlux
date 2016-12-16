@@ -101,7 +101,7 @@ public class PublicProfile extends BaseActivity {
             btnRequest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                      Engine.getUserFriend(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
+                    Engine.getUserFriend(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
                 @Override
                 public void execute(JSONObject obj) {
                     Toast.makeText(getApplicationContext(), "Successfully adding a friend", Toast.LENGTH_SHORT).show();
@@ -118,10 +118,12 @@ public class PublicProfile extends BaseActivity {
             btnAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                       Engine.getUserFriend(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
+                    Engine.getUserFriend(getApplicationContext(), id, new RequestTemplate.ServiceCallback() {
                 @Override
                 public void execute(JSONObject obj) {
                     Toast.makeText(getApplicationContext(), "Succesfull adding a friend", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(PublicProfile.this, MyProfileActivity.class);
+                    startActivity(i);
                 }
             });
                 }

@@ -865,7 +865,8 @@ public class Engine {
 							for (int i = 0; i < errors.length(); i++) {
 								JSONObject objs = errors.getJSONObject(i);
 								String details = objs.getString("details");
-								Functions.showAlert(context, "Notification", details);
+								//Functions.showAlert(context, "Notification", details);
+								Toast.makeText(context, details, Toast.LENGTH_LONG).show();
 							}
 						}catch (JSONException e) {
 							e.printStackTrace();

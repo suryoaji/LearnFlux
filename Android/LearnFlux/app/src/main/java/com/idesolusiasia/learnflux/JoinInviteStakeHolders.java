@@ -61,6 +61,7 @@ public class JoinInviteStakeHolders extends BaseActivity {
         String a = getIntent().getStringExtra("toolbar");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         join = (Button)findViewById(R.id.buttonJoinGroup);
         linearButton = (LinearLayout)findViewById(R.id.layoutJoinDecline);
@@ -131,6 +132,7 @@ public class JoinInviteStakeHolders extends BaseActivity {
             toolbar.setTitle("Join Project");
             linearButton.setVisibility(View.VISIBLE);
             linearTask.setVisibility(View.VISIBLE);
+            rowProfile.setVisibility(View.VISIBLE);
         }
         else if(a.contains("manifest")){
             toolbar.setTitle("Project Olds Folks Home");

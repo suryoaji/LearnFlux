@@ -24,6 +24,7 @@
     <ImageView
         android:layout_gravity="center" android:layout_marginBottom="45dp"
         android:src="@drawable/ic_notificationoff"
+        android:id="@+id/imageNotif"
         android:layout_width="60dp"
         android:layout_height="60dp" />
 

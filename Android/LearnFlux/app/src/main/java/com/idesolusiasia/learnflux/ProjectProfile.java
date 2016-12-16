@@ -14,10 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.idesolusiasia.learnflux.adapter.ProjectProfileComment;
+import com.idesolusiasia.learnflux.adapter.ProjectProfileCommentAdapter;
 
 import java.util.ArrayList;
 
@@ -31,9 +32,9 @@ public class ProjectProfile extends BaseActivity {
     RecyclerView commentProfile;
     Button gotoProjectDetails;
     FloatingActionButton flbtn;
-    ProjectProfileComment ppcAdapter;
+    ProjectProfileCommentAdapter ppcAdapter;
     ImageView joinProject, inviting, btnManifest;
-    RelativeLayout lnm;
+    LinearLayout lnm;
     ArrayList<String> userComment;
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -51,13 +52,13 @@ public class ProjectProfile extends BaseActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle("Projects");
 
-        comment = (EditText)findViewById(R.id.comment);
+        //comment = (EditText)findViewById(R.id.comment);
         projectProfileDesc = (TextView)findViewById(R.id.descProjectProfile);
         gotoProjectDetails = (Button)findViewById(R.id.gotoProjectDetails);
         joinProject = (ImageView)findViewById(R.id.Profile_joinGroup);
         flbtn = (FloatingActionButton)findViewById(R.id.floatingButton);
         inviting = (ImageView)findViewById(R.id.inviteCollab);
-        lnm = (RelativeLayout)findViewById(R.id.keyboard);
+        lnm = (LinearLayout)findViewById(R.id.keyboard);
         postMessage = (TextView)findViewById(R.id.postMessage);
         btnManifest = (ImageView)findViewById(R.id.btn_manifest);
         final InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -87,7 +88,7 @@ public class ProjectProfile extends BaseActivity {
                 lnm.setVisibility(View.GONE);
                 String commentUser = comment.getText().toString().trim();
                 userComment.add(commentUser);
-                ppcAdapter = new ProjectProfileComment(getApplicationContext(), userComment);
+                ppcAdapter = new ProjectProfileCommentAdapter(getApplicationContext(), userComment);
                 commentProfile.setAdapter(ppcAdapter);
                 comment.getText().clear();
             }

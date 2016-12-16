@@ -37,10 +37,6 @@ TextView projectStart,projectEnd, projectDuration;
                 R.layout.activity_project_details, null);
         parentLayout.addView(childLayout);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("New Project");
-
         projectStart = (TextView)findViewById(R.id.startProject);
         projectEnd = (TextView)findViewById(R.id.endProject);
         projectDuration = (TextView)findViewById(R.id.durationProject);

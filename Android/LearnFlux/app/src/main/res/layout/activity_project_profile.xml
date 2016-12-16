@@ -10,7 +10,6 @@
     <LinearLayout
         android:orientation="vertical"
         android:focusableInTouchMode="true"
-        android:isScrollContainer="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -104,17 +103,19 @@
             android:layout_height="wrap_content">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/projectProfileRecycler"
+            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         </android.support.v7.widget.RecyclerView>
         </FrameLayout>
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/keyboard"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_weight="0"
+            android:padding="5dp"
             android:orientation="vertical">
             <EditText
                 android:imeOptions="flagNoExtractUi"
@@ -124,47 +125,47 @@
                 android:fontFamily="sans-serif"
                 android:gravity="left"
                 android:inputType="textMultiLine"
-                android:isScrollContainer="true"
                 android:maxLength="200"
+                android:maxLines="4"
                 android:textSize="16sp"
                 android:hint="Enter comments" />
-            <ImageView
-                android:id="@+id/photoAttachment"
-                android:src="@drawable/ic_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/comment"
-                android:layout_margin="10dp"
-                android:gravity="center|center_vertical"
-                android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp"/>
-            <ImageView
-                android:layout_toRightOf="@+id/photoAttachment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/comment"
-                android:layout_margin="10dp"
-                android:gravity="center|center_vertical"
-                android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
-                android:src="@drawable/ic_folder" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/comment"
-                android:layout_marginTop="8dp"
-                android:background="@null"
-                android:id="@+id/postMessage"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center|center_vertical"
-                android:text="Post"
-                android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp"/>
-        </RelativeLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/photoAttachment"
+                    android:src="@drawable/ic_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center|center_vertical"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center|center_vertical"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"
+                    android:src="@drawable/ic_folder" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_gravity="center|end"
+                    android:gravity="end"
+                    android:id="@+id/postMessage"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Post"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/floatingButton"
             android:layout_gravity="right|bottom"

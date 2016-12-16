@@ -3,30 +3,26 @@ package com.idesolusiasia.learnflux;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.ProjectListAdapter;
 import com.idesolusiasia.learnflux.adapter.ProjectNotificationAdapter;
-import com.idesolusiasia.learnflux.adapter.ProjectProfileComment;
+import com.idesolusiasia.learnflux.adapter.ProjectProfileCommentAdapter;
 
 import java.util.ArrayList;
 
@@ -51,9 +47,9 @@ public class ProjectActivity extends BaseActivity {
     RecyclerView commentProfile;
     Button gotoProjectDetails;
     FloatingActionButton flbtn;
-    ProjectProfileComment ppcAdapter;
+    ProjectProfileCommentAdapter ppcAdapter;
     ImageView joinProject, inviting, btnManifest, notifProject;
-    RelativeLayout lnm;
+    LinearLayout lnm;
     String visible;
 
     ArrayList<String>Notification;
@@ -70,9 +66,6 @@ public class ProjectActivity extends BaseActivity {
                 R.layout.activity_home_project, null);
         parentLayout.addView(childLayout);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("Projects");
 
         // SETTING LAYOUT OF PROFILES AND LIST
         projectList = (LinearLayout)findViewById(R.id.projectListLayout);
@@ -107,9 +100,9 @@ public class ProjectActivity extends BaseActivity {
                     layoutNotif.bringToFront();
                     layoutNotif.setVisibility(View.VISIBLE);
                     Notification = new ArrayList<String>();
-                    Notification.add("Testing 1");
-                    Notification.add("Testing 2");
-                    Notification.add("Testing 3");
+                    Notification.add("Grace Chong requested to join Old Folks Home");
+                    Notification.add("Andrew Chew commented on post you are following in Child Education Spore");
+                    Notification.add("Jason Lee mentioned you in comment");
                     Notification.add("Testing 4");
                     PNAdapter = new ProjectNotificationAdapter(getApplicationContext(), Notification);
                     notifRecycler.setAdapter(PNAdapter);
@@ -151,7 +144,7 @@ public class ProjectActivity extends BaseActivity {
                 joinProject = (ImageView)findViewById(R.id.Profile_joinGroup);
                 flbtn = (FloatingActionButton)findViewById(R.id.floatingButton);
                 inviting = (ImageView)findViewById(R.id.inviteCollab);
-                lnm = (RelativeLayout)findViewById(R.id.keyboard);
+                lnm = (LinearLayout)findViewById(R.id.keyboard);
                 postMessage = (TextView)findViewById(R.id.postMessage);
                 btnManifest = (ImageView)findViewById(R.id.btn_manifest);
                 final InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -181,7 +174,7 @@ public class ProjectActivity extends BaseActivity {
                         userComment = new ArrayList<>();
                         String commentUser = comment.getText().toString().trim();
                         userComment.add(commentUser);
-                        ppcAdapter = new ProjectProfileComment(getApplicationContext(), userComment);
+                        ppcAdapter = new ProjectProfileCommentAdapter(getApplicationContext(), userComment);
                         commentProfile.setAdapter(ppcAdapter);
                         comment.getText().clear();
                     }

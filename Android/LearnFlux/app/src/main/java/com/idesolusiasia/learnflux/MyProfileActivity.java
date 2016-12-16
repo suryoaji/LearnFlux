@@ -297,11 +297,13 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 									notif.add(notifications);
 								}
 								TextView notifEmpty = (TextView)findViewById(R.id.empty_notification);
+								ImageView notifImage = (ImageView)findViewById(R.id.imageNotif);
 								if(notif.isEmpty()){
 									notifEmpty.setVisibility(View.VISIBLE);
 									recyclerNotif.setVisibility(View.GONE);
 								}else {
 									notifEmpty.setVisibility(View.GONE);
+									notifImage.setVisibility(View.GONE);
 									notifAdapter = new NotificationAdapter(getApplicationContext(), notif);
 									recyclerNotif.setAdapter(notifAdapter);
 								}

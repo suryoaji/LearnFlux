@@ -153,6 +153,7 @@
             layout="@layout/activity_edit_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
         <ScrollView
             android:id="@+id/linear1"
             android:visibility="visible"
@@ -161,7 +162,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/editProfile"
                     android:text="+ edit profile"
@@ -172,10 +173,7 @@
                     android:textColor="#8bc34a"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-
-
                 <LinearLayout
-                    android:layout_margin="6dp"
                     android:background="@drawable/relative_border"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -287,7 +285,6 @@
                             android:id="@+id/textView36" />
                     </LinearLayout>
                 </LinearLayout>
-
                 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
                     android:id="@+id/myProfileChildrenLayout"
@@ -325,7 +322,7 @@
                     <LinearLayout
                         android:id="@+id/layoutShowAll"
                         android:background="#FFFFFF"
-                        android:layout_marginLeft="210dp"
+                        android:layout_marginLeft="230dp"
                         android:layout_marginTop="35dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -353,7 +350,7 @@
                     android:id="@+id/myProfileInterestLayout"
                     android:visibility="gone"
                     android:layout_width="match_parent"
-                    android:layout_height="90dp">
+                    android:layout_height="wrap_content">
                     <TextView
                         android:layout_marginTop="5dp"
                         android:text="Interest"
@@ -371,15 +368,15 @@
                         android:layout_height="80dp">
                     </android.support.v7.widget.RecyclerView>
                 </FrameLayout>
-
                 <FrameLayout
+                    android:layout_marginTop="10dp"
                     android:visibility="gone"
                     android:id="@+id/myProfileConnectionLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 <TextView
                     android:layout_marginTop="5dp"
-                    android:text="Connections"
+                    android:text="Recommended Connections"
                     android:background="#E0E0E0"
                     android:textColor="#000"
                     android:paddingLeft="15dp" android:paddingTop="7dp"
