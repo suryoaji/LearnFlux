@@ -90,14 +90,6 @@
                 android:src="@drawable/share" android:layout_width="30dp"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-        <View
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="3dp"
-            android:background="#9E9E9E"
-            android:layout_width="match_parent"
-            android:layout_height="1dp">
-        </View>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -111,7 +103,7 @@
         </FrameLayout>
         <LinearLayout
             android:id="@+id/keyboard"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -128,7 +120,7 @@
                 android:maxLength="200"
                 android:maxLines="4"
                 android:textSize="16sp"
-                android:hint="Enter comments" />
+                android:hint="Enter comments"/>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

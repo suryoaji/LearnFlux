@@ -28,6 +28,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestHolder>{
     public Context mContext;
     public ArrayList<Group> group;
     public int mExpandedPosition = -1;
+    String visible = "none";
 
     public TestAdapter(Context context, ArrayList<Group>groups){
         this.mContext=context;
@@ -45,6 +46,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestHolder>{
     public void onBindViewHolder(final TestHolder holder, final int position) {
         final Group g = group.get(position);
         holder.name.setText(g.getName());
+        holder.checkButton.setTag(position);
         final boolean isExpanded = position ==mExpandedPosition;
         holder.layoutLinear.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.layoutLinear.setActivated(isExpanded);
@@ -67,7 +69,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestHolder>{
     }
 
     public class TestHolder extends RecyclerView.ViewHolder {
-        ImageView checklist;
+        ImageView checklist, checkButton;
         LinearLayout layoutLinear;
         TextView remark, name;
         public TestHolder(View itemView) {
@@ -76,6 +78,22 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestHolder>{
             layoutLinear = (LinearLayout)itemView.findViewById(R.id.linearRemarks);
             remark = (TextView)itemView.findViewById(R.id.remarksText);
             name = (TextView)itemView.findViewById(R.id.manifestId);
+            checkButton =  (ImageView)itemView.findViewById(R.id.checkList);
+            checkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    if(visible.equalsIgnoreCase("none")){
+                        checkButton.getTag();
+                       checkButton.setImageResource(R.drawable.ic_check_box_green);
+                        visible="true";
+                    }else{
+                       checkButton.setImageResource(R.drawable.ic_uncheckable);
+                        visible="none";
+                    }
+
+                }
+            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

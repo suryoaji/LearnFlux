@@ -37,6 +37,7 @@
     <string name="title_activity_chat">Chat</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_event_chat">EventChat</string>
+    <string name="remarks">Curabitur auctor tristique lobortis. Quisque bibendum, ipsum in feugiat pharetra, odio libero malesuada turpis, tempus fermentum augue est sit amet magna. Vestibulum bibendum lectus non mauris porta, sed blandit purus scelerisque.</string>
     <string name="large_text">
         LASALLE College of the Arts provides a supportive, progressive and truly inspiring
         environment for our students.

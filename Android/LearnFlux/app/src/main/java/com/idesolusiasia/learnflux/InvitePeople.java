@@ -1,6 +1,7 @@
 package com.idesolusiasia.learnflux;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,6 +76,8 @@ public class InvitePeople extends BaseActivity{
                         if(participant.isEmpty()){
                             emptyLayout.setVisibility(View.VISIBLE);
                             peopleRecycler.setVisibility(View.GONE);
+                            btnSelection.setBackgroundColor(Color.GRAY);
+                            btnSelection.setClickable(false);
                         }else {
                             emptyLayout.setVisibility(View.GONE);
                             adaptPeople = new CheckListPeopleAdapter(getApplicationContext(), participant);
@@ -109,7 +112,8 @@ public class InvitePeople extends BaseActivity{
                 for(int b=0;b<a.size();b++){
                     p[b]=a.get(b).intValue();
                 }
-                Engine.putGroupByAdmin(getApplicationContext(), ids, p, new RequestTemplate.ServiceCallback() {
+
+               /* Engine.putGroupByAdmin(getApplicationContext(), ids, p, new RequestTemplate.ServiceCallback() {
                     @Override
                     public void execute(JSONObject obj) {
                         Toast.makeText(getApplicationContext(),"successfull", Toast.LENGTH_LONG).show();
@@ -119,7 +123,7 @@ public class InvitePeople extends BaseActivity{
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
                     }
-                });
+                });*/
 
             }
 

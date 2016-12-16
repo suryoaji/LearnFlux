@@ -93,7 +93,7 @@
         <RelativeLayout android:layout_width="0dp" android:layout_height="wrap_content"
                         android:layout_weight="1">
             <ImageView android:layout_width="45dp" android:layout_height="45dp"
-                       android:id="@+id/imageView8" android:src="@drawable/icon_activities"
+                       android:id="@+id/imageView8" android:src="@drawable/tab_project"
                        android:foreground="?attr/selectableItemBackground"
                        android:clickable="true"
                        android:layout_centerHorizontal="true" android:layout_marginTop="10dp"
@@ -108,7 +108,7 @@
                 android:visibility="gone" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:textAppearance="?android:attr/textAppearanceSmall"
-                      android:text="Activities" android:id="@+id/textView13" android:textSize="10sp"
+                      android:text="Projects" android:id="@+id/textView13" android:textSize="10sp"
                       android:layout_weight="1" android:layout_gravity="center_horizontal"
                       android:layout_below="@+id/imageView8"
                       android:layout_centerHorizontal="true" android:gravity="center_vertical|center_horizontal"/>

@@ -87,7 +87,7 @@
             <EditText
                 android:background="@android:color/transparent"
                 android:layout_margin="10dp" android:textSize="14sp"
-                android:hint="Gift Wrapping" android:id="@+id/taskTitle"
+                android:text="Gift Wrapping" android:id="@+id/taskTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -106,9 +106,9 @@
                     android:id="@+id/startJoinProjectTask" android:drawableLeft="@drawable/calendar"
                     android:layout_margin="3dp" android:padding="3dp" android:drawablePadding="3dp"
                     android:layout_width="0dp" android:layout_weight="0.5"  android:background="@android:color/transparent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content" android:textSize="12sp"/>
                 <EditText
-                    android:id="@+id/endJoinProjectTask"
+                    android:id="@+id/endJoinProjectTask" android:textSize="12sp"
                     android:layout_margin="3dp" android:padding="3dp"
                     android:drawableLeft="@drawable/calendar" android:drawablePadding="3dp"
                     android:layout_width="0dp" android:layout_weight="0.5"  android:background="@android:color/transparent"
@@ -124,7 +124,7 @@
                 android:layout_height="30dp" />
             <EditText
                 android:background="@android:color/transparent"
-                android:hint="10 days" android:layout_margin="10dp"
+                android:text="10 days" android:layout_margin="10dp"
                 android:layout_width="wrap_content" android:textSize="14sp"
                 android:layout_height="wrap_content" />
             <TextView
@@ -136,9 +136,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
             <EditText
-                android:background="@drawable/relative_border"
                 android:gravity="top" android:padding="4dp"
-                android:hint="Remarks here"
+                android:text="@string/remarks"
                 android:layout_margin="10dp" android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
