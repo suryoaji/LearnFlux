@@ -1471,12 +1471,12 @@ extension Profile{
     
     func didSelectRowTableViewSearchResult(indexPath: NSIndexPath){
         tableViewSearchResult.deselectRowAtIndexPath(indexPath, animated: false)
-        buttonBackSearch(UIButton())
         switch (indexPath.section, indexPath.row) {
         case (let section, let row):
             if row != 0{
                 switch section {
                 case 0:
+                    buttonBackSearch(UIButton())
                     let user = searchResult.users[row - 1]
                     let cell = tableViewSearchResult.cellForRowAtIndexPath(indexPath) as! IndividualCell
                     switch cell.type! {
@@ -1490,6 +1490,14 @@ extension Profile{
                         }
                         self.performSegueWithIdentifier("PublicProfileSegue", sender: user)
                     }
+                case 1:
+                    break
+                case 2:
+                    buttonBackSearch(UIButton())
+                    let group = searchResult.groups[row - 1]
+                    let vc = Util.getViewControllerID("GroupDetails") as! GroupDetails
+                    vc.initFromCall(group, type: .privateType)
+                    showViewController(vc, sender: self)
                 default: break
                 }
             }

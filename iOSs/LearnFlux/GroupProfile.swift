@@ -16,6 +16,8 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
     var cellOriHeight : CGFloat! = 0;
     var cellPadHeight : CGFloat! = 0;
     @IBOutlet var tv : UITableView!;
+    @IBOutlet weak var buttonStartConversation: UIButton!
+    var isPublic : Bool = true
     
     let dummyDesc = "Art Consultant, Art Writer/Reviewer, Art Dealer, Art Conservator and Restorer, Art Teacher/Educator, Museum Researcher, Gallery/Museum Managers, Illustrator, Model and Prop Maker, Painter, Printmaker and more.";
     let dummyDuration = "Duration: 3 years";
@@ -33,7 +35,7 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
                 }
                 let vc = Util.getViewControllerID("ChatFlow") as! ChatFlow
                 vc.initChat(state.index, idThread: state.thread.id, from: .OpenChat)
-                groupDetailsDelegate.pushViewController(vc, animated: true)
+                groupDetailsDelegate.viewController.navigationController?.pushViewController(vc, animated: true)
             }else{
                 Util.showMessageInViewController(groupDetailsDelegate.viewController, title: "", message: "Chat of this group has been deleted accidently, so the best way is just delete this group because this could make problems in future")
             }
@@ -42,23 +44,30 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     override func viewDidLoad() {
         super.viewDidLoad();
-        lblOriHeight = (tv.dequeueReusableCellWithIdentifier("basic")!.viewWithTag(1)! as! UILabel).height;
+        lblOriHeight = 44
         cellOriHeight = tv.dequeueReusableCellWithIdentifier("basic")!.height;
         //        cellPadHeight = cellOriHeight - lblOriHeight;
     }
     
     override func viewDidAppear(animated: Bool) {
-        super.viewDidDisappear(animated);
-        tv.reloadData();
+        super.viewDidAppear(animated)
+        tv.reloadData()
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        tv.reloadData();
+        buttonStartConversation.hidden = !isPublic
+        tv.reloadData()
     }
     
-    func initFromCall (group : Group) {
+    func initFromCall(group : Group, groupType: GroupDetailsType = .publicType) {
         self.group = group
+        switch groupType{
+        case .publicType:
+            isPublic = true
+        case .privateType:
+            isPublic = false
+        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -86,11 +95,10 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
         guard let data = group else { return tv.dequeueReusableCellWithIdentifier("basic")!; }
         switch (indexPath.row) {
         case 0:
-            let cell = tv.dequeueReusableCellWithIdentifier("basic")!;
-            let lbl = cell.viewWithTag(1)! as! UILabel;
-            lbl.text = data.description;
-            lbl.heightToFit();
-            return cell;
+            let cell = tv.dequeueReusableCellWithIdentifier("basic")!
+            cell.textLabel?.text = data.description
+            cell.textLabel?.heightToFit()
+            return cell
         case 1:
             let cell = tv.dequeueReusableCellWithIdentifier("rightdetail")!;
             let title = cell.viewWithTag(1)! as! UILabel; title.text = "Course Duration";
@@ -104,17 +112,15 @@ class GroupProfile : UIViewController, UITableViewDelegate, UITableViewDataSourc
             desc.heightToFit();
             return cell;
         case 3:
-            let cell = tv.dequeueReusableCellWithIdentifier("basic")!;
-            cell.userInteractionEnabled = false
-            let lbl = cell.viewWithTag(1)! as! UILabel;
+            let cell = tv.dequeueReusableCellWithIdentifier("basic")!
             let coverView = cell.viewWithTag(0)
+            cell.userInteractionEnabled = false
             coverView!.alpha = 1.0
-            lbl.text = "";
-            lbl.heightToFit();
+            cell.textLabel?.text = ""
+            cell.textLabel?.heightToFit()
             cell.clipsToBounds = false
             cell.contentView.clipsToBounds = false
-            
-            return cell;
+            return cell
         default:
             return tv.dequeueReusableCellWithIdentifier("toolbar")!;
         }

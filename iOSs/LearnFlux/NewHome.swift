@@ -95,6 +95,8 @@ extension NewHome: UICollectionViewDelegateFlowLayout, UICollectionViewDataSourc
         let imageViewMosaic = cell.viewWithTag(1) as! UIImageView
         if !mosaicImages[indexPath.row].isEmpty{
             imageViewMosaic.image = UIImage(named: mosaicImages[indexPath.row])
+        }else{
+            imageViewMosaic.image = nil
         }
         return cell
     }

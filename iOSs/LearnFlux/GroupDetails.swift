@@ -8,15 +8,19 @@
 
 import Foundation
 
+enum GroupDetailsType{
+    case publicType
+    case privateType
+}
+
 protocol GroupDetailsDelegate: class {
-    func pushViewController (viewController: UIViewController, animated: Bool)
-    func presentViewController (viewController: UIViewController, animated: Bool)
     var viewController : GroupDetails{ get }
 }
 
 class GroupDetails : UIViewController, GroupDetailsDelegate {
     let clientData = Engine.clientData
     weak var orgEventsDelegate : OrgEventsDelegate!
+    var type: GroupDetailsType = .publicType
     var viewController: GroupDetails{
         get{
             return self
@@ -49,12 +53,13 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         }
     }
     
-    
     @IBOutlet weak var lblGroupsMenu: UILabel!
     @IBOutlet weak var lblEventsMenu: UILabel!
     @IBOutlet weak var lblActivitiesMenu: UILabel!
+    @IBOutlet weak var lblProjectsMenu: UILabel!
     @IBOutlet var lblTitle : UILabel!;
     @IBOutlet var viewTitle : UIView!;
+    @IBOutlet weak var viewActionPrivate: UIView!
     
     var strTitle = "";
     var colorTitle = UIColor.clearColor();
@@ -88,26 +93,12 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
     }
     
     var initIndex : Int!
-    func initFromCall(groupInfo : Group, indexTab: Int = 0) {
+    func initFromCall(groupInfo : Group, indexTab: Int = 0, type: GroupDetailsType = .publicType) {
         group = groupInfo;
         self.strTitle = groupInfo.name!;
         self.colorTitle = groupInfo.color ?? LFColor.blue
         self.initIndex = indexTab
-    }
-    
-    func setTabsWithController(index: Int){
-        tabs.append(Util.getViewControllerID("GroupProfile"))
-        tabs.append(Util.getViewControllerID("OrgEvents"))
-        tabs.append(Util.getViewControllerID("OrgActivities"))
-        (tabs[0] as! GroupProfile).initFromCall(group!);
-        (tabs[0] as! GroupProfile).groupDetailsDelegate = self
-        (tabs[1] as! OrgEvents).groupDetailsDelegate = self
-        self.orgEventsDelegate = (tabs[1] as! OrgEvents)
-        orgEventsDelegate.setIdGroupOfEvents(idGroup: group!.id)
-        orgEventsDelegate.setIsAdminOrNot(isAdmin)
-        orgEventsDelegate.setParentController(.GroupDetail)
-        indexActiveTabs = index
-        changeView(index)
+        self.type = type
     }
     
     override func viewDidLoad() {
@@ -140,45 +131,11 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         orgEventsDelegate.removeAllNotification()
     }
     
-    func changeView (index : Int) {
-        (tabs[0] as! GroupProfile).view.removeFromSuperview();
-        (tabs[1] as! OrgEvents).view.removeFromSuperview();
-        (tabs[2] as! OrgActivities).view.removeFromSuperview();
-        
-        let vc = tabs[index];
-        self.view.addSubview(vc.view);
-        vc.view.frame = self.view.viewWithTag(50)!.frame;
-        self.view.bringSubviewToFront(vc.view);
-        
-        UIView.animateWithDuration(0.3) {
-            self.viewSelection.x = self.viewTabs.x + 70 * CGFloat(index);
-            self.viewSelection.y = self.viewTabs.y + self.viewTabs.height - self.viewSelection.height;
-        }
-    }
-    
     @IBAction func changeViewAction (sender: AnyObject) {
         let btn = sender as! UIButton;
         let idx = btn.tag - 100;
         indexActiveTabs = idx
         changeView(idx);
-    }
-    
-    func changeImageRightBarButton(stringImage: String){
-        let navItem = self.navigationItem;
-        if stringImage.isEmpty{
-            navItem.rightBarButtonItem = nil
-        }else{
-            let right = UIBarButtonItem(image: UIImage(named: stringImage), style: .Plain, target: self, action: #selector(self.rightBarButtonTapped))
-            navItem.rightBarButtonItem = right
-        }
-    }
-    
-    func pushViewController(viewController: UIViewController, animated: Bool) {
-        self.navigationController?.pushViewController(viewController, animated: animated)
-    }
-    
-    func presentViewController(viewController: UIViewController, animated: Bool){
-        self.presentViewController(viewController, animated: animated, completion: nil)
     }
     
     let flow = Flow.sharedInstance
@@ -207,28 +164,77 @@ class GroupDetails : UIViewController, GroupDetailsDelegate {
         }
         self.navigationController?.pushViewController(Util.getViewControllerID("AttachEvent"), animated: true)
     }
-    
-    
+}
+
+// - MARK: Mock Up
+extension GroupDetails{
+    func setTabsWithController(index: Int){
+        tabs.append(Util.getViewControllerID("GroupProfile"))
+        tabs.append(Util.getViewControllerID("OrgEvents"))
+        tabs.append(Util.getViewControllerID("OrgActivities"))
+        tabs.append(Util.getViewControllerID("OrgActivities"))
+        
+        (tabs[0] as! GroupProfile).initFromCall(group!, groupType: type);
+        (tabs[0] as! GroupProfile).groupDetailsDelegate = self
+        (tabs[1] as! OrgEvents).groupDetailsDelegate = self
+        if type == .publicType{
+            viewActionPrivate.hidden = true
+        }else{
+            viewActionPrivate.hidden = false
+            view.viewWithTag(50)!.frame.size.height = view.frame.height - view.viewWithTag(50)!.frame.origin.y - viewActionPrivate.frame.height - 1
+        }
+        self.orgEventsDelegate = (tabs[1] as! OrgEvents)
+        orgEventsDelegate.setParentController(.GroupDetail)
+        orgEventsDelegate.setIdGroupOfEvents(idGroup: group!.id)
+        orgEventsDelegate.setIsAdminOrNot(isAdmin)
+        
+        indexActiveTabs = index
+        changeView(index)
+    }
     
     func setLabelMenuesColor(index: Int){
+        lblGroupsMenu.textColor = UIColor.lightGrayColor()
+        lblEventsMenu.textColor = UIColor.lightGrayColor()
+        lblActivitiesMenu.textColor = UIColor.lightGrayColor()
+        lblProjectsMenu.textColor = UIColor.lightGrayColor()
         switch index {
         case 0:
             lblGroupsMenu.textColor = UIColor.blackColor()
-            lblEventsMenu.textColor = UIColor.lightGrayColor()
-            lblActivitiesMenu.textColor = UIColor.lightGrayColor()
-            break
         case 1:
-            lblGroupsMenu.textColor = UIColor.lightGrayColor()
             lblEventsMenu.textColor = UIColor.blackColor()
-            lblActivitiesMenu.textColor = UIColor.lightGrayColor()
-            break
         case 2:
-            lblGroupsMenu.textColor = UIColor.lightGrayColor()
-            lblEventsMenu.textColor = UIColor.lightGrayColor()
+            lblProjectsMenu.textColor = UIColor.blackColor()
+        case 3:
             lblActivitiesMenu.textColor = UIColor.blackColor()
-            break
         default:
             break
+        }
+    }
+    
+    func changeView (index : Int) {
+        (tabs[0] as! GroupProfile).view.removeFromSuperview();
+        (tabs[1] as! OrgEvents).view.removeFromSuperview();
+        (tabs[2] as! OrgActivities).view.removeFromSuperview();
+        (tabs[3] as! OrgActivities).view.removeFromSuperview();
+        let vc = tabs[index];
+        self.view.addSubview(vc.view);
+        vc.view.frame = self.view.viewWithTag(50)!.frame;
+        self.view.bringSubviewToFront(vc.view);
+        self.view.bringSubviewToFront(viewActionPrivate)
+        
+        UIView.animateWithDuration(0.3) {
+            self.viewSelection.x = self.viewTabs.x + 70 * CGFloat(index);
+            self.viewSelection.y = self.viewTabs.y + self.viewTabs.height - self.viewSelection.height;
+        }
+    }
+    
+    func changeImageRightBarButton(stringImage: String){
+        let navItem = self.navigationItem;
+        if stringImage.isEmpty{
+            navItem.rightBarButtonItem = nil
+        }else{
+            let right = UIBarButtonItem(image: UIImage(named: stringImage), style: .Plain, target: self, action: #selector(self.rightBarButtonTapped))
+            navItem.rightBarButtonItem = right
         }
     }
 }

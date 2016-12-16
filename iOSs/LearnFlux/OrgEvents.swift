@@ -343,7 +343,7 @@ class OrgEvents : UIViewController, UITableViewDelegate, UITableViewDataSource, 
         if pushDelegate != nil{
             pushDelegate.pushViewController(vc, animated: true)
         }else if groupDetailsDelegate != nil{
-            groupDetailsDelegate.pushViewController(vc, animated: true)
+            groupDetailsDelegate.viewController.navigationController?.pushViewController(vc, animated: true)
         }
     }
     

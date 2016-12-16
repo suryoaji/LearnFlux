@@ -110,14 +110,14 @@
                                                                     <rect key="frame" x="97" y="0.0" width="46" height="57"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ACTIVITIES" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="i7H-14-AeE">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PROJECTS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="i7H-14-AeE">
                                                                             <rect key="frame" x="0.0" y="36" width="46" height="21"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="8.5"/>
                                                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="activities-70.png" id="5qs-aA-kBM">
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="projects-68.png" id="5qs-aA-kBM">
                                                                             <rect key="frame" x="0.0" y="7" width="46" height="31"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                                                         </imageView>
@@ -479,7 +479,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="activities-70.png" width="70" height="70"/>
         <image name="add" width="24" height="24"/>
         <image name="add-group" width="24" height="24"/>
         <image name="company1.png" width="335" height="335"/>
@@ -492,6 +491,7 @@
         <image name="message-bubble" width="24" height="24"/>
         <image name="messages-70.png" width="70" height="70"/>
         <image name="nogroup" width="128" height="128"/>
+        <image name="projects-68.png" width="68" height="68"/>
         <image name="search" width="24" height="24"/>
         <image name="star" width="24" height="24"/>
     </resources>
