@@ -139,25 +139,6 @@ public class Engine {
 			},null);
 		}
 	}
-	public static void getMyFriend(final Context context, final RequestTemplate.ServiceCallback callback){
-		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_FRIEND);
-
-		if (User.getUser().getAccess_token().isEmpty() || User.getUser().getAccess_token().equals("")){
-			reLogin(context, null);
-		}else {
-			RequestTemplate.GETJsonRequest(context, url, null, new RequestTemplate.ServiceCallback() {
-				@Override
-				public void execute(JSONObject obj) {
-
-					if (callback!=null){
-						callback.execute(obj);
-					}
-				}
-			},null);
-		}
-
-	}
-
 	public static void createThread(final Context context, final int[] ids, final String title, final RequestTemplate.ServiceCallback callback){
 		String url=context.getString(R.string.BASE_URL)+context.getString(R.string.URL_VERSION)+context.getString(R.string.URL_MESSAGES);
 		HashMap<String,int[]> par = new HashMap<>();

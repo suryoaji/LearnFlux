@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minWidth="250dp"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_margin="@dimen/activity_horizontal_margin">
-<ScrollView
-    android:minWidth="250dp"
-    android:layout_margin="@dimen/activity_horizontal_margin"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -174,5 +166,3 @@
         android:text="Add Event"
         android:id="@+id/btnSubmitEvent" android:layout_marginTop="20dp"/>
     </LinearLayout>
-</ScrollView>
-    </ScrollView>

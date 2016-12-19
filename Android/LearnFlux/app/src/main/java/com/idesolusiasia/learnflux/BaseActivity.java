@@ -10,7 +10,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -51,8 +53,10 @@ public class BaseActivity extends AppCompatActivity
 	Toolbar toolbar;
 	NavigationView navigationView;
 	SharedPreferences sharedPref;
+	public int mViewId;
+	private static final String NAV_ITEM_ID ="navItemId";
 
-	protected void onCreateDrawer(Bundle savedInstanceState) {
+	protected void onCreateDrawer(final Bundle savedInstanceState) {
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
@@ -62,62 +66,17 @@ public class BaseActivity extends AppCompatActivity
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				LinearLayout navigation = (LinearLayout)drawerView.findViewById(R.id.linearNavigation) ;
-				final TextView tvName = (TextView) drawerView.findViewById(R.id.tvDrawerName);
-				final TextView tvEmail = (TextView) drawerView.findViewById(R.id.tvDrawerEmail);
-				final ImageView ivDrawerPic = (ImageView)drawerView.findViewById(R.id.ivDrawerPic);
-				final String url = "http://lfapp.learnflux.net";
-				String getUrl =  url + "/v1"+"/me"+"/details";
-				Ion.with(getApplicationContext()).load(getUrl)
-						.addHeader("Authorization", "Bearer "+User.getUser().getAccess_token())
-						.asJsonObject()
-						.setCallback(new FutureCallback<JsonObject>() {
-							@Override
-							public void onCompleted(Exception e, JsonObject result) {
-								if(e!=null){
-									Toast.makeText(BaseActivity.this, "Something Wrong", Toast.LENGTH_SHORT).show();
-								}
-								JsonObject obj = result.getAsJsonObject();
-								Gson gson = new Gson();
-								Contact contact = gson.fromJson(obj.toString(), Contact.class);
-								tvName.setText(contact.getFirst_name()+ " "+ contact.getLast_name());
-								tvEmail.setText(contact.getEmail());
-								User.getUser().setID(contact.getId());
-								User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
-								User.getUser().setName(contact.getUsername());
-								User.getUser().setWork(contact.getWork());
-								User.getUser().setLocation(contact.getLocation());
-								Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
-										R.anim.popup_enter);
-								if(contact.get_links().getProfile_picture()!=null) {
-									String pic = url+contact.get_links().getProfile_picture().getHref();
-									Ion.with(getApplicationContext())
-											.load(pic).noCache()
-											.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
-											.withBitmap().animateLoad(animation)
-											.intoImageView(ivDrawerPic);
-								}else{
-									ivDrawerPic.setImageResource(R.drawable.user_profile);
-								}
-							}
-						});
 				/*Engine.getMeWithRequest(getApplicationContext(), "details",  new RequestTemplate.ServiceCallback() {
 					@Override
 					public void execute(JSONObject obj) {
 						try{
 							Contact contact= Converter.convertContact(obj);
 							String url = "http://lfapp.learnflux.net";
-							if(contact.get_links().getProfile_picture()!=null) {
-								String pic = contact.get_links().getProfile_picture().getHref();
-								User.getUser().setProfile_picture(url+pic);
-							}
-							User.getUser().setID(contact.getId());
-							User.getUser().setUsername(contact.getUsername());
-							tvName.setText(contact.getFirst_name()+" "+ contact.getLast_name());
-							tvEmail.setText(contact.getEmail());
 							Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
 									R.anim.popup_enter);
-							if(contact.get_links().getProfile_picture()!=null) {
+							*//*if(contact.get_links().getProfile_picture()!=null) {
+								String pic = contact.get_links().getProfile_picture().getHref();
+								User.getUser().setProfile_picture(url+pic);
 								Ion.with(getApplicationContext())
 										.load(url+contact.get_links().getProfile_picture().getHref())
 										.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
@@ -125,12 +84,79 @@ public class BaseActivity extends AppCompatActivity
 										.intoImageView(ivDrawerPic);
 							}else{
 								ivDrawerPic.setImageResource(R.drawable.user_profile);
-							}
+							}*//*
+							User.getUser().setID(contact.getId());
+							User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
+							User.getUser().setName(contact.getUsername());
+							User.getUser().setWork(contact.getWork());
+							User.getUser().setLocation(contact.getLocation());
+							*//*tvName.setText(contact.getFirst_name()+" "+ contact.getLast_name());
+							tvEmail.setText(contact.getEmail());*//*
 						}catch (JSONException e){
 							e.printStackTrace();
 						}
 					}
 				});*/
+
+			}
+		};
+
+		if (drawer != null) {
+			drawer.addDrawerListener(toggle);
+		}
+		toggle.syncState();
+
+		navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setItemIconTintList(null);
+		if (navigationView != null) {
+			navigationView.setNavigationItemSelectedListener(this);
+		}
+		View headerView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.nav_header_drawer,null);
+		navigationView.addHeaderView(headerView);
+		navigationView.getHeaderView(0);
+
+		final LinearLayout navigation = (LinearLayout)headerView.findViewById(R.id.linearNavigation) ;
+		final TextView tvName = (TextView) headerView.findViewById(R.id.tvDrawerName);
+		final TextView tvEmail = (TextView) headerView.findViewById(R.id.tvDrawerEmail);
+		final ImageView ivDrawerPic = (ImageView)headerView.findViewById(R.id.ivDrawerPic);
+
+		final String url = "http://lfapp.learnflux.net";
+		String getUrl =  url + "/v1"+"/me"+"/details";
+
+		//get data for myprofile activity
+		Ion.with(getApplicationContext()).load(getUrl)
+				.addHeader("Authorization", "Bearer "+User.getUser().getAccess_token())
+				.asJsonObject()
+				.setCallback(new FutureCallback<JsonObject>() {
+					@Override
+					public void onCompleted(Exception e, JsonObject result) {
+						if(e!=null){
+							Toast.makeText(BaseActivity.this, "Something Wrong", Toast.LENGTH_SHORT).show();
+						}
+						JsonObject obj = result.getAsJsonObject();
+						Gson gson = new Gson();
+						Contact contact = gson.fromJson(obj.toString(), Contact.class);
+						tvName.setText(contact.getFirst_name()+ " "+ contact.getLast_name());
+						tvEmail.setText(contact.getEmail());
+						User.getUser().setID(contact.getId());
+						User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
+						User.getUser().setName(contact.getUsername());
+						User.getUser().setWork(contact.getWork());
+						User.getUser().setLocation(contact.getLocation());
+						Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+								R.anim.popup_enter);
+						if(contact.get_links().getProfile_picture()!=null) {
+							String pic = url+contact.get_links().getProfile_picture().getHref();
+							Ion.with(getApplicationContext())
+									.load(pic).noCache()
+									.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+									.withBitmap().animateLoad(animation)
+									.intoImageView(ivDrawerPic);
+						}else{
+							ivDrawerPic.setImageResource(R.drawable.user_profile);
+						}
+					}
+				});
 				navigation.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
@@ -145,21 +171,6 @@ public class BaseActivity extends AppCompatActivity
 						startActivity(pic);
 					}
 				});
-			}
-		};
-		if (drawer != null) {
-			drawer.addDrawerListener(toggle);
-		}
-		toggle.syncState();
-
-		navigationView = (NavigationView) findViewById(R.id.nav_view);
-		navigationView.setItemIconTintList(null);
-		if (navigationView != null) {
-			navigationView.setNavigationItemSelectedListener(this);
-		}
-
-
-
 	}
 
 	@Override
@@ -177,6 +188,7 @@ public class BaseActivity extends AppCompatActivity
 	@SuppressWarnings("StatementWithEmptyBody")
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
+		item.setChecked(true);
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
 		if (id == R.id.nav_home){
@@ -197,13 +209,12 @@ public class BaseActivity extends AppCompatActivity
 			project.putExtra("projectAct", "activity");
 			startActivity(project);
 		}
-		else if (id == R.id.nav_logout){
-			SharedPreferences prefs = getSharedPreferences("com.idesolusiasia.learnflux",0);
+		else if (id == R.id.nav_logout) {
+			SharedPreferences prefs = getSharedPreferences("com.idesolusiasia.learnflux", 0);
 			SharedPreferences.Editor editor = prefs.edit();
-			editor.putString("email",User.getUser().getName());
+			editor.putString("email", User.getUser().getName());
 			editor.apply();
 			Functions.logout(getApplicationContext());
-
 		}
 
 		/*if (id == R.id.nav_camera) {

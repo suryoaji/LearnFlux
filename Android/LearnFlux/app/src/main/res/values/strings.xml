@@ -94,12 +94,14 @@
         <item>Not Going</item>
     </string-array>
     <string name="BASE_URL">http://lfapp.learnflux.net/</string>
+    <string name="BASE_URL2">http://lfapp2.learnflux.net/</string>
     <string name="URL_LOGIN">oauth/v2/token</string>
     <string name="client_id">
        580db5c83a603f82528b4567_ahqk6r8gni8088ock80wkkok4wk0ooc8g4s0kkg880soow4k8
     </string>
     <string name="client_secret">5d13jtr20js4wcw0488888ck0k0c0sk0kos8c08wo8wsgog8ss</string>
     <string name="URL_VERSION">v1/</string>
+    <string name="URL_VERSION_1.1">v1.1/</string>
     <string name="URL_ME">me</string>
     <string name="URL_FRIEND">me/friend</string>
     <string name="URL_MESSAGES">messages</string>

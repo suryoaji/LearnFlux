@@ -524,12 +524,12 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	void initConnection(){
 		Org = new ArrayList<>();
 		final FrameLayout connectionFrame = (FrameLayout)findViewById(R.id.myProfileConnectionLayout);
-		Engine.getMeWithRequest(getApplicationContext(), "Friends", new RequestTemplate.ServiceCallback() {
+		Engine.getMeWithRequest(getApplicationContext(), "friends", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try{
-					if(obj.has("Friends")){
-						JSONArray friends = obj.getJSONArray("Friends");
+					if(obj.has("friends")){
+						JSONArray friends = obj.getJSONArray("friends");
 						Contact c = Converter.convertContact(friends.getJSONObject(0));
 						Org.add(c);
 						Engine.getOrganizations(getApplicationContext(), new RequestTemplate.ServiceCallback() {

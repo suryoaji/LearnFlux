@@ -50,16 +50,18 @@
                     android:gravity="center" android:layout_gravity="center"
                     android:text="No Data Available" />
             </LinearLayout>
+            <Button
+                android:id="@+id/seeHideButton"
+                android:text="see All"
+                android:layout_gravity="bottom"
+                android:background="#8bc34a"
+                android:textColor="#FFF"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
         </FrameLayout>
-        <Button
-            android:id="@+id/seeHideButton"
-            android:text="see All"
-            android:background="#8bc34a"
-            android:textColor="#FFF"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" />
+
 
         <TextView
             android:layout_marginTop="5dp"

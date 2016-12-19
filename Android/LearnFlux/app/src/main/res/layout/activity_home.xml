@@ -44,9 +44,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        android:background="#E0E0E0"
-        app:headerLayout="@layout/nav_header_drawer"
+        android:layout_marginTop="20dp"
+        android:fitsSystemWindows="false"
+        android:background="#FFFFFF"
         app:menu="@menu/activity_home_drawer"/>
 
 </android.support.v4.widget.DrawerLayout>

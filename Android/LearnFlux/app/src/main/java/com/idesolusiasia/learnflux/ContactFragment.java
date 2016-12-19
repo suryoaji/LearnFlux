@@ -52,7 +52,7 @@ public class ContactFragment extends Fragment {
 
         LinearLayoutManager linearVerticalIndividual = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rcView.setLayoutManager(linearVerticalIndividual);
-        fastScroller = (RecyclerViewFastScroller)v.findViewById(R.id.fast_scroller);
+        //fastScroller = (RecyclerViewFastScroller)v.findViewById(R.id.fast_scroller);
         initFriend();
         return v;
     }

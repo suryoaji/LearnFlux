@@ -10,7 +10,7 @@
 
             <ImageView
                 android:id="@+id/networkImageBottom"
-                android:src="@drawable/company2"
+                android:src="@drawable/user_profile"
                 android:scaleType="fitCenter"
                 android:layout_margin="10dp"
                 android:layout_width="60dp"

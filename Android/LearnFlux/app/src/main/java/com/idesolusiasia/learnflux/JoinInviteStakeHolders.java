@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
+import com.idesolusiasia.learnflux.adapter.Interest_GroupYouKnow;
 import com.idesolusiasia.learnflux.adapter.ManifestAdapter;
 import com.idesolusiasia.learnflux.adapter.TestAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
@@ -111,6 +112,14 @@ public class JoinInviteStakeHolders extends BaseActivity {
             toolbar.setTitle("Join Group");
             linearTask.setVisibility(View.VISIBLE);
             requestingToJoin.setVisibility(View.VISIBLE);
+            requestingToJoin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(JoinInviteStakeHolders.this, ProjectActivity.class);
+                    i.putExtra("projectAct", "profiles");
+                    view.getContext().startActivity(i);
+                }
+            });
 
         }else if(a.contains("invite")){
             toolbar.setTitle("Invite Collaborators for project");
@@ -161,7 +170,6 @@ public class JoinInviteStakeHolders extends BaseActivity {
                     final ArrayList<SubcategoryParentListItem> subcategoryParentListItems = new ArrayList<>();
                     try{
                         ArrayList<ParentListItem> parentListItems = new ArrayList<>();
-                        Group org= null;
                         JSONArray data = obj.getJSONArray("data");
                        /* for( int i =0; i<data.length();i++){
                             org= Converter.convertGroup(data.getJSONObject(i));

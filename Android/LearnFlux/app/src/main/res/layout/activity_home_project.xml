@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,42 +25,53 @@
             android:gravity="center" android:textSize="15sp"
             android:text="Project Profile"
             android:textColor="#FFFFFF"/>
-        <ImageView
-            android:id="@+id/notifProject"
-            android:src="@drawable/broadcast"
-            android:layout_gravity="center"
-            android:layout_width="30dp"
-            android:layout_height="20dp" />
-        <ImageView
-            android:id="@+id/searchProject"
-            android:src="@drawable/ic_search"
-            android:layout_marginLeft="5dp"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
         <LinearLayout
-            android:id="@+id/actionBarLayout"
-            android:visibility="gone"
             android:orientation="horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/btn_manifest"
-            android:src="@drawable/file"
-            android:clickable="true"
-            android:layout_gravity="center"
-            android:layout_width="30dp"
-            android:layout_height="18dp"/>
-        <ImageView
-            android:id="@+id/inviteCollab"
-            android:src="@drawable/addpeople_selector"
-            android:layout_marginLeft="10dp"
-            android:clickable="true"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:layout_gravity="right">
+
+            <ImageView
+                android:id="@+id/notifProject"
+                android:src="@drawable/broadcast"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="30dp" />
+
+            <ImageView
+                android:id="@+id/searchProject"
+                android:src="@drawable/ic_search"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="30dp" />
+
+            <LinearLayout
+                android:id="@+id/actionBarLayout"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/btn_manifest"
+                    android:src="@drawable/file"
+                    android:clickable="true"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_width="30dp" />
+
+                <ImageView
+                android:id="@+id/inviteCollab"
+                android:src="@drawable/addpeople_selector"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="30dp" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -100,7 +112,8 @@
             android:paddingLeft="15dp" android:paddingTop="7dp"
             android:background="#E0E0E0"
             android:layout_width="match_parent"
-            android:layout_height="30dp" />
+            android:layout_height="30dp"
+            tools:ignore="RtlSymmetry" />
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

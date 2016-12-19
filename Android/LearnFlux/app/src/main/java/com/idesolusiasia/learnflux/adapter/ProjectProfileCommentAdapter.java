@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.Comments;
@@ -44,6 +45,13 @@ public class ProjectProfileCommentAdapter extends RecyclerView.Adapter<ProjectPr
                     view.getContext().startActivity(i);
                 }
             });
+            holder.cm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(view.getContext(), Comments.class);
+                    view.getContext().startActivity(i);
+                }
+            });
     }
 
     @Override
@@ -55,9 +63,11 @@ public class ProjectProfileCommentAdapter extends RecyclerView.Adapter<ProjectPr
 
     public class ProfileHolder extends RecyclerView.ViewHolder {
         TextView comments, cPage;
+        ImageView cm;
 
         public ProfileHolder(View itemView) {
             super(itemView);
+            cm = (ImageView)itemView.findViewById(R.id.imageComment);
             comments = (TextView)itemView.findViewById(R.id.rowComment);
             cPage = (TextView)itemView.findViewById(R.id.commentPage);
         }
