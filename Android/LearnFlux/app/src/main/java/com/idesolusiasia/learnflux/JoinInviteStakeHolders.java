@@ -15,9 +15,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
-import com.idesolusiasia.learnflux.adapter.Interest_GroupYouKnow;
 import com.idesolusiasia.learnflux.adapter.ManifestAdapter;
-import com.idesolusiasia.learnflux.adapter.TestAdapter;
+import com.idesolusiasia.learnflux.adapter.ExpandableManifestAdapter;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.SubcategoryParentListItem;
 import com.idesolusiasia.learnflux.util.Converter;
@@ -188,7 +187,7 @@ public class JoinInviteStakeHolders extends BaseActivity {
                         }
                         expendable.setVisibility(View.VISIBLE);
                         expendable.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        TestAdapter tAdapt = new TestAdapter(getApplicationContext(), yes);
+                        ExpandableManifestAdapter tAdapt = new ExpandableManifestAdapter(getApplicationContext(), yes);
                         expendable.setAdapter(tAdapt);
                      /*   mAdapt = new ManifestAdapter(getApplicationContext(), parentListItems);
                         expendable.setAdapter(mAdapt);*/

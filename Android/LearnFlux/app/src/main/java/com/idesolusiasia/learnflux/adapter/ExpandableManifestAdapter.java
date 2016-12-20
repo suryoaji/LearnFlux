@@ -12,11 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.JoinInviteStakeHolders;
-import com.idesolusiasia.learnflux.ProjectActivity;
-import com.idesolusiasia.learnflux.PublicProfile;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.User;
 
 import java.util.ArrayList;
 
@@ -24,13 +21,13 @@ import java.util.ArrayList;
  * Created by Kuroko on 12/6/2016.
  */
 
-public class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestHolder>{
+public class ExpandableManifestAdapter extends RecyclerView.Adapter<ExpandableManifestAdapter.TestHolder>{
     public Context mContext;
     public ArrayList<Group> group;
     public int mExpandedPosition = -1;
     String visible = "none";
 
-    public TestAdapter(Context context, ArrayList<Group>groups){
+    public ExpandableManifestAdapter(Context context, ArrayList<Group>groups){
         this.mContext=context;
         this.group=groups;
     }

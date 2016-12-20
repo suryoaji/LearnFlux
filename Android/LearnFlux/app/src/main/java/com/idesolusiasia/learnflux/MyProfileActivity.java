@@ -29,6 +29,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -414,15 +416,15 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					}else {
 						work.setText(ct.getWork());
 					}
-				String url = "http://lfapp.learnflux.net";
-				if(ct.get_links().getProfile_picture()!=null) {
-					String prof = url + ct.get_links().getProfile_picture().getHref();
-					Ion.with(getApplicationContext())
-							.load(prof).noCache()
-							.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
-							.withBitmap().placeholder(R.drawable.user_profile).error(R.drawable.user_profile)
-							.intoImageView(parent);
-				}
+					String url = "http://lfapp.learnflux.net";
+					if(ct.get_links().getProfile_picture()!=null) {
+						String pic = url+ct.get_links().getProfile_picture().getHref();
+						Ion.with(getApplicationContext())
+								.load(pic).noCache()
+								.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+								.withBitmap()
+								.intoImageView(parent);
+					}
 				}catch (JSONException e){
 					e.printStackTrace();
 				}

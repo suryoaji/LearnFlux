@@ -3,15 +3,12 @@ package com.idesolusiasia.learnflux;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,13 +17,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.idesolusiasia.learnflux.component.CircularNetworkImageView;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
@@ -36,15 +26,16 @@ import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class BaseActivity extends AppCompatActivity
@@ -66,38 +57,6 @@ public class BaseActivity extends AppCompatActivity
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				/*Engine.getMeWithRequest(getApplicationContext(), "details",  new RequestTemplate.ServiceCallback() {
-					@Override
-					public void execute(JSONObject obj) {
-						try{
-							Contact contact= Converter.convertContact(obj);
-							String url = "http://lfapp.learnflux.net";
-							Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
-									R.anim.popup_enter);
-							*//*if(contact.get_links().getProfile_picture()!=null) {
-								String pic = contact.get_links().getProfile_picture().getHref();
-								User.getUser().setProfile_picture(url+pic);
-								Ion.with(getApplicationContext())
-										.load(url+contact.get_links().getProfile_picture().getHref())
-										.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
-										.withBitmap().animateLoad(animation)
-										.intoImageView(ivDrawerPic);
-							}else{
-								ivDrawerPic.setImageResource(R.drawable.user_profile);
-							}*//*
-							User.getUser().setID(contact.getId());
-							User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
-							User.getUser().setName(contact.getUsername());
-							User.getUser().setWork(contact.getWork());
-							User.getUser().setLocation(contact.getLocation());
-							*//*tvName.setText(contact.getFirst_name()+" "+ contact.getLast_name());
-							tvEmail.setText(contact.getEmail());*//*
-						}catch (JSONException e){
-							e.printStackTrace();
-						}
-					}
-				});*/
-
 			}
 		};
 
@@ -121,39 +80,33 @@ public class BaseActivity extends AppCompatActivity
 		final ImageView ivDrawerPic = (ImageView)headerView.findViewById(R.id.ivDrawerPic);
 
 		final String url = "http://lfapp.learnflux.net";
-		String getUrl =  url + "/v1"+"/me"+"/details";
-
 		//get data for myprofile activity
-		Ion.with(getApplicationContext()).load(getUrl)
-				.addHeader("Authorization", "Bearer "+User.getUser().getAccess_token())
-				.asJsonObject()
-				.setCallback(new FutureCallback<JsonObject>() {
+		Engine.getMeWithRequest(getApplicationContext(), "details",  new RequestTemplate.ServiceCallback() {
 					@Override
-					public void onCompleted(Exception e, JsonObject result) {
-						if(e!=null){
-							Toast.makeText(BaseActivity.this, "Something Wrong", Toast.LENGTH_SHORT).show();
-						}
-						JsonObject obj = result.getAsJsonObject();
-						Gson gson = new Gson();
-						Contact contact = gson.fromJson(obj.toString(), Contact.class);
-						tvName.setText(contact.getFirst_name()+ " "+ contact.getLast_name());
-						tvEmail.setText(contact.getEmail());
-						User.getUser().setID(contact.getId());
-						User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
-						User.getUser().setName(contact.getUsername());
-						User.getUser().setWork(contact.getWork());
-						User.getUser().setLocation(contact.getLocation());
-						Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
-								R.anim.popup_enter);
-						if(contact.get_links().getProfile_picture()!=null) {
-							String pic = url+contact.get_links().getProfile_picture().getHref();
-							Ion.with(getApplicationContext())
-									.load(pic).noCache()
-									.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
-									.withBitmap().animateLoad(animation)
-									.intoImageView(ivDrawerPic);
-						}else{
-							ivDrawerPic.setImageResource(R.drawable.user_profile);
+					public void execute(JSONObject obj) {
+						try{
+							Contact contact= Converter.convertContact(obj);
+							Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
+									R.anim.popup_enter);
+							if(contact.get_links().getProfile_picture()!=null) {
+								String pic = url+contact.get_links().getProfile_picture().getHref();
+								Ion.with(getApplicationContext())
+										.load(pic).noCache()
+										.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
+										.withBitmap().animateLoad(animation)
+										.intoImageView(ivDrawerPic);
+							}else{
+								ivDrawerPic.setImageResource(R.drawable.user_profile);
+							}
+							User.getUser().setID(contact.getId());
+							User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
+							User.getUser().setName(contact.getUsername());
+							User.getUser().setWork(contact.getWork());
+							User.getUser().setLocation(contact.getLocation());
+							tvName.setText(contact.getFirst_name()+" "+ contact.getLast_name());
+							tvEmail.setText(contact.getEmail());
+						}catch (JSONException e){
+							e.printStackTrace();
 						}
 					}
 				});
