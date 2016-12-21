@@ -233,11 +233,11 @@ public class ChatsActivity extends BaseActivity {
 				dial.dismiss();
 			}
 		});
-		Engine.getMeWithRequest(getApplicationContext(),"Friends", new RequestTemplate.ServiceCallback() {
+		Engine.getMeWithRequest(getApplicationContext(),"friends", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try {
-					JSONArray array = obj.getJSONArray("Friends");
+					JSONArray array = obj.getJSONArray("friends");
 					ArrayList<FriendReq>contactReq = new ArrayList<>();
 					for(int i=0;i<array.length();i++){
 						JSONObject ap = array.getJSONObject(i);

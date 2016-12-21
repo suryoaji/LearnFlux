@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -48,6 +49,11 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.signature.StringSignature;
 import com.google.gson.JsonObject;
 import com.idesolusiasia.learnflux.adapter.ChildrenAdapter;
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
@@ -70,6 +76,7 @@ import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -113,12 +120,12 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	ViewPager mViewPager;
 	EditText searchBar;
 	String visible;
-	boolean visible2;
 	ImageView enterSearch;
 	LinearLayoutManager linearLayoutOrg;
 	View includedLayout, includedLayout2, includedLayout3;
 	File file;
 
+	String url = "http://lfapp.learnflux.net";
 	static final int ITEMS = 4;
 	public int PICK_IMAGE =100;
 
@@ -139,9 +146,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 				R.layout.activity_my_profile, null);
 		parentLayout.addView(childLayout);
 
-
 		visible="none";
-		visible2=true;
 
 		//My profile and connection action bar
 		final ScrollView scroll1 = (ScrollView) findViewById(R.id.linear1);
@@ -160,6 +165,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		includedLayout = findViewById(R.id.mixLayout);
 		includedLayout2 = findViewById(R.id.mixLayout2);
 		scroll3.setVisibility(View.GONE);
+
+
 
 		myProfileTab.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -314,7 +321,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 							}
 						}
 					});
-					visible2=false;
 					visible="friend";
 				}else{
 					includedLayout.setVisibility(View.GONE);
@@ -399,12 +405,22 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 		txtParentDesc = (TextView)findViewById(R.id.txtParentDesc);
 		txtParent = (TextView)findViewById(R.id.txtParentTitle);
 		child  = (CircularNetworkImageView)findViewById(R.id.imagesChild);
-		child.setDefaultImageResId(R.drawable.user_profile);
 		Engine.getMeWithRequest(getApplicationContext(),"details", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try{
 					Contact ct = Converter.convertContact(obj);
+					if(ct.get_links().getProfile_picture()!=null) {
+						String pic = url+ct.get_links().getProfile_picture().getHref();
+						GlideUrl glideUrl = new GlideUrl(pic, new LazyHeaders.Builder()
+								.addHeader("Authorization", "Bearer "+User.getUser().getAccess_token())
+								.build());
+						Glide.with(MyProfileActivity.this).load(glideUrl)
+								.diskCacheStrategy(DiskCacheStrategy.ALL)
+								.skipMemoryCache(true).dontAnimate()
+								.into(parent);
+
+					}
 					txtParent.setText(ct.getFirst_name()+" "+ct.getLast_name());
 					if(ct.getLocation()==null){
 						from.setText("-");
@@ -416,15 +432,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 					}else {
 						work.setText(ct.getWork());
 					}
-					String url = "http://lfapp.learnflux.net";
-					if(ct.get_links().getProfile_picture()!=null) {
-						String pic = url+ct.get_links().getProfile_picture().getHref();
-						Ion.with(getApplicationContext())
-								.load(pic).noCache()
-								.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
-								.withBitmap()
-								.intoImageView(parent);
-					}
+
 				}catch (JSONException e){
 					e.printStackTrace();
 				}

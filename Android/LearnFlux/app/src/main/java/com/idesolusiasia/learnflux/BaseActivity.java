@@ -17,6 +17,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaderFactory;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.User;
 import com.idesolusiasia.learnflux.util.Converter;
@@ -26,11 +32,6 @@ import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -86,17 +87,16 @@ public class BaseActivity extends AppCompatActivity
 					public void execute(JSONObject obj) {
 						try{
 							Contact contact= Converter.convertContact(obj);
-							Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),
-									R.anim.popup_enter);
 							if(contact.get_links().getProfile_picture()!=null) {
-								String pic = url+contact.get_links().getProfile_picture().getHref();
-								Ion.with(getApplicationContext())
-										.load(pic).noCache()
+								String pic = url + contact.get_links().getProfile_picture().getHref();
+								GlideUrl glideUrl = new GlideUrl(pic, new LazyHeaders.Builder()
 										.addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
-										.withBitmap().animateLoad(animation)
-										.intoImageView(ivDrawerPic);
-							}else{
-								ivDrawerPic.setImageResource(R.drawable.user_profile);
+										.build());
+
+								Glide.with(getApplicationContext()).load(glideUrl)
+										.diskCacheStrategy(DiskCacheStrategy.NONE)
+										.skipMemoryCache(true)
+										.into(ivDrawerPic);
 							}
 							User.getUser().setID(contact.getId());
 							User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());

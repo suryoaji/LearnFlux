@@ -13,7 +13,12 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.idesolusiasia.learnflux.GroupDetailActivity;
+import com.idesolusiasia.learnflux.MyProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.User;
@@ -54,14 +59,14 @@ public class GroupOganizationAdapter extends RecyclerView.Adapter<GroupOganizati
         }else {
             holder.image.setImageUrl(url, imageLoader);
         }*/
-        Animation animation = AnimationUtils.loadAnimation(context,
-                R.anim.popup_enter);
         if(org.getImage()!=null) {
-                     Ion.with(context)
-                    .load(url+org.getImage())
-                    .addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
-                    .withBitmap().animateLoad(animation)
-                    .intoImageView(holder.image);
+            GlideUrl glideUrl = new GlideUrl(url+org.getImage(), new LazyHeaders.Builder()
+                    .addHeader("Authorization", "Bearer "+User.getUser().getAccess_token())
+                    .build());
+            Glide.with(context).load(glideUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .skipMemoryCache(true).dontAnimate()
+                    .into(holder.image);
         }else{
             holder.image.setImageResource(R.drawable.company1);
         }
