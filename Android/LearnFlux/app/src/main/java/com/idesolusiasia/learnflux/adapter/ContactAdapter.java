@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.idesolusiasia.learnflux.ChattingActivity;
 import com.idesolusiasia.learnflux.GroupDetailActivity;
 import com.idesolusiasia.learnflux.R;
@@ -140,11 +144,18 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                    if (group.getImage() == null) {
                        vh2.getcircular2().setImageResource(R.drawable.company1);
                    }else{
-                               Ion.with(context)
+                       GlideUrl glideUrl = new GlideUrl(url+group.getImage(), new LazyHeaders.Builder()
+                               .addHeader("Authorization", "Bearer "+User.getUser().getAccess_token())
+                               .build());
+                       Glide.with(context).load(glideUrl)
+                               .diskCacheStrategy(DiskCacheStrategy.ALL)
+                               .skipMemoryCache(true).dontAnimate()
+                               .into( vh2.getcircular2());
+                              /* Ion.with(context)
                                .load(url+group.getImage())
                                .addHeader("Authorization", "Bearer " + User.getUser().getAccess_token())
                                .withBitmap()
-                               .intoImageView( vh2.getcircular2());
+                               .intoImageView( vh2.getcircular2());*/
                    }
                }
                vh2.getStats().setText(group.getAccess());

@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
@@ -19,9 +20,18 @@ import com.idesolusiasia.learnflux.ChattingActivity;
 import com.idesolusiasia.learnflux.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
+import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
+import com.idesolusiasia.learnflux.util.Converter;
+import com.idesolusiasia.learnflux.util.Engine;
+import com.idesolusiasia.learnflux.util.Functions;
+import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 import com.koushikdutta.ion.Ion;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +73,10 @@ public class OrganizationGridRecyclerViewAdapter extends RecyclerView.Adapter<Or
 		holder.tvImageMessage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent i = new Intent(context, ChattingActivity.class);
-				i.putExtra("idThread", org.getThread().getId());
-				i.putExtra("name", org.getName());
-				context.startActivity(i);
+			Intent a= new Intent(context, ChattingActivity.class);
+			a.putExtra("idThread", org.getThread().getId());
+			a.putExtra("name", org.getName());
+			context.startActivity(a);
 			}
 		});
 		holder.tvImageEvent.setOnClickListener(new View.OnClickListener() {

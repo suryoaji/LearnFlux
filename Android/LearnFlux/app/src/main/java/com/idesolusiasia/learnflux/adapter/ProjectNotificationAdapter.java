@@ -2,14 +2,13 @@ package com.idesolusiasia.learnflux.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.idesolusiasia.learnflux.JoinInviteStakeHolders;
+import com.idesolusiasia.learnflux.ProjectStakeHolders;
 import com.idesolusiasia.learnflux.R;
 
 import java.util.ArrayList;
@@ -52,8 +51,8 @@ public class ProjectNotificationAdapter extends RecyclerView.Adapter<ProjectNoti
                 @Override
                 public void onClick(View view) {
                     int pos = getAdapterPosition();
-                    Intent profile =  new Intent(view.getContext(), JoinInviteStakeHolders.class);
-                    profile.putExtra("toolbar", "notification");
+                    Intent profile =  new Intent(view.getContext(), ProjectStakeHolders.class);
+                    profile.putExtra("toolbar", "TaskNotif");
                     view.getContext().startActivity(profile);
                 }
             });

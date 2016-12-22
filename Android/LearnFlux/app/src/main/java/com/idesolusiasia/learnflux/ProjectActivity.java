@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.ProjectListAdapter;
@@ -189,7 +188,7 @@ public class ProjectActivity extends BaseActivity {
                 joinProject.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent i = new Intent(ProjectActivity.this, JoinInviteStakeHolders.class);
+                        Intent i = new Intent(ProjectActivity.this, ProjectStakeHolders.class);
                         i.putExtra("toolbar", "join");
                         startActivity(i);
                     }
@@ -197,7 +196,7 @@ public class ProjectActivity extends BaseActivity {
                 inviting.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent o = new Intent(ProjectActivity.this, JoinInviteStakeHolders.class);
+                        Intent o = new Intent(ProjectActivity.this, ProjectStakeHolders.class);
                         o.putExtra("toolbar", "invite");
                         startActivity(o);
                     }
@@ -205,7 +204,7 @@ public class ProjectActivity extends BaseActivity {
                 btnManifest.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent manifest = new Intent (ProjectActivity.this, JoinInviteStakeHolders.class);
+                        Intent manifest = new Intent (ProjectActivity.this, ProjectStakeHolders.class);
                         manifest.putExtra("toolbar", "manifest");
                         startActivity(manifest);
                     }

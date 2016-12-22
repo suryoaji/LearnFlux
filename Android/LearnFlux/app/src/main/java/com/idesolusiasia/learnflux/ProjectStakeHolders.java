@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
 import com.idesolusiasia.learnflux.adapter.ManifestAdapter;
@@ -36,11 +37,12 @@ import java.util.Locale;
  * Created by Kuroko on 11/28/2016.
  */
 
-public class JoinInviteStakeHolders extends BaseActivity {
+public class ProjectStakeHolders extends BaseActivity {
         Button join, inviteCollaborator, requestingToJoin;
         EditText projectStart, projectEnd, taskTitle;
-        LinearLayout linearTeamMember, linearTask, linearButton;
+        LinearLayout linearTeamMember,  linearButton;
         Toolbar toolbar;
+        LinearLayout linearTask;
         RecyclerView expendable;
         ManifestAdapter mAdapt;
         View rowProfile;
@@ -66,7 +68,7 @@ public class JoinInviteStakeHolders extends BaseActivity {
         join = (Button)findViewById(R.id.buttonJoinGroup);
         linearButton = (LinearLayout)findViewById(R.id.layoutJoinDecline);
 
-        linearTask = (LinearLayout)findViewById(R.id.layoutInviteandJoin);
+        linearTask = (LinearLayout)findViewById(R.id.layoutPrimary);
         taskTitle = (EditText)findViewById(R.id.taskTitle);
 
         inviteCollaborator = (Button)findViewById(R.id.buttonInviteCollaborator);
@@ -84,7 +86,7 @@ public class JoinInviteStakeHolders extends BaseActivity {
         projectStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(JoinInviteStakeHolders.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(ProjectStakeHolders.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
                         calendar.set(year,monthOfYear,dayOfMonth);
@@ -97,7 +99,7 @@ public class JoinInviteStakeHolders extends BaseActivity {
         projectEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(JoinInviteStakeHolders.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(ProjectStakeHolders.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
                         calendar.set(year,monthOfYear,dayOfMonth);
@@ -114,11 +116,18 @@ public class JoinInviteStakeHolders extends BaseActivity {
             requestingToJoin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(JoinInviteStakeHolders.this, ProjectActivity.class);
+                    Intent i = new Intent(ProjectStakeHolders.this, ProjectActivity.class);
                     i.putExtra("projectAct", "profiles");
                     view.getContext().startActivity(i);
                 }
             });
+
+        }
+        else if(a.contains("TaskNotif")) {
+            toolbar.setTitle("Join Project");
+            rowProfile.setVisibility(View.VISIBLE);
+            linearTask.setVisibility(View.VISIBLE);
+            linearButton.setVisibility(View.VISIBLE);
 
         }else if(a.contains("invite")){
             toolbar.setTitle("Invite Collaborators for project");
@@ -127,7 +136,7 @@ public class JoinInviteStakeHolders extends BaseActivity {
             inviteCollaborator.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(JoinInviteStakeHolders.this, InvitePeople.class);
+                    Intent i = new Intent(ProjectStakeHolders.this, InvitePeople.class);
                     startActivity(i);
                 }
             });
@@ -136,17 +145,13 @@ public class JoinInviteStakeHolders extends BaseActivity {
             rowProfile.setVisibility(View.VISIBLE);
             linearTask.setVisibility(View.VISIBLE);
             linearTeamMember.setVisibility(View.VISIBLE);
-        }else if(a.contains("notification")){
-            toolbar.setTitle("Join Project");
-            linearButton.setVisibility(View.VISIBLE);
-            linearTask.setVisibility(View.VISIBLE);
-            rowProfile.setVisibility(View.VISIBLE);
         }
-        else if(a.contains("manifest")){
+        else if(a.contains("manifest")) {
             toolbar.setTitle("Project Olds Folks Home");
             linearTask.setVisibility(View.GONE);
             linearButton.setVisibility(View.GONE);
             inviteCollaborator.setVisibility(View.GONE);
+
 
            /* final ArrayList<SubcategoryParentListItem> subcategoryParentListItems = new ArrayList<>();
             for (int i = 0; i < 3; i++) {

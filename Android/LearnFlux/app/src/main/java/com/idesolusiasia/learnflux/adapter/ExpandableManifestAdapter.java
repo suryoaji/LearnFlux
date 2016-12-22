@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.idesolusiasia.learnflux.JoinInviteStakeHolders;
+import com.idesolusiasia.learnflux.ProjectStakeHolders;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
 
@@ -94,7 +94,7 @@ public class ExpandableManifestAdapter extends RecyclerView.Adapter<ExpandableMa
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   Intent profile = new Intent(view.getContext(), JoinInviteStakeHolders.class);
+                   Intent profile = new Intent(view.getContext(), ProjectStakeHolders.class);
                    profile.putExtra("toolbar", "Profile");
                    view.getContext().startActivity(profile);
                 }

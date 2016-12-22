@@ -92,10 +92,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".NewInterestGroup"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
         <activity android:name=".EditActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -129,7 +125,7 @@
             android:label="My Project"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".JoinInviteStakeHolders"
+        <activity android:name=".ProjectStakeHolders"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait">

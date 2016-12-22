@@ -37,6 +37,7 @@
             android:id="@+id/linearIndividual"
             android:layout_gravity="center" android:gravity="center"
             android:orientation="vertical"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <ImageView

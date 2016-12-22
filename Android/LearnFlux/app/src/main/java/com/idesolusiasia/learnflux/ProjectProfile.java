@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.idesolusiasia.learnflux.adapter.ProjectProfileCommentAdapter;
@@ -103,7 +102,7 @@ public class ProjectProfile extends BaseActivity {
         joinProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ProjectProfile.this, JoinInviteStakeHolders.class);
+                Intent i = new Intent(ProjectProfile.this, ProjectStakeHolders.class);
                 i.putExtra("toolbar", "join");
                 startActivity(i);
             }
@@ -111,7 +110,7 @@ public class ProjectProfile extends BaseActivity {
         inviting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent o = new Intent(ProjectProfile.this, JoinInviteStakeHolders.class);
+                Intent o = new Intent(ProjectProfile.this, ProjectStakeHolders.class);
                 o.putExtra("toolbar", "invite");
                 startActivity(o);
             }
@@ -119,7 +118,7 @@ public class ProjectProfile extends BaseActivity {
         btnManifest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent manifest = new Intent (ProjectProfile.this, JoinInviteStakeHolders.class);
+                Intent manifest = new Intent (ProjectProfile.this, ProjectStakeHolders.class);
                 manifest.putExtra("toolbar", "manifest");
                 startActivity(manifest);
             }
