@@ -113,6 +113,7 @@
         <LinearLayout
             android:visibility="gone"
             android:focusableInTouchMode="true"
+            android:id="@+id/layoutPrimary"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -182,6 +183,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
         </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
         <android.support.v7.widget.RecyclerView
             android:visibility="gone"
             android:id="@+id/recyclerExpendable"
