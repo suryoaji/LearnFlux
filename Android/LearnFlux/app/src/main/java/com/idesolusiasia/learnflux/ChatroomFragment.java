@@ -135,7 +135,7 @@ public class ChatroomFragment extends Fragment {
 			@Override
 			public void execute(JSONObject obj) {
 				List<Thread> fromDB = DatabaseFunction.getThreadList(getContext());
-				if (adap!=null){
+				if (adap!=null && fromDB!=null){
 					if(adap.getCount()!=fromDB.size()){
 						loadChatroomFromDatabase(fromDB);
 					}
@@ -147,7 +147,7 @@ public class ChatroomFragment extends Fragment {
 	}
 
 	void loadChatroomFromDatabase(List<Thread> fromDB){
-		if (fromDB.size()>0){
+		if (fromDB!=null && fromDB.size()>0){
 			ThreadQuickSort quickSort = new ThreadQuickSort();
 			quickSort.sort(fromDB);
 			adap = new ThreadAdapter(getContext(),quickSort.getArray());

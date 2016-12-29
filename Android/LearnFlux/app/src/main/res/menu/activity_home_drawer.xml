@@ -5,6 +5,14 @@
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Home"/>
+    <item
+        android:id="@+id/nav_notif"
+        android:icon="@drawable/notification"
+        android:title="Notification"/>
+    <item
+        android:id="@+id/nav_friendRequest"
+        android:icon="@drawable/ic_peoples"
+        android:title="Friend Request"/>
     <item android:title="Tools">
         <menu>
             <item

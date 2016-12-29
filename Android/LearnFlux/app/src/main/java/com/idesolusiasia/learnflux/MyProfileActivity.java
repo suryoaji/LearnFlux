@@ -418,7 +418,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 								.addHeader("Authorization", "Bearer "+User.getUser().getAccess_token())
 								.build());
 						Glide.with(MyProfileActivity.this).load(glideUrl)
-								.diskCacheStrategy(DiskCacheStrategy.ALL)
+								.diskCacheStrategy(DiskCacheStrategy.NONE)
 								.skipMemoryCache(true).dontAnimate()
 								.into(parent);
 
