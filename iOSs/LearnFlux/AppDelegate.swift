@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKRevealing {
         UIApplication.sharedApplication().statusBarStyle = .LightContent
         setRevealController()
         DropDown.startListeningToKeyboard()
+        
         return true
     }
 
