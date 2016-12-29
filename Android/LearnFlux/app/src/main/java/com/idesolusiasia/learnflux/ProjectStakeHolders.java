@@ -65,7 +65,7 @@ public class ProjectStakeHolders extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        join = (Button)findViewById(R.id.buttonJoinGroup);
+        join = (Button)findViewById(R.id.approve);
         linearButton = (LinearLayout)findViewById(R.id.layoutJoinDecline);
 
         linearTask = (LinearLayout)findViewById(R.id.layoutPrimary);
@@ -128,7 +128,14 @@ public class ProjectStakeHolders extends BaseActivity {
             rowProfile.setVisibility(View.VISIBLE);
             linearTask.setVisibility(View.VISIBLE);
             linearButton.setVisibility(View.VISIBLE);
-
+            join.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent a = new Intent(ProjectStakeHolders.this, ProjectActivity.class);
+                    a.putExtra("projectAct", "profiles");
+                    startActivity(a);
+                }
+            });
         }else if(a.contains("invite")){
             toolbar.setTitle("Invite Collaborators for project");
             inviteCollaborator.setVisibility(View.VISIBLE);

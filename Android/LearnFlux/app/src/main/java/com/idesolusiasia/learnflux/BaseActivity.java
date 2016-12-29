@@ -99,7 +99,6 @@ public class BaseActivity extends AppCompatActivity
 										.into(ivDrawerPic);
 							}
 							User.getUser().setID(contact.getId());
-							User.getUser().setUsername(contact.getFirst_name()+ " "+ contact.getLast_name());
 							User.getUser().setName(contact.getUsername());
 							User.getUser().setWork(contact.getWork());
 							User.getUser().setLocation(contact.getLocation());

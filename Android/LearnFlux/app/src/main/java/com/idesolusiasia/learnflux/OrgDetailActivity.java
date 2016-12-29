@@ -425,11 +425,11 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 		listcontent = (ListView) dial.findViewById(R.id.alert_list);
 		Button next = (Button)dial.findViewById(R.id.btnNext);
 		Button cancel = (Button)dial.findViewById(R.id.btnCancel);
-		Engine.getMeWithRequest(getApplicationContext(),"Friends", new RequestTemplate.ServiceCallback() {
+		Engine.getMeWithRequest(getApplicationContext(),"friends", new RequestTemplate.ServiceCallback() {
 			@Override
 			public void execute(JSONObject obj) {
 				try {
-					JSONArray array = obj.getJSONArray("Friends");
+					JSONArray array = obj.getJSONArray("friends");
 					ArrayList<FriendReq>contactReq = new ArrayList<>();
 					for(int i=0;i<array.length();i++){
 						JSONObject ap = array.getJSONObject(i);

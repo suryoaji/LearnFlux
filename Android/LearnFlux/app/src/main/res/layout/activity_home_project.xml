@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/actionBarProject"
         android:background="@color/actionBarMyProfile"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -74,6 +75,31 @@
             </LinearLayout>
         </LinearLayout>
 
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/searchTyping"
+        android:background="@drawable/relative_border"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/backSearch"
+            android:src="@drawable/ic_arrowgreen"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+        <EditText
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/ic_search_green"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
     </LinearLayout>
 
     <FrameLayout

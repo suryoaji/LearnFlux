@@ -122,7 +122,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                    if(contact.get_links().getProfile_picture()==null){
                        vh1.getcircular().setDefaultImageResId(R.drawable.user_profile);
                    }else {
-                       vh1.getcircular().setImageUrl(url + contact.get_links().getProfile_picture().getHref(), imageLoader);
+                       GlideUrl glideUrl = new GlideUrl(url+contact.get_links().getProfile_picture().getHref(), new LazyHeaders.Builder()
+                               .addHeader("Authorization", "Bearer "+User.getUser().getAccess_token())
+                               .build());
+                       Glide.with(context).load(glideUrl)
+                               .diskCacheStrategy(DiskCacheStrategy.ALL)
+                               .skipMemoryCache(true).dontAnimate()
+                               .into(vh1.getcircular());
                    }
                }
            }

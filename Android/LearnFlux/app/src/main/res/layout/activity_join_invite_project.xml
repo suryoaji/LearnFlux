@@ -17,13 +17,13 @@
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:layout_height="wrap_content"
-            android:id="@+id/buttonJoinGroup" />
+            android:id="@+id/approve" />
         <Button
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:textColor="#FFFFFF"
             android:text="Decline"
-            android:id="@+id/cancelButton"
+            android:id="@+id/decline"
             android:background="@android:color/holo_red_dark"
             android:layout_height="wrap_content" />
     </LinearLayout>

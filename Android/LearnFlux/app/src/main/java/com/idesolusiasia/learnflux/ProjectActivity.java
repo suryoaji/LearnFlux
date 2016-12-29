@@ -1,5 +1,6 @@
 package com.idesolusiasia.learnflux;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +37,7 @@ public class ProjectActivity extends BaseActivity {
     RecyclerView rcView, recRecycler, notifRecycler;
     TextView  profileTitle, listTitle ;
     ImageView searchProject;
-    LinearLayout projectList, actionBar;
+    LinearLayout projectList, actionContinue, actionBar;
     ArrayList<String>title = new ArrayList<>();
     ProjectNotificationAdapter PNAdapter;
     View layoutNotif;
@@ -42,12 +45,13 @@ public class ProjectActivity extends BaseActivity {
 
     //For Project Profile
     TextView projectProfileDesc, postMessage;
+    LinearLayout searchTyping;
     EditText comment;
     RecyclerView commentProfile;
     Button gotoProjectDetails;
     FloatingActionButton flbtn;
     ProjectProfileCommentAdapter ppcAdapter;
-    ImageView joinProject, inviting, btnManifest, notifProject;
+    ImageView joinProject, inviting, btnManifest, notifProject, backSearch;
     LinearLayout lnm;
     String visible;
 
@@ -67,9 +71,12 @@ public class ProjectActivity extends BaseActivity {
 
 
         // SETTING LAYOUT OF PROFILES AND LIST
+        searchTyping = (LinearLayout)findViewById(R.id.searchTyping);
         projectList = (LinearLayout)findViewById(R.id.projectListLayout);
         final View projectProfile = (View)findViewById(R.id.projectProfileLayout);
-        actionBar = (LinearLayout)findViewById(R.id.actionBarLayout);
+        actionContinue = (LinearLayout)findViewById(R.id.actionBarLayout);
+        actionBar =(LinearLayout)findViewById(R.id.actionBarProject);
+
         searchProject = (ImageView)findViewById(R.id.searchProject);
         listTitle = (TextView)findViewById(R.id.projectListTitle);
         profileTitle = (TextView)findViewById(R.id.projectProfileTitle);
@@ -77,6 +84,7 @@ public class ProjectActivity extends BaseActivity {
         notifProject = (ImageView)findViewById(R.id.notifProject);
         layoutNotif = (View)findViewById(R.id.layoutNotif);
         visible = "none";
+        backSearch = (ImageView)findViewById(R.id.backSearch);
 
         String s = getIntent().getStringExtra("projectAct");
 
@@ -128,6 +136,22 @@ public class ProjectActivity extends BaseActivity {
             notifProject.setLayoutParams(params);
             profileTitle.setVisibility(View.INVISIBLE);
             listTitle.setTextColor(Color.parseColor("#8bc34a"));
+            searchProject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    actionBar.setVisibility(View.GONE);
+                    searchTyping.setVisibility(View.VISIBLE);
+                    backSearch.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            actionBar.setVisibility(View.VISIBLE);
+                            searchTyping.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            });
+
+
         }else if(s.contains("profiles")){
                 notifProject.setLayoutParams(secondParams);
                 listTitle.setVisibility(View.VISIBLE);
@@ -136,7 +160,7 @@ public class ProjectActivity extends BaseActivity {
                 projectList.setVisibility(View.GONE);
                 projectProfile.setVisibility(View.VISIBLE);
                 searchProject.setVisibility(View.GONE);
-                actionBar.setVisibility(View.VISIBLE);
+                actionContinue.setVisibility(View.VISIBLE);
                 comment = (EditText)findViewById(R.id.comment);
                 projectProfileDesc = (TextView)findViewById(R.id.descProjectProfile);
                 gotoProjectDetails = (Button)findViewById(R.id.gotoProjectDetails);
@@ -167,7 +191,7 @@ public class ProjectActivity extends BaseActivity {
                 postMessage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        inputManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                        hideKeyboard(ProjectActivity.this);
                         flbtn.setVisibility(View.VISIBLE);
                         lnm.setVisibility(View.GONE);
                         userComment = new ArrayList<>();
@@ -220,6 +244,7 @@ public class ProjectActivity extends BaseActivity {
                 }
             });
 
+
         }
 
     }
@@ -244,5 +269,30 @@ public class ProjectActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View v = getCurrentFocus();
+
+        if (v != null &&
+                (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_MOVE) &&
+                v instanceof EditText &&
+                !v.getClass().getName().startsWith("android.webkit.")) {
+            int scrcoords[] = new int[2];
+            v.getLocationOnScreen(scrcoords);
+            float x = ev.getRawX() + v.getLeft() - scrcoords[0];
+            float y = ev.getRawY() + v.getTop() - scrcoords[1];
+
+            if (x < v.getLeft() || x > v.getRight() || y < v.getTop() || y > v.getBottom())
+                hideKeyboard(this);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        if (activity != null && activity.getWindow() != null && activity.getWindow().getDecorView() != null) {
+            InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+        }
     }
 }

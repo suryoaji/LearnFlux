@@ -1,11 +1,15 @@
 package com.idesolusiasia.learnflux;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -21,7 +25,7 @@ import java.util.Locale;
 
 public class ProjectEdit extends BaseActivity {
 
-    EditText start,end;
+    EditText start,end, name, about, location, mission, goals;
     ImageView cancel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class ProjectEdit extends BaseActivity {
         cancel = (ImageView)findViewById(R.id.editCancel);
         start.setFocusable(false); end.setFocusable(false);
         start.setClickable(true); end.setClickable(true);
+        name = (EditText)findViewById(R.id.editProjectName);
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMM yyyy", Locale.US);
         final Calendar calendar = Calendar.getInstance();
         start.setOnClickListener(new View.OnClickListener() {
@@ -78,5 +83,31 @@ public class ProjectEdit extends BaseActivity {
             }
         });
 
+
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View v = getCurrentFocus();
+
+        if (v != null &&
+                (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_MOVE) &&
+                v instanceof EditText &&
+                !v.getClass().getName().startsWith("android.webkit.")) {
+            int scrcoords[] = new int[2];
+            v.getLocationOnScreen(scrcoords);
+            float x = ev.getRawX() + v.getLeft() - scrcoords[0];
+            float y = ev.getRawY() + v.getTop() - scrcoords[1];
+
+            if (x < v.getLeft() || x > v.getRight() || y < v.getTop() || y > v.getBottom())
+                hideKeyboard(this);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        if (activity != null && activity.getWindow() != null && activity.getWindow().getDecorView() != null) {
+            InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+        }
     }
 }
