@@ -101,7 +101,7 @@
     </string>
     <string name="client_secret">5d13jtr20js4wcw0488888ck0k0c0sk0kos8c08wo8wsgog8ss</string>
     <string name="URL_VERSION">v1/</string>
-    <string name="URL_VERSION_1.1">v1.1/</string>
+    <string name="URL_VERSION2">v1.1/</string>
     <string name="URL_ME">me</string>
     <string name="URL_FRIEND">me/friend</string>
     <string name="URL_MESSAGES">messages</string>
