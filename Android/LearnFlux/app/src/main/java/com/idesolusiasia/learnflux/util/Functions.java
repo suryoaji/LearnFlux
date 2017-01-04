@@ -9,7 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.widget.EditText;
 
-import com.idesolusiasia.learnflux.LoginActivity;
+import com.idesolusiasia.learnflux.activity.LoginActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.db.DataSource;
 import com.idesolusiasia.learnflux.entity.Thread;

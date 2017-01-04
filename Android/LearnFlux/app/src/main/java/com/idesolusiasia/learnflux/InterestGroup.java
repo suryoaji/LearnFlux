@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.idesolusiasia.learnflux.activity.BaseActivity;
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.InterestGroupAdapter;
 import com.idesolusiasia.learnflux.adapter.Interest_GroupYouKnow;
@@ -41,7 +42,7 @@ import java.util.List;
 /**
  * Created by Ide Solusi Asia on 8/15/2016.
  */
-public class InterestGroup extends BaseActivity{
+public class InterestGroup extends BaseActivity {
     ArrayList<Group> arrOrg = new ArrayList<Group>();
     ArrayList<Group>newArr = new ArrayList<Group>();
     public Participant participant=null;

@@ -10,9 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Network;
 import com.android.volley.toolbox.NetworkImageView;
-import com.idesolusiasia.learnflux.MyProfileActivity;
+import com.idesolusiasia.learnflux.activity.MyProfileActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Notification;
 import com.idesolusiasia.learnflux.util.Engine;

@@ -1,9 +1,7 @@
 package com.idesolusiasia.learnflux;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.idesolusiasia.learnflux.activity.BaseActivity;
 import com.idesolusiasia.learnflux.adapter.CheckListPeopleAdapter;
 import com.idesolusiasia.learnflux.entity.PeopleInvite;
 import com.idesolusiasia.learnflux.util.Converter;
@@ -32,7 +30,7 @@ import java.util.List;
  * Created by Ide Solusi Asia on 11/15/2016.
  */
 
-public class InvitePeople extends BaseActivity{
+public class InvitePeople extends BaseActivity {
 
     ArrayList<PeopleInvite> participant= new ArrayList<>();
     RecyclerView peopleRecycler;

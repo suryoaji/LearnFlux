@@ -1,15 +1,13 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.activity;
 
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
@@ -17,22 +15,16 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -45,21 +37,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.androidnetworking.interfaces.UploadProgressListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
-import com.bumptech.glide.signature.StringSignature;
-import com.google.gson.JsonObject;
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.adapter.ChildrenAdapter;
 import com.idesolusiasia.learnflux.adapter.ConnectionFragmentAdapter;
-import com.idesolusiasia.learnflux.adapter.ContactAdapter;
 import com.idesolusiasia.learnflux.adapter.FriendRequest;
 import com.idesolusiasia.learnflux.adapter.MyProfileOrganizationAdapter;
 import com.idesolusiasia.learnflux.adapter.MyProfileInterestAdapter;
@@ -72,18 +60,19 @@ import com.idesolusiasia.learnflux.entity.Friends;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Notification;
 import com.idesolusiasia.learnflux.entity.User;
+import com.idesolusiasia.learnflux.fragment.ConnectionGroupFragment;
+import com.idesolusiasia.learnflux.fragment.ConnectionOrganizationFragment;
+import com.idesolusiasia.learnflux.fragment.ContactFragment;
+import com.idesolusiasia.learnflux.fragment.IndividualFragment;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
-import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.ProgressCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -805,7 +794,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+		if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
 				try {
 					Uri selectedImage = data.getData();
 					Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
@@ -918,7 +907,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
 	public static void hideKeyboard(Activity activity) {
 		if (activity != null && activity.getWindow() != null && activity.getWindow().getDecorView() != null) {
-			InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+			InputMethodManager imm = (InputMethodManager)activity.getSystemService(INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
 		}
 	}

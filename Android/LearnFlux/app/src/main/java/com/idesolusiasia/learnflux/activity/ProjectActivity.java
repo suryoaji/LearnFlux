@@ -1,7 +1,6 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +20,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.idesolusiasia.learnflux.ProjectDetails;
+import com.idesolusiasia.learnflux.ProjectEdit;
+import com.idesolusiasia.learnflux.ProjectStakeHolders;
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.adapter.ProjectListAdapter;
 import com.idesolusiasia.learnflux.adapter.ProjectNotificationAdapter;
 import com.idesolusiasia.learnflux.adapter.ProjectProfileCommentAdapter;
@@ -170,7 +172,7 @@ public class ProjectActivity extends BaseActivity {
                 lnm = (LinearLayout)findViewById(R.id.keyboard);
                 postMessage = (TextView)findViewById(R.id.postMessage);
                 btnManifest = (ImageView)findViewById(R.id.btn_manifest);
-                final InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                final InputMethodManager inputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
                 //recyclerview Comment
                 commentProfile = (RecyclerView)findViewById(R.id.projectProfileRecycler);
@@ -291,7 +293,7 @@ public class ProjectActivity extends BaseActivity {
 
     public static void hideKeyboard(Activity activity) {
         if (activity != null && activity.getWindow() != null && activity.getWindow().getDecorView() != null) {
-            InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager)activity.getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
         }
     }

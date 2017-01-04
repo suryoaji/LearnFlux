@@ -11,5 +11,5 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     android:choiceMode="multipleChoiceModal"
-    tools:context="com.idesolusiasia.learnflux.ConnectionFragment"/>
+    tools:context="com.idesolusiasia.learnflux.fragment.ConnectionFragment"/>
 

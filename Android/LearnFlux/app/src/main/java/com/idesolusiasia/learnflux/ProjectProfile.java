@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.idesolusiasia.learnflux.activity.BaseActivity;
 import com.idesolusiasia.learnflux.adapter.ProjectProfileCommentAdapter;
 
 import java.util.ArrayList;

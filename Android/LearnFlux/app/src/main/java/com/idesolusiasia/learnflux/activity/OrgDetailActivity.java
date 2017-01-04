@@ -1,6 +1,5 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.activity;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -9,9 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.shapes.RoundRectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +19,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,35 +38,28 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.androidnetworking.interfaces.StringRequestListener;
-import com.androidnetworking.interfaces.UploadProgressListener;
-import com.google.gson.reflect.TypeToken;
+import com.idesolusiasia.learnflux.InvitePeople;
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
-import com.idesolusiasia.learnflux.component.RoundedImageView;
-import com.idesolusiasia.learnflux.db.DatabaseFunction;
 import com.idesolusiasia.learnflux.entity.FriendReq;
 import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
+import com.idesolusiasia.learnflux.fragment.OrgActivityFragment;
+import com.idesolusiasia.learnflux.fragment.OrgEventFragment;
+import com.idesolusiasia.learnflux.fragment.OrgGroupFragment;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 import com.koushikdutta.ion.Ion;
-import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -489,7 +477,7 @@ public class OrgDetailActivity extends BaseActivity implements View.OnClickListe
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+		if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
 			if (ContextCompat.checkSelfPermission(OrgDetailActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
 					== PackageManager.PERMISSION_GRANTED) {
 

@@ -1,8 +1,6 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.fragment;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,15 +10,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 
+import com.idesolusiasia.learnflux.activity.ChattingActivity;
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.adapter.ThreadAdapter;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
 import com.idesolusiasia.learnflux.entity.Thread;

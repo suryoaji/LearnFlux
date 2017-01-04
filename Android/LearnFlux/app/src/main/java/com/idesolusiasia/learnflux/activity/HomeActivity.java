@@ -1,4 +1,4 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -10,7 +10,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 
-import junit.framework.Test;
+import com.idesolusiasia.learnflux.InterestGroup;
+import com.idesolusiasia.learnflux.R;
 
 import java.util.Calendar;
 

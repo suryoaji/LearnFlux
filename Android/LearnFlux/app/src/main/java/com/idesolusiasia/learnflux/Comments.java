@@ -1,10 +1,11 @@
 package com.idesolusiasia.learnflux;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.idesolusiasia.learnflux.activity.BaseActivity;
 
 /**
  * Created by Kuroko on 12/15/2016.

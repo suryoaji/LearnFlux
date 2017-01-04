@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.idesolusiasia.learnflux.ProjectActivity;
-import com.idesolusiasia.learnflux.ProjectProfile;
+import com.idesolusiasia.learnflux.activity.ProjectActivity;
 import com.idesolusiasia.learnflux.R;
 
 import java.util.ArrayList;

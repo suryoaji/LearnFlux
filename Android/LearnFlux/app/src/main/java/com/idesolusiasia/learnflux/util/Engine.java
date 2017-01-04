@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.idesolusiasia.learnflux.LoginActivity;
+import com.idesolusiasia.learnflux.activity.LoginActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.db.DatabaseFunction;
-import com.idesolusiasia.learnflux.entity.BasicItem;
 import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Thread;

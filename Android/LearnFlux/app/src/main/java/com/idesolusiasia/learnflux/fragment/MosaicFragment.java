@@ -1,4 +1,4 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.fragment;
 
 
 import android.content.Intent;
@@ -9,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.idesolusiasia.learnflux.activity.ChatsActivity;
+import com.idesolusiasia.learnflux.InterestGroup;
+import com.idesolusiasia.learnflux.R;
 
 public class MosaicFragment extends Fragment {
 

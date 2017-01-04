@@ -1,4 +1,4 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -17,8 +17,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.adapter.AddGroupAdapter;
 import com.idesolusiasia.learnflux.entity.FriendReq;
+import com.idesolusiasia.learnflux.fragment.ChatroomFragment;
+import com.idesolusiasia.learnflux.fragment.ConnectionFragment;
+import com.idesolusiasia.learnflux.fragment.OrganizationsFragment;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;

@@ -1,8 +1,7 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.fragment;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,11 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.adapter.IndividualFragmentAdapter;
 import com.idesolusiasia.learnflux.entity.Contact;
-import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.RequestTemplate;
@@ -23,7 +21,6 @@ import com.idesolusiasia.learnflux.util.RequestTemplate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 

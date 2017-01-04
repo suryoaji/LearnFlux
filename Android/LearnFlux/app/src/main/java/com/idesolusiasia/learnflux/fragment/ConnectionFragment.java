@@ -1,4 +1,4 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -18,9 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.idesolusiasia.learnflux.activity.ChattingActivity;
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
-import com.idesolusiasia.learnflux.db.DatabaseFunction;
-import com.idesolusiasia.learnflux.entity.Contact;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.Participant;
 import com.idesolusiasia.learnflux.entity.User;

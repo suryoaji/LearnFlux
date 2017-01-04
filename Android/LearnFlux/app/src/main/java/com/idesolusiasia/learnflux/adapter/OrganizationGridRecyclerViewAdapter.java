@@ -3,7 +3,6 @@ package com.idesolusiasia.learnflux.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,27 +10,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.androidnetworking.AndroidNetworking;
-import com.idesolusiasia.learnflux.ChattingActivity;
-import com.idesolusiasia.learnflux.OrgDetailActivity;
+import com.idesolusiasia.learnflux.activity.ChattingActivity;
+import com.idesolusiasia.learnflux.activity.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.Thread;
 import com.idesolusiasia.learnflux.entity.User;
-import com.idesolusiasia.learnflux.util.Converter;
-import com.idesolusiasia.learnflux.util.Engine;
-import com.idesolusiasia.learnflux.util.Functions;
-import com.idesolusiasia.learnflux.util.RequestTemplate;
 import com.idesolusiasia.learnflux.util.VolleySingleton;
 import com.koushikdutta.ion.Ion;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

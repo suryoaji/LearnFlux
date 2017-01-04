@@ -12,8 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.idesolusiasia.learnflux.GroupDetailActivity;
+import com.idesolusiasia.learnflux.activity.GroupDetailActivity;
 import com.idesolusiasia.learnflux.PublicProfile;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.component.CircularNetworkImageView;

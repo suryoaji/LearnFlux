@@ -9,14 +9,12 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.idesolusiasia.learnflux.ChattingActivity;
-import com.idesolusiasia.learnflux.GroupDetailActivity;
-import com.idesolusiasia.learnflux.OrgDetailActivity;
+import com.idesolusiasia.learnflux.activity.ChattingActivity;
+import com.idesolusiasia.learnflux.activity.GroupDetailActivity;
+import com.idesolusiasia.learnflux.activity.OrgDetailActivity;
 import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
 import com.idesolusiasia.learnflux.entity.User;

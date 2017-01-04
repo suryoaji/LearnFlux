@@ -1,9 +1,8 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.activity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,6 +29,7 @@ import android.widget.ListView;
 import android.widget.TimePicker;
 
 import com.google.gson.Gson;
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.adapter.AddPollAnswerAdapter;
 import com.idesolusiasia.learnflux.adapter.ChatBubbleAdapter;
 import com.idesolusiasia.learnflux.adapter.PeopleAdapter;
@@ -138,7 +138,7 @@ public class ChattingActivity extends BaseActivity {
 				attachmentLayout.setVisibility(View.VISIBLE);
 				View view = getCurrentFocus();
 				if (view != null) {
-					InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+					InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 				}
 			}

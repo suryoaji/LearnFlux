@@ -13,9 +13,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentListItem;
+import com.idesolusiasia.learnflux.activity.BaseActivity;
+import com.idesolusiasia.learnflux.activity.ProjectActivity;
 import com.idesolusiasia.learnflux.adapter.ManifestAdapter;
 import com.idesolusiasia.learnflux.adapter.ExpandableManifestAdapter;
 import com.idesolusiasia.learnflux.entity.Group;

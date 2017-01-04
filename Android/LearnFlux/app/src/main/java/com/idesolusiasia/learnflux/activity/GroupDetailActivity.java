@@ -1,4 +1,4 @@
-package com.idesolusiasia.learnflux;
+package com.idesolusiasia.learnflux.activity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,12 +27,14 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.idesolusiasia.learnflux.adapter.CheckListPeopleAdapter;
+import com.idesolusiasia.learnflux.InterestGroup;
+import com.idesolusiasia.learnflux.InvitePeople;
+import com.idesolusiasia.learnflux.R;
 import com.idesolusiasia.learnflux.entity.Group;
-import com.idesolusiasia.learnflux.entity.Member;
-import com.idesolusiasia.learnflux.entity.PeopleInvite;
 import com.idesolusiasia.learnflux.entity.User;
+import com.idesolusiasia.learnflux.fragment.GroupProfileFragment;
+import com.idesolusiasia.learnflux.fragment.OrgActivityFragment;
+import com.idesolusiasia.learnflux.fragment.OrgEventFragment;
 import com.idesolusiasia.learnflux.util.Converter;
 import com.idesolusiasia.learnflux.util.Engine;
 import com.idesolusiasia.learnflux.util.Functions;
@@ -48,7 +49,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 public class GroupDetailActivity extends BaseActivity implements View.OnClickListener {
